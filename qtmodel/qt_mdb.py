@@ -188,6 +188,114 @@ class Mdb:
         else:
             mdb.AddPlate(ele_id, node_ids[0], node_ids[1], node_ids[2], node_ids[3], beta_angle, mat_id, sec_id)
 
+    @staticmethod
+    def add_material(material_id=-1, name="", material_type="混凝土", standard_name="公路18规范", database="C50", construct_factor=1,
+                     modified=False, modify_info=None):
+        if modified and len(modify_info) != 4:
+            raise OperationFailedException("操作错误,modify_info数据无效!")
+        if modified:
+            mdb.AddMaterial(id=material_id, name=name, materialType=material_type, standardName=standard_name,
+                            database=database, constructFactor=construct_factor, isModified=modified)
+        else:
+            mdb.AddMaterial(id=material_id, name=name, materialType=material_type, standardName=standard_name,
+                            database=database, constructFactor=construct_factor, isModified=modified,
+                            elasticModulus=modify_info[0], unitWeight=modify_info[1],
+                            posiRatio=modify_info[2], tempratureCoefficient=modify_info[3])
 
-    # @staticmethod
-    #     # def update_ele_material():
+    @staticmethod
+    def add_time_material(creep_id=-1, name="", code_index=1, time_parameter=None):
+        if time_parameter is None:  # 默认不修改收缩徐变相关参数
+            mdb.AddTimeParameter(id=creep_id, name=name, codeId=code_index)
+        elif code_index == 1:  # 公规 JTG 3362-2018
+            if len(time_parameter) != 4:
+                raise OperationFailedException("操作错误,time_parameter数据无效!")
+            mdb.AddTimeParameter(id=creep_id, name=name, codeId=code_index, rh=time_parameter[0], bsc=time_parameter[1],
+                                 timeStart=time_parameter[2], flyashCotent=time_parameter[3])
+        elif code_index == 2:  # 公规 JTG D62-2004
+            if len(time_parameter) != 3:
+                raise OperationFailedException("操作错误,time_parameter数据无效!")
+            mdb.AddTimeParameter(id=creep_id, name=name, codeId=code_index, rh=time_parameter[0], bsc=time_parameter[1],
+                                 timeStart=time_parameter[2])
+        elif code_index == 3:  # 公规 JTJ 023-85
+            if len(time_parameter) != 4:
+                raise OperationFailedException("操作错误,time_parameter数据无效!")
+            mdb.AddTimeParameter(id=creep_id, name=name, codeId=code_index, creepBaseF1=time_parameter[0], creepNamda=time_parameter[1],
+                                 shrinkSpeek=time_parameter[2], shrinkEnd=time_parameter[3])
+        elif code_index == 4:  # 铁规 TB 10092-2017
+            if len(time_parameter) != 5:
+                raise OperationFailedException("操作错误,time_parameter数据无效!")
+            mdb.AddTimeParameter(id=creep_id, name=name, codeId=code_index, rh=time_parameter[0], creepBaseF1=time_parameter[1],
+                                 creepNamda=time_parameter[2], shrinkSpeek=time_parameter[3], shrinkEnd=time_parameter[4])
+        elif code_index == 5:  # 地铁 GB 50157-2013
+            if len(time_parameter) != 3:
+                raise OperationFailedException("操作错误,time_parameter数据无效!")
+            mdb.AddTimeParameter(id=creep_id, name=name, codeId=code_index, rh=time_parameter[0], shrinkSpeek=time_parameter[1],
+                                 shrinkEnd=time_parameter[2])
+        elif code_index == 6:  # 老化理论
+            if len(time_parameter) != 4:
+                raise OperationFailedException("操作错误,time_parameter数据无效!")
+            mdb.AddTimeParameter(id=creep_id, name=name, codeId=code_index, creepEnd=time_parameter[0], creepSpeek=time_parameter[1],
+                                 shrinkSpeek=time_parameter[2], shrinkEnd=time_parameter[3])
+
+    @staticmethod
+    def update_material_creep(material_id=1, creep_id=1, f_cuk=0):
+        mdb.UpdateMaterialCreep(materialId=material_id, timePatameterId=creep_id, fcuk=f_cuk)
+
+    @staticmethod
+    def remove_material(material_id=-1):
+        if material_id == -1:
+            mdb.RemoveAllMaterial()
+        else:
+            mdb.RemoveMaterial(id=material_id)
+
+    @staticmethod
+    def add_section(section_id=-1, name="", section_type=JX, sec_info=None,
+                    bias_type="中心", center_type="质心", shear_consider=True, bias_point=None):
+        if center_type == "自定义":
+            if len(bias_point) != 2:
+                raise OperationFailedException("操作错误,bias_point数据无效!")
+            mdb.AddSection(id=section_id, name=name, secType=section_type, secInfo=sec_info, biasType=bias_type, centerType=center_type,
+                           shearConsider=shear_consider, horizontalPos=bias_point[0], verticalPos=bias_point[1])
+        else:
+            mdb.AddSection(id=section_id, name=name, secType=section_type, secInfo=sec_info, biasType=bias_type, centerType=center_type,
+                           shearConsider=shear_consider)
+
+    @staticmethod
+    def add_single_box(section_id=-1, name="", n=1, h=4, section_info=None, charm_info=None, section_info2=None, charm_info2=None,
+                       bias_type="中心", center_type="质心", shear_consider=True, bias_point=None):
+        if center_type == "自定义":
+            if len(bias_point) != 2:
+                raise OperationFailedException("操作错误,bias_point数据无效!")
+            mdb.AddSingleBoxSection(id=section_id, name=name, N=n, H=h, secInfo=section_info, charmInfo=charm_info,
+                                    secInfoR=section_info2, charmInfoR=charm_info2, biasType=bias_type, centerType=center_type,
+                                    shearConsider=shear_consider)
+        else:
+            mdb.AddSingleBoxSection(id=section_id, name=name, N=n, H=h, secInfo=section_info, charmInfo=charm_info,
+                                    secInfoR=section_info2, charmInfoR=charm_info2, biasType=bias_type, centerType=center_type,
+                                    shearConsider=shear_consider, horizontalPos=bias_point[0], verticalPos=bias_point[1])
+
+    @staticmethod
+    def add_user_section(section_id=-1, name="", section_type="特性截面", property_info=None):
+        mdb.AddUserSection(id=section_id, name=name, type=section_type, propertyInfo=property_info)
+
+    @staticmethod
+    def add_tapper_section(section_id=-1, name="", begin_id=1, end_id=1, vary_info=None):
+        if vary_info is not None:
+            if len(vary_info) != 2:
+                raise OperationFailedException("操作错误,vary_info数据无效!")
+            mdb.AddTaperSection(id=section_id, name=name, beginId=begin_id, endId=end_id,
+                                varyParameterWidth=vary_info[0], varyParameterHeight=vary_info[1])
+        else:
+            mdb.AddTaperSection(id=section_id, name=name, beginId=begin_id, endId=end_id)
+
+    @staticmethod
+    def remove_section(section_id=-1):
+        if section_id == -1:
+            mdb.RemoveAllSection()
+        else:
+            mdb.RemoveSection(id=section_id)
+
+
+class OperationFailedException(Exception):
+    """用户操作失败时抛出的异常"""
+    pass
