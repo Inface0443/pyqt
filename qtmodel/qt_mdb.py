@@ -6,7 +6,7 @@ class Mdb:
     def __int__(self):
         self.initial_model()
 
-    # region
+    # region 组操作
     @staticmethod
     def initial_model():
         """
@@ -25,7 +25,6 @@ class Mdb:
         """
         qt_model.AddStructureGroup(name=name, id=index)
 
-    # endregion
     @staticmethod
     def remove_structure_group(name="", index=-1):
         """
@@ -148,6 +147,9 @@ class Mdb:
         else:
             qt_model.RemoveAllLoadGroup()
 
+    # endregion
+
+    # region 节点单元操作
     @staticmethod
     def add_node(x=1, y=1, z=1, index=-1):
         """
@@ -173,6 +175,20 @@ class Mdb:
         qt_model.AddNodes(dataList=node_list)
 
     @staticmethod
+    def remove_node(index=None):
+        """
+        删除指定节点
+        :param index:
+        :return:
+        """
+        if index is None:
+            qt_model.RemoveAllNodes()
+        elif type(index) == int:
+            qt_model.RemoveNode(id=index)
+        else:
+            qt_model.RemoveNodes(ids=index)
+
+    @staticmethod
     def add_element(index=1, ele_type=1, node_ids=None, beta_angle=0, mat_id=-1, sec_id=-1):
         """
         根据单元编号和单元类型添加单元
@@ -195,6 +211,21 @@ class Mdb:
                               materialId=mat_id,
                               sectionId=sec_id)
 
+    @staticmethod
+    def remove_element(index=None):
+        """
+        删除指定编号的单元
+        :param index: 单元编号,默认时删除所有单元
+        :return:
+        """
+        if index is None:
+            qt_model.RemoveAllElements()
+        else:
+            qt_model.RemoveElement(index=index)
+
+    # endregion
+
+    # region 材料操作
     @staticmethod
     def add_material(index=-1, name="", material_type="混凝土", standard_name="公路18规范", database="C50", construct_factor=1,
                      modified=False, modify_info=None):
@@ -282,6 +313,9 @@ class Mdb:
         else:
             qt_model.RemoveMaterial(id=index)
 
+    # endregion
+
+    # region 截面和板厚操作
     @staticmethod
     def add_section(index=-1, name="", section_type=JX, sec_info=None,
                     bias_type="中心", center_type="质心", shear_consider=True, bias_point=None):
@@ -480,6 +514,9 @@ class Mdb:
             qt_model.UpdateSectionBias(id=index, biasType=bias_type, centerType=center_type,
                                        shearConsider=shear_consider)
 
+    # endregion
+
+    # region 边界操作
     @staticmethod
     def add_general_support(index=-1, node_id=1, boundary_info=None, group_name="默认边界组", node_system=0):
         """
@@ -566,6 +603,9 @@ class Mdb:
         """
         qt_model.AddNodalAxises(id=index, input_type=input_type, nodeId=node_id, nodeInfo=node_info)
 
+    # endregion
+
+    # region 移动荷载
     @staticmethod
     def add_standard_vehicle(name="", standard_code=1, load_type="高速铁路", load_length=0, n=6):
         """
@@ -682,6 +722,9 @@ class Mdb:
         """
         qt_model.RemoveLiveLoadCase(name=name)
 
+    # endregion
+
+    # region 钢束操作
     @staticmethod
     def add_tendon_property(name="", index=-1, tendon_type=PRE, material_id=1, duct_type=1,
                             steel_type=1, steel_detail=None, loos_detail=None, slip_info=None):
@@ -800,6 +843,9 @@ class Mdb:
         """
         qt_model.RemovePreStress(caseName=case_name, tendonName=tendon_name, groupName=group_name)
 
+    # endregion
+
+    # region 荷载操作
     @staticmethod
     def add_nodal_force(case_name="", node_id=1, load_info=None, group_name="默认荷载组"):
         """
@@ -1003,6 +1049,9 @@ class Mdb:
         """
         qt_model.AddTopPlateTemperature(elementId=element_id, caseName=case_name, temperature=temperature, groupName=group_name)
 
+    # endregion
+
+    # region 沉降操作
     @staticmethod
     def add_sink_group(name="", sink=0.1, node_ids=None):
         """
@@ -1119,6 +1168,9 @@ class Mdb:
         print(1)
         raise Exception("错误")
 
+    # endregion
+
+    # region 施工阶段和荷载组合
     @staticmethod
     def add_construction_stage(name="", duration=0, active_structures=None, delete_structures=None, active_boundaries=None,
                                delete_boundaries=None, active_loads=None, delete_loads=None, temp_loads=None, index=-1):
@@ -1180,6 +1232,7 @@ class Mdb:
             qt_model.DeleteLoadCombine(name=name)
         else:
             qt_model.DeleteAllLoadCombine()
+    # endregion
 
 
 class OperationFailedException(Exception):
