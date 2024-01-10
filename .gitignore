@@ -2,3 +2,6 @@
 /setup.py
 /dist/
 /test.py
+/source/
+/Makefile
+/make.bat

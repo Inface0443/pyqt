@@ -6,7 +6,6 @@ class Mdb:
     def __int__(self):
         self.initial_model()
 
-    # region 组操作
     @staticmethod
     def initial_model():
         """
@@ -14,6 +13,8 @@ class Mdb:
         :return: None
         """
         qt_model.Initial()
+
+    # region 组操作
 
     @staticmethod
     def add_structure_group(name="", index=-1):
@@ -317,7 +318,7 @@ class Mdb:
 
     # region 截面和板厚操作
     @staticmethod
-    def add_section(index=-1, name="", section_type=JX, sec_info=None,
+    def add_section(index=-1, name="", section_type=SEC_JX, sec_info=None,
                     bias_type="中心", center_type="质心", shear_consider=True, bias_point=None):
         """
         添加截面信息
@@ -371,7 +372,7 @@ class Mdb:
                                          shearConsider=shear_consider)
 
     @staticmethod
-    def add_steel_section(index=-1, name="", section_type=GGL, section_info=None, rib_info=None, rib_place=None,
+    def add_steel_section(index=-1, name="", section_type=SEC_GGL, section_info=None, rib_info=None, rib_place=None,
                           bias_type="中心", center_type="质心", shear_consider=True, bias_point=None):
         """
         添加钢梁截面,包括参数型钢梁截面和自定义带肋钢梁截面
@@ -578,30 +579,29 @@ class Mdb:
                                 boundaryInfo=boundary_info, groupName=group_name, disRatio=dis_ratio, kDx=kx)
 
     @staticmethod
-    def add_beam_constraint(index=-1, name="", beam_id=2, node_info1=None, node_info2=None, group_name="默认边界组"):
+    def add_beam_constraint(index=-1, beam_id=2, info_i=None, info_j=None, group_name="默认边界组"):
         """
         添加梁端约束
-        :param index:
-        :param name:
-        :param beam_id:
-        :param node_info1:
-        :param node_info2:
-        :param group_name:
+        :param index:约束编号,默认自动识别
+        :param beam_id:梁号
+        :param info_i:i端约束信息 [IsFreedX,IsFreedY,IsFreedZ,IsFreedRX,IsFreedRY,IsFreedRZ]
+        :param info_j:j端约束信息 [IsFreedX,IsFreedY,IsFreedZ,IsFreedRX,IsFreedRY,IsFreedRZ]
+        :param group_name:边界组名
         :return:
         """
-        qt_model.AddBeamConstraint(id=index, name=name, beamId=beam_id, nodeInfoI=node_info1, nodeInfo2=node_info2, groupName=group_name)
+        qt_model.AddBeamConstraint(id=index, beamId=beam_id, nodeInfoI=info_i, nodeInfo2=info_j, groupName=group_name)
 
     @staticmethod
-    def add_node_axis(index=-1, input_type=1, node_id=1, node_info=None):
+    def add_node_axis(index=-1, input_type=1, node_id=1, coord_info=None):
         """
         添加节点坐标
-        :param index:
-        :param input_type:
-        :param node_id:
-        :param node_info:
+        :param index:默认自动识别
+        :param input_type:输入方式
+        :param node_id:节点号
+        :param coord_info:局部坐标信息 -List<float>(角)  -List<List<float>>(三点/向量)
         :return:
         """
-        qt_model.AddNodalAxises(id=index, input_type=input_type, nodeId=node_id, nodeInfo=node_info)
+        qt_model.AddNodalAxises(id=index, input_type=input_type, nodeId=node_id, nodeInfo=coord_info)
 
     # endregion
 
@@ -746,7 +746,7 @@ class Mdb:
                                    loosDetail=loos_detail, slipInfo=slip_info)
 
     @staticmethod
-    def add_tendon_3d(name="", property_name="", group_name="默认钢束组", num=1, line_type=1, position_type=1,
+    def add_tendon_3d(name="", property_name="", group_name="默认钢束组", num=1, line_type=1, position_type=STRAIGHT,
                       control_info=None, point_insert=None, tendon_direction=None,
                       rotation_angle=0, track_group="默认结构组"):
         """
@@ -803,8 +803,8 @@ class Mdb:
     def add_nodal_mass(node_id=1, mass_info=None):
         """
         添加节点质量
-        :param node_id:
-        :param mass_info:
+        :param node_id:节点编号
+        :param mass_info:[m,rmX,rmY,rmZ]
         :return:
         """
         qt_model.AddNodalMass(nodeId=node_id, massInfo=mass_info)
@@ -850,10 +850,10 @@ class Mdb:
     def add_nodal_force(case_name="", node_id=1, load_info=None, group_name="默认荷载组"):
         """
         添加节点荷载
-        :param case_name:
-        :param node_id:
-        :param load_info:
-        :param group_name:
+        :param case_name:荷载工况名
+        :param node_id:节点编号
+        :param load_info:[Fx,Fy,Fz,Mx,My,Mz]
+        :param group_name:荷载组名
         :return:
         """
         qt_model.AddNodalForce(caseName=case_name, nodeId=node_id, loadInfo=load_info, groupName=group_name)
@@ -862,8 +862,8 @@ class Mdb:
     def remove_nodal_force(case_name="", node_id=-1):
         """
         删除节点荷载
-        :param case_name:
-        :param node_id:
+        :param case_name:荷载工况名
+        :param node_id:节点编号
         :return:
         """
         qt_model.RemoveNodalForce(caseName=case_name, nodeId=node_id)
@@ -872,10 +872,10 @@ class Mdb:
     def add_node_displacement(case_name="", node_id=1, load_info=None, group_name="默认荷载组"):
         """
         添加节点位移
-        :param case_name:
-        :param node_id:
-        :param load_info:
-        :param group_name:
+        :param case_name:荷载工况名
+        :param node_id:节点编号
+        :param load_info:[Dx,Dy,Dz,Rx,Ry,Rz]
+        :param group_name:荷载组名
         :return:
         """
         qt_model.AddNodeDisplacement(caseName=case_name, nodeId=node_id, loadInfo=load_info, groupName=group_name)
@@ -884,8 +884,8 @@ class Mdb:
     def remove_nodal_displacement(case_name="", node_id=-1):
         """
         删除节点位移
-        :param case_name:
-        :param node_id:
+        :param case_name:荷载工况名
+        :param node_id:节点编号
         :return:
         """
         qt_model.RemoveNodalDisplacement(caseName=case_name, nodeId=-node_id)
@@ -894,10 +894,10 @@ class Mdb:
     def add_beam_load(case_name="", beam_id=1, load_type=1, coordinate_system=3, load_info=None, group_name="默认荷载组"):
         """
         添加梁单元荷载
-        :param case_name:
-        :param beam_id:
-        :param load_type:
-        :param coordinate_system:
+        :param case_name:荷载工况名
+        :param beam_id:单元编号
+        :param load_type:荷载类型
+        :param coordinate_system:坐标系
         :param load_info:
         :param group_name:
         :return:
