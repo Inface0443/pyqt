@@ -1,4 +1,4 @@
 from .qt_mdb import *
-from .model_keyword import *
+from .qt_keyword import *
 
 mdb = Mdb

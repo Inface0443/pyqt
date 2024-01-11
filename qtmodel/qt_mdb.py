@@ -1,5 +1,5 @@
 from __main__ import qt_model
-from .model_keyword import *
+from .qt_keyword import *
 
 
 class Mdb:

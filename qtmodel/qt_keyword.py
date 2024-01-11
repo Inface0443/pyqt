@@ -45,3 +45,11 @@ SEC_GXZ = "钢箱组合梁"
 # 钢束特性
 PRE = 0  # 先张
 POST = 1  # 后张
+# 施工阶段数据的类型
+RES_MAIN = 1    # 合计
+RES_CREEP = 2   # 收缩徐变效应
+RES_PRE = 3     # 预应力效应
+RES_DLOAD = 4   # 恒载
+# 增量和全量
+TOTAL = 1
+INCREMENT = 2
