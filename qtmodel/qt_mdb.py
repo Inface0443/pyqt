@@ -56,6 +56,7 @@ class Mdb:
              name: 结构组名
              node_ids: 节点编号列表(非必选参数)
              element_ids: 单元编号列表(非必选参数)
+
         Returns:
             无
         """
@@ -69,6 +70,7 @@ class Mdb:
              name: 结构组名
              node_ids: 节点编号列表(非必选参数)
              element_ids: 单元编号列表(非必选参数)
+
         Returns:
             无
         """
@@ -81,6 +83,7 @@ class Mdb:
         Args:
              name:边界组名
              index:边界组编号，默认自动识别当前编号 (非必选参数)
+
         Returns:
             无
         """
@@ -92,6 +95,7 @@ class Mdb:
         按照名称删除边界组
         Args:
             name: 边界组名称，默认删除所有边界组 (非必须参数)
+
         Returns:
             无
         """
@@ -108,6 +112,7 @@ class Mdb:
             group_name: 边界组名
             boundary_type: 边界类型
             index: 边界编号
+
         Returns:
             无
         """
@@ -120,7 +125,8 @@ class Mdb:
         按照名称添加钢束组，添加时可指定钢束组id
         Args:   
             name: 钢束组名称
-            index: 钢束组编号(非必须参数)，默认自动识别(即max_id+1)
+            index: 钢束组编号(非必须参数)，默认自动识别
+
         Returns:
             无
         """
@@ -133,6 +139,7 @@ class Mdb:
         Args:
              name:钢束组名称,默认自动识别 (可选参数)
              index:钢束组编号,默认自动识别 (可选参数)
+
         Returns:
             无
         """
@@ -150,6 +157,7 @@ class Mdb:
         Args:
              name: 荷载组名称
              index: 荷载组编号，默认自动识别 (可选参数)
+
         Returns:
             无
         """
@@ -163,6 +171,7 @@ class Mdb:
         Args:
              name: 荷载组名称
              index: 荷载组编号
+
         Returns:
             无
         """
@@ -185,6 +194,7 @@ class Mdb:
              y: 节点坐标y
              z: 节点坐标z
              index: 节点编号，默认自动识别编号 (可选参数)
+
         Returns:
             无
         """
@@ -199,6 +209,7 @@ class Mdb:
         添加多个节点，可以选择指定节点编号
         Args:
              node_list:节点坐标信息 [[x1,y1,z1],...]或 [[id1,x1,y1,z1]...]
+
         Returns:
             无
         """
@@ -210,6 +221,7 @@ class Mdb:
         删除指定节点
         Args:
             index:
+
         Returns:
             无
         """
@@ -231,6 +243,7 @@ class Mdb:
             beta_angle:贝塔角
             mat_id:材料编号
             sec_id:截面编号
+
         Returns:
             无
         """
@@ -251,6 +264,7 @@ class Mdb:
         删除指定编号的单元
         Args:
             index: 单元编号,默认时删除所有单元
+
         Returns:
             无
         """
@@ -276,6 +290,7 @@ class Mdb:
             construct_factor:构造系数
             modified:是否修改默认材料参数,默认不修改 (可选参数)
             modify_info:材料参数列表[弹性模量,容重,泊松比,热膨胀系数] (可选参数)
+
         Returns:
             无
         """
@@ -383,6 +398,7 @@ class Mdb:
              center_type:
              shear_consider:
              bias_point:
+
         Returns:
             无
         """
@@ -413,6 +429,7 @@ class Mdb:
              center_type:
              shear_consider:
              bias_point:
+
         Returns:
             无
         """
@@ -443,6 +460,7 @@ class Mdb:
              center_type:
              shear_consider:
              bias_point:
+
         Returns:
             无
         """
@@ -466,6 +484,7 @@ class Mdb:
              name:
              section_type:
              property_info:
+
         Returns:
             无
         """
@@ -481,6 +500,7 @@ class Mdb:
              begin_id:
              end_id:
              vary_info:
+
         Returns:
             无
         """
@@ -498,6 +518,7 @@ class Mdb:
         删除截面信息
         Args:
              index: 截面编号,参数为默认时删除全部截面
+
         Returns:
             无
         """
@@ -522,6 +543,7 @@ class Mdb:
              dist_l:横向截面肋板间距
              rib_v:纵向肋板信息
              rib_l:横向肋板信息
+
         Returns:
             无
         """
@@ -539,6 +561,7 @@ class Mdb:
         删除板厚
         Args:
              index:板厚编号,默认时删除所有板厚信息
+
         Returns:
             无
         """
@@ -560,6 +583,7 @@ class Mdb:
              ref_h: 高度方向参考点 0-i 1-j
              dis_w: 宽度方向间距
              dis_h: 高度方向间距
+
         Returns:
             无
         """
@@ -575,6 +599,7 @@ class Mdb:
              center_type:
              shear_consider:
              bias_point:
+
         Returns:
             无
         """
@@ -600,6 +625,7 @@ class Mdb:
              boundary_info:
              group_name:
              node_system:
+
         Returns:
             无
         """
@@ -616,6 +642,7 @@ class Mdb:
              boundary_info:
              group_name:
              node_system:
+
         Returns:
             无
         """
@@ -632,6 +659,7 @@ class Mdb:
              slave_id:
              boundary_info:
              group_name:
+
         Returns:
             无
         """
@@ -652,6 +680,7 @@ class Mdb:
              group_name:
              dis_ratio:
              kx:
+
         Returns:
             无
         """
@@ -668,6 +697,7 @@ class Mdb:
              info_i:i端约束信息 [IsFreedX,IsFreedY,IsFreedZ,IsFreedRX,IsFreedRY,IsFreedRZ]
              info_j:j端约束信息 [IsFreedX,IsFreedY,IsFreedZ,IsFreedRX,IsFreedRY,IsFreedRZ]
              group_name:边界组名
+
         Returns:
             无
         """
@@ -682,6 +712,7 @@ class Mdb:
              input_type:输入方式
              node_id:节点号
              coord_info:局部坐标信息 -List<float>(角)  -List<List<float>>(三点/向量)
+
         Returns:
             无
         """
@@ -700,6 +731,7 @@ class Mdb:
              load_type:
              load_length:
              n:
+
         Returns:
             无
         """
@@ -713,6 +745,7 @@ class Mdb:
              name:
              start_id:
              node_ids:
+
         Returns:
             无
         """
@@ -725,6 +758,7 @@ class Mdb:
         Args:
              name:
              tandem_names:
+
         Returns:
             无
         """
@@ -740,6 +774,7 @@ class Mdb:
              tandem_name:
              offset:
              direction:
+
         Returns:
             无
         """
@@ -754,6 +789,7 @@ class Mdb:
              influence_plane:
              span:
              sub_case:
+
         Returns:
             无
         """
@@ -765,6 +801,7 @@ class Mdb:
         删除车辆信息
         Args:
              index:
+
         Returns:
             无
         """
@@ -777,6 +814,7 @@ class Mdb:
         Args:
              index:
              name:
+
         Returns:
             无
         """
@@ -792,6 +830,7 @@ class Mdb:
         Args:
              index:
              name:
+
         Returns:
             无
         """
@@ -807,6 +846,7 @@ class Mdb:
         Args:
              name:
              index:
+
         Returns:
             无
         """
@@ -821,6 +861,7 @@ class Mdb:
         删除移动荷载工况
         Args:
              name:
+
         Returns:
             无
         """
@@ -844,6 +885,7 @@ class Mdb:
              steel_detail: 钢绞线[钢束面积,孔道直径,摩阻系数,偏差系数]  螺纹钢筋[钢筋直径,钢束面积,孔道直径,摩阻系数,偏差系数,张拉方式(1-一次张拉\2-超张拉)]
              loos_detail: 松弛信息[规范(1-公规 2-铁规),张拉(1-一次张拉 2-超张拉),松弛(1-一般松弛 2-低松弛)] (仅钢绞线需要)
              slip_info: 滑移信息[始端距离,末端距离]
+
         Returns:
             无
         """
@@ -869,6 +911,7 @@ class Mdb:
              tendon_direction:直线钢束方向向量 x轴-[1,0,0] y轴-[0,1,0] (轨迹线时不用赋值)
              rotation_angle:绕钢束旋转角度
              track_group:轨迹线结构组名  (直线时不用赋值)
+
         Returns:
             无
         """
@@ -884,6 +927,7 @@ class Mdb:
         Args:
              name:
              index:
+
         Returns:
             无
         """
@@ -901,6 +945,7 @@ class Mdb:
         Args:
              name:
              index:
+
         Returns:
             无
         """
@@ -918,6 +963,7 @@ class Mdb:
         Args:
              node_id:节点编号
              mass_info:[m,rmX,rmY,rmZ]
+
         Returns:
             无
         """
@@ -929,6 +975,7 @@ class Mdb:
         删除节点质量
         Args:
              node_id:
+
         Returns:
             无
         """
@@ -945,6 +992,7 @@ class Mdb:
              pre_type:
              force:
              group_name:
+
         Returns:
             无
         """
@@ -958,6 +1006,7 @@ class Mdb:
              case_name:
              tendon_name:
              group_name:
+
         Returns:
             无
         """
@@ -974,6 +1023,7 @@ class Mdb:
              node_id:节点编号
              load_info:[Fx,Fy,Fz,Mx,My,Mz]
              group_name:荷载组名
+
         Returns:
             无
         """
@@ -986,6 +1036,7 @@ class Mdb:
         Args:
              case_name:荷载工况名
              node_id:节点编号
+
         Returns:
             无
         """
@@ -1000,6 +1051,7 @@ class Mdb:
              node_id:节点编号
              load_info:[Dx,Dy,Dz,Rx,Ry,Rz]
              group_name:荷载组名
+
         Returns:
             无
         """
@@ -1012,6 +1064,7 @@ class Mdb:
         Args:
              case_name:荷载工况名
              node_id:节点编号
+
         Returns:
             无
         """
@@ -1028,6 +1081,7 @@ class Mdb:
              coordinate_system:坐标系
              load_info:
              group_name:
+
         Returns:
             无
         """
@@ -1043,6 +1097,7 @@ class Mdb:
              element_id:
              load_type:
              group_name:
+
         Returns:
             无
         """
@@ -1058,6 +1113,7 @@ class Mdb:
              group_name:
              tension:
              tension_type:
+
         Returns:
             无
         """
@@ -1073,6 +1129,7 @@ class Mdb:
              group_name:
              length:
              tension_type:
+
         Returns:
             无
         """
@@ -1090,6 +1147,7 @@ class Mdb:
              coord_system:
              group_name:
              load_info:
+
         Returns:
             无
         """
@@ -1104,6 +1162,7 @@ class Mdb:
              name:
              element_type:
              parameter_info:
+
         Returns:
             无
         """
@@ -1118,6 +1177,7 @@ class Mdb:
              case_name:
              parameter_name:
              group_name:
+
         Returns:
             无
         """
@@ -1132,6 +1192,7 @@ class Mdb:
              case_name:
              temperature:
              group_name:
+
         Returns:
             无
         """
@@ -1147,6 +1208,7 @@ class Mdb:
              section_oriental:
              element_type:
              group_name:
+
         Returns:
             无
         """
@@ -1164,6 +1226,7 @@ class Mdb:
              temperature_type:
              paving_type:
              group_name:
+
         Returns:
             无
         """
@@ -1180,6 +1243,7 @@ class Mdb:
              temperature:
              index:
              group_name:
+
         Returns:
             无
         """
@@ -1194,6 +1258,7 @@ class Mdb:
              case_name:
              temperature:
              group_name:
+
         Returns:
             无
         """
@@ -1210,6 +1275,7 @@ class Mdb:
              name: 沉降组名
              sink: 沉降值
              node_ids: 节点编号
+
         Returns:
             无
         """
@@ -1221,6 +1287,7 @@ class Mdb:
         按照名称删除沉降组
         Args:
              name:沉降组名,默认删除所有沉降组
+
         Returns:
             无
         """
@@ -1239,6 +1306,7 @@ class Mdb:
              n_max:
              n_min:
              factor:
+
         Returns:
             无
         """
@@ -1250,6 +1318,7 @@ class Mdb:
         按照名称删除沉降工况,不输入名称时默认删除所有沉降工况
         Args:
              name:
+
         Returns:
             无
         """
@@ -1264,6 +1333,7 @@ class Mdb:
         添加并发反力组
         Args:
              names: 结构组名称集合
+
         Returns:
             无
         """
