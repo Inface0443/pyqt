@@ -1,12 +1,12 @@
 ﻿# qt_model 此命名变量为桥通内置,请勿重复赋值
-# 坐标系  -coordinate_system
+# 坐标系  coordinate_system
 GLB_X = 1  # 整体坐标X
 GLB_Y = 2  # 整体坐标Y
 GLB_Z = 3  # 整体坐标Z
 LOC_X = 4  # 局部坐标X
 LOC_Y = 5  # 局部坐标Y
 LOC_Z = 6  # 局部坐标Z
-# 钢束定位方式 -position_type
+# 钢束定位方式 position_type
 TYP_STRAIGHT = 1  # 直线
 TYP_TRACK = 2  # 轨迹线
 # 荷载工况类型
@@ -23,7 +23,7 @@ LD_SC = "船舶撞击荷载"  # ShipCollision
 LD_VC = "汽车撞击荷载"  # VehicleCollision
 LD_RB = "长轨断轨力荷载"  # RailBreakingForce
 LD_UD = "用户定义荷载"  # UserDefine
-# 截面类型 -section_type
+# 截面类型 section_type
 SEC_JX = "矩形"  # [W,H]
 SEC_YX = "圆形"  # [D]
 SEC_YG = "圆管"  # [D,t]
@@ -38,9 +38,10 @@ SEC_DTX = "倒T形"  # [H,W,tw,tb]
 SEC_IX = "I字形"  # [Wt,Wb,H,tw,tt,tb]
 SEC_MTX = "马蹄T形"  # [H,tb,b2,b1,tt,tw,W,a2,a1]
 SEC_IXH = "I字型混凝土"  # [tb,Wb,H,b2,b1,tt,Wt,tw,a2,a1]
-SEC_GT = "钢管砼"  # [D,t,Es/Ec,Ds/Dc,Ts/Tc,poissonConcrete,poissonSteel]
+SEC_GT = "钢管砼"  # [D,t,Es/Ec,Ds/Dc,Ts/Tc,vC,νS]
 SEC_XT = "钢箱砼"  # [W,H,dw,tw,tt,tb,Es/Ec,Ds/Dc,Ts/Tc,vC,νS]
-SEC_DLG = "带肋钢箱"
+SEC_HXL = "混凝土箱梁"  # 参数列表(float)-[i1,i2,B0,B1,B1a,B1b,B2,B3,B4,H1,H2,H2a,H2b,T1,T2,T3,T4,R1,R2] 倒角列表(str)-[C1,C2,C3,C4]
+SEC_DLG = "带肋钢箱"  # ui need change
 SEC_DLH = "带肋H截面"
 SEC_GHX1 = "钢桁箱梁1"
 SEC_GHX2 = "钢桁箱梁2"
@@ -50,8 +51,6 @@ SEC_GGL = "工字钢梁"
 SEC_XGL = "箱型钢梁"
 SEC_GZZ = "工字组合梁"
 SEC_GXZ = "钢箱组合梁"
-
-SEC_HXL = "混凝土箱梁"  # 参数列表(float)-[i1,i2,B0,B1,B1a,B1b,B2,B3,B4,H1,H2,H2a,H2b,T1,T2,T3,T4,R1,R2] 倒角列表(str)-[C1,C2,C3,C4]
 
 # 钢束特性
 MET_PRE = 0  # 先张
