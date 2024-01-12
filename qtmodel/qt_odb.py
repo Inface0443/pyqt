@@ -1,6 +1,6 @@
 from __main__ import qt_model
 from .qt_keyword import *
-from qtcore import BeamForce
+from qtcore import *
 
 
 class Odb:
@@ -17,5 +17,7 @@ class Odb:
         Returns:
 
         """
-        beam_force_net = qt_model.GetBeamForce(beam_id, stage_id, result_kind, increment_type)
-        return BeamForce(beam_id,)
+        bf_net = qt_model.GetBeamForce(beam_id, stage_id, result_kind, increment_type)
+        force_i = [bf_net.INodeForce.fx, bf_net.INodeForce.fy, bf_net.INodeForce.fz, bf_net.INodeForce.mx, bf_net.INodeForce.my, bf_net.INodeForce.mz]
+        force_j = [bf_net.JNodeForce.fx, bf_net.JNodeForce.fy, bf_net.JNodeForce.fz, bf_net.JNodeForce.mx, bf_net.JNodeForce.my, bf_net.JNodeForce.mz]
+        return BeamForce(beam_id, force_i, force_j)

@@ -4,10 +4,10 @@ from .qt_keyword import *
 
 class Mdb:
     def __int__(self):
-        self.initial_model()
+        self.initial()
 
     @staticmethod
-    def initial_model():
+    def initial():
         """
         初始化模型
         Returns:
@@ -33,10 +33,10 @@ class Mdb:
     @staticmethod
     def remove_structure_group(name="", index=-1):
         """
-        可根据结构与组名或结构组编号删除结构组，如组名和组编号均为默认则删除所有结构组
+        可根据结构与组名或结构组编号删除结构组，当组名和组编号均为默认则删除所有结构组
         Args:
-            name:
-            index:
+            name:结构组名称
+            index:结构组编号
 
         Returns:
             无
@@ -49,7 +49,7 @@ class Mdb:
             qt_model.RemoveAllStructureGroup()
 
     @staticmethod
-    def add_group_structure(name="", node_ids=None, element_ids=None):
+    def add_structure_to_group(name="", node_ids=None, element_ids=None):
         """
         为结构组添加节点和/或单元
         Args:
@@ -63,7 +63,7 @@ class Mdb:
         qt_model.AddStructureToGroup(name=name, nodeIds=node_ids, elementIds=element_ids)
 
     @staticmethod
-    def remove_group_structure(name="", node_ids=None, element_ids=None):
+    def remove_structure_in_group(name="", node_ids=None, element_ids=None):
         """
         为结构组删除节点和/或单元
         Args:
@@ -220,7 +220,7 @@ class Mdb:
         """
         删除指定节点
         Args:
-            index:
+            index:节点编号
 
         Returns:
             无
@@ -371,7 +371,7 @@ class Mdb:
         """
         删除指定材料
         Args:
-            index:
+            index:材料编号，默认删除所有材料
 
         Returns:
             无
@@ -385,19 +385,19 @@ class Mdb:
 
     # region 截面和板厚操作
     @staticmethod
-    def add_section(index=-1, name="", section_type=SEC_JX, sec_info=None,
+    def add_section(index=-1, name="", section_type="矩形", sec_info=None,
                     bias_type="中心", center_type="质心", shear_consider=True, bias_point=None):
         """
         添加截面信息
         Args:
              index: 截面编号,默认自动识别
-             name:
-             section_type:
-             sec_info:
-             bias_type:
-             center_type:
-             shear_consider:
-             bias_point:
+             name:截面名称
+             section_type:截面类型
+             sec_info:截面信息
+             bias_type:偏心类型
+             center_type:中心类型
+             shear_consider:考虑剪切
+             bias_point:自定义偏心点(仅自定义类型偏心需要)
 
         Returns:
             无
@@ -417,18 +417,18 @@ class Mdb:
         """
         添加单项多室混凝土截面
         Args:
-             index:
-             name:
-             n:
-             h:
-             section_info:
-             charm_info:
-             section_info2:
-             charm_info2:
-             bias_type:
-             center_type:
-             shear_consider:
-             bias_point:
+             index:截面编号，默认自动识别
+             name:截面名称
+             n:箱室数量
+             h:截面高度
+             section_info:截面信息
+             charm_info:截面倒角
+             section_info2:右半室截面信息
+             charm_info2:右半室截面倒角
+             bias_type:偏心类型
+             center_type:中心类型
+             shear_consider:考虑剪切
+             bias_point:自定义偏心点(仅自定义类型偏心需要)
 
         Returns:
             无
@@ -452,14 +452,14 @@ class Mdb:
         Args:
              index:
              name:
-             section_type:
-             section_info:
-             rib_info:
-             rib_place:
-             bias_type:
-             center_type:
-             shear_consider:
-             bias_point:
+             section_type:截面类型
+             section_info:截面信息
+             rib_info:肋板信息
+             rib_place:肋板位置
+             bias_type:偏心类型
+             center_type:中心类型
+             shear_consider:考虑剪切
+             bias_point:自定义偏心点(仅自定义类型偏心需要)
 
         Returns:
             无
@@ -480,9 +480,9 @@ class Mdb:
         """
         添加自定义截面,目前仅支持特性截面
         Args:
-             index:
-             name:
-             section_type:
+             index:截面编号
+             name:截面名称
+             section_type:截面类型
              property_info:
 
         Returns:
@@ -495,11 +495,11 @@ class Mdb:
         """
         添加变截面,需先建立单一截面
         Args:
-             index:
-             name:
-             begin_id:
-             end_id:
-             vary_info:
+             index:截面编号
+             name:截面名称
+             begin_id:截面始端编号
+             end_id:截面末端编号
+             vary_info:截面变化信息
 
         Returns:
             无
@@ -594,11 +594,11 @@ class Mdb:
         """
         更新截面偏心
         Args:
-             index:
-             bias_type:
-             center_type:
-             shear_consider:
-             bias_point:
+             index:截面编号
+             bias_type:偏心类型
+             center_type:中心类型
+             shear_consider:考虑剪切
+             bias_point:自定义偏心点(仅自定义类型偏心需要)
 
         Returns:
             无
@@ -616,49 +616,47 @@ class Mdb:
 
     # region 边界操作
     @staticmethod
-    def add_general_support(index=-1, node_id=1, boundary_info=None, group_name="默认边界组", node_system=0):
+    def add_general_support(index=-1, node_id=1, boundary_info=None, group_name="默认边界组"):
         """
         添加一般支承
         Args:
-             index:
-             node_id:
-             boundary_info:
-             group_name:
-             node_system:
+             index:边界编号
+             node_id:节点编号
+             boundary_info:边界信息
+             group_name:边界组名
 
         Returns:
             无
         """
-        qt_model.AddGeneralSupport(id=index, nodeId=node_id, boundaryInfo=boundary_info, groupName=group_name, nodeSystem=node_system)
+        qt_model.AddGeneralSupport(id=index, nodeId=node_id, boundaryInfo=boundary_info, groupName=group_name)
 
     @staticmethod
-    def add_elastic_support(index=-1, node_id=1, support_type=1, boundary_info=None, group_name="默认边界组", node_system=0):
+    def add_elastic_support(index=-1, node_id=1, support_type=1, boundary_info=None, group_name="默认边界组"):
         """
         添加弹性支承
         Args:
-             index:
-             node_id:
-             support_type:
-             boundary_info:
-             group_name:
-             node_system:
+             index:编号
+             node_id:节点编号
+             support_type:支承类型
+             boundary_info:边界信息
+             group_name:边界组
 
         Returns:
             无
         """
         qt_model.AddElasticSupport(id=index, nodeId=node_id, supportType=support_type, boundaryInfo=boundary_info,
-                                   groupName=group_name, nodeSystem=node_system)
+                                   groupName=group_name)
 
     @staticmethod
     def add_master_slave_link(index=-1, master_id=1, slave_id=2, boundary_info=None, group_name="默认边界组"):
         """
         添加主从约束
         Args:
-             index:
-             master_id:
-             slave_id:
-             boundary_info:
-             group_name:
+             index:编号
+             master_id:主节点号
+             slave_id:从节点号
+             boundary_info:边界信息
+             group_name:边界组名
 
         Returns:
             无
@@ -671,15 +669,15 @@ class Mdb:
         """
         添加弹性连接
         Args:
-             index:
-             link_type:
-             start_id:
-             end_id:
-             beta_angle:
-             boundary_info:
-             group_name:
-             dis_ratio:
-             kx:
+             index:节点编号
+             link_type:节点类型
+             start_id:起始节点号
+             end_id:终节点号
+             beta_angle:贝塔角
+             boundary_info:边界信息
+             group_name:边界组名
+             dis_ratio:距离比
+             kx:刚度
 
         Returns:
             无
@@ -726,11 +724,11 @@ class Mdb:
         """
         添加标准车辆
         Args:
-             name:
-             standard_code:
-             load_type:
-             load_length:
-             n:
+             name:车辆荷载名称
+             standard_code:荷载规范
+             load_type:荷载类型
+             load_length:荷载长度
+             n:车厢数
 
         Returns:
             无
@@ -742,9 +740,9 @@ class Mdb:
         """
         添加节点纵列
         Args:
-             name:
-             start_id:
-             node_ids:
+             name:节点纵列名
+             start_id:起始节点号
+             node_ids:节点列表
 
         Returns:
             无
@@ -756,8 +754,8 @@ class Mdb:
         """
         添加影响面
         Args:
-             name:
-             tandem_names:
+             name:影响面名称
+             tandem_names:节点纵列名称组
 
         Returns:
             无
@@ -769,11 +767,11 @@ class Mdb:
         """
         添加车道线
         Args:
-             name:
-             influence_name:
-             tandem_name:
-             offset:
-             direction:
+             name:车道线名称
+             influence_name:影响面名称
+             tandem_name:节点纵列名
+             offset:偏移
+             direction:方向
 
         Returns:
             无
@@ -785,10 +783,10 @@ class Mdb:
         """
         添加移动荷载工况
         Args:
-             name:
-             influence_plane:
-             span:
-             sub_case:
+             name:荷载工况名
+             influence_plane:影响线名
+             span:跨度
+             sub_case:子工况信息
 
         Returns:
             无
@@ -800,7 +798,7 @@ class Mdb:
         """
         删除车辆信息
         Args:
-             index:
+             index:车辆荷载编号
 
         Returns:
             无
@@ -810,10 +808,10 @@ class Mdb:
     @staticmethod
     def remove_node_tandem(index=-1, name=""):
         """
-        删除节点纵列
+        按照 节点纵列编号/节点纵列名 删除节点纵列
         Args:
-             index:
-             name:
+             index:节点纵列编号
+             name:节点纵列名
 
         Returns:
             无
@@ -826,10 +824,10 @@ class Mdb:
     @staticmethod
     def remove_influence_plane(index=-1, name=""):
         """
-        删除影响线
+        按照 影响面编号/影响面名称 删除影响面
         Args:
-             index:
-             name:
+             index:影响面编号
+             name:影响面名称
 
         Returns:
             无
@@ -842,10 +840,10 @@ class Mdb:
     @staticmethod
     def remove_lane_line(name="", index=-1):
         """
-        删除车道线
+        按照 车道线编号/车道线名称 删除车道线
         Args:
-             name:
-             index:
+             name:车道线名称
+             index:车道线编号
 
         Returns:
             无
@@ -860,7 +858,7 @@ class Mdb:
         """
         删除移动荷载工况
         Args:
-             name:
+             name:移动荷载工况名
 
         Returns:
             无
@@ -871,7 +869,7 @@ class Mdb:
 
     # region 钢束操作
     @staticmethod
-    def add_tendon_property(name="", index=-1, tendon_type=PRE, material_id=1, duct_type=1,
+    def add_tendon_property(name="", index=-1, tendon_type=MET_PRE, material_id=1, duct_type=1,
                             steel_type=1, steel_detail=None, loos_detail=None, slip_info=None):
         """
         添加钢束特性
@@ -894,7 +892,7 @@ class Mdb:
                                    loosDetail=loos_detail, slipInfo=slip_info)
 
     @staticmethod
-    def add_tendon_3d(name="", property_name="", group_name="默认钢束组", num=1, line_type=1, position_type=STRAIGHT,
+    def add_tendon_3d(name="", property_name="", group_name="默认钢束组", num=1, line_type=1, position_type=TYP_STRAIGHT,
                       control_info=None, point_insert=None, tendon_direction=None,
                       rotation_angle=0, track_group="默认结构组"):
         """
@@ -925,8 +923,8 @@ class Mdb:
         """
         按照名称或编号删除钢束,默认时删除所有钢束
         Args:
-             name:
-             index:
+             name:钢束名称
+             index:钢束编号
 
         Returns:
             无
@@ -943,8 +941,8 @@ class Mdb:
         """
         按照名称或编号删除钢束组,默认时删除所有钢束组
         Args:
-             name:
-             index:
+             name:钢束组名称
+             index:钢束组编号
 
         Returns:
             无
@@ -974,7 +972,7 @@ class Mdb:
         """
         删除节点质量
         Args:
-             node_id:
+             node_id:节点号
 
         Returns:
             无
@@ -986,12 +984,12 @@ class Mdb:
         """
         添加预应力
         Args:
-             index:
-             case_name:
-             tendon_name:
-             pre_type:
-             force:
-             group_name:
+             index:编号
+             case_name:荷载工况名
+             tendon_name:钢束名
+             pre_type:预应力类型
+             force:预应力
+             group_name:边界组
 
         Returns:
             无
@@ -1003,9 +1001,9 @@ class Mdb:
         """
         删除预应力
         Args:
-             case_name:
-             tendon_name:
-             group_name:
+             case_name:荷载工况
+             tendon_name:钢束组
+             group_name:边界组名
 
         Returns:
             无
@@ -1079,8 +1077,8 @@ class Mdb:
              beam_id:单元编号
              load_type:荷载类型
              coordinate_system:坐标系
-             load_info:
-             group_name:
+             load_info:荷载信息
+             group_name:荷载组名
 
         Returns:
             无
@@ -1093,10 +1091,10 @@ class Mdb:
         """
         删除梁单元荷载
         Args:
-             case_name:
-             element_id:
-             load_type:
-             group_name:
+             case_name:荷载工况名
+             element_id:单元号
+             load_type:荷载类型
+             group_name:边界组名
 
         Returns:
             无
@@ -1108,11 +1106,11 @@ class Mdb:
         """
         添加初始拉力
         Args:
-             element_id:
-             case_name:
-             group_name:
-             tension:
-             tension_type:
+             element_id:单元编号
+             case_name:荷载工况名
+             group_name:荷载组名
+             tension:初始拉力
+             tension_type:张拉类型
 
         Returns:
             无
@@ -1124,11 +1122,11 @@ class Mdb:
         """
         添加索长张拉
         Args:
-             element_id:
-             case_name:
-             group_name:
-             length:
-             tension_type:
+             element_id:单元类型
+             case_name:荷载工况名
+             group_name:荷载组名
+             length:长度
+             tension_type:张拉类型
 
         Returns:
             无
@@ -1140,13 +1138,13 @@ class Mdb:
         """
         添加版单元荷载
         Args:
-             element_id:
-             case_name:
-             load_type:
-             load_place:
-             coord_system:
-             group_name:
-             load_info:
+             element_id:单元id
+             case_name:荷载工况名
+             load_type:荷载类型
+             load_place:荷载位置
+             coord_system:坐标系
+             group_name:荷载组名
+             load_info:荷载信息
 
         Returns:
             无
@@ -1159,9 +1157,9 @@ class Mdb:
         """
         添加制造误差
         Args:
-             name:
-             element_type:
-             parameter_info:
+             name:名称
+             element_type:单元类型
+             parameter_info:参数列表
 
         Returns:
             无
@@ -1173,10 +1171,10 @@ class Mdb:
         """
         添加制造误差荷载
         Args:
-             element_id:
-             case_name:
-             parameter_name:
-             group_name:
+             element_id:单元编号
+             case_name:荷载工况名
+             parameter_name:参数名
+             group_name:荷载组名
 
         Returns:
             无
@@ -1188,10 +1186,10 @@ class Mdb:
         """
         添加单元温度
         Args:
-             element_id:
-             case_name:
-             temperature:
-             group_name:
+             element_id:单元编号
+             case_name:荷载工况名
+             temperature:温度
+             group_name:荷载组名
 
         Returns:
             无
@@ -1202,12 +1200,12 @@ class Mdb:
     def add_gradient_temperature(element_id=1, case_name="", temperature=1, section_oriental=1, element_type=1, group_name=""):
         """
         添加梯度温度
-             element_id:
-             case_name:
-             temperature:
-             section_oriental:
-             element_type:
-             group_name:
+             element_id:单元编号
+             case_name:荷载工况名
+             temperature:温度
+             section_oriental:截面方向
+             element_type:单元类型
+             group_name:荷载组名
 
         Returns:
             无
@@ -1220,12 +1218,12 @@ class Mdb:
         """
         添加梁截面温度
         Args:
-             element_id:
-             case_name:
-             paving_thick:
-             temperature_type:
-             paving_type:
-             group_name:
+             element_id:单元编号
+             case_name:荷载工况名
+             paving_thick:铺设厚度
+             temperature_type:温度类型
+             paving_type:铺设类型
+             group_name:荷载组名
 
         Returns:
             无
@@ -1238,11 +1236,11 @@ class Mdb:
         """
         添加指数温度
         Args:
-             element_id:
-             case_name:
-             temperature:
-             index:
-             group_name:
+             element_id:单元编号
+             case_name:荷载工况名
+             temperature:单元类型
+             index:指数
+             group_name:荷载组名
 
         Returns:
             无
@@ -1254,10 +1252,10 @@ class Mdb:
         """
         添加顶板温度
         Args:
-             element_id:
-             case_name:
-             temperature:
-             group_name:
+             element_id:单元编号
+             case_name:荷载工况
+             temperature:温度
+             group_name:荷载组名
 
         Returns:
             无
@@ -1297,27 +1295,24 @@ class Mdb:
             qt_model.RemoveSinkGroup(name=name)
 
     @staticmethod
-    def add_sink_case(name="", sink_groups=None, n_max=1, n_min=1, factor=1):
+    def add_sink_case(name="", sink_groups=None):
         """
         添加沉降工况
         Args:
-             name:
-             sink_groups:
-             n_max:
-             n_min:
-             factor:
+             name:荷载工况名
+             sink_groups:沉降组名
 
         Returns:
             无
         """
-        qt_model.AddSinkCase(name=name, sinkGroups=sink_groups, nMax=n_max, nMin=n_min, factor=factor)
+        qt_model.AddSinkCase(name=name, sinkGroups=sink_groups)
 
     @staticmethod
     def remove_sink_case(name=""):
         """
         按照名称删除沉降工况,不输入名称时默认删除所有沉降工况
         Args:
-             name:
+             name:沉降工况名
 
         Returns:
             无
@@ -1367,13 +1362,13 @@ class Mdb:
         qt_model.RemoveConcurrentForce()
 
     @staticmethod
-    def add_load_case(index=-1, name="", load_case_type=CS):
+    def add_load_case(index=-1, name="", load_case_type="施工阶段荷载"):
         """
         添加荷载工况
         Args:
-            index:
-            name:
-            load_case_type:
+            index:沉降工况编号
+            name:沉降名0
+            load_case_type:荷载工况类型
 
         Returns:
 
@@ -1417,16 +1412,16 @@ class Mdb:
         """
         添加施工阶段信息
         Args:
-            name:
-            duration:
-            active_structures:
-            delete_structures:
-            active_boundaries:
-            delete_boundaries:
-            active_loads:
-            delete_loads:
-            temp_loads:
-            index:
+            name:施工阶段信息
+            duration:时长
+            active_structures:激活结构组信息
+            delete_structures:钝化结构组信息
+            active_boundaries:激活边界组信息
+            delete_boundaries:钝化边界组信息
+            active_loads:激活荷载组信息
+            delete_loads:钝化荷载组信息
+            temp_loads:临时荷载信息
+            index:施工阶段编号，默认自动添加
 
         Returns:
 
@@ -1440,7 +1435,7 @@ class Mdb:
         """
         按照施工阶段名删除施工阶段
         Args:
-            name:
+            name:所删除施工阶段名称
 
         Returns:
 
@@ -1461,10 +1456,10 @@ class Mdb:
         """
         添加荷载组合
         Args:
-            name:
-            combine_type:
-            describe:
-            combine_info:
+            name:荷载组合名
+            combine_type:荷载组合类型
+            describe:描述
+            combine_info:荷载组合信息
 
         Returns:
 
@@ -1475,7 +1470,7 @@ class Mdb:
     def remove_load_combine(name=""):
         """
         删除荷载组合,参数默认时删除所有荷载组合
-             name:
+             name:所删除荷载组合名
         Returns:
             无
         """
