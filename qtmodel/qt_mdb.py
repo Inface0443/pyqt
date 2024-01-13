@@ -869,7 +869,7 @@ class Mdb:
 
     # region 钢束操作
     @staticmethod
-    def add_tendon_property(name="", index=-1, tendon_type=MET_PRE, material_id=1, duct_type=1,
+    def add_tendon_property(name="", index=-1, tendon_type=TYP_PRE, material_id=1, duct_type=1,
                             steel_type=1, steel_detail=None, loos_detail=None, slip_info=None):
         """
         添加钢束特性

@@ -5,7 +5,7 @@ from qtcore import *
 
 class Odb:
     @staticmethod
-    def get_beam_force(beam_id=1, stage_id=1, result_kind=RES_MAIN, increment_type=TOTAL):
+    def get_beam_force(beam_id=1, stage_id=1, result_kind=RES_MAIN, increment_type=TYP_TOTAL):
         """
         获取梁单元内力
         Args:

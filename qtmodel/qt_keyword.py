@@ -53,11 +53,11 @@ SEC_GZZ = "工字组合梁"
 SEC_GXZ = "钢箱组合梁"
 
 # 钢束特性
-MET_PRE = 0  # 先张
-MET_POST = 1  # 后张
+TYP_PRE = 0  # 先张
+TYP_POST = 1  # 后张
 # 增量和全量
-MET_TOTAL = 1
-MET_INCREMENT = 2
+TYP_TOTAL = 1
+TYP_INCREMENT = 2
 # 施工阶段数据的类型
 RES_MAIN = 1  # 合计
 RES_CREEP = 2  # 收缩徐变效应
