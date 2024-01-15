@@ -48,8 +48,8 @@ class Mdb:
         为结构组添加节点和/或单元
         Args:
              name: 结构组名
-             node_ids: 节点编号列表(非必选参数)
-             element_ids: 单元编号列表(非必选参数)
+             node_ids: 节点编号列表(可选参数)
+             element_ids: 单元编号列表(可选参数)
         Returns: 无
         """
         qt_model.AddStructureToGroup(name=name, nodeIds=node_ids, elementIds=element_ids)
@@ -60,8 +60,8 @@ class Mdb:
         为结构组删除节点和/或单元
         Args:
              name: 结构组名
-             node_ids: 节点编号列表(非必选参数)
-             element_ids: 单元编号列表(非必选参数)
+             node_ids: 节点编号列表(可选参数)
+             element_ids: 单元编号列表(可选参数)
         Returns: 无
         """
         qt_model.RemoveStructureOnGroup(name=name, nodeIds=node_ids, elementIds=element_ids)
@@ -340,7 +340,7 @@ class Mdb:
              index:截面编号
              name:截面名称
              section_type:截面类型
-             property_info:
+             property_info:截面特性列表
         Returns: 无
         """
         qt_model.AddUserSection(id=index, name=name, type=section_type, propertyInfo=property_info)
@@ -464,7 +464,7 @@ class Mdb:
         新建边界组
         Args:
              name:边界组名
-             index:边界组编号，默认自动识别当前编号 (非必选参数)
+             index:边界组编号，默认自动识别当前编号 (可选参数)
         Returns: 无
         """
         qt_model.AddBoundaryGroup(name=name, id=index)
@@ -1110,7 +1110,7 @@ class Mdb:
         添加顶板温度
         Args:
              element_id:单元编号
-             case_name:荷载工况
+             case_name:荷载
              temperature:温度
              group_name:荷载组名
         Returns: 无
