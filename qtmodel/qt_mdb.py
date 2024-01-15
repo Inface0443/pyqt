@@ -3,6 +3,9 @@ from .qt_keyword import *
 
 
 class Mdb:
+    """
+    Mdb类负责建模相关操作
+    """
     def __int__(self):
         self.initial()
 
@@ -948,20 +951,20 @@ class Mdb:
         qt_model.RemoveNodalDisplacement(caseName=case_name, nodeId=-node_id)
 
     @staticmethod
-    def add_beam_load(case_name="", beam_id=1, load_type=1, coordinate_system=3, load_info=None, group_name="默认荷载组"):
+    def add_beam_load(case_name="", beam_id=1, load_type=1, coord_system=3, load_info=None, group_name="默认荷载组"):
         """
         添加梁单元荷载
         Args:
              case_name:荷载工况名
              beam_id:单元编号
              load_type:荷载类型
-             coordinate_system:坐标系
+             coord_system:坐标系
              load_info:荷载信息
              group_name:荷载组名
         Returns: 无
         """
         qt_model.AddBeamLoad(caseName=case_name, beamId=beam_id, loadType=load_type,
-                             coordinateSystem=coordinate_system, loadInfo=load_info, groupName=group_name)
+                             coordinateSystem=coord_system, loadInfo=load_info, groupName=group_name)
 
     @staticmethod
     def remove_beam_load(case_name="", element_id=1, load_type=1, group_name="默认荷载组"):
@@ -1204,7 +1207,7 @@ class Mdb:
         qt_model.RemoveConcurrentForce()
 
     @staticmethod
-    def add_load_case(index=-1, name="", load_case_type="施工阶段荷载"):
+    def add_load_case(index=-1, name="", load_case_type=LD_CS):
         """
         添加荷载工况
         Args:

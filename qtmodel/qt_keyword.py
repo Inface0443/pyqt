@@ -41,7 +41,7 @@ SEC_IXH = "I字型混凝土"  # [tb,Wb,H,b2,b1,tt,Wt,tw,a2,a1]
 SEC_GT = "钢管砼"  # [D,t,Es/Ec,Ds/Dc,Ts/Tc,vC,νS]
 SEC_XT = "钢箱砼"  # [W,H,dw,tw,tt,tb,Es/Ec,Ds/Dc,Ts/Tc,vC,νS]
 SEC_HXL = "混凝土箱梁"  # 参数列表(float)-[i1,i2,B0,B1,B1a,B1b,B2,B3,B4,H1,H2,H2a,H2b,T1,T2,T3,T4,R1,R2] 倒角列表(str)-[C1,C2,C3,C4]
-SEC_DLG = "带肋钢箱"  # ui need change
+SEC_DLG = "带肋钢箱"
 SEC_DLH = "带肋H截面"
 SEC_GHX1 = "钢桁箱梁1"
 SEC_GHX2 = "钢桁箱梁2"
@@ -51,8 +51,9 @@ SEC_GGL = "工字钢梁"
 SEC_XGL = "箱型钢梁"
 SEC_GZZ = "工字组合梁"
 SEC_GXZ = "钢箱组合梁"
-
-# 钢束特性
+# 张拉
+TYP_ONCE = 1  # 一次张拉
+TYP_OVER = 2  # 超张拉
 TYP_PRE = 0  # 先张
 TYP_POST = 1  # 后张
 # 增量和全量
@@ -67,3 +68,9 @@ RES_DLOAD = 4  # 恒载
 TYP_ADD = 0  # 叠加
 TYP_JUDGE = 1  # 判别
 TYP_ENVELOPE = 2  # 包络
+# 荷载组合中荷载工况类型
+TYP_CS = "CS"
+TYP_ST = "ST"
+TYP_SM = "SM"
+TYP_CB = "CB"
+TYP_MV = "MV"

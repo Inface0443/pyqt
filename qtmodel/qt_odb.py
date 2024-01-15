@@ -4,6 +4,9 @@ from qtcore import *
 
 
 class Odb:
+    """
+    Odb类负责获取后处理信息
+    """
     @staticmethod
     def get_beam_force(beam_id=1, stage_id=1, result_kind=RES_MAIN, increment_type=TYP_TOTAL):
         """
