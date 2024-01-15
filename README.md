@@ -1,5 +1,47 @@
-# 桥通参数说明
-* 混凝土箱梁相关参数
+## 建模操作
+### 初始化模型
+#### initial()
+> 初始化模型  
+        Returns:
+            无  
+
+### 节点单元操作
+#### add_structure_group()
+> 添加结构组  
+        Args:  
+            name: 结构组名  
+            index: 结构组编号(非必须参数)，默认自动识别当前编号  
+        Returns:
+            无
+
+#### remove_structure_group()
+> 可根据结构与组名或结构组编号删除结构组，当组名和组编号均为默认则删除所有结构组  
+        Args:  
+            name:结构组名称  
+            index:结构组编号  
+        Returns:
+            无
+
+#### add_structure_to_group()
+> 为结构组添加节点和/或单元  
+        Args:  
+             name: 结构组名  
+             node_ids: 节点编号列表(非必选参数)  
+             element_ids: 单元编号列表(非必选参数)  
+        Returns:
+            无  
+
+#### remove_structure_in_group()
+> 为结构组删除节点和/或单元  
+        Args:  
+             name: 结构组名  
+             node_ids: 节点编号列表(非必选参数)  
+             element_ids: 单元编号列表(非必选参数)  
+        Returns:
+            无
+
+
+### 混凝土箱梁相关参数
 > 顶板坡度(i1)	0.02    -float类型  
 底板坡度(i2)	0  
 顶板宽(B0)	12  

@@ -10,13 +10,11 @@ class Mdb:
     def initial():
         """
         初始化模型
-        Returns:
-            无
+        Returns: 无
         """
         qt_model.Initial()
 
-    # region 组操作
-
+    # region 节点单元操作
     @staticmethod
     def add_structure_group(name="", index=-1):
         """
@@ -24,9 +22,7 @@ class Mdb:
         Args:
             name: 结构组名
             index: 结构组编号(非必须参数)，默认自动识别当前编号
-
-        Returns:
-            无
+        Returns: 无
         """
         qt_model.AddStructureGroup(name=name, id=index)
 
@@ -37,9 +33,7 @@ class Mdb:
         Args:
             name:结构组名称
             index:结构组编号
-
-        Returns:
-            无
+        Returns: 无
         """
         if index != -1:
             qt_model.RemoveStructureGroup(id=index)
@@ -56,9 +50,7 @@ class Mdb:
              name: 结构组名
              node_ids: 节点编号列表(非必选参数)
              element_ids: 单元编号列表(非必选参数)
-
-        Returns:
-            无
+        Returns: 无
         """
         qt_model.AddStructureToGroup(name=name, nodeIds=node_ids, elementIds=element_ids)
 
@@ -70,121 +62,10 @@ class Mdb:
              name: 结构组名
              node_ids: 节点编号列表(非必选参数)
              element_ids: 单元编号列表(非必选参数)
-
-        Returns:
-            无
+        Returns: 无
         """
         qt_model.RemoveStructureOnGroup(name=name, nodeIds=node_ids, elementIds=element_ids)
 
-    @staticmethod
-    def add_boundary_group(name="", index=-1):
-        """
-        新建边界组
-        Args:
-             name:边界组名
-             index:边界组编号，默认自动识别当前编号 (非必选参数)
-
-        Returns:
-            无
-        """
-        qt_model.AddBoundaryGroup(name=name, id=index)
-
-    @staticmethod
-    def remove_boundary_group(name=""):
-        """
-        按照名称删除边界组
-        Args:
-            name: 边界组名称，默认删除所有边界组 (非必须参数)
-
-        Returns:
-            无
-        """
-        if name != "":
-            qt_model.RemoveBoundaryGroup(name)
-        else:
-            qt_model.RemoveAllBoundaryGroup()
-
-    @staticmethod
-    def remove_boundary(group_name="", boundary_type=-1, index=1):
-        """
-        根据边界组名称、边界的类型和编号删除边界信息,默认时删除所有边界信息
-        Args:
-            group_name: 边界组名
-            boundary_type: 边界类型
-            index: 边界编号
-
-        Returns:
-            无
-        """
-        if group_name == "":
-            qt_model.RemoveAllBoundary()
-
-    @staticmethod
-    def add_tendon_group(name="", index=-1):
-        """
-        按照名称添加钢束组，添加时可指定钢束组id
-        Args:   
-            name: 钢束组名称
-            index: 钢束组编号(非必须参数)，默认自动识别
-
-        Returns:
-            无
-        """
-        qt_model.AddTendonGroup(name=name, id=index)
-
-    @staticmethod
-    def remove_tendon_group(name="", index=-1):
-        """
-        按照钢束组名称或钢束组编号删除钢束组，两参数均为默认时删除所有钢束组
-        Args:
-             name:钢束组名称,默认自动识别 (可选参数)
-             index:钢束组编号,默认自动识别 (可选参数)
-
-        Returns:
-            无
-        """
-        if name != "":
-            qt_model.RemoveTendonGroup(name=name)
-        elif index != -1:
-            qt_model.RemoveTendonGroup(id=index)
-        else:
-            qt_model.RemoveAllStructureGroup()
-
-    @staticmethod
-    def add_load_group(name="", index=-1):
-        """
-        根据荷载组名称添加荷载组
-        Args:
-             name: 荷载组名称
-             index: 荷载组编号，默认自动识别 (可选参数)
-
-        Returns:
-            无
-        """
-        if name != "":
-            qt_model.AddLoadGroup(name=name, id=index)
-
-    @staticmethod
-    def remove_load_group(name="", index=-1):
-        """
-        根据荷载组名称或荷载组id删除荷载组,参数为默认时删除所有荷载组
-        Args:
-             name: 荷载组名称
-             index: 荷载组编号
-
-        Returns:
-            无
-        """
-        if name != "":
-            qt_model.RemoveLoadGroup(name=name)
-        elif index != -1:
-            qt_model.RemoveLoadGroup(id=index)
-        else:
-            qt_model.RemoveAllLoadGroup()
-
-    # endregion
-
-    # region 节点单元操作
     @staticmethod
     def add_node(x=1, y=1, z=1, index=-1):
         """
@@ -194,9 +75,7 @@ class Mdb:
              y: 节点坐标y
              z: 节点坐标z
              index: 节点编号，默认自动识别编号 (可选参数)
-
-        Returns:
-            无
+        Returns:无
         """
         if index != -1:
             qt_model.AddNode(id=index, x=x, y=y, z=z)
@@ -209,9 +88,7 @@ class Mdb:
         添加多个节点，可以选择指定节点编号
         Args:
              node_list:节点坐标信息 [[x1,y1,z1],...]或 [[id1,x1,y1,z1]...]
-
-        Returns:
-            无
+        Returns: 无
         """
         qt_model.AddNodes(dataList=node_list)
 
@@ -221,9 +98,7 @@ class Mdb:
         删除指定节点
         Args:
             index:节点编号
-
-        Returns:
-            无
+        Returns: 无
         """
         if index is None:
             qt_model.RemoveAllNodes()
@@ -243,9 +118,7 @@ class Mdb:
             beta_angle:贝塔角
             mat_id:材料编号
             sec_id:截面编号
-
-        Returns:
-            无
+        Returns: 无
         """
         if ele_type == 1:
             qt_model.AddBeam(id=index, idI=node_ids[0], idJ=node_ids[1], betaAngle=beta_angle, materialId=mat_id, sectionId=sec_id)
@@ -264,9 +137,7 @@ class Mdb:
         删除指定编号的单元
         Args:
             index: 单元编号,默认时删除所有单元
-
-        Returns:
-            无
+        Returns: 无
         """
         if index is None:
             qt_model.RemoveAllElements()
@@ -290,9 +161,7 @@ class Mdb:
             construct_factor:构造系数
             modified:是否修改默认材料参数,默认不修改 (可选参数)
             modify_info:材料参数列表[弹性模量,容重,泊松比,热膨胀系数] (可选参数)
-
-        Returns:
-            无
+        Returns: 无
         """
         if modified and len(modify_info) != 4:
             raise OperationFailedException("操作错误,modify_info数据无效!")
@@ -314,9 +183,7 @@ class Mdb:
             name: 收缩徐变名
             code_index: 收缩徐变规范索引
             time_parameter: 对应规范的收缩徐变参数列表,默认不改变规范中信息 (可选参数)
-
-        Returns:
-            无
+        Returns:无
         """
         if time_parameter is None:  # 默认不修改收缩徐变相关参数
             qt_model.AddTimeParameter(id=index, name=name, codeId=code_index)
@@ -359,9 +226,7 @@ class Mdb:
             index: 材料编号
             creep_id: 收缩徐变编号
             f_cuk: 材料标准抗压强度,仅自定义材料是需要输入
-
-        Returns:
-            无
+        Returns: 无
         """
 
         qt_model.UpdateMaterialCreep(materialId=index, timePatameterId=creep_id, fcuk=f_cuk)
@@ -372,9 +237,7 @@ class Mdb:
         删除指定材料
         Args:
             index:材料编号，默认删除所有材料
-
-        Returns:
-            无
+        Returns: 无
         """
         if index == -1:
             qt_model.RemoveAllMaterial()
@@ -398,9 +261,7 @@ class Mdb:
              center_type:中心类型
              shear_consider:考虑剪切
              bias_point:自定义偏心点(仅自定义类型偏心需要)
-
-        Returns:
-            无
+        Returns: 无
         """
         if center_type == "自定义":
             if len(bias_point) != 2:
@@ -429,9 +290,7 @@ class Mdb:
              center_type:中心类型
              shear_consider:考虑剪切
              bias_point:自定义偏心点(仅自定义类型偏心需要)
-
-        Returns:
-            无
+        Returns: 无
         """
         if center_type == "自定义":
             if len(bias_point) != 2:
@@ -460,9 +319,7 @@ class Mdb:
              center_type:中心类型
              shear_consider:考虑剪切
              bias_point:自定义偏心点(仅自定义类型偏心需要)
-
-        Returns:
-            无
+        Returns: 无
         """
         if center_type == "自定义":
             if len(bias_point) != 2:
@@ -484,9 +341,7 @@ class Mdb:
              name:截面名称
              section_type:截面类型
              property_info:
-
-        Returns:
-            无
+        Returns: 无
         """
         qt_model.AddUserSection(id=index, name=name, type=section_type, propertyInfo=property_info)
 
@@ -500,9 +355,7 @@ class Mdb:
              begin_id:截面始端编号
              end_id:截面末端编号
              vary_info:截面变化信息
-
-        Returns:
-            无
+        Returns: 无
         """
         if vary_info is not None:
             if len(vary_info) != 2:
@@ -518,9 +371,7 @@ class Mdb:
         删除截面信息
         Args:
              index: 截面编号,参数为默认时删除全部截面
-
-        Returns:
-            无
+        Returns: 无
         """
         if index == -1:
             qt_model.RemoveAllSection()
@@ -543,9 +394,7 @@ class Mdb:
              dist_l:横向截面肋板间距
              rib_v:纵向肋板信息
              rib_l:横向肋板信息
-
-        Returns:
-            无
+        Returns: 无
         """
         if bias_info is None:
             qt_model.AddThickness(id=index, name=name, t=t, type=thick_type, isBiased=False, ribPos=rib_pos,
@@ -561,9 +410,7 @@ class Mdb:
         删除板厚
         Args:
              index:板厚编号,默认时删除所有板厚信息
-
-        Returns:
-            无
+        Returns: 无
         """
         if index == -1:
             qt_model.RemoveAllThickness()
@@ -583,9 +430,7 @@ class Mdb:
              ref_h: 高度方向参考点 0-i 1-j
              dis_w: 宽度方向间距
              dis_h: 高度方向间距
-
-        Returns:
-            无
+        Returns: 无
         """
         qt_model.AddTapperSectionGroup(ids=ids, name=name, factorW=factor_w, factorH=factor_h, w=ref_w, h=ref_h, disW=dis_w, disH=dis_h)
 
@@ -599,9 +444,7 @@ class Mdb:
              center_type:中心类型
              shear_consider:考虑剪切
              bias_point:自定义偏心点(仅自定义类型偏心需要)
-
-        Returns:
-            无
+        Returns: 无
         """
         if center_type == "自定义":
             if len(bias_point) != 2:
@@ -616,6 +459,43 @@ class Mdb:
 
     # region 边界操作
     @staticmethod
+    def add_boundary_group(name="", index=-1):
+        """
+        新建边界组
+        Args:
+             name:边界组名
+             index:边界组编号，默认自动识别当前编号 (非必选参数)
+        Returns: 无
+        """
+        qt_model.AddBoundaryGroup(name=name, id=index)
+
+    @staticmethod
+    def remove_boundary_group(name=""):
+        """
+        按照名称删除边界组
+        Args:
+            name: 边界组名称，默认删除所有边界组 (非必须参数)
+        Returns: 无
+        """
+        if name != "":
+            qt_model.RemoveBoundaryGroup(name)
+        else:
+            qt_model.RemoveAllBoundaryGroup()
+
+    @staticmethod
+    def remove_boundary(group_name="", boundary_type=-1, index=1):
+        """
+        根据边界组名称、边界的类型和编号删除边界信息,默认时删除所有边界信息
+        Args:
+            group_name: 边界组名
+            boundary_type: 边界类型
+            index: 边界编号
+        Returns: 无
+        """
+        if group_name == "":
+            qt_model.RemoveAllBoundary()
+
+    @staticmethod
     def add_general_support(index=-1, node_id=1, boundary_info=None, group_name="默认边界组"):
         """
         添加一般支承
@@ -624,9 +504,7 @@ class Mdb:
              node_id:节点编号
              boundary_info:边界信息
              group_name:边界组名
-
-        Returns:
-            无
+        Returns: 无
         """
         qt_model.AddGeneralSupport(id=index, nodeId=node_id, boundaryInfo=boundary_info, groupName=group_name)
 
@@ -640,9 +518,7 @@ class Mdb:
              support_type:支承类型
              boundary_info:边界信息
              group_name:边界组
-
-        Returns:
-            无
+        Returns: 无
         """
         qt_model.AddElasticSupport(id=index, nodeId=node_id, supportType=support_type, boundaryInfo=boundary_info,
                                    groupName=group_name)
@@ -657,9 +533,7 @@ class Mdb:
              slave_id:从节点号
              boundary_info:边界信息
              group_name:边界组名
-
-        Returns:
-            无
+        Returns: 无
         """
         qt_model.AddMasterSlaveLink(id=index, masterId=master_id, slaveId=slave_id, boundaryInfo=boundary_info, groupName=group_name)
 
@@ -678,9 +552,7 @@ class Mdb:
              group_name:边界组名
              dis_ratio:距离比
              kx:刚度
-
-        Returns:
-            无
+        Returns: 无
         """
         qt_model.AddElasticLink(id=index, linkType=link_type, startId=start_id, endId=end_id, beta=beta_angle,
                                 boundaryInfo=boundary_info, groupName=group_name, disRatio=dis_ratio, kDx=kx)
@@ -695,9 +567,7 @@ class Mdb:
              info_i:i端约束信息 [IsFreedX,IsFreedY,IsFreedZ,IsFreedRX,IsFreedRY,IsFreedRZ]
              info_j:j端约束信息 [IsFreedX,IsFreedY,IsFreedZ,IsFreedRX,IsFreedRY,IsFreedRZ]
              group_name:边界组名
-
-        Returns:
-            无
+        Returns: 无
         """
         qt_model.AddBeamConstraint(id=index, beamId=beam_id, nodeInfoI=info_i, nodeInfo2=info_j, groupName=group_name)
 
@@ -710,9 +580,7 @@ class Mdb:
              input_type:输入方式
              node_id:节点号
              coord_info:局部坐标信息 -List<float>(角)  -List<List<float>>(三点/向量)
-
-        Returns:
-            无
+        Returns: 无
         """
         qt_model.AddNodalAxises(id=index, input_type=input_type, nodeId=node_id, nodeInfo=coord_info)
 
@@ -729,9 +597,7 @@ class Mdb:
              load_type:荷载类型
              load_length:荷载长度
              n:车厢数
-
-        Returns:
-            无
+        Returns: 无
         """
         qt_model.AddStandardVehicle(name=name, standardIndex=standard_code, loadType=load_type, loadLength=load_length, N=n)
 
@@ -743,9 +609,7 @@ class Mdb:
              name:节点纵列名
              start_id:起始节点号
              node_ids:节点列表
-
-        Returns:
-            无
+        Returns: 无
         """
         qt_model.AddNodeTandem(name=name, startId=start_id, nodeIds=node_ids)
 
@@ -756,9 +620,7 @@ class Mdb:
         Args:
              name:影响面名称
              tandem_names:节点纵列名称组
-
-        Returns:
-            无
+        Returns: 无
         """
         qt_model.AddInfluencePlane(name=name, tandemNames=tandem_names)
 
@@ -772,9 +634,7 @@ class Mdb:
              tandem_name:节点纵列名
              offset:偏移
              direction:方向
-
-        Returns:
-            无
+        Returns: 无
         """
         qt_model.AddLaneLine(name, influenceName=influence_name, tandemName=tandem_name, offset=offset, direction=direction)
 
@@ -787,9 +647,7 @@ class Mdb:
              influence_plane:影响线名
              span:跨度
              sub_case:子工况信息
-
-        Returns:
-            无
+        Returns: 无
         """
         qt_model.AddLiveLoadCase(name=name, influencePlane=influence_plane, span=span, subCase=sub_case)
 
@@ -799,9 +657,7 @@ class Mdb:
         删除车辆信息
         Args:
              index:车辆荷载编号
-
-        Returns:
-            无
+        Returns: 无
         """
         qt_model.RemoveVehicle(id=index)
 
@@ -812,9 +668,7 @@ class Mdb:
         Args:
              index:节点纵列编号
              name:节点纵列名
-
-        Returns:
-            无
+        Returns: 无
         """
         if index != -1:
             qt_model.RemoveNodeTandem(id=index)
@@ -828,9 +682,7 @@ class Mdb:
         Args:
              index:影响面编号
              name:影响面名称
-
-        Returns:
-            无
+        Returns: 无
         """
         if index != -1:
             qt_model.RemoveInfluencePlane(id=index)
@@ -844,9 +696,7 @@ class Mdb:
         Args:
              name:车道线名称
              index:车道线编号
-
-        Returns:
-            无
+        Returns: 无
         """
         if index != -1:
             qt_model.RemoveLaneLine(id=index)
@@ -859,15 +709,40 @@ class Mdb:
         删除移动荷载工况
         Args:
              name:移动荷载工况名
-
-        Returns:
-            无
+        Returns: 无
         """
         qt_model.RemoveLiveLoadCase(name=name)
 
     # endregion
 
     # region 钢束操作
+    @staticmethod
+    def add_tendon_group(name="", index=-1):
+        """
+        按照名称添加钢束组，添加时可指定钢束组id
+        Args:
+            name: 钢束组名称
+            index: 钢束组编号(非必须参数)，默认自动识别
+        Returns: 无
+        """
+        qt_model.AddTendonGroup(name=name, id=index)
+
+    @staticmethod
+    def remove_tendon_group(name="", index=-1):
+        """
+        按照钢束组名称或钢束组编号删除钢束组，两参数均为默认时删除所有钢束组
+        Args:
+             name:钢束组名称,默认自动识别 (可选参数)
+             index:钢束组编号,默认自动识别 (可选参数)
+        Returns: 无
+        """
+        if name != "":
+            qt_model.RemoveTendonGroup(name=name)
+        elif index != -1:
+            qt_model.RemoveTendonGroup(id=index)
+        else:
+            qt_model.RemoveAllStructureGroup()
+
     @staticmethod
     def add_tendon_property(name="", index=-1, tendon_type=TYP_PRE, material_id=1, duct_type=1,
                             steel_type=1, steel_detail=None, loos_detail=None, slip_info=None):
@@ -883,9 +758,7 @@ class Mdb:
              steel_detail: 钢绞线[钢束面积,孔道直径,摩阻系数,偏差系数]  螺纹钢筋[钢筋直径,钢束面积,孔道直径,摩阻系数,偏差系数,张拉方式(1-一次张拉\2-超张拉)]
              loos_detail: 松弛信息[规范(1-公规 2-铁规),张拉(1-一次张拉 2-超张拉),松弛(1-一般松弛 2-低松弛)] (仅钢绞线需要)
              slip_info: 滑移信息[始端距离,末端距离]
-
-        Returns:
-            无
+        Returns: 无
         """
         qt_model.AddTendonProperty(name=name, id=index, tendonType=tendon_type, materialId=material_id,
                                    ductType=duct_type, steelType=steel_type, steelDetail=steel_detail,
@@ -909,9 +782,7 @@ class Mdb:
              tendon_direction:直线钢束方向向量 x轴-[1,0,0] y轴-[0,1,0] (轨迹线时不用赋值)
              rotation_angle:绕钢束旋转角度
              track_group:轨迹线结构组名  (直线时不用赋值)
-
-        Returns:
-            无
+        Returns: 无
         """
         qt_model.AddTendon3D(name=name, propertyName=property_name, groupName=group_name, num=num, lineType=line_type,
                              positionType=position_type, controlPoints=control_info,
@@ -925,9 +796,7 @@ class Mdb:
         Args:
              name:钢束名称
              index:钢束编号
-
-        Returns:
-            无
+        Returns: 无
         """
         if name != "":
             qt_model.RemoveTendon(name=name)
@@ -943,9 +812,7 @@ class Mdb:
         Args:
              name:钢束组名称
              index:钢束组编号
-
-        Returns:
-            无
+        Returns: 无
         """
         if name != "":
             qt_model.RemoveTendonProperty(name=name)
@@ -961,9 +828,7 @@ class Mdb:
         Args:
              node_id:节点编号
              mass_info:[m,rmX,rmY,rmZ]
-
-        Returns:
-            无
+        Returns: 无
         """
         qt_model.AddNodalMass(nodeId=node_id, massInfo=mass_info)
 
@@ -973,9 +838,7 @@ class Mdb:
         删除节点质量
         Args:
              node_id:节点号
-
-        Returns:
-            无
+        Returns: 无
         """
         qt_model.RemoveNodalMass(nodeId=node_id)
 
@@ -990,9 +853,7 @@ class Mdb:
              pre_type:预应力类型
              force:预应力
              group_name:边界组
-
-        Returns:
-            无
+        Returns: 无
         """
         qt_model.AddPreStress(caseName=case_name, tendonName=tendon_name, preType=pre_type, force=force, id=index, groupName=group_name)
 
@@ -1004,15 +865,41 @@ class Mdb:
              case_name:荷载工况
              tendon_name:钢束组
              group_name:边界组名
-
-        Returns:
-            无
+        Returns: 无
         """
         qt_model.RemovePreStress(caseName=case_name, tendonName=tendon_name, groupName=group_name)
 
     # endregion
 
     # region 荷载操作
+    @staticmethod
+    def add_load_group(name="", index=-1):
+        """
+        根据荷载组名称添加荷载组
+        Args:
+             name: 荷载组名称
+             index: 荷载组编号，默认自动识别 (可选参数)
+        Returns: 无
+        """
+        if name != "":
+            qt_model.AddLoadGroup(name=name, id=index)
+
+    @staticmethod
+    def remove_load_group(name="", index=-1):
+        """
+        根据荷载组名称或荷载组id删除荷载组,参数为默认时删除所有荷载组
+        Args:
+             name: 荷载组名称
+             index: 荷载组编号
+        Returns: 无
+        """
+        if name != "":
+            qt_model.RemoveLoadGroup(name=name)
+        elif index != -1:
+            qt_model.RemoveLoadGroup(id=index)
+        else:
+            qt_model.RemoveAllLoadGroup()
+
     @staticmethod
     def add_nodal_force(case_name="", node_id=1, load_info=None, group_name="默认荷载组"):
         """
@@ -1021,9 +908,7 @@ class Mdb:
              node_id:节点编号
              load_info:[Fx,Fy,Fz,Mx,My,Mz]
              group_name:荷载组名
-
-        Returns:
-            无
+        Returns: 无
         """
         qt_model.AddNodalForce(caseName=case_name, nodeId=node_id, loadInfo=load_info, groupName=group_name)
 
@@ -1034,9 +919,7 @@ class Mdb:
         Args:
              case_name:荷载工况名
              node_id:节点编号
-
-        Returns:
-            无
+        Returns: 无
         """
         qt_model.RemoveNodalForce(caseName=case_name, nodeId=node_id)
 
@@ -1049,9 +932,7 @@ class Mdb:
              node_id:节点编号
              load_info:[Dx,Dy,Dz,Rx,Ry,Rz]
              group_name:荷载组名
-
-        Returns:
-            无
+        Returns: 无
         """
         qt_model.AddNodeDisplacement(caseName=case_name, nodeId=node_id, loadInfo=load_info, groupName=group_name)
 
@@ -1062,9 +943,7 @@ class Mdb:
         Args:
              case_name:荷载工况名
              node_id:节点编号
-
-        Returns:
-            无
+        Returns: 无
         """
         qt_model.RemoveNodalDisplacement(caseName=case_name, nodeId=-node_id)
 
@@ -1079,9 +958,7 @@ class Mdb:
              coordinate_system:坐标系
              load_info:荷载信息
              group_name:荷载组名
-
-        Returns:
-            无
+        Returns: 无
         """
         qt_model.AddBeamLoad(caseName=case_name, beamId=beam_id, loadType=load_type,
                              coordinateSystem=coordinate_system, loadInfo=load_info, groupName=group_name)
@@ -1095,9 +972,7 @@ class Mdb:
              element_id:单元号
              load_type:荷载类型
              group_name:边界组名
-
-        Returns:
-            无
+        Returns: 无
         """
         qt_model.RemoveBeamLoad(caseName=case_name, elementId=element_id, loadType=load_type, groupName=group_name)
 
@@ -1111,9 +986,7 @@ class Mdb:
              group_name:荷载组名
              tension:初始拉力
              tension_type:张拉类型
-
-        Returns:
-            无
+        Returns: 无
         """
         qt_model.AddInitialTension(elementId=element_id, caseName=case_name, groupName=group_name, tension=tension, tensionType=tension_type)
 
@@ -1127,9 +1000,7 @@ class Mdb:
              group_name:荷载组名
              length:长度
              tension_type:张拉类型
-
-        Returns:
-            无
+        Returns: 无
         """
         qt_model.AddCableLenghtLoad(elementId=element_id, caseName=case_name, groupName=group_name, length=length, tensionType=tension_type)
 
@@ -1145,9 +1016,7 @@ class Mdb:
              coord_system:坐标系
              group_name:荷载组名
              load_info:荷载信息
-
-        Returns:
-            无
+        Returns: 无
         """
         qt_model.AddPlateElementLoad(elementId=element_id, caseName=case_name, loadType=load_type, loadPlace=load_place,
                                      coordSystem=coord_system, groupName=group_name, loadInfo=load_info)
@@ -1160,9 +1029,7 @@ class Mdb:
              name:名称
              element_type:单元类型
              parameter_info:参数列表
-
-        Returns:
-            无
+        Returns: 无
         """
         qt_model.AddDeviationParameter(name=name, elementType=element_type, parameterInfo=parameter_info)
 
@@ -1175,9 +1042,7 @@ class Mdb:
              case_name:荷载工况名
              parameter_name:参数名
              group_name:荷载组名
-
-        Returns:
-            无
+        Returns: 无
         """
         qt_model.AddDeviationLoad(elementId=element_id, caseName=case_name, parameterName=parameter_name, groupName=group_name)
 
@@ -1190,9 +1055,7 @@ class Mdb:
              case_name:荷载工况名
              temperature:温度
              group_name:荷载组名
-
-        Returns:
-            无
+        Returns: 无
         """
         qt_model.AddElementTemperature(elementId=element_id, caseName=case_name, temperature=temperature, groupName=group_name)
 
@@ -1206,9 +1069,7 @@ class Mdb:
              section_oriental:截面方向
              element_type:单元类型
              group_name:荷载组名
-
-        Returns:
-            无
+        Returns: 无
         """
         qt_model.AddGradientTemperature(elementId=element_id, caseName=case_name, temperature=temperature,
                                         sectionOriental=section_oriental, elementType=element_type, groupNmae=group_name)
@@ -1224,9 +1085,7 @@ class Mdb:
              temperature_type:温度类型
              paving_type:铺设类型
              group_name:荷载组名
-
-        Returns:
-            无
+        Returns: 无
         """
         qt_model.AddBeamSectionTemperature(elementId=element_id, caseName=case_name, pavingThickness=paving_thick,
                                            temperatureType=temperature_type, pavingType=paving_type, groupName=group_name)
@@ -1241,9 +1100,7 @@ class Mdb:
              temperature:单元类型
              index:指数
              group_name:荷载组名
-
-        Returns:
-            无
+        Returns: 无
         """
         qt_model.AddIndexTemperature(elementId=element_id, caseName=case_name, temperature=temperature, index=index, groupName=group_name)
 
@@ -1256,9 +1113,7 @@ class Mdb:
              case_name:荷载工况
              temperature:温度
              group_name:荷载组名
-
-        Returns:
-            无
+        Returns: 无
         """
         qt_model.AddTopPlateTemperature(elementId=element_id, caseName=case_name, temperature=temperature, groupName=group_name)
 
@@ -1273,9 +1128,7 @@ class Mdb:
              name: 沉降组名
              sink: 沉降值
              node_ids: 节点编号
-
-        Returns:
-            无
+        Returns: 无
         """
         qt_model.AddSinkGroup(name=name, sinkValue=sink, nodeIds=node_ids)
 
@@ -1285,9 +1138,7 @@ class Mdb:
         按照名称删除沉降组
         Args:
              name:沉降组名,默认删除所有沉降组
-
-        Returns:
-            无
+        Returns: 无
         """
         if name == "":
             qt_model.RemoveAllSinkGroup()
@@ -1301,9 +1152,7 @@ class Mdb:
         Args:
              name:荷载工况名
              sink_groups:沉降组名
-
-        Returns:
-            无
+        Returns: 无
         """
         qt_model.AddSinkCase(name=name, sinkGroups=sink_groups)
 
@@ -1313,9 +1162,7 @@ class Mdb:
         按照名称删除沉降工况,不输入名称时默认删除所有沉降工况
         Args:
              name:沉降工况名
-
-        Returns:
-            无
+        Returns: 无
         """
         if name == "":
             qt_model.RemoveAllSinkCase()
@@ -1328,9 +1175,7 @@ class Mdb:
         添加并发反力组
         Args:
              names: 结构组名称集合
-
-        Returns:
-            无
+        Returns: 无
         """
         qt_model.AddConcurrentReaction(names=names)
 
@@ -1338,8 +1183,7 @@ class Mdb:
     def remove_concurrent_reaction():
         """
         删除并发反力组
-        Returns:
-            无
+        Returns: 无
         """
         qt_model.RemoveConcurrentRection()
 
@@ -1347,8 +1191,7 @@ class Mdb:
     def add_concurrent_force():
         """
         添加并发内力
-        Returns:
-            无
+        Returns: 无
         """
         qt_model.AddConcurrentForce()
 
@@ -1356,8 +1199,7 @@ class Mdb:
     def remove_concurrent_force():
         """
         删除并发内力
-        Returns:
-
+        Returns: 无
         """
         qt_model.RemoveConcurrentForce()
 
@@ -1367,11 +1209,9 @@ class Mdb:
         添加荷载工况
         Args:
             index:沉降工况编号
-            name:沉降名0
+            name:沉降名
             load_case_type:荷载工况类型
-
-        Returns:
-
+        Returns: 无
         """
         qt_model.AddLoadCase(id=index, name=name, loadCaseType=load_case_type)
 
@@ -1380,11 +1220,9 @@ class Mdb:
         """
         删除荷载工况,参数均为默认时删除全部荷载工况
         Args:
-            index:
-            name:
-
-        Returns:
-
+            index:荷载编号
+            name:荷载名
+        Returns: 无
         """
         if name != "":
             qt_model.DeleteLoadCase(name=name)
@@ -1397,8 +1235,7 @@ class Mdb:
     def test_print():
         """
         测试运行
-        Returns:
-
+        Returns: 无
         """
         print(1)
         raise Exception("错误")
@@ -1422,9 +1259,7 @@ class Mdb:
             delete_loads:钝化荷载组信息
             temp_loads:临时荷载信息
             index:施工阶段编号，默认自动添加
-
-        Returns:
-
+        Returns: 无
         """
         qt_model.AddConstructionStage(name=name, duration=duration, activeStructures=active_structures, inActiveStructures=delete_structures
                                       , activeBoundaries=active_boundaries, inActiveBoundaries=delete_boundaries, activeLoads=active_loads,
@@ -1436,9 +1271,7 @@ class Mdb:
         按照施工阶段名删除施工阶段
         Args:
             name:所删除施工阶段名称
-
-        Returns:
-
+        Returns: 无
         """
         qt_model.RemoveConstructionStage(name=name)
 
@@ -1446,8 +1279,7 @@ class Mdb:
     def remove_all_construction_stage():
         """
         删除所有施工阶段
-        Returns:
-
+        Returns: 无
         """
         qt_model.RemoveAllConstructionStage()
 
@@ -1460,9 +1292,7 @@ class Mdb:
             combine_type:荷载组合类型
             describe:描述
             combine_info:荷载组合信息
-
-        Returns:
-
+        Returns: 无
         """
         qt_model.AddLoadCombine(name=name, loadCombineType=combine_type, describe=describe, caseAndFactor=combine_info)
 
@@ -1470,9 +1300,9 @@ class Mdb:
     def remove_load_combine(name=""):
         """
         删除荷载组合,参数默认时删除所有荷载组合
+        Args:
              name:所删除荷载组合名
-        Returns:
-            无
+        Returns: 无
         """
         if name != "":
             qt_model.DeleteLoadCombine(name=name)
