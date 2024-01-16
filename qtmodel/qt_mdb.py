@@ -1376,6 +1376,8 @@ class Mdb:
             combine_info:荷载组合信息
         Returns: 无
         """
+        if combine_info is None:
+            combine_info = []
         qt_model.AddLoadCombine(name=name, loadCombineType=combine_type, describe=describe, caseAndFactor=combine_info)
 
     @staticmethod
