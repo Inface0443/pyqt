@@ -1329,6 +1329,20 @@ class Mdb:
             index:施工阶段编号，默认自动添加
         Returns: 无
         """
+        if temp_loads is None:
+            temp_loads = []
+        if delete_loads is None:
+            delete_loads = []
+        if active_loads is None:
+            active_loads = []
+        if delete_boundaries is None:
+            delete_boundaries = []
+        if active_structures is None:
+            active_structures = []
+        if delete_structures is None:
+            delete_structures = []
+        if active_boundaries is None:
+            active_boundaries = []
         qt_model.AddConstructionStage(name=name, duration=duration, activeStructures=active_structures, inActiveStructures=delete_structures
                                       , activeBoundaries=active_boundaries, inActiveBoundaries=delete_boundaries, activeLoads=active_loads,
                                       inActiveLoads=delete_loads, tempLoads=temp_loads, id=index)
