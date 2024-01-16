@@ -6,6 +6,7 @@ class Mdb:
     """
     Mdb类负责建模相关操作
     """
+
     def __int__(self):
         self.initial()
 
@@ -55,6 +56,10 @@ class Mdb:
              element_ids: 单元编号列表(可选参数)
         Returns: 无
         """
+        if node_ids is None:
+            node_ids = []
+        if element_ids is None:
+            element_ids = []
         qt_model.AddStructureToGroup(name=name, nodeIds=node_ids, elementIds=element_ids)
 
     @staticmethod
@@ -67,6 +72,10 @@ class Mdb:
              element_ids: 单元编号列表(可选参数)
         Returns: 无
         """
+        if node_ids is None:
+            node_ids = []
+        if element_ids is None:
+            element_ids = []
         qt_model.RemoveStructureOnGroup(name=name, nodeIds=node_ids, elementIds=element_ids)
 
     @staticmethod
@@ -123,6 +132,10 @@ class Mdb:
             sec_id:截面编号
         Returns: 无
         """
+        if node_ids is None and ele_type != 4:
+            raise OperationFailedException("操作错误,请输入此单元所需节点列表,[i,j]")
+        if node_ids is None and ele_type == 4:
+            raise OperationFailedException("操作错误,请输入此板单元所需节点列表,[i,j,k,l]")
         if ele_type == 1:
             qt_model.AddBeam(id=index, idI=node_ids[0], idJ=node_ids[1], betaAngle=beta_angle, materialId=mat_id, sectionId=sec_id)
         elif index == 2:
@@ -168,7 +181,7 @@ class Mdb:
         """
         if modified and len(modify_info) != 4:
             raise OperationFailedException("操作错误,modify_info数据无效!")
-        if modified:
+        if not modified:
             qt_model.AddMaterial(id=index, name=name, materialType=material_type, standardName=standard_name,
                                  database=database, constructFactor=construct_factor, isModified=modified)
         else:
@@ -251,7 +264,7 @@ class Mdb:
 
     # region 截面和板厚操作
     @staticmethod
-    def add_section(index=-1, name="", section_type="矩形", sec_info=None,
+    def add_section(index=-1, name="", section_type="矩形", section_info=None,
                     bias_type="中心", center_type="质心", shear_consider=True, bias_point=None):
         """
         添加截面信息
@@ -259,20 +272,22 @@ class Mdb:
              index: 截面编号,默认自动识别
              name:截面名称
              section_type:截面类型
-             sec_info:截面信息
+             section_info:截面信息 (必要参数)
              bias_type:偏心类型
              center_type:中心类型
              shear_consider:考虑剪切
              bias_point:自定义偏心点(仅自定义类型偏心需要)
         Returns: 无
         """
+        if section_info is None:
+            raise OperationFailedException("操作错误,请输入此截面的截面信息，参数列表可参考截面定义窗口")
         if center_type == "自定义":
             if len(bias_point) != 2:
                 raise OperationFailedException("操作错误,bias_point数据无效!")
-            qt_model.AddSection(id=index, name=name, secType=section_type, secInfo=sec_info, biasType=bias_type, centerType=center_type,
+            qt_model.AddSection(id=index, name=name, secType=section_type, secInfo=section_info, biasType=bias_type, centerType=center_type,
                                 shearConsider=shear_consider, horizontalPos=bias_point[0], verticalPos=bias_point[1])
         else:
-            qt_model.AddSection(id=index, name=name, secType=section_type, secInfo=sec_info, biasType=bias_type, centerType=center_type,
+            qt_model.AddSection(id=index, name=name, secType=section_type, secInfo=section_info, biasType=bias_type, centerType=center_type,
                                 shearConsider=shear_consider)
 
     @staticmethod
@@ -295,6 +310,8 @@ class Mdb:
              bias_point:自定义偏心点(仅自定义类型偏心需要)
         Returns: 无
         """
+        if section_info is None:
+            raise OperationFailedException("操作错误,请输入此截面的截面信息，参数列表可参考截面定义窗口")
         if center_type == "自定义":
             if len(bias_point) != 2:
                 raise OperationFailedException("操作错误,bias_point数据无效!")
@@ -324,6 +341,8 @@ class Mdb:
              bias_point:自定义偏心点(仅自定义类型偏心需要)
         Returns: 无
         """
+        if section_info is None:
+            raise OperationFailedException("操作错误,请输入此截面的截面信息，参数列表可参考截面定义窗口")
         if center_type == "自定义":
             if len(bias_point) != 2:
                 raise OperationFailedException("操作错误,bias_point数据无效!")
@@ -346,6 +365,8 @@ class Mdb:
              property_info:截面特性列表
         Returns: 无
         """
+        if property_info is None:
+            raise OperationFailedException("操作错误,请输入此截面的截面特性，特性列表可参考截面定义窗口")
         qt_model.AddUserSection(id=index, name=name, type=section_type, propertyInfo=property_info)
 
     @staticmethod
@@ -363,10 +384,10 @@ class Mdb:
         if vary_info is not None:
             if len(vary_info) != 2:
                 raise OperationFailedException("操作错误,vary_info数据无效!")
-            qt_model.AddTaperSection(id=index, name=name, beginId=begin_id, endId=end_id,
-                                     varyParameterWidth=vary_info[0], varyParameterHeight=vary_info[1])
+            qt_model.AddTapperSection(id=index, name=name, beginId=begin_id, endId=end_id,
+                                      varyParameterWidth=vary_info[0], varyParameterHeight=vary_info[1])
         else:
-            qt_model.AddTaperSection(id=index, name=name, beginId=begin_id, endId=end_id)
+            qt_model.AddTapperSection(id=index, name=name, beginId=begin_id, endId=end_id)
 
     @staticmethod
     def remove_section(index=-1):
@@ -399,6 +420,10 @@ class Mdb:
              rib_l:横向肋板信息
         Returns: 无
         """
+        if rib_v is None:
+            rib_v = []
+        if rib_l is None:
+            rib_l = []
         if bias_info is None:
             qt_model.AddThickness(id=index, name=name, t=t, type=thick_type, isBiased=False, ribPos=rib_pos,
                                   verticalDis=dist_v, lateralDis=dist_l, verticalRib=rib_v, lateralRib=rib_l)
@@ -505,10 +530,12 @@ class Mdb:
         Args:
              index:边界编号
              node_id:节点编号
-             boundary_info:边界信息
+             boundary_info:边界信息，例如[X,Y,Z,Rx,Ry,Rz] 1-固定 0-自由
              group_name:边界组名
         Returns: 无
         """
+        if boundary_info is None or len(boundary_info) != 6:
+            raise OperationFailedException("操作错误，要求输入一般支承列表长度为6")
         qt_model.AddGeneralSupport(id=index, nodeId=node_id, boundaryInfo=boundary_info, groupName=group_name)
 
     @staticmethod
@@ -572,6 +599,10 @@ class Mdb:
              group_name:边界组名
         Returns: 无
         """
+        if info_i is None or len(info_i) != 6:
+            raise OperationFailedException("操作错误，要求输入I端约束列表长度为6")
+        if info_j is None or len(info_j) != 6:
+            raise OperationFailedException("操作错误，要求输入J端约束列表长度为6")
         qt_model.AddBeamConstraint(id=index, beamId=beam_id, nodeInfoI=info_i, nodeInfo2=info_j, groupName=group_name)
 
     @staticmethod
@@ -585,6 +616,8 @@ class Mdb:
              coord_info:局部坐标信息 -List<float>(角)  -List<List<float>>(三点/向量)
         Returns: 无
         """
+        if coord_info is None:
+            raise OperationFailedException("操作错误，输入坐标系信息不能为空")
         qt_model.AddNodalAxises(id=index, input_type=input_type, nodeId=node_id, nodeInfo=coord_info)
 
     # endregion
@@ -614,6 +647,8 @@ class Mdb:
              node_ids:节点列表
         Returns: 无
         """
+        if node_ids is None:
+            raise OperationFailedException("操作错误，输入节点列表不能为空")
         qt_model.AddNodeTandem(name=name, startId=start_id, nodeIds=node_ids)
 
     @staticmethod
@@ -649,9 +684,11 @@ class Mdb:
              name:荷载工况名
              influence_plane:影响线名
              span:跨度
-             sub_case:子工况信息
+             sub_case:子工况信息 List<string[]>
         Returns: 无
         """
+        if sub_case is None:
+            raise OperationFailedException("操作错误，子工况信息列表不能为空")
         qt_model.AddLiveLoadCase(name=name, influencePlane=influence_plane, span=span, subCase=sub_case)
 
     @staticmethod
@@ -763,6 +800,12 @@ class Mdb:
              slip_info: 滑移信息[始端距离,末端距离]
         Returns: 无
         """
+        if steel_detail is None:
+            raise OperationFailedException("操作错误，钢束特性信息不能为空")
+        if loos_detail is None:
+            loos_detail = []
+        if slip_info is None:
+            slip_info = [0.006, 0.006]
         qt_model.AddTendonProperty(name=name, id=index, tendonType=tendon_type, materialId=material_id,
                                    ductType=duct_type, steelType=steel_type, steelDetail=steel_detail,
                                    loosDetail=loos_detail, slipInfo=slip_info)
@@ -787,6 +830,12 @@ class Mdb:
              track_group:轨迹线结构组名  (直线时不用赋值)
         Returns: 无
         """
+        if tendon_direction is None:
+            tendon_direction = []
+        if control_info is None:
+            raise OperationFailedException("操作错误，钢束形状控制点不能为空")
+        if point_insert is None or len(point_insert) != 3:
+            raise OperationFailedException("操作错误，钢束插入点信息不能为空且长度必须为3")
         qt_model.AddTendon3D(name=name, propertyName=property_name, groupName=group_name, num=num, lineType=line_type,
                              positionType=position_type, controlPoints=control_info,
                              pointInsert=point_insert, tendonDirection=tendon_direction,
@@ -833,6 +882,8 @@ class Mdb:
              mass_info:[m,rmX,rmY,rmZ]
         Returns: 无
         """
+        if mass_info is None:
+            raise OperationFailedException("操作错误，节点质量信息列表不能为空")
         qt_model.AddNodalMass(nodeId=node_id, massInfo=mass_info)
 
     @staticmethod
@@ -913,6 +964,8 @@ class Mdb:
              group_name:荷载组名
         Returns: 无
         """
+        if load_info is None or len(load_info) != 6:
+            raise OperationFailedException("操作错误，节点荷载列表信息不能为空，且其长度必须为6")
         qt_model.AddNodalForce(caseName=case_name, nodeId=node_id, loadInfo=load_info, groupName=group_name)
 
     @staticmethod
@@ -937,6 +990,8 @@ class Mdb:
              group_name:荷载组名
         Returns: 无
         """
+        if load_info is None or len(load_info) != 6:
+            raise OperationFailedException("操作错误，节点位移列表信息不能为空，且其长度必须为6")
         qt_model.AddNodeDisplacement(caseName=case_name, nodeId=node_id, loadInfo=load_info, groupName=group_name)
 
     @staticmethod
@@ -1034,6 +1089,8 @@ class Mdb:
              parameter_info:参数列表
         Returns: 无
         """
+        if parameter_info is None:
+            raise OperationFailedException("操作错误，制造误差信息不能为空")
         qt_model.AddDeviationParameter(name=name, elementType=element_type, parameterInfo=parameter_info)
 
     @staticmethod
@@ -1047,6 +1104,8 @@ class Mdb:
              group_name:荷载组名
         Returns: 无
         """
+        if parameter_name is None:
+            raise OperationFailedException("操作错误，制造误差名称信息不能为空")
         qt_model.AddDeviationLoad(elementId=element_id, caseName=case_name, parameterName=parameter_name, groupName=group_name)
 
     @staticmethod
@@ -1133,6 +1192,8 @@ class Mdb:
              node_ids: 节点编号
         Returns: 无
         """
+        if node_ids is None:
+            raise OperationFailedException("操作错误，沉降定义中节点信息不能为空")
         qt_model.AddSinkGroup(name=name, sinkValue=sink, nodeIds=node_ids)
 
     @staticmethod
@@ -1157,6 +1218,8 @@ class Mdb:
              sink_groups:沉降组名
         Returns: 无
         """
+        if sink_groups is None:
+            raise OperationFailedException("操作错误，沉降工况定义中沉降组信息不能为空")
         qt_model.AddSinkCase(name=name, sinkGroups=sink_groups)
 
     @staticmethod
@@ -1180,6 +1243,8 @@ class Mdb:
              names: 结构组名称集合
         Returns: 无
         """
+        if names is None:
+            raise OperationFailedException("操作错误，添加并发反力组时结构组名称不能为空")
         qt_model.AddConcurrentReaction(names=names)
 
     @staticmethod
