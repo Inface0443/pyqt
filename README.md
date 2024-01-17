@@ -2,7 +2,7 @@
 ### initial
 > 初始化模型  
 > Returns: 无  
-##  节点单元操作
+##  节点单元操作 
 ### add_structure_group
 > 添加结构组  
 > Args:  
