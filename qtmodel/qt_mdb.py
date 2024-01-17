@@ -10,6 +10,7 @@ class Mdb:
     def __int__(self):
         self.initial()
 
+    # region 初始化模型
     @staticmethod
     def initial():
         """
