@@ -1,6 +1,6 @@
 from __main__ import qt_model
 from .qt_keyword import *
-from qtcore import *
+from .res_db import *
 
 
 class Odb:

@@ -83,3 +83,7 @@ class BeamStress:
                 f"  Moment Y Bottom: {self.smy_bot:.3f}\n"
                 f"  Moment Z Left: {self.smz_left:.3f}\n"
                 f"  Moment Z Right: {self.smz_right:.3f}")
+
+    @staticmethod
+    def test_print():
+        print("yes")
