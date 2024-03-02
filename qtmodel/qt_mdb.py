@@ -196,7 +196,7 @@ class Mdb:
         """
         添加收缩徐变材料
         Args:
-            index: 收缩徐变编号,默认自动识别 (可选参数)
+            index: 指定收缩徐变编号,默认则自动识别 (可选参数)
             name: 收缩徐变名
             code_index: 收缩徐变规范索引
             time_parameter: 对应规范的收缩徐变参数列表,默认不改变规范中信息 (可选参数)
@@ -253,7 +253,7 @@ class Mdb:
         """
         删除指定材料
         Args:
-            index:材料编号，默认删除所有材料
+            index:指定材料编号，默认则删除所有材料
         Returns: 无
         """
         if index == -1:
@@ -1384,9 +1384,9 @@ class Mdb:
     @staticmethod
     def remove_load_combine(name=""):
         """
-        删除荷载组合,参数默认时删除所有荷载组合
+        删除荷载组合
         Args:
-             name:所删除荷载组合名
+             name:指定删除荷载组合名，默认时则删除所有荷载组合
         Returns: 无
         """
         if name != "":
