@@ -1322,7 +1322,7 @@ class Mdb:
             duration:时长
             active_structures:激活结构组信息 [[结构组名，(int)龄期，施工阶段名，(int)1-变形法 2-接线法 3-无应力法],...]
             delete_structures:钝化结构组信息 [结构组1，结构组2,...]
-            active_boundaries:激活边界组信息 [[边界组1，(int)1-变形前 2-变形后],...]
+            active_boundaries:激活边界组信息 [[边界组1，(int)0-变形前 1-变形后],...]
             delete_boundaries:钝化边界组信息 [边界组1，结构组2,...]
             active_loads:激活荷载组信息 [[荷载组1,(int)0-开始 1-结束],...]
             delete_loads:钝化荷载组信息 [[荷载组1,(int)0-开始 1-结束],...]

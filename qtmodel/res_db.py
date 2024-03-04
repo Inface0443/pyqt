@@ -18,7 +18,7 @@ class FrameElementForce:
             raise ValueError("Invalid input: 'id' must be an integer, and 'force_i' and 'force_j' must be lists of length 6.")
 
     def __str__(self):
-        return f"BeamId:{self.id}\nForceI: {self.force_i}\nForceJ: {self.force_j}"
+        return f"BeamId:{self.id}\nforce_i: {self.force_i}\nforce_j: {self.force_j}"
 
 
 class FrameElementStress:
@@ -57,6 +57,7 @@ class Force:
                 f"mx={self.mx:.3f}, my={self.my:.3f}, mz={self.mz:.3f}, "
                 f"f_xyz={self.fxyz:.3f}, "
                 f"m_xyz={self.mxyz:.3f})")
+
 
 
 class BeamStress:

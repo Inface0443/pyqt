@@ -10,13 +10,13 @@ class Odb:
 
     @staticmethod
     def __get_force_i(force_info):
-        return [force_info.INodeForce.fx, force_info.INodeForce.fy, force_info.INodeForce.fz,
-                force_info.INodeForce.mx, force_info.INodeForce.my, force_info.INodeForce.mz]
+        return [force_info.INodeForce.Fx, force_info.INodeForce.Fy, force_info.INodeForce.Fz,
+                force_info.INodeForce.Mx, force_info.INodeForce.My, force_info.INodeForce.Mz]
 
     @staticmethod
     def __get_force_j(force_info):
-        return [force_info.INodeForce.fx, force_info.INodeForce.fy, force_info.INodeForce.fz,
-                force_info.INodeForce.mx, force_info.INodeForce.my, force_info.INodeForce.mz]
+        return [force_info.INodeForce.Fx, force_info.INodeForce.Fy, force_info.INodeForce.Fz,
+                force_info.INodeForce.Mx, force_info.INodeForce.My, force_info.INodeForce.Mz]
 
     @staticmethod
     def get_beam_force(beam_id=1, stage_id=1, result_kind=RES_MAIN, increment_type=TYP_TOTAL):
