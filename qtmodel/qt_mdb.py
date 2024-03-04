@@ -265,8 +265,9 @@ class Mdb:
 
     # region 截面和板厚操作
     @staticmethod
-    def add_section(index=-1, name="", section_type="矩形", section_info=None,
-                    bias_type="中心", center_type="质心", shear_consider=True, bias_point=None):
+    def add_parameter_section(index=-1, name="", section_type="矩形", section_info=None,
+                              charm_info=None, section_right=None, charm_right=None, box_number=3, height=2, material_info=None,
+                              bias_type="中心", center_type="质心", shear_consider=True, bias_x=0, bias_y=0):
         """
         添加截面信息
         Args:
@@ -274,59 +275,47 @@ class Mdb:
              name:截面名称
              section_type:截面类型
              section_info:截面信息 (必要参数)
+             charm_info:混凝土截面倒角信息 (仅混凝土箱梁截面需要)str[4]
+             section_right:混凝土截面右半信息 (对称时可忽略，仅混凝土箱梁截面需要) str[19]
+             charm_right:混凝土截面右半倒角信息 (对称时可忽略，仅混凝土箱梁截面需要) str[4]
+             box_number: 混凝土箱室数 (仅混凝土箱梁截面需要)
+             height: 混凝土箱梁梁高 (仅混凝土箱梁截面需要)
+             material_info: 组合截面材料信息 [弹性模量比s/c、密度比s/c、钢材泊松比、混凝土泊松比、热膨胀系数比s/c] (仅组合材料需要)
              bias_type:偏心类型
              center_type:中心类型
-             shear_consider:考虑剪切
-             bias_point:自定义偏心点(仅自定义类型偏心需要)
-        Returns: 无
-        """
-        if section_info is None:
-            raise OperationFailedException("操作错误,请输入此截面的截面信息，参数列表可参考截面定义窗口")
-        if center_type == "自定义":
-            if len(bias_point) != 2:
-                raise OperationFailedException("操作错误,bias_point数据无效!")
-            qt_model.AddSection(id=index, name=name, secType=section_type, secInfo=section_info, biasType=bias_type, centerType=center_type,
-                                shearConsider=shear_consider, horizontalPos=bias_point[0], verticalPos=bias_point[1])
-        else:
-            qt_model.AddSection(id=index, name=name, secType=section_type, secInfo=section_info, biasType=bias_type, centerType=center_type,
-                                shearConsider=shear_consider)
+             shear_consider:考虑剪切 bool
+             bias_x:自定义偏心点x坐标 (仅自定义类型偏心需要)
+             bias_y:自定义偏心点y坐标 (仅自定义类型偏心需要)
 
-    @staticmethod
-    def add_single_box(index=-1, name="", n=1, h=4, section_info=None, charm_info=None, section_info2=None, charm_info2=None,
-                       bias_type="中心", center_type="质心", shear_consider=True, bias_point=None):
-        """
-        添加单项多室混凝土截面
-        Args:
-             index:截面编号，默认自动识别
-             name:截面名称
-             n:箱室数量
-             h:截面高度
-             section_info:截面信息
-             charm_info:截面倒角
-             section_info2:右半室截面信息
-             charm_info2:右半室截面倒角
-             bias_type:偏心类型
-             center_type:中心类型
-             shear_consider:考虑剪切
-             bias_point:自定义偏心点(仅自定义类型偏心需要)
         Returns: 无
         """
         if section_info is None:
-            raise OperationFailedException("操作错误,请输入此截面的截面信息，参数列表可参考截面定义窗口")
-        if center_type == "自定义":
-            if len(bias_point) != 2:
-                raise OperationFailedException("操作错误,bias_point数据无效!")
-            qt_model.AddSingleBoxSection(id=index, name=name, N=n, H=h, secInfo=section_info, charmInfo=charm_info,
-                                         secInfoR=section_info2, charmInfoR=charm_info2, biasType=bias_type, centerType=center_type,
-                                         shearConsider=shear_consider, horizontalPos=bias_point[0], verticalPos=bias_point[1])
+            raise OperationFailedException("操作错误,请输入此截面的截面信息，参数列表可参考截面定义窗口!")
+        elif section_type == "混凝土箱梁":
+            if len(section_info) != 19 or len(charm_info) != 4:
+                raise OperationFailedException("操作错误，混凝土箱梁参数错误，参数列表可参考截面定义窗口！")
+            qt_model.AddParameterSection(id=index, name=name, secType=section_type, secInfo=section_info, charmInfo=charm_info,
+                                         N=box_number, H=height, charmInfoR=charm_right, secInfoR=section_right,
+                                         biasType=bias_type, centerType=center_type, shearConsider=shear_consider,
+                                         horizontalPos=bias_x, verticalPos=bias_y)
+        elif section_type == "钢管砼" or section_type == "钢箱砼":
+            if len(material_info) != 5:
+                raise OperationFailedException("操作错误，材料比错误，参数列表：[弹性模量比s/c、密度比s/c、钢材泊松比、混凝土泊松比、热膨胀系数比s/c] ！")
+            if len(section_info) != 2 or len(section_info) != 6:
+                raise OperationFailedException("操作错误，截面参数列表：[D,t]-钢管砼  [W,H,dw,tw,tt,tb]-钢箱砼")
+            qt_model.AddParameterSection(id=index, name=name, secType=section_type, secInfo=section_info,
+                                         elasticModulusRatio=material_info[0], densityRatio=material_info[1], steelPoisson=material_info[2],
+                                         concretePoisson=material_info[3], temperatureRatio=material_info[4],
+                                         biasType=bias_type, centerType=center_type, shearConsider=shear_consider,
+                                         horizontalPos=bias_x, verticalPos=bias_y)
         else:
-            qt_model.AddSingleBoxSection(id=index, name=name, N=n, H=h, secInfo=section_info, charmInfo=charm_info,
-                                         secInfoR=section_info2, charmInfoR=charm_info2, biasType=bias_type, centerType=center_type,
-                                         shearConsider=shear_consider)
+            qt_model.AddParameterSection(id=index, name=name, secType=section_type, secInfo=section_info,
+                                         biasType=bias_type, centerType=center_type, shearConsider=shear_consider,
+                                         horizontalPos=bias_x, verticalPos=bias_y)
 
     @staticmethod
     def add_steel_section(index=-1, name="", section_type=SEC_GGL, section_info=None, rib_info=None, rib_place=None,
-                          bias_type="中心", center_type="质心", shear_consider=True, bias_point=None):
+                          bias_type="中心", center_type="质心", shear_consider=True, bias_x=0, bias_y=0):
         """
         添加钢梁截面,包括参数型钢梁截面和自定义带肋钢梁截面
         Args:
@@ -339,21 +328,15 @@ class Mdb:
              bias_type:偏心类型
              center_type:中心类型
              shear_consider:考虑剪切
-             bias_point:自定义偏心点(仅自定义类型偏心需要)
+             bias_x:自定义偏心点x坐标 (仅自定义类型偏心需要)
+             bias_y:自定义偏心点y坐标 (仅自定义类型偏心需要)
         Returns: 无
         """
         if section_info is None:
             raise OperationFailedException("操作错误,请输入此截面的截面信息，参数列表可参考截面定义窗口")
-        if center_type == "自定义":
-            if len(bias_point) != 2:
-                raise OperationFailedException("操作错误,bias_point数据无效!")
-            qt_model.AddSteelSection(id=index, name=name, type=section_type, sectionInfoList=section_info, ribInfoList=rib_info,
-                                     ribPlaceList=rib_place, baisType=bias_type, centerType=center_type,
-                                     shearConsider=shear_consider, horizontalPos=bias_point[0], verticalPos=bias_point[1])
-        else:
-            qt_model.AddSteelSection(id=index, name=name, type=section_type, sectionInfoList=section_info, ribInfoList=rib_info,
-                                     ribPlaceList=rib_place, baisType=bias_type, centerType=center_type,
-                                     shearConsider=shear_consider)
+        qt_model.AddSteelSection(id=index, name=name, type=section_type, sectionInfoList=section_info, ribInfoList=rib_info,
+                                 ribPlaceList=rib_place, baisType=bias_type, centerType=center_type,
+                                 shearConsider=shear_consider, horizontalPos=bias_x, verticalPos=bias_y)
 
     @staticmethod
     def add_user_section(index=-1, name="", section_type="特性截面", property_info=None):
@@ -1399,3 +1382,17 @@ class Mdb:
 class OperationFailedException(Exception):
     """用户操作失败时抛出的异常"""
     pass
+
+    """
+                添加截面信息
+                Args:
+                     index: 截面编号,默认自动识别
+                     name:截面名称
+                     section_type:截面类型
+                     section_info:截面信息 (必要参数)
+                     bias_type:偏心类型
+                     center_type:中心类型
+                     shear_consider:考虑剪切
+                     bias_point:自定义偏心点(仅自定义类型偏心需要)
+                Returns: 无
+                """
