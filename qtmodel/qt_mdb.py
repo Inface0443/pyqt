@@ -328,7 +328,7 @@ class Mdb:
              bias_type:偏心类型
              center_type:中心类型
              shear_consider:考虑剪切
-             bias_x:自定义偏心点x坐标 (仅自定义类型偏心需要)
+             bias_x:自定义偏心点x坐标 (仅自定义类型偏心需要,相对形心)
              bias_y:自定义偏心点y坐标 (仅自定义类型偏心需要)
         Returns: 无
         """
