@@ -1,5 +1,4 @@
 from __main__ import qt_model
-from .qt_keyword import *
 from .res_db import *
 
 
@@ -19,14 +18,14 @@ class Odb:
                 force_info.INodeForce.Mx, force_info.INodeForce.My, force_info.INodeForce.Mz]
 
     @staticmethod
-    def get_beam_force(beam_id=1, stage_id=1, result_kind=RES_MAIN, increment_type=TYP_TOTAL):
+    def get_beam_force(beam_id=1, stage_id=1, result_kind=1, increment_type=1):
         """
         获取梁单元内力,支持单个节点和节点列表
         Args:
             beam_id: 梁单元号
             stage_id: 施工极端号
-            result_kind: 施工阶段数据的类型
-            increment_type: 增量和全量
+            result_kind: 施工阶段数据的类型 1-合计 2-收缩徐变效应 3-预应力效应 4-恒载
+            increment_type: 1-全量    2-增量
 
         Returns:
             FrameForce
@@ -42,14 +41,14 @@ class Odb:
             return list_res
 
     @staticmethod
-    def get_cable_force(cable_id=1, stage_id=1, result_kind=RES_MAIN, increment_type=TYP_TOTAL):
+    def get_cable_force(cable_id=1, stage_id=1, result_kind=1, increment_type=1):
         """
         获取索单元内力,支持单个节点和节点列表
         Args:
             cable_id: 索单元号
             stage_id: 施工极端号
-            result_kind: 施工阶段数据的类型
-            increment_type: 增量和全量
+            result_kind: 施工阶段数据的类型 1-合计 2-收缩徐变效应 3-预应力效应 4-恒载
+            increment_type:  1-全量    2-增量
 
         Returns:
             FrameForce
@@ -65,14 +64,14 @@ class Odb:
             return list_res
 
     @staticmethod
-    def get_link_force(cable_id=1, stage_id=1, result_kind=RES_MAIN, increment_type=TYP_TOTAL):
+    def get_link_force(cable_id=1, stage_id=1, result_kind=1, increment_type=1):
         """
         获取桁架单元内力,支持单个节点和节点列表
         Args:
             cable_id: 桁架单元号
             stage_id: 施工极端号
-            result_kind: 施工阶段数据的类型
-            increment_type: 增量和全量
+            result_kind: 施工阶段数据的类型 1-合计 2-收缩徐变效应 3-预应力效应 4-恒载
+            increment_type: 1-全量    2-增量
 
         Returns:
             FrameForce

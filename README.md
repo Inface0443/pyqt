@@ -1,6 +1,6 @@
 ##  初始化模型
 ### initial
-> 初始化模型  
+> 初始化模型
 > Returns: 无  
 ##  节点单元操作 
 ### add_structure_group
@@ -660,66 +660,3 @@
 > Args:  
 > name:所删除荷载组合名  
 > Returns: 无  
-
-
-## 参数说明
-### charm_info
-*倒角列表中信息含义详见桥通界面定义界面，所需参数类型均为str类型*
-- 倒角列表：[C1,C2,C3,C4]
-
-### section_info
-*截面信息各变量含义详见桥通截面定义界面，以下所需参数类型均为float*
-- 单箱多室混凝土截面：[i1,i2,B0,B1,B1a,B1b,B2,B3,B4,H1,H2,H2a,H2b,T1,T2,T3,T4,R1,R2]
-- 矩形截面：[W,H]
-- 圆形截面： [D]
-- 圆管截面： [D,t]
-- 箱型截面： [W,H,dw,tw,tt,tb]
-- 实腹八边形截面： [a,b,W,H]
-- 空腹八边形： [W,H,tw,tt,tb,a,b]
-- 内八角形截面： [W,H,tw,tt,tb,a,b]
-- 实腹圆端形截面： [W,H]
-- 空腹圆端形截面： [H,W,tw,tt]
-- T形截面： [H,W,tw,tt]
-- 倒T形截面： [H,W,tw,tb]
-- I字形截面： [Wt,Wb,H,tw,tt,tb]
-- 马蹄T形截面： [H,tb,b2,b1,tt,tw,W,a2,a1]
-- I字型混凝土截面： [tb,Wb,H,b2,b1,tt,Wt,tw,a2,a1]
-- 钢管砼： [D,t,Es/Ec,Ds/Dc,Ts/Tc,vC,νS]
-- 钢箱砼： [W,H,dw,tw,tt,tb,Es/Ec,Ds/Dc,Ts/Tc,vC,νS]
-
-### steel_detail
-- 钢绞线：[钢束面积,孔道直径,摩阻系数,偏差系数]   
-- 螺纹钢筋：[钢筋直径,钢束面积,孔道直径,摩阻系数,偏差系数,张拉方式]
-
-
-
-## 关键字定义
-### 坐标系  
-关联参数： coord_system
-- GLB_X = 1  # 整体坐标X  
-- GLB_Y = 2  # 整体坐标Y  
-- GLB_Z = 3  # 整体坐标Z  
-- LOC_X = 4  # 局部坐标X  
-- LOC_Y = 5  # 局部坐标Y  
-- LOC_Z = 6  # 局部坐标Z  
-
-### 钢束定位方式
-关联参数：position_type
-- TYP_STRAIGHT = 1  # 直线
-- TYP_TRACK = 2  # 轨迹线
-
-### 荷载工况类型
-关联参数：load_case_type
-- LD_CS = "施工阶段荷载"  # ConstructionStage
-- LD_DL = "恒载"  # DeadLoad
-- LD_LL = "活载"  # LiveLoad
-- LD_BF = "制动力"  # BrakingForce
-- LD_WL = "风荷载"  # WindLoad
-- LD_ST = "体系温度荷载"  # SystemTemperature
-- LD_GT = "梯度温度荷载"  # GradientTemperature
-- LD_RD = "长轨伸缩挠曲力荷载"  # RailDeformation
-- LD_DE = "脱轨荷载"  # Derailment
-- LD_SC = "船舶撞击荷载"  # ShipCollision
-- LD_VC = "汽车撞击荷载"  # VehicleCollision
-- LD_RB = "长轨断轨力荷载"  # RailBreakingForce
-- LD_UD = "用户定义荷载"  # UserDefine

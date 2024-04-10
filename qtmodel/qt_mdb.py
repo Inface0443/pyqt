@@ -1,5 +1,4 @@
 from __main__ import qt_model
-from .qt_keyword import *
 
 
 class Mdb:
@@ -15,29 +14,37 @@ class Mdb:
     def initial():
         """
         初始化模型
+        example:
+                mdb.initial()
         Returns: 无
         """
         qt_model.Initial()
 
     # region 节点单元操作
     @staticmethod
-    def add_structure_group(name="", index=-1):
+    def add_structure_group(name: str = "", index: int = -1):
         """
         添加结构组
         Args:
             name: 结构组名
             index: 结构组编号(非必须参数)，默认自动识别当前编号
+        example:
+                mdb.add_structure_group("新建结构组1")
+                mdb.add_structure_group(name="新建结构组2",index=2)
         Returns: 无
         """
         qt_model.AddStructureGroup(name=name, id=index)
 
     @staticmethod
-    def remove_structure_group(name="", index=-1):
+    def remove_structure_group(name: str = "", index: int = -1):
         """
         可根据结构与组名或结构组编号删除结构组，当组名和组编号均为默认则删除所有结构组
         Args:
             name:结构组名称
             index:结构组编号
+        example:
+                mdb.remove_structure_group(name=“新建结构组1”)
+                mdb.remove_structure_group(index = 2)
         Returns: 无
         """
         if index != -1:
@@ -48,13 +55,15 @@ class Mdb:
             qt_model.RemoveAllStructureGroup()
 
     @staticmethod
-    def add_structure_to_group(name="", node_ids=None, element_ids=None):
+    def add_structure_to_group(name: int = "", node_ids: list[int] = None, element_ids: list[int] = None):
         """
         为结构组添加节点和/或单元
         Args:
              name: 结构组名
              node_ids: 节点编号列表(可选参数)
              element_ids: 单元编号列表(可选参数)
+        example:
+                mdb.add_structure_to_group(name="现有结构组1",node_ids=[1,2,3,4],element_ids=[1,2])
         Returns: 无
         """
         if node_ids is None:
@@ -64,13 +73,15 @@ class Mdb:
         qt_model.AddStructureToGroup(name=name, nodeIds=node_ids, elementIds=element_ids)
 
     @staticmethod
-    def remove_structure_in_group(name="", node_ids=None, element_ids=None):
+    def remove_structure_in_group(name: str = "", node_ids: list[int] = None, element_ids=None):
         """
         为结构组删除节点和/或单元
         Args:
              name: 结构组名
              node_ids: 节点编号列表(可选参数)
              element_ids: 单元编号列表(可选参数)
+        example:
+                mdb.add_structure_to_group(name="现有结构组1",node_ids=[1,2,3,4],element_ids=[1,2])
         Returns: 无
         """
         if node_ids is None:
@@ -80,7 +91,7 @@ class Mdb:
         qt_model.RemoveStructureOnGroup(name=name, nodeIds=node_ids, elementIds=element_ids)
 
     @staticmethod
-    def add_node(x=1, y=1, z=1, index=-1):
+    def add_node(x: float = 1, y: float = 1, z: float = 1, index: int = -1):
         """
         根据坐标信息和节点编号添加节点，默认自动识别编号
         Args:
@@ -88,6 +99,9 @@ class Mdb:
              y: 节点坐标y
              z: 节点坐标z
              index: 节点编号，默认自动识别编号 (可选参数)
+        example:
+            mdb.add_node(1,2,3)
+            mdb.add_node(x= 1,y = 2,z = 4,index = 2)
         Returns:无
         """
         if index != -1:
@@ -101,16 +115,22 @@ class Mdb:
         添加多个节点，可以选择指定节点编号
         Args:
              node_list:节点坐标信息 [[x1,y1,z1],...]或 [[id1,x1,y1,z1]...]
+        example:
+            mdb.add_nodes([[1,2,3],[4,5,6]])
+            mdb.add_nodes([[1,1,2,3],[2,4,5,6]])
         Returns: 无
         """
         qt_model.AddNodes(dataList=node_list)
 
     @staticmethod
-    def remove_node(index=None):
+    def remove_node(index: int = None):
         """
-        删除指定节点
+        删除指定节点,不输入参数时默认删除所有节点
         Args:
             index:节点编号
+        example:
+            mdb.remove_node()
+            mdb.remove_node(index=1)
         Returns: 无
         """
         if index is None:
@@ -121,7 +141,7 @@ class Mdb:
             qt_model.RemoveNodes(ids=index)
 
     @staticmethod
-    def add_element(index=1, ele_type=1, node_ids=None, beta_angle=0, mat_id=-1, sec_id=-1):
+    def add_element(index: int = 1, ele_type: int = 1, node_ids: list[int] = None, beta_angle: float = 0, mat_id: int = -1, sec_id: int = -1):
         """
         根据单元编号和单元类型添加单元
         Args:
@@ -131,12 +151,14 @@ class Mdb:
             beta_angle:贝塔角
             mat_id:材料编号
             sec_id:截面编号
+        example:
+            mdb.add_element(index=1,ele_type=1,node_ids=[1,2],beta_angle=1,mat_id=1.sec_id=1)
         Returns: 无
         """
         if node_ids is None and ele_type != 4:
-            raise OperationFailedException("操作错误,请输入此单元所需节点列表,[i,j]")
+            raise Exception("操作错误,请输入此单元所需节点列表,[i,j]")
         if node_ids is None and ele_type == 4:
-            raise OperationFailedException("操作错误,请输入此板单元所需节点列表,[i,j,k,l]")
+            raise Exception("操作错误,请输入此板单元所需节点列表,[i,j,k,l]")
         if ele_type == 1:
             qt_model.AddBeam(id=index, idI=node_ids[0], idJ=node_ids[1], betaAngle=beta_angle, materialId=mat_id, sectionId=sec_id)
         elif index == 2:
@@ -149,11 +171,14 @@ class Mdb:
                               sectionId=sec_id)
 
     @staticmethod
-    def remove_element(index=None):
+    def remove_element(index: int = None):
         """
         删除指定编号的单元
         Args:
             index: 单元编号,默认时删除所有单元
+        example:
+            mdb.remove_element()
+            mdb.remove_element(index=1)
         Returns: 无
         """
         if index is None:
@@ -165,34 +190,40 @@ class Mdb:
 
     # region 材料操作
     @staticmethod
-    def add_material(index=-1, name="", material_type="混凝土", standard_name="公路18规范", database="C50", construct_factor=1,
-                     modified=False, modify_info=None):
+    def add_material(index: int = -1, name: str = "", material_type: str = "混凝土", standard: str = "公路18规范", database: str = "C50",
+                     construct_factor: float = 1, modified: bool = False, data_info: list[float] = None):
         """
         添加材料
         Args:
             index:材料编号,默认自动识别 (可选参数)
             name:材料名称
             material_type: 材料类型
-            standard_name:规范名称
+            standard:规范名称
             database:数据库
             construct_factor:构造系数
             modified:是否修改默认材料参数,默认不修改 (可选参数)
-            modify_info:材料参数列表[弹性模量,容重,泊松比,热膨胀系数] (可选参数)
+            data_info:材料参数列表[弹性模量,容重,泊松比,热膨胀系数] (可选参数)
+        example:
+            mdb.add_material(index=1,name=“混凝土材料1”,material_type="混凝土",standard="公路18规范",database="C50")
+            mdb.add_material(index=1,name=“自定义材料1”,material_type="自定义",data_info=[3.5e10,2.5e4,0.2,1.5e-5])
         Returns: 无
         """
-        if modified and len(modify_info) != 4:
-            raise OperationFailedException("操作错误,modify_info数据无效!")
+        list_material = ["混凝土", "钢材", "预应力", "钢丝", "钢筋", "自定义"]
+        if material_type not in list_material:
+            raise Exception(f"操作错误,material_type不在指定列表:{list_material}中")
+        if modified and len(data_info) != 4:
+            raise Exception("操作错误,modify_info数据无效!")
         if not modified:
-            qt_model.AddMaterial(id=index, name=name, materialType=material_type, standardName=standard_name,
+            qt_model.AddMaterial(id=index, name=name, materialType=material_type, standardName=standard,
                                  database=database, constructFactor=construct_factor, isModified=modified)
         else:
-            qt_model.AddMaterial(id=index, name=name, materialType=material_type, standardName=standard_name,
+            qt_model.AddMaterial(id=index, name=name, materialType=material_type, standardName=standard,
                                  database=database, constructFactor=construct_factor, isModified=modified,
-                                 elasticModulus=modify_info[0], unitWeight=modify_info[1],
-                                 posiRatio=modify_info[2], tempratureCoefficient=modify_info[3])
+                                 elasticModulus=data_info[0], unitWeight=data_info[1],
+                                 posiRatio=data_info[2], tempratureCoefficient=data_info[3])
 
     @staticmethod
-    def add_time_material(index=-1, name="", code_index=1, time_parameter=None):
+    def add_time_material(index: int = -1, name: str = "", code_index: int = 1, time_parameter: list[float] = None):
         """
         添加收缩徐变材料
         Args:
@@ -200,60 +231,66 @@ class Mdb:
             name: 收缩徐变名
             code_index: 收缩徐变规范索引
             time_parameter: 对应规范的收缩徐变参数列表,默认不改变规范中信息 (可选参数)
+        example:
+            mdb.add_time_material(index=1,name="收缩徐变材料1",code_index=1)
         Returns:无
         """
         if time_parameter is None:  # 默认不修改收缩徐变相关参数
             qt_model.AddTimeParameter(id=index, name=name, codeId=code_index)
         elif code_index == 1:  # 公规 JTG 3362-2018
             if len(time_parameter) != 4:
-                raise OperationFailedException("操作错误,time_parameter数据无效!")
+                raise Exception("操作错误,time_parameter数据无效!")
             qt_model.AddTimeParameter(id=index, name=name, codeId=code_index, rh=time_parameter[0], bsc=time_parameter[1],
                                       timeStart=time_parameter[2], flyashCotent=time_parameter[3])
         elif code_index == 2:  # 公规 JTG D62-2004
             if len(time_parameter) != 3:
-                raise OperationFailedException("操作错误,time_parameter数据无效!")
+                raise Exception("操作错误,time_parameter数据无效!")
             qt_model.AddTimeParameter(id=index, name=name, codeId=code_index, rh=time_parameter[0], bsc=time_parameter[1],
                                       timeStart=time_parameter[2])
         elif code_index == 3:  # 公规 JTJ 023-85
             if len(time_parameter) != 4:
-                raise OperationFailedException("操作错误,time_parameter数据无效!")
+                raise Exception("操作错误,time_parameter数据无效!")
             qt_model.AddTimeParameter(id=index, name=name, codeId=code_index, creepBaseF1=time_parameter[0], creepNamda=time_parameter[1],
                                       shrinkSpeek=time_parameter[2], shrinkEnd=time_parameter[3])
         elif code_index == 4:  # 铁规 TB 10092-2017
             if len(time_parameter) != 5:
-                raise OperationFailedException("操作错误,time_parameter数据无效!")
+                raise Exception("操作错误,time_parameter数据无效!")
             qt_model.AddTimeParameter(id=index, name=name, codeId=code_index, rh=time_parameter[0], creepBaseF1=time_parameter[1],
                                       creepNamda=time_parameter[2], shrinkSpeek=time_parameter[3], shrinkEnd=time_parameter[4])
         elif code_index == 5:  # 地铁 GB 50157-2013
             if len(time_parameter) != 3:
-                raise OperationFailedException("操作错误,time_parameter数据无效!")
+                raise Exception("操作错误,time_parameter数据无效!")
             qt_model.AddTimeParameter(id=index, name=name, codeId=code_index, rh=time_parameter[0], shrinkSpeek=time_parameter[1],
                                       shrinkEnd=time_parameter[2])
         elif code_index == 6:  # 老化理论
             if len(time_parameter) != 4:
-                raise OperationFailedException("操作错误,time_parameter数据无效!")
+                raise Exception("操作错误,time_parameter数据无效!")
             qt_model.AddTimeParameter(id=index, name=name, codeId=code_index, creepEnd=time_parameter[0], creepSpeek=time_parameter[1],
                                       shrinkSpeek=time_parameter[2], shrinkEnd=time_parameter[3])
 
     @staticmethod
-    def update_material_creep(index=1, creep_id=1, f_cuk=0):
+    def update_material_creep(index: int = 1, creep_id: int = 1, f_cuk: float = 0):
         """
         将收缩徐变参数连接到材料
         Args:
             index: 材料编号
             creep_id: 收缩徐变编号
             f_cuk: 材料标准抗压强度,仅自定义材料是需要输入
+        example:
+            mdb.update_material_creep(index=1,creep_id=1,f_cuk=5e7)
         Returns: 无
         """
-
         qt_model.UpdateMaterialCreep(materialId=index, timePatameterId=creep_id, fcuk=f_cuk)
 
     @staticmethod
-    def remove_material(index=-1):
+    def remove_material(index: int = -1):
         """
         删除指定材料
         Args:
             index:指定材料编号，默认则删除所有材料
+        example:
+            mdb.remove_material()
+            mdb.remove_material(index=1)
         Returns: 无
         """
         if index == -1:
@@ -265,8 +302,8 @@ class Mdb:
 
     # region 截面和板厚操作
     @staticmethod
-    def add_parameter_section(index=-1, name="", section_type="矩形", section_info=None,
-                              charm_info=None, section_right=None, charm_right=None, box_number=3, height=2, material_info=None,
+    def add_parameter_section(index: int = -1, name: str = "", section_type: str = "矩形", section_info: list[float] = None,
+                              charm_info: list[str] = None, section_right=None, charm_right=None, box_number=3, box_height=2, material_info=None,
                               bias_type="中心", center_type="质心", shear_consider=True, bias_x=0, bias_y=0):
         """
         添加截面信息
@@ -276,33 +313,34 @@ class Mdb:
              section_type:截面类型
              section_info:截面信息 (必要参数)
              charm_info:混凝土截面倒角信息 (仅混凝土箱梁截面需要)str[4]
-             section_right:混凝土截面右半信息 (对称时可忽略，仅混凝土箱梁截面需要) str[19]
+             section_right:混凝土截面右半信息 (对称时可忽略，仅混凝土箱梁截面需要) 
              charm_right:混凝土截面右半倒角信息 (对称时可忽略，仅混凝土箱梁截面需要) str[4]
              box_number: 混凝土箱室数 (仅混凝土箱梁截面需要)
-             height: 混凝土箱梁梁高 (仅混凝土箱梁截面需要)
+             box_height: 混凝土箱梁梁高 (仅混凝土箱梁截面需要)
              material_info: 组合截面材料信息 [弹性模量比s/c、密度比s/c、钢材泊松比、混凝土泊松比、热膨胀系数比s/c] (仅组合材料需要)
              bias_type:偏心类型
              center_type:中心类型
              shear_consider:考虑剪切 bool
              bias_x:自定义偏心点x坐标 (仅自定义类型偏心需要)
              bias_y:自定义偏心点y坐标 (仅自定义类型偏心需要)
-
+        example:
+            mdb.add_parameter_section
         Returns: 无
         """
         if section_info is None:
-            raise OperationFailedException("操作错误,请输入此截面的截面信息，参数列表可参考截面定义窗口!")
+            raise Exception("操作错误,请输入此截面的截面信息，参数列表可参考截面定义窗口!")
         elif section_type == "混凝土箱梁":
             if len(section_info) != 19 or len(charm_info) != 4:
-                raise OperationFailedException("操作错误，混凝土箱梁参数错误，参数列表可参考截面定义窗口！")
+                raise Exception("操作错误，混凝土箱梁参数错误，参数列表可参考截面定义窗口！")
             qt_model.AddParameterSection(id=index, name=name, secType=section_type, secInfo=section_info, charmInfo=charm_info,
-                                         N=box_number, H=height, charmInfoR=charm_right, secInfoR=section_right,
+                                         N=box_number, H=box_height, charmInfoR=charm_right, secInfoR=section_right,
                                          biasType=bias_type, centerType=center_type, shearConsider=shear_consider,
                                          horizontalPos=bias_x, verticalPos=bias_y)
         elif section_type == "钢管砼" or section_type == "钢箱砼":
             if len(material_info) != 5:
-                raise OperationFailedException("操作错误，材料比错误，参数列表：[弹性模量比s/c、密度比s/c、钢材泊松比、混凝土泊松比、热膨胀系数比s/c] ！")
+                raise Exception("操作错误，材料比错误，参数列表：[弹性模量比s/c、密度比s/c、钢材泊松比、混凝土泊松比、热膨胀系数比s/c] ！")
             if len(section_info) != 2 or len(section_info) != 6:
-                raise OperationFailedException("操作错误，截面参数列表：[D,t]-钢管砼  [W,H,dw,tw,tt,tb]-钢箱砼")
+                raise Exception("操作错误，截面参数列表：[D,t]-钢管砼  [W,H,dw,tw,tt,tb]-钢箱砼")
             qt_model.AddParameterSection(id=index, name=name, secType=section_type, secInfo=section_info,
                                          elasticModulusRatio=material_info[0], densityRatio=material_info[1], steelPoisson=material_info[2],
                                          concretePoisson=material_info[3], temperatureRatio=material_info[4],
@@ -314,7 +352,7 @@ class Mdb:
                                          horizontalPos=bias_x, verticalPos=bias_y)
 
     @staticmethod
-    def add_steel_section(index=-1, name="", section_type=SEC_GGL, section_info=None, rib_info=None, rib_place=None,
+    def add_steel_section(index=-1, name="", section_type="工字钢梁", section_info=None, rib_info=None, rib_place=None,
                           bias_type="中心", center_type="质心", shear_consider=True, bias_x=0, bias_y=0):
         """
         添加钢梁截面,包括参数型钢梁截面和自定义带肋钢梁截面
@@ -333,7 +371,7 @@ class Mdb:
         Returns: 无
         """
         if section_info is None:
-            raise OperationFailedException("操作错误,请输入此截面的截面信息，参数列表可参考截面定义窗口")
+            raise Exception("操作错误,请输入此截面的截面信息，参数列表可参考截面定义窗口")
         qt_model.AddSteelSection(id=index, name=name, type=section_type, sectionInfoList=section_info, ribInfoList=rib_info,
                                  ribPlaceList=rib_place, baisType=bias_type, centerType=center_type,
                                  shearConsider=shear_consider, horizontalPos=bias_x, verticalPos=bias_y)
@@ -350,7 +388,7 @@ class Mdb:
         Returns: 无
         """
         if property_info is None:
-            raise OperationFailedException("操作错误,请输入此截面的截面特性，特性列表可参考截面定义窗口")
+            raise Exception("操作错误,请输入此截面的截面特性，特性列表可参考截面定义窗口")
         qt_model.AddUserSection(id=index, name=name, type=section_type, propertyInfo=property_info)
 
     @staticmethod
@@ -367,7 +405,7 @@ class Mdb:
         """
         if vary_info is not None:
             if len(vary_info) != 2:
-                raise OperationFailedException("操作错误,vary_info数据无效!")
+                raise Exception("操作错误,vary_info数据无效!")
             qt_model.AddTapperSection(id=index, name=name, beginId=begin_id, endId=end_id,
                                       varyParameterWidth=vary_info[0], varyParameterHeight=vary_info[1])
         else:
@@ -460,7 +498,7 @@ class Mdb:
         """
         if center_type == "自定义":
             if len(bias_point) != 2:
-                raise OperationFailedException("操作错误,bias_point数据无效!")
+                raise Exception("操作错误,bias_point数据无效!")
             qt_model.UpdateSectionBias(id=index, biasType=bias_type, centerType=center_type,
                                        shearConsider=shear_consider, horizontalPos=bias_point[0], verticalPos=bias_point[1])
         else:
@@ -519,7 +557,7 @@ class Mdb:
         Returns: 无
         """
         if boundary_info is None or len(boundary_info) != 6:
-            raise OperationFailedException("操作错误，要求输入一般支承列表长度为6")
+            raise Exception("操作错误，要求输入一般支承列表长度为6")
         qt_model.AddGeneralSupport(id=index, nodeId=node_id, boundaryInfo=boundary_info, groupName=group_name)
 
     @staticmethod
@@ -584,9 +622,9 @@ class Mdb:
         Returns: 无
         """
         if info_i is None or len(info_i) != 6:
-            raise OperationFailedException("操作错误，要求输入I端约束列表长度为6")
+            raise Exception("操作错误，要求输入I端约束列表长度为6")
         if info_j is None or len(info_j) != 6:
-            raise OperationFailedException("操作错误，要求输入J端约束列表长度为6")
+            raise Exception("操作错误，要求输入J端约束列表长度为6")
         qt_model.AddBeamConstraint(id=index, beamId=beam_id, nodeInfoI=info_i, nodeInfo2=info_j, groupName=group_name)
 
     @staticmethod
@@ -601,7 +639,7 @@ class Mdb:
         Returns: 无
         """
         if coord_info is None:
-            raise OperationFailedException("操作错误，输入坐标系信息不能为空")
+            raise Exception("操作错误，输入坐标系信息不能为空")
         qt_model.AddNodalAxises(id=index, input_type=input_type, nodeId=node_id, nodeInfo=coord_info)
 
     # endregion
@@ -632,7 +670,7 @@ class Mdb:
         Returns: 无
         """
         if node_ids is None:
-            raise OperationFailedException("操作错误，输入节点列表不能为空")
+            raise Exception("操作错误，输入节点列表不能为空")
         qt_model.AddNodeTandem(name=name, startId=start_id, nodeIds=node_ids)
 
     @staticmethod
@@ -672,7 +710,7 @@ class Mdb:
         Returns: 无
         """
         if sub_case is None:
-            raise OperationFailedException("操作错误，子工况信息列表不能为空")
+            raise Exception("操作错误，子工况信息列表不能为空")
         qt_model.AddLiveLoadCase(name=name, influencePlane=influence_plane, span=span, subCase=sub_case)
 
     @staticmethod
@@ -768,7 +806,7 @@ class Mdb:
             qt_model.RemoveAllStructureGroup()
 
     @staticmethod
-    def add_tendon_property(name="", index=-1, tendon_type=TYP_PRE, material_id=1, duct_type=1,
+    def add_tendon_property(name="", index=-1, tendon_type="先张", material_id=1, duct_type=1,
                             steel_type=1, steel_detail=None, loos_detail=None, slip_info=None):
         """
         添加钢束特性
@@ -785,7 +823,7 @@ class Mdb:
         Returns: 无
         """
         if steel_detail is None:
-            raise OperationFailedException("操作错误，钢束特性信息不能为空")
+            raise Exception("操作错误，钢束特性信息不能为空")
         if loos_detail is None:
             loos_detail = []
         if slip_info is None:
@@ -795,7 +833,7 @@ class Mdb:
                                    loosDetail=loos_detail, slipInfo=slip_info)
 
     @staticmethod
-    def add_tendon_3d(name="", property_name="", group_name="默认钢束组", num=1, line_type=1, position_type=TYP_STRAIGHT,
+    def add_tendon_3d(name="", property_name="", group_name="默认钢束组", num=1, line_type=1, position_type=1,
                       control_info=None, point_insert=None, tendon_direction=None,
                       rotation_angle=0, track_group="默认结构组"):
         """
@@ -817,9 +855,9 @@ class Mdb:
         if tendon_direction is None:
             tendon_direction = []
         if control_info is None:
-            raise OperationFailedException("操作错误，钢束形状控制点不能为空")
+            raise Exception("操作错误，钢束形状控制点不能为空")
         if point_insert is None or len(point_insert) != 3:
-            raise OperationFailedException("操作错误，钢束插入点信息不能为空且长度必须为3")
+            raise Exception("操作错误，钢束插入点信息不能为空且长度必须为3")
         qt_model.AddTendon3D(name=name, propertyName=property_name, groupName=group_name, num=num, lineType=line_type,
                              positionType=position_type, controlPoints=control_info,
                              pointInsert=point_insert, tendonDirection=tendon_direction,
@@ -867,7 +905,7 @@ class Mdb:
         Returns: 无
         """
         if mass_info is None:
-            raise OperationFailedException("操作错误，节点质量信息列表不能为空")
+            raise Exception("操作错误，节点质量信息列表不能为空")
         qt_model.AddNodalMass(nodeId=node_id, massInfo=mass_info)
 
     @staticmethod
@@ -949,7 +987,7 @@ class Mdb:
         Returns: 无
         """
         if load_info is None or len(load_info) != 6:
-            raise OperationFailedException("操作错误，节点荷载列表信息不能为空，且其长度必须为6")
+            raise Exception("操作错误，节点荷载列表信息不能为空，且其长度必须为6")
         qt_model.AddNodalForce(caseName=case_name, nodeId=node_id, loadInfo=load_info, groupName=group_name)
 
     @staticmethod
@@ -975,7 +1013,7 @@ class Mdb:
         Returns: 无
         """
         if load_info is None or len(load_info) != 6:
-            raise OperationFailedException("操作错误，节点位移列表信息不能为空，且其长度必须为6")
+            raise Exception("操作错误，节点位移列表信息不能为空，且其长度必须为6")
         qt_model.AddNodeDisplacement(caseName=case_name, nodeId=node_id, loadInfo=load_info, groupName=group_name)
 
     @staticmethod
@@ -1074,7 +1112,7 @@ class Mdb:
         Returns: 无
         """
         if parameter_info is None:
-            raise OperationFailedException("操作错误，制造误差信息不能为空")
+            raise Exception("操作错误，制造误差信息不能为空")
         qt_model.AddDeviationParameter(name=name, elementType=element_type, parameterInfo=parameter_info)
 
     @staticmethod
@@ -1089,7 +1127,7 @@ class Mdb:
         Returns: 无
         """
         if parameter_name is None:
-            raise OperationFailedException("操作错误，制造误差名称信息不能为空")
+            raise Exception("操作错误，制造误差名称信息不能为空")
         qt_model.AddDeviationLoad(elementId=element_id, caseName=case_name, parameterName=parameter_name, groupName=group_name)
 
     @staticmethod
@@ -1177,7 +1215,7 @@ class Mdb:
         Returns: 无
         """
         if node_ids is None:
-            raise OperationFailedException("操作错误，沉降定义中节点信息不能为空")
+            raise Exception("操作错误，沉降定义中节点信息不能为空")
         qt_model.AddSinkGroup(name=name, sinkValue=sink, nodeIds=node_ids)
 
     @staticmethod
@@ -1203,7 +1241,7 @@ class Mdb:
         Returns: 无
         """
         if sink_groups is None:
-            raise OperationFailedException("操作错误，沉降工况定义中沉降组信息不能为空")
+            raise Exception("操作错误，沉降工况定义中沉降组信息不能为空")
         qt_model.AddSinkCase(name=name, sinkGroups=sink_groups)
 
     @staticmethod
@@ -1228,7 +1266,7 @@ class Mdb:
         Returns: 无
         """
         if names is None:
-            raise OperationFailedException("操作错误，添加并发反力组时结构组名称不能为空")
+            raise Exception("操作错误，添加并发反力组时结构组名称不能为空")
         qt_model.AddConcurrentReaction(names=names)
 
     @staticmethod
@@ -1256,7 +1294,7 @@ class Mdb:
         qt_model.RemoveConcurrentForce()
 
     @staticmethod
-    def add_load_case(index=-1, name="", load_case_type=LD_CS):
+    def add_load_case(index: int = -1, name: str = "", load_case_type: int = 1):
         """
         添加荷载工况
         Args:
@@ -1265,7 +1303,12 @@ class Mdb:
             load_case_type:荷载工况类型
         Returns: 无
         """
-        qt_model.AddLoadCase(id=index, name=name, loadCaseType=load_case_type)
+        case_type_list = ["施工阶段荷载", "恒载", "活载", "制动力", "风荷载",
+                          "体系温度荷载", "梯度温度荷载", "长轨伸缩挠曲力荷载", "脱轨荷载", "船舶撞击荷载",
+                          "汽车撞击荷载", "长轨断轨力荷载", "用户定义荷载"]
+        if load_case_type < 1 or load_case_type > 13:
+            raise
+        qt_model.AddLoadCase(id=index, name=name, loadCaseType=case_type_list[load_case_type - 1])
 
     @staticmethod
     def remove_load_case(index=-1, name=""):
@@ -1296,14 +1339,20 @@ class Mdb:
 
     # region 施工阶段和荷载组合
     @staticmethod
-    def add_construction_stage(name="", duration=0, active_structures=None, delete_structures=None, active_boundaries=None,
-                               delete_boundaries=None, active_loads=None, delete_loads=None, temp_loads=None, index=-1):
+    def add_construction_stage(name: str = "", duration: int = 0,
+                               active_structures: list[tuple[str, int, int, int]] = None,
+                               delete_structures: list[str] = None,
+                               active_boundaries: list[tuple[str, int]] = None,
+                               delete_boundaries: list[str] = None,
+                               active_loads: list[tuple[str, int]] = None,
+                               delete_loads: list[tuple[str, int]] = None,
+                               temp_loads: list[str] = None, index=-1):
         """
         添加施工阶段信息
         Args:
             name:施工阶段信息
             duration:时长
-            active_structures:激活结构组信息 [[结构组名，(int)龄期，施工阶段名，(int)1-变形法 2-接线法 3-无应力法],...]
+            active_structures:激活结构组信息 [[结构组名，(int)龄期，(int)1-变形法 2-接线法 3-无应力法，计自重施工阶段id(0-不计自重,1-本阶段 n-第n阶段)],...]
             delete_structures:钝化结构组信息 [结构组1，结构组2,...]
             active_boundaries:激活边界组信息 [[边界组1，(int)0-变形前 1-变形后],...]
             delete_boundaries:钝化边界组信息 [边界组1，结构组2,...]
@@ -1377,22 +1426,3 @@ class Mdb:
         else:
             qt_model.DeleteAllLoadCombine()
     # endregion
-
-
-class OperationFailedException(Exception):
-    """用户操作失败时抛出的异常"""
-    pass
-
-    """
-                添加截面信息
-                Args:
-                     index: 截面编号,默认自动识别
-                     name:截面名称
-                     section_type:截面类型
-                     section_info:截面信息 (必要参数)
-                     bias_type:偏心类型
-                     center_type:中心类型
-                     shear_consider:考虑剪切
-                     bias_point:自定义偏心点(仅自定义类型偏心需要)
-                Returns: 无
-                """
