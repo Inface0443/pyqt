@@ -302,97 +302,125 @@ class Mdb:
 
     # region 截面和板厚操作
     @staticmethod
-    def add_parameter_section(index: int = -1, name: str = "", section_type: str = "矩形", section_info: list[float] = None,
-                              charm_info: list[str] = None, section_right=None, charm_right=None, box_number=3, box_height=2, material_info=None,
-                              bias_type="中心", center_type="质心", shear_consider=True, bias_x=0, bias_y=0):
+    def add_parameter_section(index: int = -1, name: str = "", sec_type: str = "矩形", sec_info: list[float] = None,
+                              charm_info: list[str] = None, sec_right: list[float] = None,
+                              charm_right: list[str] = None, box_number: int = 3, box_height: float = 2,
+                              mat_combine: list[float] = None,
+                              bias_type: str = "中心", center_type: str = "质心", shear_consider: bool = True, bias_x: float = 0, bias_y: float = 0):
         """
         添加截面信息
         Args:
              index: 截面编号,默认自动识别
              name:截面名称
-             section_type:截面类型
-             section_info:截面信息 (必要参数)
+             sec_type:截面类型
+             sec_info:截面信息 (必要参数)
              charm_info:混凝土截面倒角信息 (仅混凝土箱梁截面需要)str[4]
-             section_right:混凝土截面右半信息 (对称时可忽略，仅混凝土箱梁截面需要) 
+             sec_right:混凝土截面右半信息 (对称时可忽略，仅混凝土箱梁截面需要)
              charm_right:混凝土截面右半倒角信息 (对称时可忽略，仅混凝土箱梁截面需要) str[4]
              box_number: 混凝土箱室数 (仅混凝土箱梁截面需要)
              box_height: 混凝土箱梁梁高 (仅混凝土箱梁截面需要)
-             material_info: 组合截面材料信息 [弹性模量比s/c、密度比s/c、钢材泊松比、混凝土泊松比、热膨胀系数比s/c] (仅组合材料需要)
+             mat_combine: 组合截面材料信息 [弹性模量比s/c、密度比s/c、钢材泊松比、混凝土泊松比、热膨胀系数比s/c] (仅组合材料需要)
              bias_type:偏心类型
              center_type:中心类型
              shear_consider:考虑剪切 bool
              bias_x:自定义偏心点x坐标 (仅自定义类型偏心需要)
              bias_y:自定义偏心点y坐标 (仅自定义类型偏心需要)
         example:
-            mdb.add_parameter_section
+            mdb.add_parameter_section(name="截面1",sec_type="矩形",sec_info=[2,4],bias_type="中心)
         Returns: 无
         """
-        if section_info is None:
+        sec_type_list = ["矩形", "圆形", "圆管", "箱型", "实腹八边形",
+                         "空腹八边形", "内八角形", "实腹圆端型", "T形", "倒T形",
+                         "I字形", "马蹄T形", "I字形混凝土", "混凝土箱梁", "带肋钢箱",
+                         "带肋H截面", "钢桁箱梁1", "钢桁箱梁2", "钢桁箱梁3", "钢工字型带肋",
+                         "钢管砼", "钢箱砼"]
+        if sec_type not in sec_type_list:
+            raise Exception(f"操作失败，参数截面仅支持以下截面类型{sec_type_list}")
+        if sec_info is None:
             raise Exception("操作错误,请输入此截面的截面信息，参数列表可参考截面定义窗口!")
-        elif section_type == "混凝土箱梁":
-            if len(section_info) != 19 or len(charm_info) != 4:
+        elif sec_type == "混凝土箱梁":
+            if len(sec_info) != 19 or len(charm_info) != 4:
                 raise Exception("操作错误，混凝土箱梁参数错误，参数列表可参考截面定义窗口！")
-            qt_model.AddParameterSection(id=index, name=name, secType=section_type, secInfo=section_info, charmInfo=charm_info,
-                                         N=box_number, H=box_height, charmInfoR=charm_right, secInfoR=section_right,
+            qt_model.AddParameterSection(id=index, name=name, secType=sec_type, secInfo=sec_info, charmInfo=charm_info,
+                                         N=box_number, H=box_height, charmInfoR=charm_right, secInfoR=sec_right,
                                          biasType=bias_type, centerType=center_type, shearConsider=shear_consider,
                                          horizontalPos=bias_x, verticalPos=bias_y)
-        elif section_type == "钢管砼" or section_type == "钢箱砼":
-            if len(material_info) != 5:
+        elif sec_type == "钢管砼" or sec_type == "钢箱砼":
+            if len(mat_combine) != 5:
                 raise Exception("操作错误，材料比错误，参数列表：[弹性模量比s/c、密度比s/c、钢材泊松比、混凝土泊松比、热膨胀系数比s/c] ！")
-            if len(section_info) != 2 or len(section_info) != 6:
+            if len(sec_info) != 2 or len(sec_info) != 6:
                 raise Exception("操作错误，截面参数列表：[D,t]-钢管砼  [W,H,dw,tw,tt,tb]-钢箱砼")
-            qt_model.AddParameterSection(id=index, name=name, secType=section_type, secInfo=section_info,
-                                         elasticModulusRatio=material_info[0], densityRatio=material_info[1], steelPoisson=material_info[2],
-                                         concretePoisson=material_info[3], temperatureRatio=material_info[4],
+            qt_model.AddParameterSection(id=index, name=name, secType=sec_type, secInfo=sec_info,
+                                         elasticModulusRatio=mat_combine[0], densityRatio=mat_combine[1], steelPoisson=mat_combine[2],
+                                         concretePoisson=mat_combine[3], temperatureRatio=mat_combine[4],
                                          biasType=bias_type, centerType=center_type, shearConsider=shear_consider,
                                          horizontalPos=bias_x, verticalPos=bias_y)
         else:
-            qt_model.AddParameterSection(id=index, name=name, secType=section_type, secInfo=section_info,
+            qt_model.AddParameterSection(id=index, name=name, secType=sec_type, secInfo=sec_info,
                                          biasType=bias_type, centerType=center_type, shearConsider=shear_consider,
                                          horizontalPos=bias_x, verticalPos=bias_y)
 
     @staticmethod
-    def add_steel_section(index=-1, name="", section_type="工字钢梁", section_info=None, rib_info=None, rib_place=None,
-                          bias_type="中心", center_type="质心", shear_consider=True, bias_x=0, bias_y=0):
+    def add_steel_section(index: int = -1, name: str = "", sec_type: int = 1, sec_info: list[float] = None,
+                          rib_info: dict[str, list[float]] = None, rib_place: list[tuple[int, int, int, list[tuple[float, str, int, str]]]] = None,
+                          bias_type: str = "中心", center_type: str = "质心", shear_consider: bool = True, bias_x: float = 0, bias_y: float = 0):
         """
         添加钢梁截面,包括参数型钢梁截面和自定义带肋钢梁截面
         Args:
              index:
              name:
-             section_type:截面类型
-             section_info:截面信息
+             sec_type:截面类型 1-工字钢梁  2-箱型钢梁
+             sec_info:截面信息
+                工字钢梁[topDis,botDis,b1,b2,b3,b4,h,t1,t2,tw]
+                箱型钢梁[topDis,botDis,b1,b2,b3,b4,b5,b6,h,t1,t2,tw1,tw2]
              rib_info:肋板信息
-             rib_place:肋板位置
+             rib_place:肋板位置 list[tuple[布置位置,具体位置,参考点位置,list[tuple[间隔,肋板名，加劲肋位置,加劲肋名]]]]
+                布置位置 0-上...  具体位置 0-桥面1.。。 参考点位置 0-左  加劲肋位置 0-上/左 1-下/右 2-两侧 (详细信息参考UI界面顺序)
              bias_type:偏心类型
              center_type:中心类型
              shear_consider:考虑剪切
              bias_x:自定义偏心点x坐标 (仅自定义类型偏心需要,相对形心)
              bias_y:自定义偏心点y坐标 (仅自定义类型偏心需要)
+        example:
+            mdb.add_steel_section(name="钢梁截面1",section_type=1,sec_info=[0,0,0.5,0.5,0.5,0.5,0.7,0.02,0.02,0.02])
+            mdb.add_steel_section(name="钢梁截面2",section_type=2,sec_info=[0,0.15,0.25,0.5,0.25,0.15,0.4,0.15,0.7,0.02,0.02,0.02,0.02],
+                rib_info = {"板肋1": [0.1,0.02],"T形肋1":[0.1,0.02,0.02,0.02]},
+                rib_place2 = [(0, 0, 0, [(0.1, "板肋1", 2, "默认名称1"), (0.2, "板肋1", 2, "默认名称2")]), (0, 0, 1, [(0.1, "T形肋1", 0, "默认名称3")])],
+                bias_type=“中上”)
         Returns: 无
         """
-        if section_info is None:
+
+        if sec_info is None:
             raise Exception("操作错误,请输入此截面的截面信息，参数列表可参考截面定义窗口")
-        qt_model.AddSteelSection(id=index, name=name, type=section_type, sectionInfoList=section_info, ribInfoList=rib_info,
+        section_type = "工字钢梁" if sec_type == 1 else "箱型钢梁"
+        rib_names = list(rib_info.keys())
+        rib_data = list(rib_info.values())
+        qt_model.AddSteelSection(id=index, name=name, sectionType=section_type, sectionInfoList=sec_info,
+                                 ribNameList=rib_names, ribInfoList=rib_data,
                                  ribPlaceList=rib_place, baisType=bias_type, centerType=center_type,
                                  shearConsider=shear_consider, horizontalPos=bias_x, verticalPos=bias_y)
 
     @staticmethod
-    def add_user_section(index=-1, name="", section_type="特性截面", property_info=None):
+    def add_user_section(index: int = -1, name: str = "", sec_type: str = "特性截面", property_info: list[float] = None):
         """
         添加自定义截面,目前仅支持特性截面
         Args:
              index:截面编号
              name:截面名称
-             section_type:截面类型
+             sec_type:截面类型
              property_info:截面特性列表
+        example:
+            mdb.add_user_section(name="自定义特性截面",property_info=[i for i in range(25)])
         Returns: 无
         """
+        if sec_type == "特性截面" and len(property_info) != 25:
+            raise Exception(f"操作错误，自定义特性截面列表property_info需要25个参数")
         if property_info is None:
             raise Exception("操作错误,请输入此截面的截面特性，特性列表可参考截面定义窗口")
-        qt_model.AddUserSection(id=index, name=name, type=section_type, propertyInfo=property_info)
+        qt_model.AddUserSection(id=index, name=name, type=sec_type, propertyInfo=property_info)
 
     @staticmethod
-    def add_tapper_section(index=-1, name="", begin_id=1, end_id=1, vary_info=None):
+    def add_tapper_section(index: int = -1, name: str = "", begin_id: int = 1, end_id: int = 1):
         """
         添加变截面,需先建立单一截面
         Args:
@@ -400,23 +428,21 @@ class Mdb:
              name:截面名称
              begin_id:截面始端编号
              end_id:截面末端编号
-             vary_info:截面变化信息
+        example:
+            mdb.add_tapper_section(name="变截面1",begin_id=1,end_id=2)
         Returns: 无
         """
-        if vary_info is not None:
-            if len(vary_info) != 2:
-                raise Exception("操作错误,vary_info数据无效!")
-            qt_model.AddTapperSection(id=index, name=name, beginId=begin_id, endId=end_id,
-                                      varyParameterWidth=vary_info[0], varyParameterHeight=vary_info[1])
-        else:
-            qt_model.AddTapperSection(id=index, name=name, beginId=begin_id, endId=end_id)
+        qt_model.AddTapperSection(id=index, name=name, beginId=begin_id, endId=end_id)
 
     @staticmethod
-    def remove_section(index=-1):
+    def remove_section(index: int = -1):
         """
         删除截面信息
         Args:
              index: 截面编号,参数为默认时删除全部截面
+        example:
+            mdb.remove_section()
+            mdb.remove_section(1)
         Returns: 无
         """
         if index == -1:
@@ -425,8 +451,9 @@ class Mdb:
             qt_model.RemoveSection(id=index)
 
     @staticmethod
-    def add_thickness(index=-1, name="", t=0, thick_type=0, bias_info=None,
-                      rib_pos=0, dist_v=0, dist_l=0, rib_v=None, rib_l=None):
+    def add_thickness(index: int = -1, name: str = "", t: float = 0,
+                      thick_type: int = 0, bias_info: tuple[int, float] = None,
+                      rib_pos: int = 0, dist_v: float = 0, dist_l: float = 0, rib_v=None, rib_l=None):
         """
         添加板厚
         Args:
@@ -435,11 +462,14 @@ class Mdb:
              t:   板厚度
              thick_type: 板厚类型 0-普通板 1-加劲肋板
              bias_info:  默认不偏心,偏心时输入列表[type,value] type:0-厚度比 1-数值
-             rib_pos:肋板位置
-             dist_v:纵向截面肋板间距
-             dist_l:横向截面肋板间距
-             rib_v:纵向肋板信息
-             rib_l:横向肋板信息
+             rib_pos: 肋板位置 0-下部 1-上部
+             dist_v: 纵向截面肋板间距
+             dist_l: 横向截面肋板间距
+             rib_v: 纵向肋板信息
+             rib_l: 横向肋板信息
+        example:
+            mdb.add_thickness(name="厚度1", t=0.2,thick_type=0,bias_info=[0,0.8])
+            mdb.add_thickness(name="厚度2", t=0.2,thick_type=1,rib_pos=0,dis_v=0.1,rib_v=[1,1,0.02,0.02])
         Returns: 无
         """
         if rib_v is None:
@@ -455,11 +485,14 @@ class Mdb:
                                   verticalDis=dist_v, lateralDis=dist_l, verticalRib=rib_v, lateralRib=rib_l)
 
     @staticmethod
-    def remove_thickness(index=-1):
+    def remove_thickness(index: int = -1):
         """
         删除板厚
         Args:
              index:板厚编号,默认时删除所有板厚信息
+        example:
+            mdb.remove_thickness()
+            mdb.remove_thickness(index=1)
         Returns: 无
         """
         if index == -1:
@@ -468,7 +501,8 @@ class Mdb:
             qt_model.RemoveThickness(id=index)
 
     @staticmethod
-    def add_tapper_section_group(ids=None, name="", factor_w=1.0, factor_h=1.0, ref_w=0, ref_h=0, dis_w=0, dis_h=0):
+    def add_tapper_section_group(ids: list[int] = None, name: str = "", factor_w: float = 1.0, factor_h: float = 1.0,
+                                 ref_w: int = 0, ref_h: int = 0, dis_w: float = 0, dis_h: float = 0):
         """
         添加变截面组
         Args:
@@ -478,14 +512,17 @@ class Mdb:
              factor_h: 高度方向变化阶数 线性(1.0) 非线性(!=1.0)
              ref_w: 宽度方向参考点 0-i 1-j
              ref_h: 高度方向参考点 0-i 1-j
-             dis_w: 宽度方向间距
-             dis_h: 高度方向间距
+             dis_w: 宽度方向距离
+             dis_h: 高度方向距离
+        example:
+            mdb.add_tapper_section_group(ids=[1,2,3,4],name="变截面组1")
         Returns: 无
         """
         qt_model.AddTapperSectionGroup(ids=ids, name=name, factorW=factor_w, factorH=factor_h, w=ref_w, h=ref_h, disW=dis_w, disH=dis_h)
 
     @staticmethod
-    def update_section_bias(index=1, bias_type="中心", center_type="质心", shear_consider=True, bias_point=None):
+    def update_section_bias(index: int = 1, bias_type: str = "中心", center_type: str = "质心", shear_consider: bool = True,
+                            bias_point: list[float] = None):
         """
         更新截面偏心
         Args:
@@ -494,6 +531,9 @@ class Mdb:
              center_type:中心类型
              shear_consider:考虑剪切
              bias_point:自定义偏心点(仅自定义类型偏心需要)
+        example:
+            mdb.update_section_bias(index=1,bias_type="中上",center_type="几何中心")
+            mdb.update_section_bias(index=1,bias_type="自定义",bias_point=[0.1,0.2])
         Returns: 无
         """
         if center_type == "自定义":
@@ -509,22 +549,27 @@ class Mdb:
 
     # region 边界操作
     @staticmethod
-    def add_boundary_group(name="", index=-1):
+    def add_boundary_group(name: str = "", index: int = -1):
         """
         新建边界组
         Args:
              name:边界组名
              index:边界组编号，默认自动识别当前编号 (可选参数)
+        example:
+            mdb.add_boundary_group(name="边界组1")
         Returns: 无
         """
         qt_model.AddBoundaryGroup(name=name, id=index)
 
     @staticmethod
-    def remove_boundary_group(name=""):
+    def remove_boundary_group(name: str = ""):
         """
         按照名称删除边界组
         Args:
             name: 边界组名称，默认删除所有边界组 (非必须参数)
+        example:
+            mdb.remove_boundary_group()
+            mdb.remove_boundary_group(name="边界组1")
         Returns: 无
         """
         if name != "":
@@ -533,99 +578,121 @@ class Mdb:
             qt_model.RemoveAllBoundaryGroup()
 
     @staticmethod
-    def remove_boundary(group_name="", boundary_type=-1, index=1):
+    def remove_all_boundary():
         """
         根据边界组名称、边界的类型和编号删除边界信息,默认时删除所有边界信息
-        Args:
-            group_name: 边界组名
-            boundary_type: 边界类型
-            index: 边界编号
+        Args:无
+        example:
+            mdb.remove_all_boundary()
         Returns: 无
         """
-        if group_name == "":
-            qt_model.RemoveAllBoundary()
+        qt_model.RemoveAllBoundary()
 
     @staticmethod
-    def add_general_support(index=-1, node_id=1, boundary_info=None, group_name="默认边界组"):
+    def remove_boundary(remove_id: int, bd_type: int, group: str = "默认边界组"):
+        """
+        根据节点号删除边界一般支撑、弹性支承，根据单元号删除梁端约束、根据主节点号删除主从约束、根据从节点号删除约束方程
+        Args:
+            remove_id:节点号 or 单元号 or主节点号  or 从节点号
+            bd_type:边界类型  1-一般支承 2-弹性支承 3-主从约束 4-弹性连接 5-约束方程 6-梁端约束
+            group:边界所处边界组名
+        example:
+            mdb.remove_boundary(remove_id = 1, bd_type = 1,group="边界组1")
+        Returns: 无
+        """
+        type_list = ["一般支承", "弹性支承", "主从约束", "弹性连接", "约束方程", "梁端约束"]
+        bd_name = type_list[bd_type - 1]
+        qt_model.RemoveBoundary(controlId=remove_id, type=bd_name, group=group)
+
+    @staticmethod
+    def add_general_support(node_id: int = 1, boundary_info: list[bool] = None, group_name: str = "默认边界组"):
         """
         添加一般支承
         Args:
-             index:边界编号
              node_id:节点编号
-             boundary_info:边界信息，例如[X,Y,Z,Rx,Ry,Rz] 1-固定 0-自由
-             group_name:边界组名
+             boundary_info:边界信息  [X,Y,Z,Rx,Ry,Rz] ture-固定 false-自由
+             group_name:边界组名,默认为默认边界组
+        example:
+            mdb.add_general_support(node_id=1, boundary_info=[True,True,True,False,False,False])
         Returns: 无
         """
         if boundary_info is None or len(boundary_info) != 6:
             raise Exception("操作错误，要求输入一般支承列表长度为6")
-        qt_model.AddGeneralSupport(id=index, nodeId=node_id, boundaryInfo=boundary_info, groupName=group_name)
+        qt_model.AddGeneralSupport(nodeId=node_id, boundaryInfo=boundary_info, groupName=group_name)
 
     @staticmethod
-    def add_elastic_support(index=-1, node_id=1, support_type=1, boundary_info=None, group_name="默认边界组"):
+    def add_elastic_support(node_id: int = 1, support_type: int = 1, boundary_info: list[float] = None, group_name: str = "默认边界组"):
         """
         添加弹性支承
         Args:
-             index:编号
              node_id:节点编号
-             support_type:支承类型
-             boundary_info:边界信息
+             support_type:支承类型 1-线性  2-受拉  3-受压
+             boundary_info:边界信息 受拉和受压时列表长度为1  线性时列表长度为6
              group_name:边界组
+        example:
+            mdb.add_elastic_support(node_d=1,support_type=1,boundary_info=[1e6,0,1e6,0,0,0])
         Returns: 无
         """
-        qt_model.AddElasticSupport(id=index, nodeId=node_id, supportType=support_type, boundaryInfo=boundary_info,
+        qt_model.AddElasticSupport(nodeId=node_id, supportType=support_type, boundaryInfo=boundary_info,
                                    groupName=group_name)
 
     @staticmethod
-    def add_master_slave_link(index=-1, master_id=1, slave_id=2, boundary_info=None, group_name="默认边界组"):
+    def add_master_slave_link(master_id: int = 1, slave_id: int = 2, boundary_info: list[bool] = None, group_name: str = "默认边界组"):
         """
         添加主从约束
         Args:
-             index:编号
              master_id:主节点号
              slave_id:从节点号
-             boundary_info:边界信息
+             boundary_info:边界信息 [X,Y,Z,Rx,Ry,Rz] ture-固定 false-自由
              group_name:边界组名
+        example:
+            mdb.add_master_slave_link(master_id=1,slave_id=2,boundary_info=[True,True,True,False,False,False])
         Returns: 无
         """
-        qt_model.AddMasterSlaveLink(id=index, masterId=master_id, slaveId=slave_id, boundaryInfo=boundary_info, groupName=group_name)
+        qt_model.AddMasterSlaveLink(masterId=master_id, slaveId=slave_id, boundaryInfo=boundary_info, groupName=group_name)
 
     @staticmethod
-    def add_elastic_link(index=-1, link_type=1, start_id=1, end_id=2, beta_angle=0, boundary_info=None,
-                         group_name="默认边界组", dis_ratio=0.5, kx=0):
+    def add_elastic_link(link_type: int = 1, start_id: int = 1, end_id: int = 2, beta_angle: float = 0,
+                         boundary_info: list[float] = None,
+                         group_name: str = "默认边界组", dis_ratio: float = 0.5, kx: float = 0):
         """
         添加弹性连接
         Args:
-             index:节点编号
-             link_type:节点类型
+             link_type:节点类型   1-一般弹性连接 2-刚性连接 3-受拉弹性连接 4-受压弹性连接
              start_id:起始节点号
              end_id:终节点号
              beta_angle:贝塔角
              boundary_info:边界信息
              group_name:边界组名
-             dis_ratio:距离比
-             kx:刚度
+             dis_ratio:距i端距离比 (仅一般弹性连接需要)
+             kx:受拉或受压刚度
+        example:
+            mdb.add_elastic_link(link_type=1,start_id=1,end_id=2,boundary_info=[1e6,1e6,1e6,0,0,0])
+            mdb.add_elastic_link(link_type=2,start_id=1,end_id=2)
+            mdb.add_elastic_link(link_type=3,start_id=1,end_id=2,kx=1e6)
         Returns: 无
         """
-        qt_model.AddElasticLink(id=index, linkType=link_type, startId=start_id, endId=end_id, beta=beta_angle,
+        qt_model.AddElasticLink(linkType=link_type, startId=start_id, endId=end_id, beta=beta_angle,
                                 boundaryInfo=boundary_info, groupName=group_name, disRatio=dis_ratio, kDx=kx)
 
     @staticmethod
-    def add_beam_constraint(index=-1, beam_id=2, info_i=None, info_j=None, group_name="默认边界组"):
+    def add_beam_constraint(beam_id: int = 2, info_i: list[bool] = None, info_j: list[bool] = None, group_name: str = "默认边界组"):
         """
         添加梁端约束
         Args:
-             index:约束编号,默认自动识别
              beam_id:梁号
-             info_i:i端约束信息 [IsFreedX,IsFreedY,IsFreedZ,IsFreedRX,IsFreedRY,IsFreedRZ]
-             info_j:j端约束信息 [IsFreedX,IsFreedY,IsFreedZ,IsFreedRX,IsFreedRY,IsFreedRZ]
+             info_i:i端约束信息 [X,Y,Z,Rx,Ry,Rz] ture-固定 false-自由
+             info_j:j端约束信息 [X,Y,Z,Rx,Ry,Rz] ture-固定 false-自由
              group_name:边界组名
+        example:
+            mdb.add_beam_constraint(beam_id=2,info_i=[True,True,True,False,False,False],info_j=[True,True,True,False,False,False])
         Returns: 无
         """
         if info_i is None or len(info_i) != 6:
             raise Exception("操作错误，要求输入I端约束列表长度为6")
         if info_j is None or len(info_j) != 6:
             raise Exception("操作错误，要求输入J端约束列表长度为6")
-        qt_model.AddBeamConstraint(id=index, beamId=beam_id, nodeInfoI=info_i, nodeInfo2=info_j, groupName=group_name)
+        qt_model.AddBeamConstraint(beamId=beam_id, nodeInfoI=info_i, nodeInfo2=info_j, groupName=group_name)
 
     @staticmethod
     def add_node_axis(index=-1, input_type=1, node_id=1, coord_info=None):
