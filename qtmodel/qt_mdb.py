@@ -312,21 +312,27 @@ class Mdb:
         Args:
              index: 截面编号,默认自动识别
              name:截面名称
-             sec_type:截面类型
+             sec_type:参数截面类型名称
+                支持类型:"矩形", "圆形", "圆管", "箱型", "实腹八边形","空腹八边形", "内八角形", "实腹圆端型", "T形", "倒T形",
+                         "I字形", "马蹄T形", "I字形混凝土", "混凝土箱梁", "带肋钢箱","带肋H截面",
+                         "钢桁箱梁1", "钢桁箱梁2", "钢桁箱梁3", "钢工字型带肋", "钢管砼", "钢箱砼"
              sec_info:截面信息 (必要参数)
              charm_info:混凝土截面倒角信息 (仅混凝土箱梁截面需要)str[4]
-             sec_right:混凝土截面右半信息 (对称时可忽略，仅混凝土箱梁截面需要)
+             sec_right:混凝土截面右半信息 (对称时可忽略，仅混凝土箱梁截面需要) float[19]
              charm_right:混凝土截面右半倒角信息 (对称时可忽略，仅混凝土箱梁截面需要) str[4]
              box_number: 混凝土箱室数 (仅混凝土箱梁截面需要)
              box_height: 混凝土箱梁梁高 (仅混凝土箱梁截面需要)
              mat_combine: 组合截面材料信息 [弹性模量比s/c、密度比s/c、钢材泊松比、混凝土泊松比、热膨胀系数比s/c] (仅组合材料需要)
-             bias_type:偏心类型
-             center_type:中心类型
-             shear_consider:考虑剪切 bool
+             bias_type:偏心类型 默认中心
+             center_type:中心类型 默认质心
+             shear_consider:考虑剪切 bool 默认考虑剪切变形
              bias_x:自定义偏心点x坐标 (仅自定义类型偏心需要)
              bias_y:自定义偏心点y坐标 (仅自定义类型偏心需要)
         example:
             mdb.add_parameter_section(name="截面1",sec_type="矩形",sec_info=[2,4],bias_type="中心)
+            mdb.add_parameter_section(name="截面2",sec_type="混凝土箱梁",box_height=2,box_number=3,
+                sec_info=[0.02,0,12,3,1,2,1,5,6,0.2,0.4,0.1,0.13,0.28,0.3,0.5,0.5,0.5,0.2],
+                charm_info=["1*0.2,0.1*0.2","0.5*0.15,0.3*0.2","0.4*0.2","0.5*0.2"])
         Returns: 无
         """
         sec_type_list = ["矩形", "圆形", "圆管", "箱型", "实腹八边形",
@@ -695,45 +701,64 @@ class Mdb:
         qt_model.AddBeamConstraint(beamId=beam_id, nodeInfoI=info_i, nodeInfo2=info_j, groupName=group_name)
 
     @staticmethod
-    def add_node_axis(index=-1, input_type=1, node_id=1, coord_info=None):
+    def add_node_axis(input_type: int = 1, node_id: int = 1, coord_info: list = None):
         """
         添加节点坐标
         Args:
-             index:默认自动识别
-             input_type:输入方式
+             input_type:输入方式 1-角度 2-三点  3-向量
              node_id:节点号
-             coord_info:局部坐标信息 -List<float>(角)  -List<List<float>>(三点/向量)
+             coord_info:局部坐标信息 -List<float>(角)  -List<List<float>>(三点 or 向量)
+        example:
+            mdb.add_node_axis(input_type=1,node_id=1,coord_info=[45,45,45])
+            mdb.add_node_axis(input_type=2,node_id=1,coord_info=[[0,0,1],[0,1,0],[1,0,0]])
+            mdb.add_node_axis(input_type=3,node_id=1,coord_info=[[0,0,1],[0,1,0]])
         Returns: 无
         """
         if coord_info is None:
             raise Exception("操作错误，输入坐标系信息不能为空")
-        qt_model.AddNodalAxises(id=index, input_type=input_type, nodeId=node_id, nodeInfo=coord_info)
+        if input_type == 1:
+            qt_model.AddNodalAxises(inputType=input_type, nodeId=node_id, angleInfo=coord_info)
+        else:
+            qt_model.AddNodalAxises(inputType=input_type, nodeId=node_id, nodeInfo=coord_info)
 
     # endregion
 
     # region 移动荷载
     @staticmethod
-    def add_standard_vehicle(name="", standard_code=1, load_type="高速铁路", load_length=0, n=6):
+    def add_standard_vehicle(name: str, standard_code: int = 1, load_type: str = "高速铁路", load_length: float = 0, n: int = 6):
         """
         添加标准车辆
         Args:
-             name:车辆荷载名称
-             standard_code:荷载规范
-             load_type:荷载类型
-             load_length:荷载长度
-             n:车厢数
+             name: 车辆荷载名称
+             standard_code: 荷载规范
+                1-中国铁路桥涵规范(Q/CR 9300-2017)
+                2-城市桥梁设计规范(CJJ11-2019)
+                3-公路工程技术标准(JTJ 001-97)
+                4-公路桥涵设计通规(JTG D60-2004)
+                5-公路桥涵设计通规(JTG D60-2015)
+                6-城市轨道交通桥梁规范(GB/T51234-2017)
+             load_type: 荷载类型
+                支持类型: "公路I级","公路II级","城A车道","城B车道","地铁A型车","地铁B型车","地铁C型车","汽10"
+                        "汽15","汽20","汽超20","特载","挂80","挂100","挂120","公路疲劳荷载1","公路疲劳荷载2","公路疲劳荷载3",
+                        "汽36轻", "汽38重","高速铁路","城际铁路","客货共线铁路","重载铁路","中活载","长大货物车检算荷载"
+             load_length: 默认为0即不限制荷载长度  (铁路桥涵规范 Q/CR 9300-2017 所需参数)
+             n:车厢数: 默认6节车厢 (城市轨道交通桥梁规范 GB/T51234-2017 所需参数)
+        example:
+            mdb.add_standard_vehicle("高速铁路",standard_code=1,load_type="高速铁路")
         Returns: 无
         """
         qt_model.AddStandardVehicle(name=name, standardIndex=standard_code, loadType=load_type, loadLength=load_length, N=n)
 
     @staticmethod
-    def add_node_tandem(name="", start_id=-1, node_ids=None):
+    def add_node_tandem(name: str, start_id: int, node_ids: list[int]):
         """
         添加节点纵列
         Args:
              name:节点纵列名
              start_id:起始节点号
              node_ids:节点列表
+        example:
+            mdb.add_node_tandem("节点纵列1",1,[i+1 for i in range(12)])
         Returns: 无
         """
         if node_ids is None:
@@ -741,18 +766,20 @@ class Mdb:
         qt_model.AddNodeTandem(name=name, startId=start_id, nodeIds=node_ids)
 
     @staticmethod
-    def add_influence_plane(name="", tandem_names=None):
+    def add_influence_plane(name: str, tandem_names: list[str]):
         """
         添加影响面
         Args:
              name:影响面名称
              tandem_names:节点纵列名称组
+        example:
+            mdb.add_influence_plane("影响面1",["节点纵列1","节点纵列2"])
         Returns: 无
         """
         qt_model.AddInfluencePlane(name=name, tandemNames=tandem_names)
 
     @staticmethod
-    def add_lane_line(name="", influence_name="", tandem_name="", offset=0, direction=0):
+    def add_lane_line(name: str, influence_name: str, tandem_name: str, offset: float = 0, lane_width: float = 0):
         """
         添加车道线
         Args:
@@ -760,20 +787,31 @@ class Mdb:
              influence_name:影响面名称
              tandem_name:节点纵列名
              offset:偏移
-             direction:方向
+             lane_width:车道宽度
+        example:
+            mdb.add_lane_line("车道1","影响面1","节点纵列1",offset=0,lane_width=3.1)
         Returns: 无
         """
-        qt_model.AddLaneLine(name, influenceName=influence_name, tandemName=tandem_name, offset=offset, direction=direction)
+        qt_model.AddLaneLine(name, influenceName=influence_name, tandemName=tandem_name, offset=offset, laneWidth=lane_width)
 
     @staticmethod
-    def add_live_load_case(name="", influence_plane="", span=0, sub_case=None):
+    def add_live_load_case(name: str, influence_plane: str, span: float,
+                           car_detail: tuple[list[float], float, float] = None,
+                           train_detail: tuple[list[float], float, float, float] = None,
+                           metro_detail: tuple[list[float], float, float] = None,
+                           sub_case: list[tuple[str, float, list[str]]] = None):
         """
         添加移动荷载工况
         Args:
              name:荷载工况名
              influence_plane:影响线名
              span:跨度
-             sub_case:子工况信息 List<string[]>
+             car_detail: 汽车相关系数 (横向折减列表float[8],纵向折减系数,冲击强度)
+             train_detail: 火车相关系数 (横向折减列表float[8],纵向折减系数,强度冲击,疲劳冲击)
+             metro_detail: 轻轨相关系数 (横向折减列表float[8],纵向折减系数,冲击强度)
+             sub_case:子工况信息 [(车辆名称,系数,["车道1","车道2"])...]
+        example:
+            mdb.add_live_load_case("活载工况1","影响面1",100,sub_case=[(“车辆名称”,1.0,["车道1","车道2"])...])
         Returns: 无
         """
         if sub_case is None:
@@ -781,11 +819,15 @@ class Mdb:
         qt_model.AddLiveLoadCase(name=name, influencePlane=influence_plane, span=span, subCase=sub_case)
 
     @staticmethod
-    def remove_vehicle(index=-1):
+    def remove_vehicle(index:int=-1,name:str=""):
         """
         删除车辆信息
         Args:
              index:车辆荷载编号
+             name:车辆名称
+        example:
+            mdb.remove_vehicle(index=1)
+            mdb.remove_vehicle(name="")
         Returns: 无
         """
         qt_model.RemoveVehicle(id=index)
