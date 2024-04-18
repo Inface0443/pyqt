@@ -1065,7 +1065,8 @@ class Mdb:
         删除节点质量
         Args:
              node_id:节点号
-        mdb.remove_nodal_mass(node_id=1)
+        example:
+            mdb.remove_nodal_mass(node_id=1)
         Returns: 无
         """
         qt_model.RemoveNodalMass(nodeId=node_id)
@@ -1267,7 +1268,7 @@ class Mdb:
         qt_model.AddCableLenghtLoad(elementId=element_id, caseName=case_name, groupName=group_name, length=length, tensionType=tension_type)
 
     @staticmethod
-    def add_plate_element_load(element_id: int = 1, case_name: str = "", load_type: int = 1, load_place: int = 1, coord_system: int = 1,
+    def add_plate_element_load(element_id: int = 1, case_name: str = "", load_type: int = 1, load_place: int = 1, coord_system: int = 3,
                                group_name: str = "默认荷载组", load_list: list[float] = None, xy_list: tuple[float, float] = None):
         """
         添加版单元荷载
@@ -1275,11 +1276,13 @@ class Mdb:
              element_id:单元id
              case_name:荷载工况名
              load_type:荷载类型   1-集中力  2-集中弯矩  3-分布力  4-分布弯矩
-             load_place:荷载位置  0-面IJKL 1-边IJ  2-边JK  3-边KL  4-边LI
-             coord_system:坐标系
+             load_place:荷载位置  0-面IJKL 1-边IJ  2-边JK  3-边KL  4-边LI  (仅分布荷载需要)
+             coord_system:坐标系  (默认3) 1-整体坐标X  2-整体坐标Y 3-整体坐标Z  4-局部坐标X  5-局部坐标Y  6-局部坐标Z
              group_name:荷载组名
              load_list:荷载列表
              xy_list:荷载位置信息 [IJ方向距离x,IL方向距离y]  (仅集中荷载需要,x,y代表荷载距离板单元I端的绝对值)
+        example:
+            mdb.add_plate_element_load(element_id=1,case_name="工况1",load_type=1,group_name="默认荷载组",load_list=[1000],xy_list=[0.2,0.5])
         Returns: 无
         """
         if load_type == 1 or load_type == 2:
