@@ -29,7 +29,7 @@ class Mdb:
             name: 结构组名
             index: 结构组编号(非必须参数)，默认自动识别当前编号
         example:
-                mdb.add_structure_group("新建结构组1")
+                mdb.add_structure_group(name="新建结构组1")
                 mdb.add_structure_group(name="新建结构组2",index=2)
         Returns: 无
         """
@@ -43,7 +43,7 @@ class Mdb:
             name:结构组名称
             index:结构组编号
         example:
-                mdb.remove_structure_group(name=“新建结构组1”)
+                mdb.remove_structure_group(name="新建结构组1")
                 mdb.remove_structure_group(index = 2)
         Returns: 无
         """
@@ -55,7 +55,7 @@ class Mdb:
             qt_model.RemoveAllStructureGroup()
 
     @staticmethod
-    def add_structure_to_group(name: int = "", node_ids: list[int] = None, element_ids: list[int] = None):
+    def add_structure_to_group(name: str = "", node_ids: list[int] = None, element_ids: list[int] = None):
         """
         为结构组添加节点和/或单元
         Args:
@@ -152,7 +152,7 @@ class Mdb:
             mat_id:材料编号
             sec_id:截面编号
         example:
-            mdb.add_element(index=1,ele_type=1,node_ids=[1,2],beta_angle=1,mat_id=1.sec_id=1)
+            mdb.add_element(index=1,ele_type=1,node_ids=[1,2],beta_angle=1,mat_id=1,sec_id=1)
         Returns: 无
         """
         if node_ids is None and ele_type != 4:
@@ -204,8 +204,8 @@ class Mdb:
             modified:是否修改默认材料参数,默认不修改 (可选参数)
             data_info:材料参数列表[弹性模量,容重,泊松比,热膨胀系数] (可选参数)
         example:
-            mdb.add_material(index=1,name=“混凝土材料1”,material_type="混凝土",standard="公路18规范",database="C50")
-            mdb.add_material(index=1,name=“自定义材料1”,material_type="自定义",data_info=[3.5e10,2.5e4,0.2,1.5e-5])
+            mdb.add_material(index=1,name="混凝土材料1",material_type="混凝土",standard="公路18规范",database="C50")
+            mdb.add_material(index=1,name="自定义材料1",material_type="自定义",data_info=[3.5e10,2.5e4,0.2,1.5e-5])
         Returns: 无
         """
         list_material = ["混凝土", "钢材", "预应力", "钢丝", "钢筋", "自定义"]
@@ -329,7 +329,7 @@ class Mdb:
              bias_x:自定义偏心点x坐标 (仅自定义类型偏心需要)
              bias_y:自定义偏心点y坐标 (仅自定义类型偏心需要)
         example:
-            mdb.add_parameter_section(name="截面1",sec_type="矩形",sec_info=[2,4],bias_type="中心)
+            mdb.add_parameter_section(name="截面1",sec_type="矩形",sec_info=[2,4],bias_type="中心")
             mdb.add_parameter_section(name="截面2",sec_type="混凝土箱梁",box_height=2,box_number=3,
                 sec_info=[0.02,0,12,3,1,2,1,5,6,0.2,0.4,0.1,0.13,0.28,0.3,0.5,0.5,0.5,0.2],
                 charm_info=["1*0.2,0.1*0.2","0.5*0.15,0.3*0.2","0.4*0.2","0.5*0.2"])
@@ -392,7 +392,7 @@ class Mdb:
             mdb.add_steel_section(name="钢梁截面2",section_type=2,sec_info=[0,0.15,0.25,0.5,0.25,0.15,0.4,0.15,0.7,0.02,0.02,0.02,0.02],
                 rib_info = {"板肋1": [0.1,0.02],"T形肋1":[0.1,0.02,0.02,0.02]},
                 rib_place2 = [(0, 0, 0, [(0.1, "板肋1", 2, "默认名称1"), (0.2, "板肋1", 2, "默认名称2")]), (0, 0, 1, [(0.1, "T形肋1", 0, "默认名称3")])],
-                bias_type=“中上”)
+                bias_type="中上")
         Returns: 无
         """
 
@@ -811,7 +811,7 @@ class Mdb:
              metro_detail: 轻轨相关系数 (横向折减列表float[8],纵向折减系数,冲击强度)
              sub_case:子工况信息 [(车辆名称,系数,["车道1","车道2"])...]
         example:
-            mdb.add_live_load_case("活载工况1","影响面1",100,sub_case=[(“车辆名称”,1.0,["车道1","车道2"])...])
+            mdb.add_live_load_case("活载工况1","影响面1",100,sub_case=[("车辆名称",1.0,["车道1","车道2"]),])
         Returns: 无
         """
         if sub_case is None:
@@ -1192,7 +1192,7 @@ class Mdb:
             node_id:节点编号
             case_name:荷载工况名
         example:
-            mdn.remove_nodal_displacement(case_name="荷载工况1",node_id=1)
+            mdb.remove_nodal_displacement(case_name="荷载工况1",node_id=1)
         Returns: 无
         """
         qt_model.RemoveNodalDisplacement(caseName=case_name, nodeId=-node_id)
@@ -1230,7 +1230,7 @@ class Mdb:
             load_type:荷载类型 1-集中力   2-集中弯矩  3-分布力   4-分布弯矩
             group_name:边界组名
         example:
-            mdb.remove_beam_load(case_name="工况1",element_id=1,load_type=1，group_name="默认荷载组")
+            mdb.remove_beam_load(case_name="工况1",element_id=1,load_type=1,group_name="默认荷载组")
         Returns: 无
         """
         qt_model.RemoveBeamLoad(caseName=case_name, elementId=element_id, loadType=load_type, groupName=group_name)
@@ -1305,7 +1305,8 @@ class Mdb:
                 梁杆单元:[轴向,I端X向转角,I端Y向转角,I端Z向转角,J端X向转角,J端Y向转角,J端Z向转角]
                 板单元:[X向位移,Y向位移,Z向位移,X向转角,Y向转角]
         example:
-            mdb.add_deviation_parameter(name="梁端制造误差",elementType=1,parameterInfo=parameters)
+            mdb.add_deviation_parameter(name="梁端制造误差",elementType=1,parameters=[1,0,0,0,0,0,0])
+            mdb.add_deviation_parameter(name="板端制造误差",elementType=1,parameters=[1,0,0,0,0])
         Returns: 无
         """
         if parameters is None:
@@ -1324,8 +1325,8 @@ class Mdb:
             parameters:参数名列表 梁杆单元时-[制造误差参数名称]   板单元时-[I端误差名,J端误差名,K端误差名,L端误差名]
             group_name:荷载组名
         example:
-            mdb.add_deviation_load(element_id=1,case_name="工况1",parameters=[“梁端误差”])
-            mdb.add_deviation_load(element_id=2,case_name="工况1",parameters=[“板端误差1”,"板端误差2","板端误差3","板端误差4"])
+            mdb.add_deviation_load(element_id=1,case_name="工况1",parameters=["梁端误差"])
+            mdb.add_deviation_load(element_id=2,case_name="工况1",parameters=["板端误差1","板端误差2","板端误差3","板端误差4"])
         Returns: 无
         """
         if parameters is None:
@@ -1359,8 +1360,8 @@ class Mdb:
              element_type:单元类型 1-梁单元(默认)  2-板单元
              group_name:荷载组名
         example:
-            mdb.add_gradient_temperature(elementId=1,caseName=“荷载工况1”,groupName=“荷载组名1,temperature=10)
-            mdb.add_gradient_temperature(elementId=2,caseName=“荷载工况2”,groupName=”荷载组名2“,temperature=10,element_type=2)
+            mdb.add_gradient_temperature(elementId=1,caseName="荷载工况1",groupName="荷载组名1",temperature=10)
+            mdb.add_gradient_temperature(elementId=2,caseName="荷载工况2",groupName="荷载组名2",temperature=10,element_type=2)
         Returns: 无
         """
         qt_model.AddGradientTemperature(elementId=element_id, caseName=case_name, temperature=temperature,
@@ -1609,7 +1610,7 @@ class Mdb:
            temp_loads:临时荷载信息 [荷载组1，荷载组2,..]
            index:施工阶段编号，默认自动添加
         example:
-           mdb.add_construction_stage(name="施工阶段1",duration=5,active_structures=[(“结构组1”,5,1,1),(“结构组2”,5,1,1)],
+           mdb.add_construction_stage(name="施工阶段1",duration=5,active_structures=[("结构组1",5,1,1),("结构组2",5,1,1)],
                 active_boundaries=[("默认边界组",1)],active_loads=[("默认荷载组1",0)])
         Returns: 无
         """
@@ -1644,7 +1645,7 @@ class Mdb:
                                时间: 0-开始 1-结束
            temp_loads:临时荷载信息 [荷载组1，荷载组2,..]
         example:
-           mdb.update_construction_stage(name="施工阶段1",duration=5,active_structures=[(“结构组1”,5,1,1),(“结构组2”,5,1,1)],
+           mdb.update_construction_stage(name="施工阶段1",duration=5,active_structures=[("结构组1",5,1,1),("结构组2",5,1,1)],
                active_boundaries=[("默认边界组",1)],active_loads=[("默认荷载组1",0)])
         Returns: 无
         """
