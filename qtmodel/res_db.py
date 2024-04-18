@@ -59,7 +59,6 @@ class Force:
                 f"m_xyz={self.mxyz:.3f})")
 
 
-
 class BeamStress:
     def __init__(self, top_left, top_right, bottom_left, bottom_right,
                  s_fx, smy_top, smy_bot, smz_left, smz_right):

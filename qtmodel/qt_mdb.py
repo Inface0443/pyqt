@@ -819,7 +819,7 @@ class Mdb:
         qt_model.AddLiveLoadCase(name=name, influencePlane=influence_plane, span=span, subCase=sub_case)
 
     @staticmethod
-    def remove_vehicle(index:int=-1,name:str=""):
+    def remove_vehicle(index: int = -1, name: str = ""):
         """
         删除车辆信息
         Args:
@@ -827,18 +827,24 @@ class Mdb:
              name:车辆名称
         example:
             mdb.remove_vehicle(index=1)
-            mdb.remove_vehicle(name="")
+            mdb.remove_vehicle(name="车辆名称")
         Returns: 无
         """
-        qt_model.RemoveVehicle(id=index)
+        if id != -1:
+            qt_model.RemoveVehicle(id=index)
+        elif name != "":
+            qt_model.RemoveVehicle(name=name)
 
     @staticmethod
-    def remove_node_tandem(index=-1, name=""):
+    def remove_node_tandem(index: int = -1, name: str = ""):
         """
         按照 节点纵列编号/节点纵列名 删除节点纵列
         Args:
              index:节点纵列编号
              name:节点纵列名
+        example:
+            mdb.remove_node_tandem(index=1)
+            mdb.remove_node_tandem(name="节点纵列1")
         Returns: 无
         """
         if index != -1:
@@ -847,12 +853,15 @@ class Mdb:
             qt_model.RemoveNodeTandem(name=name)
 
     @staticmethod
-    def remove_influence_plane(index=-1, name=""):
+    def remove_influence_plane(index: int = -1, name: str = ""):
         """
         按照 影响面编号/影响面名称 删除影响面
         Args:
              index:影响面编号
              name:影响面名称
+        example:
+            mdb.remove_influence_plane(index=1)
+            mdb.remove_influence_plane(name="影响面1")
         Returns: 无
         """
         if index != -1:
@@ -861,12 +870,15 @@ class Mdb:
             qt_model.RemoveInfluencePlane(name=name)
 
     @staticmethod
-    def remove_lane_line(name="", index=-1):
+    def remove_lane_line(name: str = "", index: int = -1):
         """
         按照 车道线编号/车道线名称 删除车道线
         Args:
              name:车道线名称
              index:车道线编号
+        example:
+            mdb.remove_lane_line(index=1)
+            mdb.remove_lane_line(name="车道线1")
         Returns: 无
         """
         if index != -1:
@@ -875,11 +887,13 @@ class Mdb:
             qt_model.RemoveLaneLine(name=name)
 
     @staticmethod
-    def remove_live_load_case(name=""):
+    def remove_live_load_case(name: str = ""):
         """
         删除移动荷载工况
         Args:
              name:移动荷载工况名
+        example:
+            mdb.remove_live_load_case(name="活载工况1")
         Returns: 无
         """
         qt_model.RemoveLiveLoadCase(name=name)
@@ -888,23 +902,28 @@ class Mdb:
 
     # region 钢束操作
     @staticmethod
-    def add_tendon_group(name="", index=-1):
+    def add_tendon_group(name: str = "", index: int = -1):
         """
         按照名称添加钢束组，添加时可指定钢束组id
         Args:
             name: 钢束组名称
             index: 钢束组编号(非必须参数)，默认自动识别
+        example:
+            mdb.add_tendon_group(name="钢束组1")
         Returns: 无
         """
         qt_model.AddTendonGroup(name=name, id=index)
 
     @staticmethod
-    def remove_tendon_group(name="", index=-1):
+    def remove_tendon_group(name: str = "", index: int = -1):
         """
         按照钢束组名称或钢束组编号删除钢束组，两参数均为默认时删除所有钢束组
         Args:
              name:钢束组名称,默认自动识别 (可选参数)
              index:钢束组编号,默认自动识别 (可选参数)
+        example:
+            mdb.remove_tendon_group(name="钢束组1")
+            mdb.remove_tendon_group(index=1)
         Returns: 无
         """
         if name != "":
@@ -915,8 +934,9 @@ class Mdb:
             qt_model.RemoveAllStructureGroup()
 
     @staticmethod
-    def add_tendon_property(name="", index=-1, tendon_type="先张", material_id=1, duct_type=1,
-                            steel_type=1, steel_detail=None, loos_detail=None, slip_info=None):
+    def add_tendon_property(name: str = "", index: int = -1, tendon_type: str = "先张", material_id: int = 1, duct_type: int = 1,
+                            steel_type: int = 1, steel_detail: list[float] = None, loos_detail: tuple[int, int, int] = None,
+                            slip_info: tuple[int, int] = None):
         """
         添加钢束特性
         Args:
@@ -927,24 +947,30 @@ class Mdb:
              duct_type: 1-金属波纹管  2-塑料波纹管  3-铁皮管  4-钢管  5-抽芯成型
              steel_type: 1-钢绞线  2-螺纹钢筋
              steel_detail: 钢绞线[钢束面积,孔道直径,摩阻系数,偏差系数]  螺纹钢筋[钢筋直径,钢束面积,孔道直径,摩阻系数,偏差系数,张拉方式(1-一次张拉\2-超张拉)]
-             loos_detail: 松弛信息[规范(1-公规 2-铁规),张拉(1-一次张拉 2-超张拉),松弛(1-一般松弛 2-低松弛)] (仅钢绞线需要)
-             slip_info: 滑移信息[始端距离,末端距离]
+             loos_detail: 松弛信息[规范(1-公规 2-铁规),张拉(1-一次张拉 2-超张拉),松弛(1-一般松弛 2-低松弛)] (仅钢绞线需要,默认为[1,1,1])
+             slip_info: 滑移信息[始端距离,末端距离] 默认为[0.006, 0.006]
+        example:
+            mdb.add_tendon_property(name="钢束1",tendon_type="先张",material_id=1,duct_type=1,steel_type=1,
+                                    steel_detail=[0.00014,0.10,0.25,0.0015],loos_detail=[1,1,1])
         Returns: 无
         """
         if steel_detail is None:
             raise Exception("操作错误，钢束特性信息不能为空")
         if loos_detail is None:
-            loos_detail = []
+            loos_detail = (1, 1, 1)
         if slip_info is None:
-            slip_info = [0.006, 0.006]
+            slip_info = (0.006, 0.006)
         qt_model.AddTendonProperty(name=name, id=index, tendonType=tendon_type, materialId=material_id,
                                    ductType=duct_type, steelType=steel_type, steelDetail=steel_detail,
                                    loosDetail=loos_detail, slipInfo=slip_info)
 
     @staticmethod
-    def add_tendon_3d(name="", property_name="", group_name="默认钢束组", num=1, line_type=1, position_type=1,
-                      control_info=None, point_insert=None, tendon_direction=None,
-                      rotation_angle=0, track_group="默认结构组"):
+    def add_tendon_3d(name: str, property_name: str = "", group_name: str = "默认钢束组",
+                      num: int = 1, line_type: int = 1, position_type=1,
+                      control_points: list[tuple[float, float, float, float]] = None,
+                      point_insert: tuple[float, float, float, float] = None,
+                      tendon_direction: tuple[float, float, float, float] = None,
+                      rotation_angle: float = 0, track_group: str = "默认结构组", projection: bool = True):
         """
         添加三维钢束
         Args:
@@ -954,31 +980,41 @@ class Mdb:
              num:根数
              line_type:1-导线点  2-折线点
              position_type: 定位方式 1-直线  2-轨迹线
-             control_info: 控制点信息[[x1,y1,z1,r1],[x2,y2,z2,r2]....]
+             control_points: 控制点信息[(x1,y1,z1,r1),(x2,y2,z2,r2)....]
              point_insert: 定位方式为直线时为插入点坐标[x,y,z], 轨迹线时为 [插入端(1-I 2-J),插入方向(1-ij 2-ji),插入单元id]
-             tendon_direction:直线钢束方向向量 x轴-[1,0,0] y轴-[0,1,0] (轨迹线时不用赋值)
+             tendon_direction:直线钢束X方向向量 x轴-[1,0,0] y轴-[0,1,0]  默认为[1,0,0] (轨迹线不用赋值)
              rotation_angle:绕钢束旋转角度
              track_group:轨迹线结构组名  (直线时不用赋值)
+             projection:直线钢束投影，默认为true
+        example:
+            mdb.add_tendon_3d("BB1",property_name="22-15",num=2,position_type=1,
+                    control_points=[(0,0,-1,0),(10,0,-1,0)],point_insert=(0,0,0))
+            mdb.add_tendon_3d("BB1",property_name="22-15",num=2,position_type=2,
+                    control_points=[(0,0,-1,0),(10,0,-1,0)],point_insert=(1,1,1),track_group="轨迹线结构组1")
         Returns: 无
         """
         if tendon_direction is None:
-            tendon_direction = []
-        if control_info is None:
+            tendon_direction = (1, 0, 0)
+        if control_points is None:
             raise Exception("操作错误，钢束形状控制点不能为空")
         if point_insert is None or len(point_insert) != 3:
             raise Exception("操作错误，钢束插入点信息不能为空且长度必须为3")
         qt_model.AddTendon3D(name=name, propertyName=property_name, groupName=group_name, num=num, lineType=line_type,
-                             positionType=position_type, controlPoints=control_info,
+                             positionType=position_type, controlPoints=control_points,
                              pointInsert=point_insert, tendonDirection=tendon_direction,
-                             rotationAngle=rotation_angle, trackGroup=track_group)
+                             rotationAngle=rotation_angle, trackGroup=track_group, isProjection=projection)
 
     @staticmethod
-    def remove_tendon(name="", index=-1):
+    def remove_tendon(name: str = "", index: int = -1):
         """
         按照名称或编号删除钢束,默认时删除所有钢束
         Args:
              name:钢束名称
              index:钢束编号
+        example:
+            mdb.remove_tendon(name="钢束1")
+            mdb.remove_tendon(index=1)
+            mdb.remove_tendon()
         Returns: 无
         """
         if name != "":
@@ -989,12 +1025,16 @@ class Mdb:
             qt_model.RemoveAllTendon()
 
     @staticmethod
-    def remove_tendon_property(name="", index=-1):
+    def remove_tendon_property(name: str = "", index: int = -1):
         """
         按照名称或编号删除钢束组,默认时删除所有钢束组
         Args:
              name:钢束组名称
              index:钢束组编号
+        example:
+            mdb.remove_tendon_property(name="钢束特性1")
+            mdb.remove_tendon_property(index=1)
+            mdb.remove_tendon_property()
         Returns: 无
         """
         if name != "":
@@ -1005,12 +1045,14 @@ class Mdb:
             qt_model.RemoveAllTendonGroup()
 
     @staticmethod
-    def add_nodal_mass(node_id=1, mass_info=None):
+    def add_nodal_mass(node_id: int = 1, mass_info: tuple[float, float, float, float] = None):
         """
         添加节点质量
         Args:
              node_id:节点编号
              mass_info:[m,rmX,rmY,rmZ]
+        example:
+            mdb.add_nodal_mass(node_id=1,mass_info=(100,0,0,0))
         Returns: 无
         """
         if mass_info is None:
@@ -1018,38 +1060,42 @@ class Mdb:
         qt_model.AddNodalMass(nodeId=node_id, massInfo=mass_info)
 
     @staticmethod
-    def remove_nodal_mass(node_id=-1):
+    def remove_nodal_mass(node_id: int = -1):
         """
         删除节点质量
         Args:
              node_id:节点号
+        mdb.remove_nodal_mass(node_id=1)
         Returns: 无
         """
         qt_model.RemoveNodalMass(nodeId=node_id)
 
     @staticmethod
-    def add_pre_stress(index=-1, case_name="", tendon_name="", pre_type=2, force=1395000, group_name="默认荷载组"):
+    def add_pre_stress(case_name: str = "", tendon_name: str = "", pre_type: int = 2, force: float = 1395000, group_name: str = "默认荷载组"):
         """
         添加预应力
         Args:
-             index:编号
              case_name:荷载工况名
              tendon_name:钢束名
-             pre_type:预应力类型
+             pre_type:预应力类型 0-始端 1-末端 2-两端
              force:预应力
              group_name:边界组
+        example:
+            mdb.add_pre_stress(case_name="荷载工况名",tendon_name="钢束1",force=1390000)
         Returns: 无
         """
-        qt_model.AddPreStress(caseName=case_name, tendonName=tendon_name, preType=pre_type, force=force, id=index, groupName=group_name)
+        qt_model.AddPreStress(caseName=case_name, tendonName=tendon_name, preType=pre_type, force=force, groupName=group_name)
 
     @staticmethod
-    def remove_pre_stress(case_name="", tendon_name="", group_name="默认荷载组"):
+    def remove_pre_stress(case_name: str = "", tendon_name: str = "", group_name: str = "默认荷载组"):
         """
         删除预应力
         Args:
              case_name:荷载工况
              tendon_name:钢束组
              group_name:边界组名
+        example:
+            mdb.remove_pre_stress(case_name="工况1",tendon_name="钢束1",group_name="默认荷载组")
         Returns: 无
         """
         qt_model.RemovePreStress(caseName=case_name, tendonName=tendon_name, groupName=group_name)
@@ -1058,24 +1104,28 @@ class Mdb:
 
     # region 荷载操作
     @staticmethod
-    def add_load_group(name="", index=-1):
+    def add_load_group(name: str = ""):
         """
         根据荷载组名称添加荷载组
         Args:
              name: 荷载组名称
-             index: 荷载组编号，默认自动识别 (可选参数)
+        example:
+            mdb.add_load_group(name="荷载组1")
         Returns: 无
         """
         if name != "":
-            qt_model.AddLoadGroup(name=name, id=index)
+            qt_model.AddLoadGroup(name=name)
 
     @staticmethod
-    def remove_load_group(name="", index=-1):
+    def remove_load_group(name: str = "", index: int = -1):
         """
         根据荷载组名称或荷载组id删除荷载组,参数为默认时删除所有荷载组
         Args:
              name: 荷载组名称
              index: 荷载组编号
+        example:
+            mdb.remove_load_group(name="荷载组1")
+            mdb.remove_load_group(index="1")
         Returns: 无
         """
         if name != "":
@@ -1086,13 +1136,16 @@ class Mdb:
             qt_model.RemoveAllLoadGroup()
 
     @staticmethod
-    def add_nodal_force(case_name="", node_id=1, load_info=None, group_name="默认荷载组"):
+    def add_nodal_force(node_id: int = 1, case_name: str = "", load_info: tuple[float, float, float, float, float, float] = None,
+                        group_name: str = "默认荷载组"):
         """
         添加节点荷载
              case_name:荷载工况名
              node_id:节点编号
              load_info:[Fx,Fy,Fz,Mx,My,Mz]
              group_name:荷载组名
+        example:
+            mdb.add_nodal_force(case_name="荷载工况1",node_id=1,load_info=(1,1,1,1,1,1),group_name="默认结构组")
         Returns: 无
         """
         if load_info is None or len(load_info) != 6:
@@ -1100,25 +1153,30 @@ class Mdb:
         qt_model.AddNodalForce(caseName=case_name, nodeId=node_id, loadInfo=load_info, groupName=group_name)
 
     @staticmethod
-    def remove_nodal_force(case_name="", node_id=-1):
+    def remove_nodal_force(node_id: int = -1, case_name: str = ""):
         """
         删除节点荷载
         Args:
              case_name:荷载工况名
              node_id:节点编号
+        example:
+            mdb.remove_nodal_force(case_name="荷载工况1",node_id=1)
         Returns: 无
         """
         qt_model.RemoveNodalForce(caseName=case_name, nodeId=node_id)
 
     @staticmethod
-    def add_node_displacement(case_name="", node_id=1, load_info=None, group_name="默认荷载组"):
+    def add_node_displacement(node_id: int = 1, case_name: str = "", load_info: tuple[float, float, float, float, float, float] = None,
+                              group_name: str = "默认荷载组"):
         """
         添加节点位移
         Args:
-             case_name:荷载工况名
-             node_id:节点编号
-             load_info:[Dx,Dy,Dz,Rx,Ry,Rz]
-             group_name:荷载组名
+            node_id:节点编号
+            case_name:荷载工况名
+            load_info:[Dx,Dy,Dz,Rx,Ry,Rz]
+            group_name:荷载组名
+        example:
+            mdb.add_node_displacement(case_name="荷载工况1",node_id=1,load_info=(1,0,0,0,0,0),group_name="默认荷载组")
         Returns: 无
         """
         if load_info is None or len(load_info) != 6:
@@ -1126,186 +1184,233 @@ class Mdb:
         qt_model.AddNodeDisplacement(caseName=case_name, nodeId=node_id, loadInfo=load_info, groupName=group_name)
 
     @staticmethod
-    def remove_nodal_displacement(case_name="", node_id=-1):
+    def remove_nodal_displacement(node_id: int = -1, case_name: str = ""):
         """
         删除节点位移
         Args:
-             case_name:荷载工况名
-             node_id:节点编号
+            node_id:节点编号
+            case_name:荷载工况名
+        example:
+            mdn.remove_nodal_displacement(case_name="荷载工况1",node_id=1)
         Returns: 无
         """
         qt_model.RemoveNodalDisplacement(caseName=case_name, nodeId=-node_id)
 
     @staticmethod
-    def add_beam_load(case_name="", beam_id=1, load_type=1, coord_system=3, load_info=None, group_name="默认荷载组"):
+    def add_beam_load(beam_id: int = 1, case_name: str = "", load_type: int = 1, coord_system: int = 3, list_x: list[float] = None,
+                      list_load: list[float] = None, uniform_load: float = 0, group_name="默认荷载组"):
         """
         添加梁单元荷载
         Args:
-             case_name:荷载工况名
-             beam_id:单元编号
-             load_type:荷载类型
-             coord_system:坐标系
-             load_info:荷载信息
-             group_name:荷载组名
+            beam_id:单元编号
+            case_name:荷载工况名
+            load_type:荷载类型 1-集中荷载 2-集中弯矩 3-均布荷载 4-均布弯矩 5-梯形荷载 6-梯形弯矩
+            coord_system:坐标系 1-整体坐标X  2-整体坐标Y 3-整体坐标Z  4-局部坐标X  5-局部坐标Y  6-局部坐标Z
+            list_x:荷载位置信息 ,荷载距离单元I端的相对距离
+            list_load:荷载数值信息
+            uniform_load:均布荷载值
+            group_name:荷载组名
+        example:
+            mdb.add_beam_load(case_name="荷载工况1",beam_id=1,load_type=1,list_x=[0.1,0.5,0.8],list_load=[100,100,100])
+            mdb.add_beam_load(case_name="荷载工况1",beam_id=1,load_type=3,list_x=[0,1],uniform_load=100)
+            mdb.add_beam_load(case_name="荷载工况1",beam_id=1,load_type=5,list_x=[0.4,0.8],list_load=[100,200])
         Returns: 无
         """
         qt_model.AddBeamLoad(caseName=case_name, beamId=beam_id, loadType=load_type,
-                             coordinateSystem=coord_system, loadInfo=load_info, groupName=group_name)
+                             coordinateSystem=coord_system, listX=list_x, listLoad=list_load, uniform=uniform_load, groupName=group_name)
 
     @staticmethod
-    def remove_beam_load(case_name="", element_id=1, load_type=1, group_name="默认荷载组"):
+    def remove_beam_load(element_id: int = 1, case_name: str = "", load_type: int = 1, group_name: str = "默认荷载组"):
         """
         删除梁单元荷载
         Args:
-             case_name:荷载工况名
-             element_id:单元号
-             load_type:荷载类型
-             group_name:边界组名
+            element_id:单元号
+            case_name:荷载工况名
+            load_type:荷载类型 1-集中力   2-集中弯矩  3-分布力   4-分布弯矩
+            group_name:边界组名
+        example:
+            mdb.remove_beam_load(case_name="工况1",element_id=1,load_type=1，group_name="默认荷载组")
         Returns: 无
         """
         qt_model.RemoveBeamLoad(caseName=case_name, elementId=element_id, loadType=load_type, groupName=group_name)
 
     @staticmethod
-    def add_initial_tension(element_id=1, case_name="", group_name="默认荷载组", tension=0, tension_type=1):
+    def add_initial_tension(element_id: int = 1, case_name: str = "", group_name: str = "默认荷载组", tension: float = 0, tension_type: int = 1):
         """
         添加初始拉力
         Args:
              element_id:单元编号
              case_name:荷载工况名
-             group_name:荷载组名
              tension:初始拉力
-             tension_type:张拉类型
+             tension_type:张拉类型  1-全量   2-增量
+             group_name:荷载组名
+        example:
+            mdb.add_initial_tension(element_id=1,case_name="工况1",tension=100,tension_type=1)
         Returns: 无
         """
-        qt_model.AddInitialTension(elementId=element_id, caseName=case_name, groupName=group_name, tension=tension, tensionType=tension_type)
+        qt_model.AddInitialTension(elementId=element_id, caseName=case_name, tension=tension, tensionType=tension_type, groupName=group_name)
 
     @staticmethod
-    def add_cable_length_load(element_id=1, case_name="", group_name="默认荷载组", length=0, tension_type=1):
+    def add_cable_length_load(element_id: int = 1, case_name: str = "", group_name: str = "默认荷载组", length: float = 0, tension_type: int = 1):
         """
         添加索长张拉
         Args:
-             element_id:单元类型
-             case_name:荷载工况名
-             group_name:荷载组名
-             length:长度
-             tension_type:张拉类型
+            element_id:单元类型
+            case_name:荷载工况名
+            length:长度
+            tension_type:张拉类型  1-全量   2-增量
+            group_name:荷载组名
+        example:
+            mdb.add_cable_length_load(element_id=1,case_name="工况1",length=1,tension_type=1)
         Returns: 无
         """
         qt_model.AddCableLenghtLoad(elementId=element_id, caseName=case_name, groupName=group_name, length=length, tensionType=tension_type)
 
     @staticmethod
-    def add_plate_element_load(element_id=1, case_name="", load_type=1, load_place=1, coord_system=1, group_name="默认荷载组", load_info=None):
+    def add_plate_element_load(element_id: int = 1, case_name: str = "", load_type: int = 1, load_place: int = 1, coord_system: int = 1,
+                               group_name: str = "默认荷载组", load_list: list[float] = None, xy_list: tuple[float, float] = None):
         """
         添加版单元荷载
         Args:
              element_id:单元id
              case_name:荷载工况名
-             load_type:荷载类型
-             load_place:荷载位置
+             load_type:荷载类型   1-集中力  2-集中弯矩  3-分布力  4-分布弯矩
+             load_place:荷载位置  0-面IJKL 1-边IJ  2-边JK  3-边KL  4-边LI
              coord_system:坐标系
              group_name:荷载组名
-             load_info:荷载信息
+             load_list:荷载列表
+             xy_list:荷载位置信息 [IJ方向距离x,IL方向距离y]  (仅集中荷载需要,x,y代表荷载距离板单元I端的绝对值)
         Returns: 无
         """
-        qt_model.AddPlateElementLoad(elementId=element_id, caseName=case_name, loadType=load_type, loadPlace=load_place,
-                                     coordSystem=coord_system, groupName=group_name, loadInfo=load_info)
+        if load_type == 1 or load_type == 2:
+            qt_model.AddPlateElementLoad(elementId=element_id, caseName=case_name, loadType=load_type,
+                                         coordSystem=coord_system, groupName=group_name, loads=load_list[0])
+        elif load_type == 3 or load_type == 4:
+            if load_place == 0:
+                load_type = load_type + 2
+            qt_model.AddPlateElementLoad(elementId=element_id, caseName=case_name, loadType=load_type, loadPosition=load_place,
+                                         distanceList=xy_list, coordSystem=coord_system, groupName=group_name, loads=load_list[0])
 
     @staticmethod
-    def add_deviation_parameter(name="", element_type=1, parameter_info=None):
+    def add_deviation_parameter(name: str = "", element_type: int = 1, parameters: list[float] = None):
         """
         添加制造误差
         Args:
-             name:名称
-             element_type:单元类型
-             parameter_info:参数列表
+            name:名称
+            element_type:单元类型  1-梁单元  2-板单元
+            parameters:参数列表
+                梁杆单元:[轴向,I端X向转角,I端Y向转角,I端Z向转角,J端X向转角,J端Y向转角,J端Z向转角]
+                板单元:[X向位移,Y向位移,Z向位移,X向转角,Y向转角]
+        example:
+            mdb.add_deviation_parameter(name="梁端制造误差",elementType=1,parameterInfo=parameters)
         Returns: 无
         """
-        if parameter_info is None:
+        if parameters is None:
             raise Exception("操作错误，制造误差信息不能为空")
-        qt_model.AddDeviationParameter(name=name, elementType=element_type, parameterInfo=parameter_info)
+        if len(parameters) != 5 or len(parameters) != 7:
+            raise Exception("操作错误，误差列表有误")
+        qt_model.AddDeviationParameter(name=name, elementType=element_type, parameterInfo=parameters)
 
     @staticmethod
-    def add_deviation_load(element_id=1, case_name="", parameter_name=None, group_name="默认荷载组"):
+    def add_deviation_load(element_id: int = 1, case_name: str = "", parameters: list[float] = None, group_name: str = "默认荷载组"):
         """
         添加制造误差荷载
         Args:
-             element_id:单元编号
-             case_name:荷载工况名
-             parameter_name:参数名
-             group_name:荷载组名
+            element_id:单元编号
+            case_name:荷载工况名
+            parameters:参数名列表 梁杆单元时-[制造误差参数名称]   板单元时-[I端误差名,J端误差名,K端误差名,L端误差名]
+            group_name:荷载组名
+        example:
+            mdb.add_deviation_load(element_id=1,case_name="工况1",parameters=[“梁端误差”])
+            mdb.add_deviation_load(element_id=2,case_name="工况1",parameters=[“板端误差1”,"板端误差2","板端误差3","板端误差4"])
         Returns: 无
         """
-        if parameter_name is None:
+        if parameters is None:
             raise Exception("操作错误，制造误差名称信息不能为空")
-        qt_model.AddDeviationLoad(elementId=element_id, caseName=case_name, parameterName=parameter_name, groupName=group_name)
+        qt_model.AddDeviationLoad(elementId=element_id, caseName=case_name, parameterName=parameters, groupName=group_name)
 
     @staticmethod
-    def add_element_temperature(element_id=1, case_name="", temperature=1, group_name="默认荷载组"):
+    def add_element_temperature(element_id: int = 1, case_name: str = "", temperature: float = 1, group_name: str = "默认荷载组"):
         """
         添加单元温度
         Args:
-             element_id:单元编号
-             case_name:荷载工况名
-             temperature:温度
-             group_name:荷载组名
+            element_id:单元编号
+            case_name:荷载工况名
+            temperature:最终温度
+            group_name:荷载组名
+        example:
+            mdb.add_element_temperature(element_id=1,case_name="自重",temperature=1,group_name="默认荷载组")
         Returns: 无
         """
         qt_model.AddElementTemperature(elementId=element_id, caseName=case_name, temperature=temperature, groupName=group_name)
 
     @staticmethod
-    def add_gradient_temperature(element_id=1, case_name="", temperature=1, section_oriental=1, element_type=1, group_name=""):
+    def add_gradient_temperature(element_id: int = 1, case_name: str = "", temperature: float = 1, section_oriental: int = 1,
+                                 element_type: int = 1, group_name: str = ""):
         """
         添加梯度温度
              element_id:单元编号
              case_name:荷载工况名
-             temperature:温度
-             section_oriental:截面方向
-             element_type:单元类型
+             temperature:温差
+             section_oriental:截面方向 1-截面Y向(默认)  2-截面Z向  (仅梁单元需要)
+             element_type:单元类型 1-梁单元(默认)  2-板单元
              group_name:荷载组名
+        example:
+            mdb.add_gradient_temperature(elementId=1,caseName=“荷载工况1”,groupName=“荷载组名1,temperature=10)
+            mdb.add_gradient_temperature(elementId=2,caseName=“荷载工况2”,groupName=”荷载组名2“,temperature=10,element_type=2)
         Returns: 无
         """
         qt_model.AddGradientTemperature(elementId=element_id, caseName=case_name, temperature=temperature,
                                         sectionOriental=section_oriental, elementType=element_type, groupNmae=group_name)
 
     @staticmethod
-    def add_beam_section_temperature(element_id=1, case_name="", paving_thick=0, temperature_type=1, paving_type=1, group_name="默认荷载组"):
+    def add_beam_section_temperature(element_id: int = 1, case_name: str = "", paving_thick: float = 0, temperature_type: int = 1,
+                                     paving_type: int = 1, group_name: str = "默认荷载组", modify: bool = False, temp_list: tuple[float, float] = None):
         """
         添加梁截面温度
         Args:
-             element_id:单元编号
-             case_name:荷载工况名
-             paving_thick:铺设厚度
-             temperature_type:温度类型
-             paving_type:铺设类型
-             group_name:荷载组名
+            element_id:单元编号
+            case_name:荷载工况名
+            paving_thick:铺设厚度(m)
+            temperature_type:温度类型  1-升温(默认) 2-降温
+            paving_type:铺设类型     1-沥青混凝土(默认)  2-水泥混凝土
+            group_name:荷载组名
+            modify:是否修改规范温度
+            temp_list:温度列表[T1,T2]  (仅修改时需要)
+        example:
+            mdb.add_beam_section_temperature(element_id=1,case_name="工况1",paving_thick=0.1)
         Returns: 无
         """
-        qt_model.AddBeamSectionTemperature(elementId=element_id, caseName=case_name, pavingThickness=paving_thick,
-                                           temperatureType=temperature_type, pavingType=paving_type, groupName=group_name)
+        qt_model.AddBeamSectionTemperature(elementId=element_id, caseName=case_name, pavingThickness=paving_thick, temperatureType=temperature_type,
+                                           pavingType=paving_type, groupName=group_name, isModify=modify, temperatures=temp_list)
 
     @staticmethod
-    def add_index_temperature(element_id=1, case_name="", temperature=0, index=1, group_name="默认荷载组"):
+    def add_index_temperature(element_id: int = 1, case_name: str = "", temperature: float = 0, index: float = 1, group_name: str = "默认荷载组"):
         """
         添加指数温度
         Args:
-             element_id:单元编号
-             case_name:荷载工况名
-             temperature:单元类型
-             index:指数
-             group_name:荷载组名
+            element_id:单元编号
+            case_name:荷载工况名
+            temperature:温差
+            index:指数
+            group_name:荷载组名
+        example:
+            mdb.add_index_temperature(element_id=1,case_name="工况1",temperature=20,index=2)
         Returns: 无
         """
         qt_model.AddIndexTemperature(elementId=element_id, caseName=case_name, temperature=temperature, index=index, groupName=group_name)
 
     @staticmethod
-    def add_plate_temperature(element_id=1, case_name="", temperature=0, group_name="默认荷载组"):
+    def add_top_plate_temperature(element_id: int = 1, case_name: str = "", temperature: float = 0, group_name: str = "默认荷载组"):
         """
         添加顶板温度
         Args:
              element_id:单元编号
              case_name:荷载
-             temperature:温度
+             temperature:最终温度
              group_name:荷载组名
+        example:
+            mdb.add_top_plate_temperature(element_id=1,case_name="工况1",temperature=40,group_name="默认荷载组")
         Returns: 无
         """
         qt_model.AddTopPlateTemperature(elementId=element_id, caseName=case_name, temperature=temperature, groupName=group_name)
@@ -1314,13 +1419,15 @@ class Mdb:
 
     # region 沉降操作
     @staticmethod
-    def add_sink_group(name="", sink=0.1, node_ids=None):
+    def add_sink_group(name: str = "", sink: float = 0.1, node_ids: list[int] = None):
         """
         添加沉降组
         Args:
              name: 沉降组名
              sink: 沉降值
              node_ids: 节点编号
+        example:
+            mdb.add_sink_group(name="沉降1",sink=0.1,node_ids=[1,2,3])
         Returns: 无
         """
         if node_ids is None:
@@ -1328,11 +1435,14 @@ class Mdb:
         qt_model.AddSinkGroup(name=name, sinkValue=sink, nodeIds=node_ids)
 
     @staticmethod
-    def remove_sink_group(name=""):
+    def remove_sink_group(name: str = ""):
         """
         按照名称删除沉降组
         Args:
              name:沉降组名,默认删除所有沉降组
+        example:
+            mdb.remove_sink_group()
+            mdb.remove_sink_group(name="沉降1")
         Returns: 无
         """
         if name == "":
@@ -1341,12 +1451,14 @@ class Mdb:
             qt_model.RemoveSinkGroup(name=name)
 
     @staticmethod
-    def add_sink_case(name="", sink_groups=None):
+    def add_sink_case(name: str, sink_groups: list[str] = None):
         """
         添加沉降工况
         Args:
-             name:荷载工况名
-             sink_groups:沉降组名
+            name:荷载工况名
+            sink_groups:沉降组名
+        example:
+            mdb.add_sink_case(name="沉降工况1",sink_groups=["沉降1","沉降2"])
         Returns: 无
         """
         if sink_groups is None:
@@ -1358,7 +1470,10 @@ class Mdb:
         """
         按照名称删除沉降工况,不输入名称时默认删除所有沉降工况
         Args:
-             name:沉降工况名
+            name:沉降工况名
+        example:
+            mdb.remove_sink_case()
+            mdb.remove_sink_case(name="沉降1")
         Returns: 无
         """
         if name == "":
@@ -1367,11 +1482,13 @@ class Mdb:
             qt_model.RemoveSinkCase()
 
     @staticmethod
-    def add_concurrent_reaction(names=None):
+    def add_concurrent_reaction(names: list[str]):
         """
         添加并发反力组
         Args:
              names: 结构组名称集合
+        example:
+            mdb.add_concurrent_reaction(["默认结构组"])
         Returns: 无
         """
         if names is None:
@@ -1381,51 +1498,65 @@ class Mdb:
     @staticmethod
     def remove_concurrent_reaction():
         """
-        删除并发反力组
+        删除所有并发反力组
+        Args:无
+        example:
+            mdb.remove_concurrent_reaction()
         Returns: 无
         """
         qt_model.RemoveConcurrentRection()
 
     @staticmethod
-    def add_concurrent_force():
+    def add_concurrent_force(names: list[str]):
         """
-        添加并发内力
+        创建并发内力组
+        Args:
+            names: 结构组名称集合
+        example:
+            mdb.add_concurrent_force(["默认结构组"])
         Returns: 无
         """
-        qt_model.AddConcurrentForce()
+        qt_model.AddConcurrentForce(names=names)
 
     @staticmethod
     def remove_concurrent_force():
         """
-        删除并发内力
+        删除所有并发内力组
+        example:
+            mdb.remove_concurrent_force()
         Returns: 无
         """
         qt_model.RemoveConcurrentForce()
 
     @staticmethod
-    def add_load_case(index: int = -1, name: str = "", load_case_type: int = 1):
+    def add_load_case(name: str = "", case_type: int = 1):
         """
         添加荷载工况
         Args:
-            index:沉降工况编号
             name:沉降名
-            load_case_type:荷载工况类型
+            case_type:荷载工况类型
+        example:
+            mdb.add_load_case(name="工况1",case_type=1)
         Returns: 无
         """
         case_type_list = ["施工阶段荷载", "恒载", "活载", "制动力", "风荷载",
                           "体系温度荷载", "梯度温度荷载", "长轨伸缩挠曲力荷载", "脱轨荷载", "船舶撞击荷载",
                           "汽车撞击荷载", "长轨断轨力荷载", "用户定义荷载"]
-        if load_case_type < 1 or load_case_type > 13:
+        if case_type < 1 or case_type > 13:
             raise
-        qt_model.AddLoadCase(id=index, name=name, loadCaseType=case_type_list[load_case_type - 1])
+        qt_model.AddLoadCase(name=name, loadCaseType=case_type_list[case_type - 1])
 
     @staticmethod
-    def remove_load_case(index=-1, name=""):
+    def remove_load_case(index: int = -1, name: str = ""):
         """
         删除荷载工况,参数均为默认时删除全部荷载工况
         Args:
             index:荷载编号
             name:荷载名
+        example:
+            mdb.add_load_case(index=1)
+            mdb.add_load_case(name="工况1")
+            mdb.add_load_case()
         Returns: 无
         """
         if name != "":
@@ -1459,63 +1590,106 @@ class Mdb:
         """
         添加施工阶段信息
         Args:
-            name:施工阶段信息
-            duration:时长
-            active_structures:激活结构组信息 [[结构组名，(int)龄期，(int)1-变形法 2-接线法 3-无应力法，计自重施工阶段id(0-不计自重,1-本阶段 n-第n阶段)],...]
-            delete_structures:钝化结构组信息 [结构组1，结构组2,...]
-            active_boundaries:激活边界组信息 [[边界组1，(int)0-变形前 1-变形后],...]
-            delete_boundaries:钝化边界组信息 [边界组1，结构组2,...]
-            active_loads:激活荷载组信息 [[荷载组1,(int)0-开始 1-结束],...]
-            delete_loads:钝化荷载组信息 [[荷载组1,(int)0-开始 1-结束],...]
-            temp_loads:临时荷载信息 [荷载组1，荷载组2,..]
-            index:施工阶段编号，默认自动添加
+           name:施工阶段信息
+           duration:时长
+           active_structures:激活结构组信息 [(结构组名,龄期,安装方法,计自重施工阶段id),...]
+                               计自重施工阶段id: 0-不计自重,1-本阶段 n-第n阶段)
+                               安装方法：1-变形法 2-接线法 3-无应力法
+           delete_structures:钝化结构组信息 [结构组1，结构组2,...]
+           active_boundaries:激活边界组信息 [(边界组1，位置),...]
+                               位置:  0-变形前 1-变形后
+           delete_boundaries:钝化边界组信息 [边界组1，结构组2,...]
+           active_loads:激活荷载组信息 [(荷载组1,时间),...]
+                               时间: 0-开始 1-结束
+           delete_loads:钝化荷载组信息 [(荷载组1,时间),...]
+                               时间: 0-开始 1-结束
+           temp_loads:临时荷载信息 [荷载组1，荷载组2,..]
+           index:施工阶段编号，默认自动添加
+        example:
+           mdb.add_construction_stage(name="施工阶段1",duration=5,active_structures=[(“结构组1”,5,1,1),(“结构组2”,5,1,1)],
+                active_boundaries=[("默认边界组",1)],active_loads=[("默认荷载组1",0)])
         Returns: 无
         """
-        if temp_loads is None:
-            temp_loads = []
-        if delete_loads is None:
-            delete_loads = []
-        if active_loads is None:
-            active_loads = []
-        if delete_boundaries is None:
-            delete_boundaries = []
-        if active_structures is None:
-            active_structures = []
-        if delete_structures is None:
-            delete_structures = []
-        if active_boundaries is None:
-            active_boundaries = []
         qt_model.AddConstructionStage(name=name, duration=duration, activeStructures=active_structures, inActiveStructures=delete_structures
                                       , activeBoundaries=active_boundaries, inActiveBoundaries=delete_boundaries, activeLoads=active_loads,
                                       inActiveLoads=delete_loads, tempLoads=temp_loads, id=index)
 
     @staticmethod
-    def remove_construction_stage(name=""):
+    def update_construction_stage(name: str = "", duration: int = 0,
+                                  active_structures: list[tuple[str, int, int, int]] = None,
+                                  delete_structures: list[str] = None,
+                                  active_boundaries: list[tuple[str, int]] = None,
+                                  delete_boundaries: list[str] = None,
+                                  active_loads: list[tuple[str, int]] = None,
+                                  delete_loads: list[tuple[str, int]] = None,
+                                  temp_loads: list[str] = None):
         """
-        按照施工阶段名删除施工阶段
+        添加施工阶段信息
+        Args:
+           name:施工阶段信息
+           duration:时长
+           active_structures:激活结构组信息 [(结构组名,龄期,安装方法,计自重施工阶段id),...]
+                               计自重施工阶段id: 0-不计自重,1-本阶段 n-第n阶段)
+                               安装方法：1-变形法 2-接线法 3-无应力法
+           delete_structures:钝化结构组信息 [结构组1，结构组2,...]
+           active_boundaries:激活边界组信息 [(边界组1，位置),...]
+                               位置:  0-变形前 1-变形后
+           delete_boundaries:钝化边界组信息 [边界组1，结构组2,...]
+           active_loads:激活荷载组信息 [(荷载组1,时间),...]
+                               时间: 0-开始 1-结束
+           delete_loads:钝化荷载组信息 [(荷载组1,时间),...]
+                               时间: 0-开始 1-结束
+           temp_loads:临时荷载信息 [荷载组1，荷载组2,..]
+        example:
+           mdb.update_construction_stage(name="施工阶段1",duration=5,active_structures=[(“结构组1”,5,1,1),(“结构组2”,5,1,1)],
+               active_boundaries=[("默认边界组",1)],active_loads=[("默认荷载组1",0)])
+        Returns: 无
+        """
+        qt_model.UpdateConstructionStage(name=name, duration=duration, activeStructures=active_structures, inActiveStructures=delete_structures
+                                         , activeBoundaries=active_boundaries, inActiveBoundaries=delete_boundaries, activeLoads=active_loads,
+                                         inActiveLoads=delete_loads, tempLoads=temp_loads)
+
+    @staticmethod
+    def update_weight_stage(stage_name: str = "", structure_group_name: str = "", weight_stage_id: int = 1):
+        """
+        添加施工阶段信息
+        Args:
+           stage_name:施工阶段信息
+           structure_group_name:结构组名
+           weight_stage_id: 计自重阶段号: 0-不计自重,1-本阶段 n-第n阶段
+        example:
+           mdb.update_weight_stage(stage_name="施工阶段1",structure_group_name="默认结构组",weight_stage_id=1)
+        Returns: 无
+        """
+
+    @staticmethod
+    def remove_construction_stage(name: str = ""):
+        """
+        按照施工阶段名删除施工阶段,默认删除所有施工阶段
         Args:
             name:所删除施工阶段名称
+        example:
+            mdb.remove_construction_stage(name="施工阶段1")
         Returns: 无
         """
-        qt_model.RemoveConstructionStage(name=name)
+        if name == "":
+            qt_model.RemoveAllConstructionStage()
+        else:
+            qt_model.RemoveConstructionStage(name=name)
 
     @staticmethod
-    def remove_all_construction_stage():
-        """
-        删除所有施工阶段
-        Returns: 无
-        """
-        qt_model.RemoveAllConstructionStage()
-
-    @staticmethod
-    def add_load_combine(name="", combine_type=1, describe="", combine_info=None):
+    def add_load_combine(name: str = "", combine_type: int = 1, describe: str = "", combine_info: list[tuple[str, str, float]] = None):
         """
         添加荷载组合
         Args:
             name:荷载组合名
-            combine_type:荷载组合类型
+            combine_type:荷载组合类型 1-叠加  2-判别  3-包络
             describe:描述
-            combine_info:荷载组合信息
+            combine_info:荷载组合信息 [(荷载工况类型,工况名,系数)...]
+                荷载工况类型: "ST"-静力荷载工况  "CS"-施工阶段荷载工况  "CB"-荷载组合
+                            "MV"-移动荷载工况  "SM"-沉降荷载工况
+        example:
+            mdb.add_load_combine(name="荷载组合1",combine_type=1,describe="无",combine_info=[("CS","合计值",1),("CS","恒载",1)])
         Returns: 无
         """
         if combine_info is None:
@@ -1523,11 +1697,13 @@ class Mdb:
         qt_model.AddLoadCombine(name=name, loadCombineType=combine_type, describe=describe, caseAndFactor=combine_info)
 
     @staticmethod
-    def remove_load_combine(name=""):
+    def remove_load_combine(name: str = ""):
         """
         删除荷载组合
         Args:
              name:指定删除荷载组合名，默认时则删除所有荷载组合
+        example:
+            mdb.remove_load_combine(name="荷载组合1")
         Returns: 无
         """
         if name != "":
