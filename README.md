@@ -770,19 +770,17 @@ mdb.remove_nodal_displacement(case_name="荷载工况1",node_id=1)
 > beam_id:单元编号  
 > case_name:荷载工况名  
 > load_type:荷载类型  
-> _ 1-集中荷载 2-集中弯矩 3-均布荷载 4-均布弯矩 5-梯形荷载 6-梯形弯矩_  
+> _ 1-集中荷载 2-集中弯矩 3-分布弯矩 4-分布弯矩  
 > coord_system:坐标系  
 > _1-整体坐标X  2-整体坐标Y 3-整体坐标Z  4-局部坐标X  5-局部坐标Y  6-局部坐标Z_  
 > list_x:荷载位置信息 ,荷载距离单元I端的相对距离  
 > list_load:荷载数值信息  
-> uniform_load:均布荷载值  
 > group_name:荷载组名  
 ```Python
 # 示例代码
 from qtmodel import mdb
 mdb.add_beam_load(case_name="荷载工况1",beam_id=1,load_type=1,list_x=[0.1,0.5,0.8],list_load=[100,100,100])
-mdb.add_beam_load(case_name="荷载工况1",beam_id=1,load_type=3,list_x=[0,1],uniform_load=100)
-mdb.add_beam_load(case_name="荷载工况1",beam_id=1,load_type=5,list_x=[0.4,0.8],list_load=[100,200])
+mdb.add_beam_load(case_name="荷载工况1",beam_id=1,load_type=3,list_x=[0.4,0.8],list_load=[100,200])
 ```  
 ### remove_beam_load
 删除梁单元荷载

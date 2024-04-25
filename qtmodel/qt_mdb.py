@@ -1222,29 +1222,27 @@ class Mdb:
         qt_model.RemoveNodalDisplacement(caseName=case_name, nodeId=-node_id)
 
     @staticmethod
-    def add_beam_load(beam_id: int = 1, case_name: str = "", load_type: int = 1, coord_system: int = 3, list_x: list[float] = None,
-                      list_load: list[float] = None, uniform_load: float = 0, group_name="默认荷载组"):
+    def add_beam_load(beam_id: int = 1, case_name: str = "", load_type: int = 1, coord_system: int = 3, list_x: list[tuple[float,float]] = None,
+                      list_load: list[tuple[float,float]] = None, group_name="默认荷载组"):
         """
         添加梁单元荷载
         Args:
             beam_id:单元编号
             case_name:荷载工况名
             load_type:荷载类型
-               _ 1-集中荷载 2-集中弯矩 3-均布荷载 4-均布弯矩 5-梯形荷载 6-梯形弯矩_
+               _ 1-集中荷载 2-集中弯矩 3-分布弯矩 4-分布弯矩
             coord_system:坐标系
                 _1-整体坐标X  2-整体坐标Y 3-整体坐标Z  4-局部坐标X  5-局部坐标Y  6-局部坐标Z_
             list_x:荷载位置信息 ,荷载距离单元I端的相对距离
             list_load:荷载数值信息
-            uniform_load:均布荷载值
             group_name:荷载组名
         example:
             mdb.add_beam_load(case_name="荷载工况1",beam_id=1,load_type=1,list_x=[0.1,0.5,0.8],list_load=[100,100,100])
-            mdb.add_beam_load(case_name="荷载工况1",beam_id=1,load_type=3,list_x=[0,1],uniform_load=100)
-            mdb.add_beam_load(case_name="荷载工况1",beam_id=1,load_type=5,list_x=[0.4,0.8],list_load=[100,200])
+            mdb.add_beam_load(case_name="荷载工况1",beam_id=1,load_type=3,list_x=[0.4,0.8],list_load=[100,200])
         Returns: 无
         """
         qt_model.AddBeamLoad(caseName=case_name, beamId=beam_id, loadType=load_type,
-                             coordinateSystem=coord_system, listX=list_x, listLoad=list_load, uniform=uniform_load, groupName=group_name)
+                             coordinateSystem=coord_system, listX=list_x, listLoad=list_load,  groupName=group_name)
 
     @staticmethod
     def remove_beam_load(element_id: int = 1, case_name: str = "", load_type: int = 1, group_name: str = "默认荷载组"):
