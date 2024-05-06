@@ -949,7 +949,7 @@ class Mdb:
             qt_model.RemoveAllStructureGroup()
 
     @staticmethod
-    def add_tendon_property(name: str = "", index: int = -1, tendon_type: str = "先张", material_id: int = 1, duct_type: int = 1,
+    def add_tendon_property(name: str = "", index: int = -1, tendon_type: int = 0, material_id: int = 1, duct_type: int = 1,
                             steel_type: int = 1, steel_detail: list[float] = None, loos_detail: tuple[int, int, int] = None,
                             slip_info: tuple[int, int] = None):
         """
@@ -970,7 +970,7 @@ class Mdb:
                 _松弛类型：1-一般松弛 2-低松弛_
              slip_info: 滑移信息[始端距离,末端距离] 默认为[0.006, 0.006]
         example:
-            mdb.add_tendon_property(name="钢束1",tendon_type="先张",material_id=1,duct_type=1,steel_type=1,
+            mdb.add_tendon_property(name="钢束1",tendon_type=0,material_id=1,duct_type=1,steel_type=1,
                                     steel_detail=[0.00014,0.10,0.25,0.0015],loos_detail=(1,1,1))
         Returns: 无
         """
@@ -989,7 +989,7 @@ class Mdb:
                       num: int = 1, line_type: int = 1, position_type=1,
                       control_points: list[tuple[float, float, float, float]] = None,
                       point_insert: tuple[float, float, float] = None,
-                      tendon_direction: tuple[float, float, float, float] = None,
+                      tendon_direction: tuple[float, float, float] = None,
                       rotation_angle: float = 0, track_group: str = "默认结构组", projection: bool = True):
         """
         添加三维钢束
