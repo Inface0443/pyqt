@@ -9,6 +9,76 @@ class Mdb:
     def __int__(self):
         self.initial()
 
+    # region 项目管理
+    @staticmethod
+    def open_file(file_path: str):
+        """
+            打开bfmd文件
+            example:
+                    mdb.open_file("a.bfmd")
+            Returns: 无
+        """
+        if not file_path.endswith(".bfmd"):
+            raise Exception("操作错误，仅支持bfmd文件")
+        qt_model.OpenFile(file_path)
+
+    @staticmethod
+    def save_file(file_path: str):
+        """
+            保存bfmd文件
+            example:
+                    mdb.save_file("a.bfmd")
+            Returns: 无
+        """
+        qt_model.OpenFile(file_path)
+
+    @staticmethod
+    def close_project():
+        """
+            关闭项目
+            example:
+                mdb.close_project()
+            Returns: 无
+        """
+        qt_model.CloseFile()
+
+    @staticmethod
+    def import_command(command: str, command_type: int = 1):
+        """
+            导入命令
+            Args:
+                command:命令字符
+                command_type:命令类型 1-桥通命令
+            example:
+                mdb.import_command("*SECTION")
+            Returns: 无
+        """
+        qt_model.ImportQtCommand(command)
+
+    @staticmethod
+    def export_file(file_path: str):
+        """
+            导入命令
+            Args:
+                file_path:导出文件(.mct/.qdat/.PGF/.3dx)
+            example:
+                qt_model.ExportFile("a.mct")
+            Returns: 无
+        """
+        qt_model.ExportFile(file_path)
+
+    @staticmethod
+    def do_solve():
+        """
+            运行分析
+            example:
+                    mdb.do_solve()
+            Returns: 无
+        """
+        qt_model.DoSolve()
+
+    # endregion
+
     # region 初始化模型
     @staticmethod
     def initial():
@@ -43,8 +113,8 @@ class Mdb:
             name:结构组名称
             index:结构组编号
         example:
-                mdb.remove_structure_group(name="新建结构组1")
-                mdb.remove_structure_group(index = 2)
+            mdb.remove_structure_group(name="新建结构组1")
+            mdb.remove_structure_group(index = 2)
         Returns: 无
         """
         if index != -1:
@@ -59,11 +129,11 @@ class Mdb:
         """
         为结构组添加节点和/或单元
         Args:
-             name: 结构组名
-             node_ids: 节点编号列表(可选参数)
-             element_ids: 单元编号列表(可选参数)
+            name: 结构组名
+            node_ids: 节点编号列表(可选参数)
+            element_ids: 单元编号列表(可选参数)
         example:
-                mdb.add_structure_to_group(name="现有结构组1",node_ids=[1,2,3,4],element_ids=[1,2])
+            mdb.add_structure_to_group(name="现有结构组1",node_ids=[1,2,3,4],element_ids=[1,2])
         Returns: 无
         """
         if node_ids is None:
@@ -77,11 +147,11 @@ class Mdb:
         """
         为结构组删除节点和/或单元
         Args:
-             name: 结构组名
-             node_ids: 节点编号列表(可选参数)
-             element_ids: 单元编号列表(可选参数)
+            name: 结构组名
+            node_ids: 节点编号列表(可选参数)
+            element_ids: 单元编号列表(可选参数)
         example:
-                mdb.add_structure_to_group(name="现有结构组1",node_ids=[1,2,3,4],element_ids=[1,2])
+            mdb.add_structure_to_group(name="现有结构组1",node_ids=[1,2,3,4],element_ids=[1,2])
         Returns: 无
         """
         if node_ids is None:
@@ -460,6 +530,7 @@ class Mdb:
             qt_model.RemoveAllSection()
         else:
             qt_model.RemoveSection(id=index)
+
     # endregion
 
     # region 板厚操作
@@ -1222,8 +1293,8 @@ class Mdb:
         qt_model.RemoveNodalDisplacement(caseName=case_name, nodeId=-node_id)
 
     @staticmethod
-    def add_beam_load(beam_id: int = 1, case_name: str = "", load_type: int = 1, coord_system: int = 3, list_x: list[tuple[float,float]] = None,
-                      list_load: list[tuple[float,float]] = None, group_name="默认荷载组"):
+    def add_beam_load(beam_id: int = 1, case_name: str = "", load_type: int = 1, coord_system: int = 3, list_x: list[tuple[float, float]] = None,
+                      list_load: list[tuple[float, float]] = None, group_name="默认荷载组"):
         """
         添加梁单元荷载
         Args:
@@ -1242,7 +1313,7 @@ class Mdb:
         Returns: 无
         """
         qt_model.AddBeamLoad(caseName=case_name, beamId=beam_id, loadType=load_type,
-                             coordinateSystem=coord_system, listX=list_x, listLoad=list_load,  groupName=group_name)
+                             coordinateSystem=coord_system, listX=list_x, listLoad=list_load, groupName=group_name)
 
     @staticmethod
     def remove_beam_load(element_id: int = 1, case_name: str = "", load_type: int = 1, group_name: str = "默认荷载组"):
@@ -1714,6 +1785,7 @@ class Mdb:
             qt_model.RemoveAllConstructionStage()
         else:
             qt_model.RemoveConstructionStage(name=name)
+
     # endregion
 
     # region 荷载组合
