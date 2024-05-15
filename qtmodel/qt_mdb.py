@@ -30,7 +30,7 @@ class Mdb:
                     mdb.save_file("a.bfmd")
             Returns: 无
         """
-        qt_model.OpenFile(file_path)
+        qt_model.SaveFile(file_path)
 
     @staticmethod
     def close_project():
