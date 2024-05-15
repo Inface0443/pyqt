@@ -1293,8 +1293,8 @@ class Mdb:
         qt_model.RemoveNodalDisplacement(caseName=case_name, nodeId=-node_id)
 
     @staticmethod
-    def add_beam_load(beam_id: int = 1, case_name: str = "", load_type: int = 1, coord_system: int = 3, list_x: list[tuple[float, float]] = None,
-                      list_load: list[tuple[float, float]] = None, group_name="默认荷载组"):
+    def add_beam_load(beam_id: int = 1, case_name: str = "", load_type: int = 1, coord_system: int = 3, list_x: list[float, float] = None,
+                      list_load: list[float, float] = None, group_name="默认荷载组"):
         """
         添加梁单元荷载
         Args:
@@ -1673,15 +1673,6 @@ class Mdb:
             qt_model.DeleteLoadCase(id=index)
         else:
             qt_model.DeleteAllLoadCase()
-
-    @staticmethod
-    def test_print():
-        """
-        测试运行
-        Returns: 无
-        """
-        print(1)
-        raise Exception("错误")
 
     # endregion
 
