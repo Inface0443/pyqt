@@ -68,6 +68,18 @@ class Mdb:
         qt_model.ExportFile(file_path)
 
     @staticmethod
+    def import_file(file_path: str):
+        """
+            导入命令
+            Args:
+                file_path:导入文件(.mct/.qdat/.dxf/.3dx)
+            example:
+                qt_model.ImportFile("a.mct")
+            Returns: 无
+        """
+        qt_model.ImportFile(file_path)
+
+    @staticmethod
     def do_solve():
         """
             运行分析

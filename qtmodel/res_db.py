@@ -1,8 +1,27 @@
 import math
 
 
+class NodeDisplacement:
+    def __init__(self, node_id, data_info: list[float]):
+        if len(data_info) == 6:
+            self.id = node_id
+            self.dx = data_info[0]
+            self.dy = data_info[1]
+            self.dz = data_info[2]
+            self.rx = data_info[3]
+            self.rx = data_info[4]
+            self.rz = data_info[5]
+        else:
+            raise ValueError("操作错误:  'data_info' 列表有误")
+
+    def __str__(self):
+        attrs = vars(self)
+        dict_str = '{' + ', '.join(f"'{k}': {v}" for k, v in attrs.items()) + '}'
+        return dict_str
+
+
 class FrameElementForce:
-    def __init__(self, frame_id, force_i, force_j):
+    def __init__(self, frame_id: int, force_i: list[float], force_j: list[float]):
         """
         单元内力构造器
         Args:
@@ -10,35 +29,39 @@ class FrameElementForce:
             force_i: I端单元内力 [Fx,Fy,Fz,Mx,My,Mz]
             force_j: J端单元内力
         """
-        if isinstance(frame_id, int) and len(force_i) == 6 and len(force_j) == 6:
+        if len(force_i) == 6 and len(force_j) == 6:
             self.id = frame_id
             self.force_i = Force(force_i[0], force_i[1], force_i[2], force_i[3], force_i[4], force_i[5])
             self.force_j = Force(force_j[0], force_j[1], force_j[2], force_j[3], force_j[4], force_j[5])
         else:
-            raise ValueError("Invalid input: 'id' must be an integer, and 'force_i' and 'force_j' must be lists of length 6.")
+            raise ValueError("操作错误:  'force_i' and 'force_j' 列表有误")
 
     def __str__(self):
-        return f"BeamId:{self.id}\nforce_i: {self.force_i}\nforce_j: {self.force_j}"
+        attrs = vars(self)
+        dict_str = '{' + ', '.join(f"'{k}': {v}" for k, v in attrs.items()) + '}'
+        return dict_str
 
 
-class FrameElementStress:
-    def __init__(self, frame_id, force_i, force_j):
-        """
-        单元内力构造器
-        Args:
-            frame_id: 单元id
-            force_i: I端单元内力 [Fx,Fy,Fz,Mx,My,Mz]
-            force_j: J端单元内力
-        """
-        if isinstance(frame_id, int) and len(force_i) == 6 and len(force_j) == 6:
-            self.id = frame_id
-            self.force_i = list(force_i)
-            self.force_j = list(force_j)
-        else:
-            raise ValueError("Invalid input: 'id' must be an integer, and 'force_i' and 'force_j' must be lists of length 6.")
-
-    def __str__(self):
-        return f"FrameId:{self.id}\nForceI: {self.force_i}\nForceJ: {self.force_j}"
+# class FrameElementStress:
+#     def __init__(self, frame_id, force_i, force_j):
+#         """
+#         单元内力构造器
+#         Args:
+#             frame_id: 单元id
+#             force_i: I端单元内力 [Fx,Fy,Fz,Mx,My,Mz]
+#             force_j: J端单元内力
+#         """
+#         if isinstance(frame_id, int) and len(force_i) == 6 and len(force_j) == 6:
+#             self.id = frame_id
+#             self.force_i = list(force_i)
+#             self.force_j = list(force_j)
+#         else:
+#             raise ValueError("Invalid input: 'id' must be an integer, and 'force_i' and 'force_j' must be lists of length 6.")
+#
+#     def __str__(self):
+#         attrs = vars(self)
+#         dict_str = '{' + ', '.join(f"'{k}': {v}" for k, v in attrs.items()) + '}'
+#         return dict_str
 
 
 class Force:
@@ -53,10 +76,24 @@ class Force:
         self.mxyz = math.sqrt((self.mx * self.mx + self.my * self.my + self.mz * self.mz))
 
     def __str__(self):
-        return (f"(fx={self.fx:.3f}, fy={self.fy:.3f}, fz={self.fz:.3f}, "
-                f"mx={self.mx:.3f}, my={self.my:.3f}, mz={self.mz:.3f}, "
-                f"f_xyz={self.fxyz:.3f}, "
-                f"m_xyz={self.mxyz:.3f})")
+        attrs = vars(self)
+        dict_str = '{' + ', '.join(f"'{k}': {v}" for k, v in attrs.items()) + '}'
+        return dict_str
+
+
+class Displacement:
+    def __init__(self, dx, dy, dz, rx, ry, rz):
+        self.dx = dx
+        self.dy = dy
+        self.dz = dz
+        self.rx = rx
+        self.ry = ry
+        self.rz = rz
+
+    def __str__(self):
+        attrs = vars(self)
+        dict_str = '{' + ', '.join(f"'{k}': {v:.3f}" for k, v in attrs.items()) + '}'
+        return dict_str
 
 
 class BeamStress:
@@ -73,17 +110,6 @@ class BeamStress:
         self.smz_right = smz_right
 
     def __str__(self):
-        return (f"BeamStress:\n"
-                f"  Force Top Left: {self.top_left:.3f}\n"
-                f"  Force Top Right: {self.top_right:.3f}\n"
-                f"  Force Bottom Left: {self.bottom_left:.3f}\n"
-                f"  Force Bottom Right: {self.bottom_right:.3f}\n"
-                f"  Force X: {self.s_fx:.3f}\n"
-                f"  Moment Y Top: {self.smy_top:.3f}\n"
-                f"  Moment Y Bottom: {self.smy_bot:.3f}\n"
-                f"  Moment Z Left: {self.smz_left:.3f}\n"
-                f"  Moment Z Right: {self.smz_right:.3f}")
-
-    @staticmethod
-    def test_print():
-        print("yes")
+        attrs = vars(self)
+        dict_str = '{' + ', '.join(f"'{k}': {v}" for k, v in attrs.items()) + '}'
+        return dict_str

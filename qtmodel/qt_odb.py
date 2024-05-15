@@ -18,7 +18,7 @@ class Odb:
                 force_info.INodeForce.Mx, force_info.INodeForce.My, force_info.INodeForce.Mz]
 
     @staticmethod
-    def get_beam_force(beam_id=1, stage_id=1, result_kind=1, increment_type=1):
+    def get_beam_force(beam_id, stage_id: int, result_kind: int = 1, increment_type: int = 1):
         """
         获取梁单元内力,支持单个节点和节点列表
         Args:
@@ -41,7 +41,7 @@ class Odb:
             return list_res
 
     @staticmethod
-    def get_cable_force(cable_id=1, stage_id=1, result_kind=1, increment_type=1):
+    def get_cable_force(cable_id, stage_id, result_kind=1, increment_type=1):
         """
         获取索单元内力,支持单个节点和节点列表
         Args:
@@ -64,7 +64,7 @@ class Odb:
             return list_res
 
     @staticmethod
-    def get_link_force(cable_id=1, stage_id=1, result_kind=1, increment_type=1):
+    def get_link_force(cable_id, stage_id: int, result_kind: int = 1, increment_type: int = 1):
         """
         获取桁架单元内力,支持单个节点和节点列表
         Args:
@@ -81,6 +81,18 @@ class Odb:
             return FrameElementForce(cable_id, Odb.__get_force_i(bf_list[0]), Odb.__get_force_j(bf_list[0]))
         elif type(cable_id) == list:
             bf_list = qt_model.GetLinkForce(cable_id, stage_id, result_kind, increment_type)
+            list_res = []
+            for item in bf_list:
+                list_res.append(FrameElementForce(item.ElementId, Odb.__get_force_i(item), Odb.__get_force_j(item)))
+            return list_res
+
+    @staticmethod
+    def get_node_displacement(node_id, stage_id: int, result_kind: int = 1, increment_type: int = 1):
+        if type(node_id) == int:
+            bf_list = qt_model.GetNodeDisplacement([node_id], stage_id, result_kind, increment_type)
+            return FrameElementForce(node_id, Odb.__get_force_i(bf_list[0]), Odb.__get_force_j(bf_list[0]))
+        elif type(node_id) == list:
+            bf_list = qt_model.GetNodeDisplacement(node_id, stage_id, result_kind, increment_type)
             list_res = []
             for item in bf_list:
                 list_res.append(FrameElementForce(item.ElementId, Odb.__get_force_i(item), Odb.__get_force_j(item)))
