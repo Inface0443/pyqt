@@ -102,6 +102,8 @@ class Mdb:
         """
         qt_model.Initial()
 
+    # endregion
+
     # region 节点单元操作
     @staticmethod
     def add_structure_group(name: str = "", index: int = -1):
@@ -996,6 +998,9 @@ class Mdb:
         """
         qt_model.RemoveLiveLoadCase(name=name)
 
+    @staticmethod
+    def update_model():
+        qt_model.UpdateModel()
     # endregion
 
     # region 钢束操作
@@ -1825,4 +1830,44 @@ class Mdb:
             qt_model.DeleteLoadCombine(name=name)
         else:
             qt_model.DeleteAllLoadCombine()
+
     # endregion
+
+    # region 辅助转换
+    @staticmethod
+    def parse_number_string(input_string):
+        """
+        将类似”1to5by2 11 13to18“的字符串转为list<int>型变量
+        Args:
+            input_string:传入字符串，字符串各部分用空格分开
+        Returns:
+            list[int]
+        """
+        if not input_string.strip():
+            return None
+
+        if input_string == 'nan':
+            return None
+
+        string_list = input_string.split(" ")
+        ids = []
+        for str_ids in string_list:
+            if "to" in str_ids:
+                range_parts = str_ids.split("to")
+                if "by" in range_parts[1]:
+                    range_parts = range_parts[1].split("by")
+
+                start = end = step = 0
+                if range_parts[0].isdigit() and range_parts[1].isdigit():
+                    start = int(range_parts[0])
+                    end = int(range_parts[1])
+                if len(range_parts) > 2 and range_parts[2].isdigit():
+                    step = int(range_parts[2])
+                else:
+                    step = 1
+                ids += [start + n * step for n in range((end - start) // step + 1)]
+            else:
+                ids.append(int(str_ids))
+        return ids
+    # endregion
+
