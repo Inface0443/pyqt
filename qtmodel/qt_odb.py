@@ -19,7 +19,7 @@ class Odb:
             operation: 是否为运营阶段
             case_name: 运营阶段所需荷载工况名
         Returns:
-            list[ElementStress]
+            list[ElementStress] or ElementStress
         """
         if type(element_id) != int and type(element_id) != list:
             raise TypeError("类型错误,element_id仅支持 int和 list[int]")
@@ -51,6 +51,8 @@ class Odb:
                 list_res.append(TrussElementStress(item.ElementId, stress_i, stress_j))
             else:
                 raise TypeError(f"操作错误，不存在{item.ElementType}类型")
+        if len(list_res) == 1:
+            return list_res[0]
         return list_res
 
     @staticmethod
@@ -65,7 +67,7 @@ class Odb:
             operation: 是否为运营阶段
             case_name: 运营阶段所需荷载工况名
         Returns:
-            list[ElementForce]
+            list[ElementForce] or ElementForce
         """
         if type(element_id) != int and type(element_id) != list:
             raise TypeError("类型错误,element_id仅支持 int和 list[int]")
@@ -88,6 +90,8 @@ class Odb:
                 list_res.append(TrussElementForce(item.ElementId, force_i, force_j))
             else:
                 raise TypeError(f"操作错误，不存在{item.ElementType}类型")
+        if len(list_res) == 1:
+            return list_res[0]
         return list_res
 
     @staticmethod
@@ -102,7 +106,7 @@ class Odb:
             operation: 是否为运营阶段
             case_name: 运营阶段所需荷载工况名
         Returns:
-            list[SupportReaction]
+            list[SupportReaction] or SupportReaction
         """
         if type(node_id) != int and type(node_id) != list:
             raise TypeError("类型错误,beam_id int和 list[int]")
@@ -111,6 +115,8 @@ class Odb:
         for item in bs_list:
             force = [item.Force.Fx, item.Force.Fy, item.Force.Fz, item.Force.Mx, item.Force.My, item.Force.Mz]
             list_res.append(SupportReaction(item.NodeId, force))
+        if len(list_res) == 1:
+            return list_res[0]
         return list_res
 
     @staticmethod
@@ -125,7 +131,7 @@ class Odb:
             operation: 是否为运营阶段
             case_name: 运营阶段所需荷载工况名
         Returns:
-            list[NodeDisplacement]
+            list[NodeDisplacement] or NodeDisplacement
         """
         if type(node_id) != int and type(node_id) != list:
             raise TypeError("类型错误,node_id仅支持 int和 list[int]")
@@ -135,4 +141,6 @@ class Odb:
             displacements = [item.Displacement.Dx, item.Displacement.Dy, item.Displacement.Dz,
                              item.Displacement.Rx, item.Displacement.Ry, item.Displacement.Rz]
             list_res.append(NodeDisplacement(item.NodeId, displacements))
+        if len(list_res) == 1:
+            return list_res[0]
         return list_res
