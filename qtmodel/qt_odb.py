@@ -23,7 +23,7 @@ class Odb:
         """
         if type(element_id) != int and type(element_id) != list:
             raise TypeError("类型错误,element_id仅支持 int和 list[int]")
-        bf_list = qt_model.GetBeamForce(element_id, stage_id, result_kind, increment_type, operation, case_name)
+        bf_list = qt_model.GetElementStress(element_id, stage_id, result_kind, increment_type, operation, case_name)
         list_res = []
         for item in bf_list:
             if item.ElementType == "BEAM":
@@ -69,7 +69,7 @@ class Odb:
         """
         if type(element_id) != int and type(element_id) != list:
             raise TypeError("类型错误,element_id仅支持 int和 list[int]")
-        bf_list = qt_model.GetBeamForce(element_id, stage_id, result_kind, increment_type, operation, case_name)
+        bf_list = qt_model.GetElementForce(element_id, stage_id, result_kind, increment_type, operation, case_name)
         list_res = []
         for item in bf_list:
             if item.ElementType == "BEAM":
