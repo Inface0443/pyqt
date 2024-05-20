@@ -497,7 +497,9 @@ class Mdb:
                                  shearConsider=shear_consider, horizontalPos=bias_x, verticalPos=bias_y)
 
     @staticmethod
-    def add_user_section(index: int = -1, name: str = "", sec_type: str = "特性截面", property_info: list[float] = None):
+    def add_user_section(index: int = -1, name: str = "", sec_type: str = "特性截面", property_info: list[float] = None,
+                         main_loop: list[tuple[float, float]] = None, sub_loops: list[list[tuple[float, float]]] = None,
+                         sec_lines: list[tuple[float, float, float, float, float]] = None):
         """
         添加自定义截面,目前仅支持特性截面
         Args:
@@ -505,6 +507,9 @@ class Mdb:
              name:截面名称
              sec_type:截面类型
              property_info:截面特性列表
+             main_loop:主线圈坐标集合 [(-1,-1),(5,0),(5,5),(-1,5)] 目前只支持单一线圈
+             sub_loops:次线圈坐标集合 [[(0,0),(0,1),(1,1,)], [(2,2),(3,2),(3,3)]]
+             sec_lines:线宽集合[(x1,y1,x2,y3,thick),]
         example:
             mdb.add_user_section(name="自定义特性截面",property_info=[i for i in range(25)])
         Returns: 无
@@ -513,7 +518,8 @@ class Mdb:
             raise Exception(f"操作错误，自定义特性截面列表property_info需要25个参数")
         if property_info is None:
             raise Exception("操作错误,请输入此截面的截面特性，特性列表可参考截面定义窗口")
-        qt_model.AddUserSection(id=index, name=name, type=sec_type, propertyInfo=property_info)
+        qt_model.AddUserSection(id=index, name=name, type=sec_type, propertyInfo=property_info,
+                                mainLoop=main_loop, subLoops=sub_loops, secLines=sec_lines)
 
     @staticmethod
     def add_tapper_section(index: int = -1, name: str = "", begin_id: int = 1, end_id: int = 1):
@@ -1336,7 +1342,7 @@ class Mdb:
         """
         qt_model.AddBeamLoad(caseName=case_name, beamId=beam_id, loadType=load_type,
                              coordinateSystem=coord_system, listX=list_x, listLoad=list_load, groupName=group_name,
-                             biasInfo = load_bias, isProject = projected)
+                             biasInfo=load_bias, isProject=projected)
 
     @staticmethod
     def remove_beam_load(element_id: int = 1, case_name: str = "", load_type: int = 1, group_name: str = "默认荷载组"):
