@@ -9,7 +9,24 @@ class Mdb:
     def __int__(self):
         self.initial()
 
+    # region 获取模型信息
+    @staticmethod
+    def get_app_stage():
+        return qt_model.GetApplicationStage()
+
+    # endregion
+
     # region 项目管理
+    @staticmethod
+    def initial():
+        """
+        初始化模型,新建模型
+        example:
+                mdb.initial()
+        Returns: 无
+        """
+        qt_model.Initial()
+
     @staticmethod
     def open_file(file_path: str):
         """
@@ -88,19 +105,6 @@ class Mdb:
             Returns: 无
         """
         qt_model.DoSolve()
-
-    # endregion
-
-    # region 初始化模型
-    @staticmethod
-    def initial():
-        """
-        初始化模型
-        example:
-                mdb.initial()
-        Returns: 无
-        """
-        qt_model.Initial()
 
     # endregion
 
@@ -422,6 +426,8 @@ class Mdb:
                 charm_info=["1*0.2,0.1*0.2","0.5*0.15,0.3*0.2","0.4*0.2","0.5*0.2"])
         Returns: 无
         """
+        if qt_model.GetApplicationStage() == "首页":
+            raise Exception("起始页面下无法建模，请切换至前处理")
         sec_type_list = ["矩形", "圆形", "圆管", "箱型", "实腹八边形",
                          "空腹八边形", "内八角形", "实腹圆端型", "T形", "倒T形",
                          "I字形", "马蹄T形", "I字形混凝土", "混凝土箱梁", "带肋钢箱",
@@ -1001,6 +1007,7 @@ class Mdb:
     @staticmethod
     def update_model():
         qt_model.UpdateModel()
+
     # endregion
 
     # region 钢束操作
@@ -1311,7 +1318,8 @@ class Mdb:
 
     @staticmethod
     def add_beam_load(beam_id: int = 1, case_name: str = "", load_type: int = 1, coord_system: int = 3, list_x: list[float, float] = None,
-                      list_load: list[float, float] = None, group_name="默认荷载组"):
+                      list_load: list[float, float] = None, group_name="默认荷载组", load_bias: tuple[bool, int, int, float] = None,
+                      projected: bool = False):
         """
         添加梁单元荷载
         Args:
@@ -1324,13 +1332,16 @@ class Mdb:
             list_x:荷载位置信息 ,荷载距离单元I端的相对距离
             list_load:荷载数值信息
             group_name:荷载组名
+            load_bias:偏心荷载 (是否偏心,0-中心 1-偏心,偏心坐标系-int,偏心距离)
+            projected:是否投影
         example:
             mdb.add_beam_load(case_name="荷载工况1",beam_id=1,load_type=1,list_x=[0.1,0.5,0.8],list_load=[100,100,100])
             mdb.add_beam_load(case_name="荷载工况1",beam_id=1,load_type=3,list_x=[0.4,0.8],list_load=[100,200])
         Returns: 无
         """
         qt_model.AddBeamLoad(caseName=case_name, beamId=beam_id, loadType=load_type,
-                             coordinateSystem=coord_system, listX=list_x, listLoad=list_load, groupName=group_name)
+                             coordinateSystem=coord_system, listX=list_x, listLoad=list_load, groupName=group_name,
+                             biasInfo = load_bias, isProject = projected)
 
     @staticmethod
     def remove_beam_load(element_id: int = 1, case_name: str = "", load_type: int = 1, group_name: str = "默认荷载组"):
@@ -1832,42 +1843,3 @@ class Mdb:
             qt_model.DeleteAllLoadCombine()
 
     # endregion
-
-    # region 辅助转换
-    @staticmethod
-    def parse_number_string(input_string):
-        """
-        将类似”1to5by2 11 13to18“的字符串转为list<int>型变量
-        Args:
-            input_string:传入字符串，字符串各部分用空格分开
-        Returns:
-            list[int]
-        """
-        if not input_string.strip():
-            return None
-
-        if input_string == 'nan':
-            return None
-
-        string_list = input_string.split(" ")
-        ids = []
-        for str_ids in string_list:
-            if "to" in str_ids:
-                range_parts = str_ids.split("to")
-                if "by" in range_parts[1]:
-                    range_parts = range_parts[1].split("by")
-
-                start = end = step = 0
-                if range_parts[0].isdigit() and range_parts[1].isdigit():
-                    start = int(range_parts[0])
-                    end = int(range_parts[1])
-                if len(range_parts) > 2 and range_parts[2].isdigit():
-                    step = int(range_parts[2])
-                else:
-                    step = 1
-                ids += [start + n * step for n in range((end - start) // step + 1)]
-            else:
-                ids.append(int(str_ids))
-        return ids
-    # endregion
-
