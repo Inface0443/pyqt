@@ -9,13 +9,6 @@ class Mdb:
     def __int__(self):
         self.initial()
 
-    # region 获取模型信息
-    @staticmethod
-    def get_app_stage():
-        return qt_model.GetApplicationStage()
-
-    # endregion
-
     # region 项目管理
     @staticmethod
     def initial():
@@ -79,7 +72,7 @@ class Mdb:
             Args:
                 file_path:导出文件(.mct/.qdat/.PGF/.3dx)
             example:
-                qt_model.ExportFile("a.mct")
+                mdb.export_file("a.mct")
             Returns: 无
         """
         qt_model.ExportFile(file_path)
@@ -91,7 +84,7 @@ class Mdb:
             Args:
                 file_path:导入文件(.mct/.qdat/.dxf/.3dx)
             example:
-                qt_model.ImportFile("a.mct")
+                mdb.import_file("a.mct")
             Returns: 无
         """
         qt_model.ImportFile(file_path)

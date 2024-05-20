@@ -18,6 +18,10 @@ class Odb:
             increment_type: 1-全量    2-增量
             operation: 是否为运营阶段
             case_name: 运营阶段所需荷载工况名
+        example:
+            odb.get_element_stress(1,stage_id=1)
+            odb.get_element_stress([1,2,3],stage_id=1)
+            odb.get_element_stress(1,operation=True,case_name="工况名")
         Returns:
             list[ElementStress] or ElementStress
         """
@@ -66,6 +70,10 @@ class Odb:
             increment_type: 1-全量    2-增量
             operation: 是否为运营阶段
             case_name: 运营阶段所需荷载工况名
+        example:
+            odb.get_element_force(1,stage_id=1)
+            odb.get_element_force([1,2,3],stage_id=1)
+            odb.get_element_force(1,operation=True,case_name="工况名")
         Returns:
             list[ElementForce] or ElementForce
         """
@@ -105,6 +113,10 @@ class Odb:
             increment_type: 1-全量    2-增量
             operation: 是否为运营阶段
             case_name: 运营阶段所需荷载工况名
+        example:
+            odb.get_reaction(1,stage_id=1)
+            odb.get_reaction([1,2,3],stage_id=1)
+            odb.get_reaction(1,operation=True,case_name="工况名")
         Returns:
             list[SupportReaction] or SupportReaction
         """
@@ -130,6 +142,10 @@ class Odb:
             increment_type: 1-全量    2-增量
             operation: 是否为运营阶段
             case_name: 运营阶段所需荷载工况名
+        example:
+            odb.get_node_displacement(1,stage_id=1)
+            odb.get_node_displacement([1,2,3],stage_id=1)
+            odb.get_node_displacement(1,operation=True,case_name="工况名")
         Returns:
             list[NodeDisplacement] or NodeDisplacement
         """

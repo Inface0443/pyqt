@@ -1,10 +1,68 @@
-##  初始化模型
+# 最新版本 V0.3.7 - 2024.05.20 
+- 优化部分调用
+##  项目管理
 ### initial
-初始化模型
+初始化模型,新建模型
 ```Python
 # 示例代码
 from qtmodel import mdb
 mdb.initial()
+```  
+### open_file
+打开bfmd文件
+```Python
+# 示例代码
+from qtmodel import mdb
+mdb.open_file("a.bfmd")
+```  
+### save_file
+保存bfmd文件
+```Python
+# 示例代码
+from qtmodel import mdb
+mdb.save_file("a.bfmd")
+```  
+### close_project
+关闭项目
+```Python
+# 示例代码
+from qtmodel import mdb
+mdb.close_project()
+```  
+### import_command
+导入命令
+> 参数:  
+> command:命令字符  
+> command_type:命令类型 1-桥通命令  
+```Python
+# 示例代码
+from qtmodel import mdb
+mdb.import_command("*SECTION")
+```  
+### export_file
+导入命令
+> 参数:  
+> file_path:导出文件(.mct/.qdat/.PGF/.3dx)  
+```Python
+# 示例代码
+from qtmodel import mdb
+mdb.export_file("a.mct")
+```  
+### import_file
+导入命令
+> 参数:  
+> file_path:导入文件(.mct/.qdat/.dxf/.3dx)  
+```Python
+# 示例代码
+from qtmodel import mdb
+mdb.import_file("a.mct")
+```  
+### do_solve
+运行分析
+```Python
+# 示例代码
+from qtmodel import mdb
+mdb.do_solve()
 ```  
 ##  节点单元操作
 ### add_structure_group
@@ -607,7 +665,7 @@ mdb.remove_tendon_group(index=1)
 ```Python
 # 示例代码
 from qtmodel import mdb
-mdb.add_tendon_property(name="钢束1",tendon_type="先张",material_id=1,duct_type=1,steel_type=1,
+mdb.add_tendon_property(name="钢束1",tendon_type=0,material_id=1,duct_type=1,steel_type=1,
 steel_detail=[0.00014,0.10,0.25,0.0015],loos_detail=(1,1,1))
 ```  
 ### add_tendon_3d
@@ -776,6 +834,8 @@ mdb.remove_nodal_displacement(case_name="荷载工况1",node_id=1)
 > list_x:荷载位置信息 ,荷载距离单元I端的相对距离  
 > list_load:荷载数值信息  
 > group_name:荷载组名  
+> load_bias:偏心荷载 (是否偏心,0-中心 1-偏心,偏心坐标系-int,偏心距离)  
+> projected:是否投影  
 ```Python
 # 示例代码
 from qtmodel import mdb
@@ -1028,8 +1088,6 @@ mdb.remove_load_case(index=1)
 mdb.remove_load_case(name="工况1")
 mdb.remove_load_case()
 ```  
-### test_print
-测试运行
 ##  施工阶段
 ### add_construction_stage
 添加施工阶段信息
@@ -1122,5 +1180,69 @@ mdb.add_load_combine(name="荷载组合1",combine_type=1,describe="无",combine_
 # 示例代码
 from qtmodel import mdb
 mdb.remove_load_combine(name="荷载组合1")
+```
+## 结果提取
+### get_element_stress
+获取单元应力,支持单个单元和单元列表
+> 参数:  
+> element_id: 单元编号  
+> stage_id: 施工极端号  
+> result_kind: 施工阶段数据的类型 1-合计 2-收缩徐变效应 3-预应力效应 4-恒载  
+> increment_type: 1-全量    2-增量  
+> operation: 是否为运营阶段  
+> case_name: 运营阶段所需荷载工况名  
+```Python
+# 示例代码
+from qtmodel import odb
+odb.get_element_stress(1,stage_id=1)
+odb.get_element_stress([1,2,3],stage_id=1)
+odb.get_element_stress(1,operation=True,case_name="工况名")
 ```  
-
+### get_element_force
+获取单元内力,支持单个单元和单元列表
+> 参数:  
+> element_id: 单元编号  
+> stage_id: 施工极端号  
+> result_kind: 施工阶段数据的类型 1-合计 2-收缩徐变效应 3-预应力效应 4-恒载  
+> increment_type: 1-全量    2-增量  
+> operation: 是否为运营阶段  
+> case_name: 运营阶段所需荷载工况名  
+```Python
+# 示例代码
+from qtmodel import odb
+odb.get_element_force(1,stage_id=1)
+odb.get_element_force([1,2,3],stage_id=1)
+odb.get_element_force(1,operation=True,case_name="工况名")
+```  
+### get_reaction
+获取节点,支持单个节点和节点列表
+> 参数:  
+> node_id: 节点编号  
+> stage_id: 施工极端号  
+> result_kind: 施工阶段数据的类型 1-合计 2-收缩徐变效应 3-预应力效应 4-恒载  
+> increment_type: 1-全量    2-增量  
+> operation: 是否为运营阶段  
+> case_name: 运营阶段所需荷载工况名  
+```Python
+# 示例代码
+from qtmodel import odb
+odb.get_reaction(1,stage_id=1)
+odb.get_reaction([1,2,3],stage_id=1)
+odb.get_reaction(1,operation=True,case_name="工况名")
+```  
+### get_node_displacement
+获取节点,支持单个节点和节点列表
+> 参数:  
+> node_id: 节点号  
+> stage_id: 施工极端号  
+> result_kind: 施工阶段数据的类型 1-合计 2-收缩徐变效应 3-预应力效应 4-恒载  
+> increment_type: 1-全量    2-增量  
+> operation: 是否为运营阶段  
+> case_name: 运营阶段所需荷载工况名  
+```Python
+# 示例代码
+from qtmodel import odb
+odb.get_node_displacement(1,stage_id=1)
+odb.get_node_displacement([1,2,3],stage_id=1)
+odb.get_node_displacement(1,operation=True,case_name="工况名")
+```  
