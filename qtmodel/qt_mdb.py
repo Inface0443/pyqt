@@ -249,9 +249,9 @@ class Mdb:
             raise Exception("操作错误,请输入此板单元所需节点列表,[i,j,k,l]")
         if ele_type == 1:
             qt_model.AddBeam(id=index, idI=node_ids[0], idJ=node_ids[1], betaAngle=beta_angle, materialId=mat_id, sectionId=sec_id)
-        elif index == 2:
+        elif ele_type == 2:
             qt_model.AddCable(id=index, idI=node_ids[0], idJ=node_ids[1], betaAngle=beta_angle, materialId=mat_id, sectionId=sec_id)
-        elif sec_id == 3:
+        elif ele_type == 3:
             qt_model.AddLink(id=index, idI=node_ids[0], idJ=node_ids[1], betaAngle=beta_angle, materialId=mat_id, sectionId=sec_id)
         else:
             qt_model.AddPlate(id=index, idI=node_ids[0], idJ=node_ids[1], idK=node_ids[2], idL=node_ids[3], betaAngle=beta_angle,
@@ -299,6 +299,8 @@ class Mdb:
         list_material = ["混凝土", "钢材", "预应力", "钢丝", "钢筋", "自定义"]
         if material_type not in list_material:
             raise Exception(f"操作错误,material_type不在指定列表:{list_material}中")
+        if material_type == "自定义":
+            modified = True
         if modified and len(data_info) != 4:
             raise Exception("操作错误,modify_info数据无效!")
         if not modified:
