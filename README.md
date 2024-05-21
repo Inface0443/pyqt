@@ -1,5 +1,7 @@
 # 最新版本 V0.3.7 - 2024.05.20 
+> pip install --upgrade qtmodel
 - 优化部分调用
+
 ##  项目管理
 ### initial
 初始化模型,新建模型

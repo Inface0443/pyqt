@@ -1,4 +1,4 @@
-# 调用示例
+# 第三方调用示例
 # import requests
 #
 #
