@@ -25,7 +25,7 @@ class Element:
         """
         单元详细信息
         Args:
-            ele_type: 单元类型 支持 BEAM PLATE
+            ele_type: 单元类型 支持 BEAM PLATE CABLE LINK
             node_list: 单元节点列表
             sec_id: 单元截面id号或板厚id号
             mat_id: 材料号
@@ -38,10 +38,8 @@ class Element:
         self.sec_id = sec_id
         self.mat_id = mat_id
         self.beta = beta
-        self.initial_type = 1
-        self.initial_value = 0
-        self.initial_type = 1
-        self.initial_value = 0
+        self.initial_type = initial_type
+        self.initial_value = initial_value
 
     def __str__(self):
         attrs = vars(self)

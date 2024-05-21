@@ -1675,7 +1675,7 @@ class Mdb:
                           "体系温度荷载", "梯度温度荷载", "长轨伸缩挠曲力荷载", "脱轨荷载", "船舶撞击荷载",
                           "汽车撞击荷载", "长轨断轨力荷载", "用户定义荷载"]
         if case_type < 1 or case_type > 13:
-            raise
+            raise TypeError("输入类型错误，荷载工况类型有误，仅支持int类型")
         qt_model.AddLoadCase(name=name, loadCaseType=case_type_list[case_type - 1])
 
     @staticmethod
@@ -2004,32 +2004,149 @@ class Mdb:
         获取节点信息 默认获取所有节点信息
         Args: 无
         example:
-            mdb.get_node_data()
-            mdb.get_node_data(1)
-            mdb.get_node_data([1,2])
+            mdb.get_node_data()     # 获取所有节点结果
+            mdb.get_node_data(1)    # 获取单个节点结果
+            mdb.get_node_data([1,2])    # 获取多个节点结果
         Returns:
             list[Node] 或 Node
         """
-        node_list = []
         if ids is None:
             node_list = qt_model.GetNodeData()
+        else:
+            node_list = qt_model.GetNodeData(ids)
         res_list = []
         for item in node_list:
             res_list.append(Node(item.Id, item.XCoor, item.YCoor, item.ZCoor))
+        if len(res_list) == 1:
+            return res_list[0]
         return res_list
 
     @staticmethod
-    def get_element_data():
+    def get_element_data(ids=None):
         """
         获取单元信息
         Args: 无
         example:
-            mdb.get_element_data()
+            mdb.get_element_data() 获取所有单元结果
+            mdb.get_element_data(1) 获取指定编号单元结果
         Returns:
             list[Element]
         """
-        # ele_list = []
-        # if ele_type == 1:
-        #     ele_list = qt_model.GetBeamElementData()
+        ele_list = []
+        target_ids = []
+        if ids is None:
+            ele_list.extend(Mdb.get_beam_element())
+            ele_list.extend(Mdb.get_plate_element())
+            ele_list.extend(Mdb.get_cable_element())
+            ele_list.extend(Mdb.get_link_element())
+            if len(ele_list) == 1:
+                return ele_list[0]
+            else:
+                return ele_list
+        if isinstance(ids, int):
+            target_ids.append(ids)
+        else:
+            target_ids.extend(ids)
+        for item_id in target_ids:
+            ele_type = Mdb.get_element_type(item_id)
+            if ele_type == "BEAM":
+                ele_list.append(Mdb.get_beam_element(item_id)[0])
+            if ele_type == "PLATE":
+                ele_list.append(Mdb.get_plate_element(item_id)[0])
+            if ele_type == "CABLE":
+                ele_list.append(Mdb.get_cable_element(item_id)[0])
+            if ele_type == "LINK":
+                ele_list.append(Mdb.get_link_element(item_id)[0])
+        return ele_list
 
-    # endregion
+    @staticmethod
+    def get_element_type(ele_id: int) -> str:
+        """
+        获取单元类型
+        Args: 无
+        example:
+            mdb.get_element_type(1) 获取所有单元结果
+        Returns:
+            str
+        """
+        return qt_model.GetElementType(ele_id)
+
+    @staticmethod
+    def get_beam_element(ids=None) -> list[Element]:
+        """
+        获取梁单元信息
+        Args: 无
+        example:
+            mdb.get_beam_element() 获取所有单元结果
+        Returns:
+            list[Element]
+        """
+        res_list = []
+        if ids is None:
+            ele_list = qt_model.GetBeamElementData()
+        else:
+            ele_list = qt_model.GetBeamElementData(ids)
+        for item in ele_list:
+            res_list.append(Element("BEAM", [item.StartNode.Id, item.EndNode.Id], item.SectionId, item.MaterialId, item.BetaAngle))
+        return res_list
+
+    @staticmethod
+    def get_plate_element(ids=None) -> list[Element]:
+        """
+        获取板单元信息
+        Args: 无
+        example:
+            mdb.get_plate_element() 获取所有单元结果
+        Returns:
+            list[Element]
+        """
+        res_list = []
+        if ids is None:
+            ele_list = qt_model.GetPlateElementData()
+        else:
+            ele_list = qt_model.GetPlateElementData(ids)
+        for item in ele_list:
+            res_list.append(Element("PLATE", [item.NodeI.Id, item.NodeJ.Id, item.NodeK.Id, item.NodeL.Id],
+                                    item.ThicknessId, item.MaterialId, item.BetaAngle))
+        return res_list
+
+    @staticmethod
+    def get_cable_element(ids=None) -> list[Element]:
+        """
+        获取索单元信息
+        Args: 无
+        example:
+            mdb.get_cable_element() 获取所有单元结果
+        Returns:
+            list[Element]
+        """
+        res_list = []
+        if ids is None:
+            ele_list = qt_model.GetCableElementData()
+        else:
+            ele_list = qt_model.GetCableElementData(ids)
+        for item in ele_list:
+            res_list.append(Element("CABLE", [item.StartNode.Id, item.EndNode.Id], item.SectionId, item.MaterialId, item.BetaAngle,
+                                    int(item.InitialParameterType), item.InitialParameter))
+        return res_list
+
+    @staticmethod
+    def get_link_element(ids=None) -> list[Element]:
+        """
+        获取杆单元信息
+        Args: 无
+        example:
+            mdb.get_link_element() 获取所有单元结果
+        Returns:
+            list[Element]
+        """
+        res_list = []
+        if ids is None:
+            ele_list = qt_model.GetLinkElementData()
+        else:
+            ele_list = qt_model.GetLinkElementData(ids)
+        for item in ele_list:
+            res_list.append(Element("LINK", [item.StartNode.Id, item.EndNode.Id], item.SectionId, item.MaterialId, item.BetaAngle))
+        return res_list
+
+# endregion
