@@ -1,4 +1,4 @@
-# 最新版本 V0.3.7 - 2024.05.20 
+# 最新版本 V0.3.8 - 2024.05.21 
 > pip install --upgrade qtmodel
 - 优化部分调用
 
@@ -1195,10 +1195,10 @@ mdb.remove_load_combine(name="荷载组合1")
 > case_name: 运营阶段所需荷载工况名  
 ```Python
 # 示例代码
-from qtmodel import odb
-odb.get_element_stress(1,stage_id=1)
-odb.get_element_stress([1,2,3],stage_id=1)
-odb.get_element_stress(1,operation=True,case_name="工况名")
+from qtmodel import mdb
+mdb.get_element_stress(1,stage_id=1)
+mdb.get_element_stress([1,2,3],stage_id=1)
+mdb.get_element_stress(1,operation=True,case_name="工况名")
 ```  
 ### get_element_force
 获取单元内力,支持单个单元和单元列表
@@ -1211,10 +1211,10 @@ odb.get_element_stress(1,operation=True,case_name="工况名")
 > case_name: 运营阶段所需荷载工况名  
 ```Python
 # 示例代码
-from qtmodel import odb
-odb.get_element_force(1,stage_id=1)
-odb.get_element_force([1,2,3],stage_id=1)
-odb.get_element_force(1,operation=True,case_name="工况名")
+from qtmodel import mdb
+mdb.get_element_force(1,stage_id=1)
+mdb.get_element_force([1,2,3],stage_id=1)
+mdb.get_element_force(1,operation=True,case_name="工况名")
 ```  
 ### get_reaction
 获取节点,支持单个节点和节点列表
@@ -1227,10 +1227,10 @@ odb.get_element_force(1,operation=True,case_name="工况名")
 > case_name: 运营阶段所需荷载工况名  
 ```Python
 # 示例代码
-from qtmodel import odb
-odb.get_reaction(1,stage_id=1)
-odb.get_reaction([1,2,3],stage_id=1)
-odb.get_reaction(1,operation=True,case_name="工况名")
+from qtmodel import mdb
+mdb.get_reaction(1,stage_id=1)
+mdb.get_reaction([1,2,3],stage_id=1)
+mdb.get_reaction(1,operation=True,case_name="工况名")
 ```  
 ### get_node_displacement
 获取节点,支持单个节点和节点列表
@@ -1243,8 +1243,8 @@ odb.get_reaction(1,operation=True,case_name="工况名")
 > case_name: 运营阶段所需荷载工况名  
 ```Python
 # 示例代码
-from qtmodel import odb
-odb.get_node_displacement(1,stage_id=1)
-odb.get_node_displacement([1,2,3],stage_id=1)
-odb.get_node_displacement(1,operation=True,case_name="工况名")
+from qtmodel import mdb
+mdb.get_node_displacement(1,stage_id=1)
+mdb.get_node_displacement([1,2,3],stage_id=1)
+mdb.get_node_displacement(1,operation=True,case_name="工况名")
 ```  
