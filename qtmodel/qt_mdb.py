@@ -298,7 +298,7 @@ class Mdb:
             qt_model.AddMaterial(id=index, name=name, materialType=material_type, standardName=standard,
                                  database=database, constructFactor=construct_factor, isModified=modified,
                                  elasticModulus=data_info[0], unitWeight=data_info[1],
-                                 posiRatio=data_info[2], tempratureCoefficient=data_info[3])
+                                 posiRatio=data_info[2], temperatureCoefficient=data_info[3])
 
     @staticmethod
     def add_time_material(index: int = -1, name: str = "", code_index: int = 1, time_parameter: list[float] = None):
