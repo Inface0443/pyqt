@@ -179,12 +179,14 @@ mdb.remove_element(index=1)
 > database:数据库  
 > construct_factor:构造系数  
 > modified:是否修改默认材料参数,默认不修改 (可选参数)  
-> data_info:材料参数列表[弹性模量,容重,泊松比,热膨胀系数] (可选参数)  
+> data_info:材料参数列表[弹性模量,容重,泊松比,热膨胀系数] (可选参数)
+
 ```Python
 # 示例代码
 from qtmodel import mdb
-mdb.add_material(index=1,name="混凝土材料1",material_type="混凝土",standard="公路18规范",database="C50")
-mdb.add_material(index=1,name="自定义材料1",material_type="自定义",data_info=[3.5e10,2.5e4,0.2,1.5e-5])
+
+mdb.add_material(index=1, name="混凝土材料1", mat_type="混凝土", standard="公路18规范", database="C50")
+mdb.add_material(index=1, name="自定义材料1", mat_type="自定义", data_info=[3.5e10, 2.5e4, 0.2, 1.5e-5])
 ```  
 ### add_time_material
 添加收缩徐变材料
