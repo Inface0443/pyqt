@@ -21,9 +21,9 @@ class Odb:
             operation: 是否为运营阶段
             case_name: 运营阶段所需荷载工况名
         example:
-            mdb.get_element_stress(1,stage_id=1)
-            mdb.get_element_stress([1,2,3],stage_id=1)
-            mdb.get_element_stress(1,operation=True,case_name="工况名")
+            odb.get_element_stress(1,stage_id=1)
+            odb.get_element_stress([1,2,3],stage_id=1)
+            odb.get_element_stress(1,operation=True,case_name="工况名")
         Returns: list[ElementStress] or ElementStress
         """
         if type(element_id) != int and type(element_id) != list:
@@ -71,9 +71,9 @@ class Odb:
             increment_type: 1-全量    2-增量
             case_name: 运营阶段所需荷载工况名
         example:
-            mdb.get_element_force(1,stage_id=1)
-            mdb.get_element_force([1,2,3],stage_id=1)
-            mdb.get_element_force(1,operation=True,case_name="工况名")
+            odb.get_element_force(1,stage_id=1)
+            odb.get_element_force([1,2,3],stage_id=1)
+            odb.get_element_force(1,operation=True,case_name="工况名")
         Returns: list[ElementForce] or ElementForce
         """
         if type(element_id) != int and type(element_id) != list:
@@ -112,9 +112,9 @@ class Odb:
             increment_type: 1-全量    2-增量
             case_name: 运营阶段所需荷载工况名
         example:
-            mdb.get_reaction(1,stage_id=1)
-            mdb.get_reaction([1,2,3],stage_id=1)
-            mdb.get_reaction(1,operation=True,case_name="工况名")
+            odb.get_reaction(1,stage_id=1)
+            odb.get_reaction([1,2,3],stage_id=1)
+            odb.get_reaction(1,operation=True,case_name="工况名")
         Returns: list[SupportReaction] or SupportReaction
         """
         if type(node_id) != int and type(node_id) != list:
@@ -139,9 +139,9 @@ class Odb:
             increment_type: 1-全量    2-增量
             case_name: 运营阶段所需荷载工况名
         example:
-            mdb.get_node_displacement(1,stage_id=1)
-            mdb.get_node_displacement([1,2,3],stage_id=1)
-            mdb.get_node_displacement(1,stage_id=-1,case_name="工况名")
+            odb.get_node_displacement(1,stage_id=1)
+            odb.get_node_displacement([1,2,3],stage_id=1)
+            odb.get_node_displacement(1,stage_id=-1,case_name="工况名")
         Returns: list[NodeDisplacement] or NodeDisplacement
         """
         if type(node_id) != int and type(node_id) != list:
@@ -180,7 +180,7 @@ class Odb:
             show_exponential: 指数显示开启
             increment: 是否显示增量结果
         example:
-            mdb.plot_reaction_result(r"aaa.png",component=0,load_case_name="CQ:成桥(合计)",stage_id=-1)     # 获取所有节点信息
+            odb.plot_reaction_result(r"aaa.png",component=0,load_case_name="CQ:成桥(合计)",stage_id=-1)     # 获取所有节点信息
         Returns: 无
         """
         qt_model.PlotReactionResult(file_path, component=component, loadCaseName=load_case_name, stageId=stage_id, envelopeType=envelope_type,
@@ -196,9 +196,9 @@ class Odb:
         获取节点信息 默认获取所有节点信息
         Args: 无
         example:
-            mdb.get_node_data()     # 获取所有节点信息
-            mdb.get_node_data(1)    # 获取单个节点信息
-            mdb.get_node_data([1,2])    # 获取多个节点信息
+            odb.get_node_data()     # 获取所有节点信息
+            odb.get_node_data(1)    # 获取单个节点信息
+            odb.get_node_data([1,2])    # 获取多个节点信息
         Returns: list[Node] 或 Node
         """
         if ids is None:
@@ -218,8 +218,8 @@ class Odb:
         获取单元信息
         Args: 无
         example:
-            mdb.get_element_data() 获取所有单元结果
-            mdb.get_element_data(1) 获取指定编号单元信息
+            odb.get_element_data() # 获取所有单元结果
+            odb.get_element_data(1) # 获取指定编号单元信息
         Returns: list[Element]
         """
         ele_list = []
@@ -256,7 +256,7 @@ class Odb:
         Args:
             ele_id: 单元号
         example:
-            mdb.get_element_type(1) 获取所有单元信息
+            odb.get_element_type(1) # 获取所有单元信息
         Returns: str类型 返回 BEAM PLATE CABLE LINK
         """
         return qt_model.GetElementType(ele_id)
@@ -268,7 +268,7 @@ class Odb:
         Args:
             ids: 梁单元号，默认时获取所有梁单元
         example:
-            mdb.get_beam_element() 获取所有单元信息
+            odb.get_beam_element() # 获取所有单元信息
         Returns: list[Element]
         """
         res_list = []
@@ -287,7 +287,7 @@ class Odb:
         Args:
             ids: 板单元号，默认时获取所有板单元
         example:
-            mdb.get_plate_element() 获取所有单元信息
+            odb.get_plate_element() # 获取所有单元信息
         Returns: list[Element]
         """
         res_list = []
@@ -307,7 +307,7 @@ class Odb:
         Args:
             ids: 索单元号，默认时获取所有索单元
         example:
-            mdb.get_cable_element() 获取所有单元信息
+            odb.get_cable_element() # 获取所有单元信息
         Returns: list[Element]
         """
         res_list = []
@@ -327,7 +327,7 @@ class Odb:
         Args:
             ids: 杆单元号，默认时输出全部杆单元
         example:
-            mdb.get_link_element() 获取所有单元信息
+            odb.get_link_element() # 获取所有单元信息
         Returns: list[Element]
         """
         res_list = []
@@ -346,7 +346,7 @@ class Odb:
         Args:
             ids: 材料号，默认时输出全部材料
         example:
-            mdb.get_material_data() 获取所有材料信息
+            odb.get_material_data() # 获取所有材料信息
         Returns: list[Material]
         """
         mat_list = []
@@ -364,7 +364,7 @@ class Odb:
         Args:
             ids: 材料号，默认时输出全部材料
         example:
-            mdb.get_concrete_material() 获取所有材料信息
+            odb.get_concrete_material() # 获取所有材料信息
         Returns: list[Material]
         """
         res_list = []

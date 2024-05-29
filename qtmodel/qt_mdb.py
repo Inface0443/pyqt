@@ -1729,6 +1729,7 @@ class Mdb:
             names: 结构组名称集合
         example:
             mdb.add_concurrent_force(["默认结构组"])
+        Returns: 无
         """
         qt_model.AddConcurrentForce(names=names)
 
