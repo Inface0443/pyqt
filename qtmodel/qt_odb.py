@@ -15,7 +15,7 @@ class Odb:
         获取单元应力,支持单个单元和单元列表
         Args:
             element_id: 单元编号
-            stage_id: 施工极端号
+            stage_id: 施工阶段号 -1-运营阶段  0-施工阶段包络 n-施工阶段号
             result_kind: 施工阶段数据的类型 1-合计 2-收缩徐变效应 3-预应力效应 4-恒载
             increment_type: 1-全量    2-增量
             operation: 是否为运营阶段
@@ -24,8 +24,7 @@ class Odb:
             mdb.get_element_stress(1,stage_id=1)
             mdb.get_element_stress([1,2,3],stage_id=1)
             mdb.get_element_stress(1,operation=True,case_name="工况名")
-        Returns:
-            list[ElementStress] or ElementStress
+        Returns: list[ElementStress] or ElementStress
         """
         if type(element_id) != int and type(element_id) != list:
             raise TypeError("类型错误,element_id仅支持 int和 list[int]")
@@ -62,26 +61,24 @@ class Odb:
         return list_res
 
     @staticmethod
-    def get_element_force(element_id, stage_id: int = 1, result_kind: int = 1, increment_type: int = 1, operation: bool = False, case_name=""):
+    def get_element_force(element_id, stage_id: int = 1, result_kind: int = 1, increment_type: int = 1, case_name=""):
         """
         获取单元内力,支持单个单元和单元列表
         Args:
             element_id: 单元编号
-            stage_id: 施工极端号
+            stage_id: 施工阶段号 -1-运营阶段  0-施工阶段包络 n-施工阶段号
             result_kind: 施工阶段数据的类型 1-合计 2-收缩徐变效应 3-预应力效应 4-恒载
             increment_type: 1-全量    2-增量
-            operation: 是否为运营阶段
             case_name: 运营阶段所需荷载工况名
         example:
             mdb.get_element_force(1,stage_id=1)
             mdb.get_element_force([1,2,3],stage_id=1)
             mdb.get_element_force(1,operation=True,case_name="工况名")
-        Returns:
-            list[ElementForce] or ElementForce
+        Returns: list[ElementForce] or ElementForce
         """
         if type(element_id) != int and type(element_id) != list:
             raise TypeError("类型错误,element_id仅支持 int和 list[int]")
-        bf_list = qt_model.GetElementForce(element_id, stage_id, result_kind, increment_type, operation, case_name)
+        bf_list = qt_model.GetElementForce(element_id, stage_id, result_kind, increment_type, case_name)
         list_res = []
         for item in bf_list:
             if item.ElementType == "BEAM":
@@ -105,26 +102,24 @@ class Odb:
         return list_res
 
     @staticmethod
-    def get_reaction(node_id, stage_id: int = 1, result_kind: int = 1, increment_type: int = 1, operation: bool = False, case_name=""):
+    def get_reaction(node_id, stage_id: int = 1, result_kind: int = 1, increment_type: int = 1, case_name=""):
         """
         获取节点,支持单个节点和节点列表
         Args:
             node_id: 节点编号
-            stage_id: 施工极端号
+            stage_id: 施工阶段号 -1-运营阶段  0-施工阶段包络 n-施工阶段号
             result_kind: 施工阶段数据的类型 1-合计 2-收缩徐变效应 3-预应力效应 4-恒载
             increment_type: 1-全量    2-增量
-            operation: 是否为运营阶段
             case_name: 运营阶段所需荷载工况名
         example:
             mdb.get_reaction(1,stage_id=1)
             mdb.get_reaction([1,2,3],stage_id=1)
             mdb.get_reaction(1,operation=True,case_name="工况名")
-        Returns:
-            list[SupportReaction] or SupportReaction
+        Returns: list[SupportReaction] or SupportReaction
         """
         if type(node_id) != int and type(node_id) != list:
             raise TypeError("类型错误,beam_id int和 list[int]")
-        bs_list = qt_model.GetSupportReaction(node_id, stage_id, result_kind, increment_type, operation, case_name)
+        bs_list = qt_model.GetSupportReaction(node_id, stage_id, result_kind, increment_type, case_name)
         list_res = []
         for item in bs_list:
             force = [item.Force.Fx, item.Force.Fy, item.Force.Fz, item.Force.Mx, item.Force.My, item.Force.Mz]
@@ -134,26 +129,24 @@ class Odb:
         return list_res
 
     @staticmethod
-    def get_node_displacement(node_id, stage_id: int = 1, result_kind: int = 1, increment_type: int = 1, operation: bool = False, case_name=""):
+    def get_node_displacement(node_id, stage_id: int = 1, result_kind: int = 1, increment_type: int = 1, case_name=""):
         """
         获取节点,支持单个节点和节点列表
         Args:
             node_id: 节点号
-            stage_id: 施工极端号
+            stage_id: 施工阶段号 -1-运营阶段  0-施工阶段包络 n-施工阶段号
             result_kind: 施工阶段数据的类型 1-合计 2-收缩徐变效应 3-预应力效应 4-恒载
             increment_type: 1-全量    2-增量
-            operation: 是否为运营阶段
             case_name: 运营阶段所需荷载工况名
         example:
             mdb.get_node_displacement(1,stage_id=1)
             mdb.get_node_displacement([1,2,3],stage_id=1)
-            mdb.get_node_displacement(1,operation=True,case_name="工况名")
-        Returns:
-            list[NodeDisplacement] or NodeDisplacement
+            mdb.get_node_displacement(1,stage_id=-1,case_name="工况名")
+        Returns: list[NodeDisplacement] or NodeDisplacement
         """
         if type(node_id) != int and type(node_id) != list:
             raise TypeError("类型错误,node_id仅支持 int和 list[int]")
-        bf_list = qt_model.GetNodeDisplacement(node_id, stage_id, result_kind, increment_type, operation, case_name)
+        bf_list = qt_model.GetNodeDisplacement(node_id, stage_id, result_kind, increment_type, case_name)
         list_res = []
         for item in bf_list:
             displacements = [item.Displacement.Dx, item.Displacement.Dy, item.Displacement.Dz,
@@ -162,6 +155,37 @@ class Odb:
         if len(list_res) == 1:
             return list_res[0]
         return list_res
+
+    # endregion
+
+    # region 绘制模型结果
+    @staticmethod
+    def plot_reaction_result(file_path: str, component: int = 1, load_case_name: str = "", stage_id: int = 1,
+                             envelope_type: int = 1, show_number: bool = True, show_legend: bool = True,
+                             text_rotation=0, digital_count=0, show_exponential: bool = True, show_max_min: int = 1,
+                             increment: bool = False):
+        """
+        保存结果图片到指定文件甲
+        Args:
+            file_path: 保存路径名
+            component: 分量编号 0-Fx 1-Fy 2-Fz 3-Fxyz 4-Mx 5-My 6-Mz 7-Mxyz
+            load_case_name: 详细荷载工况名，参考桥通结果输出，例如： CQ:成桥(合计)
+            stage_id: -1-运营阶段  0-施工阶段包络 n-施工阶段号
+            envelope_type: 施工阶段包络类型 1-最大 2-最小
+            show_number: 数值选项卡开启
+            show_legend: 图例选项卡开启
+            text_rotation: 数值选项卡内文字旋转角度
+            show_max_min: 数值选项卡内最大最小值显示 -1-不显示最大最小值  0-显示最大值和最小值  1-最大绝对值 2-最大值 3-最小值
+            digital_count: 小数点位数
+            show_exponential: 指数显示开启
+            increment: 是否显示增量结果
+        example:
+            mdb.plot_reaction_result(r"aaa.png",component=0,load_case_name="CQ:成桥(合计)",stage_id=-1)     # 获取所有节点信息
+        Returns: 无
+        """
+        qt_model.PlotReactionResult(file_path, component=component, loadCaseName=load_case_name, stageId=stage_id, envelopeType=envelope_type,
+                                    showNumber=show_number, showLegend=show_legend, textRotationAngle=text_rotation, digitalCount=digital_count,
+                                    showAsExponential=show_exponential, maxMinValueKind=show_max_min, showIncrementResult=increment)
 
     # endregion
 
@@ -175,8 +199,7 @@ class Odb:
             mdb.get_node_data()     # 获取所有节点信息
             mdb.get_node_data(1)    # 获取单个节点信息
             mdb.get_node_data([1,2])    # 获取多个节点信息
-        Returns:
-            list[Node] 或 Node
+        Returns: list[Node] 或 Node
         """
         if ids is None:
             node_list = qt_model.GetNodeData()
@@ -197,8 +220,7 @@ class Odb:
         example:
             mdb.get_element_data() 获取所有单元结果
             mdb.get_element_data(1) 获取指定编号单元信息
-        Returns:
-            list[Element]
+        Returns: list[Element]
         """
         ele_list = []
         target_ids = []
@@ -235,8 +257,7 @@ class Odb:
             ele_id: 单元号
         example:
             mdb.get_element_type(1) 获取所有单元信息
-        Returns:
-            str类型 返回 BEAM PLATE CABLE LINK
+        Returns: str类型 返回 BEAM PLATE CABLE LINK
         """
         return qt_model.GetElementType(ele_id)
 
@@ -248,8 +269,7 @@ class Odb:
             ids: 梁单元号，默认时获取所有梁单元
         example:
             mdb.get_beam_element() 获取所有单元信息
-        Returns:
-            list[Element]
+        Returns: list[Element]
         """
         res_list = []
         if ids is None:
@@ -268,8 +288,7 @@ class Odb:
             ids: 板单元号，默认时获取所有板单元
         example:
             mdb.get_plate_element() 获取所有单元信息
-        Returns:
-            list[Element]
+        Returns: list[Element]
         """
         res_list = []
         if ids is None:
@@ -289,8 +308,7 @@ class Odb:
             ids: 索单元号，默认时获取所有索单元
         example:
             mdb.get_cable_element() 获取所有单元信息
-        Returns:
-            list[Element]
+        Returns: list[Element]
         """
         res_list = []
         if ids is None:
@@ -310,8 +328,7 @@ class Odb:
             ids: 杆单元号，默认时输出全部杆单元
         example:
             mdb.get_link_element() 获取所有单元信息
-        Returns:
-            list[Element]
+        Returns: list[Element]
         """
         res_list = []
         if ids is None:
@@ -330,8 +347,7 @@ class Odb:
             ids: 材料号，默认时输出全部材料
         example:
             mdb.get_material_data() 获取所有材料信息
-        Returns:
-            list[Material]
+        Returns: list[Material]
         """
         mat_list = []
         # if ids is None:
@@ -349,8 +365,7 @@ class Odb:
             ids: 材料号，默认时输出全部材料
         example:
             mdb.get_concrete_material() 获取所有材料信息
-        Returns:
-            list[Material]
+        Returns: list[Material]
         """
         res_list = []
         if ids is None:

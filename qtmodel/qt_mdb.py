@@ -11,8 +11,10 @@ class Mdb:
     def update_model():
         """
         刷新模型信息
+        Args: 无
         example:
             mdb.update_model()
+        Returns: 无
         """
         qt_model.UpdateModel()
 
@@ -25,14 +27,17 @@ class Mdb:
         example:
             mdb.update_app_stage(1)
             mdb.update_app_stage(2)
+        Returns: 无
         """
 
     @staticmethod
     def do_solve():
         """
         运行分析
+        Args: 无
         example:
             mdb.do_solve()
+        Returns: 无
         """
         qt_model.DoSolve()
 
@@ -40,8 +45,10 @@ class Mdb:
     def initial():
         """
         初始化模型,新建模型
+        Args: 无
         example:
             mdb.initial()
+        Returns: 无
         """
         qt_model.Initial()
 
@@ -53,6 +60,7 @@ class Mdb:
             file_path: 文件全路径
         example:
             mdb.open_file("a.bfmd")
+        Returns: 无
         """
         if not file_path.endswith(".bfmd"):
             raise Exception("操作错误，仅支持bfmd文件")
@@ -62,8 +70,10 @@ class Mdb:
     def close_project():
         """
         关闭项目
+        Args: 无
         example:
             mdb.close_project()
+        Returns: 无
         """
         qt_model.CloseFile()
 
@@ -75,6 +85,7 @@ class Mdb:
             file_path: 文件全路径
         example:
             mdb.save_file("a.bfmd")
+        Returns: 无
         """
         qt_model.SaveFile(file_path)
 
@@ -87,6 +98,7 @@ class Mdb:
             command_type:命令类型 1-桥通命令 目前仅支持桥通命令
         example:
             mdb.import_command("*SECTION")
+        Returns: 无
         """
         qt_model.ImportQtCommand(command)
 
@@ -98,6 +110,7 @@ class Mdb:
             file_path:导入文件(.mct/.qdat/.dxf/.3dx)
         example:
             mdb.import_file("a.mct")
+        Returns: 无
         """
         qt_model.ImportFile(file_path)
 
@@ -109,6 +122,7 @@ class Mdb:
             file_path:导出文件全路径，支持格式(.mct/.qdat/.PGF/.3dx)
         example:
             mdb.export_file("a.mct")
+        Returns: 无
         """
         qt_model.ExportFile(file_path)
 
@@ -124,6 +138,7 @@ class Mdb:
         example:
             mdb.add_nodes([[1,2,3],[4,5,6]])
             mdb.add_nodes([[1,1,2,3],[2,4,5,6]])
+        Returns: 无
         """
         qt_model.AddNodes(dataList=node_list)
 
@@ -139,6 +154,7 @@ class Mdb:
         example:
             mdb.add_node(1,2,3)
             mdb.add_node(x= 1,y = 2,z = 4,index = 2)
+        Returns: 无
         """
         if index != -1:
             qt_model.AddNode(id=index, x=x, y=y, z=z)
@@ -154,6 +170,7 @@ class Mdb:
              new_id: 新节点编号
         example:
             mdb.update_node_id(1,2)
+        Returns: 无
         """
         qt_model.UpdateNodeId(nodeId=node_id, newId=new_id)
 
@@ -166,6 +183,7 @@ class Mdb:
              tolerance: 合并容许误差
         example:
             mdb.merge_nodes()
+        Returns: 无
         """
         if ids is None:
             qt_model.MergeNode(tolerance)
@@ -182,6 +200,7 @@ class Mdb:
             mdb.remove_node()
             mdb.remove_node(ids=1)
             mdb.remove_node(ids=[1,2,3])
+        Returns: 无
         """
         if ids is None:
             qt_model.RemoveAllNodes()
@@ -197,6 +216,7 @@ class Mdb:
         Args: 无
         example:
             mdb.renumber_node()
+        Returns: 无
         """
         qt_model.RenumberNodeId()
 
@@ -210,9 +230,10 @@ class Mdb:
             offset_y:Y轴偏移量
             offset_z:Z轴偏移量
         example:
-            mdb.move_node()
+            mdb.move_node(1,1.5,1.5,1.5)
+        Returns: 无
         """
-        qt_model.MoveNode(nodeId=node_id, offsets=[offset_x, offset_y, offset_z])
+        qt_model.MoveNode(node_id, offsets=[offset_x, offset_y, offset_z])
 
     @staticmethod
     def add_structure_group(name: str = "", index: int = -1):
@@ -224,6 +245,7 @@ class Mdb:
         example:
             mdb.add_structure_group(name="新建结构组1")
             mdb.add_structure_group(name="新建结构组2",index=2)
+        Returns: 无
         """
         qt_model.AddStructureGroup(name=name, id=index)
 
@@ -237,6 +259,7 @@ class Mdb:
         example:
             mdb.remove_structure_group(name="新建结构组1")
             mdb.remove_structure_group(index = 2)
+        Returns: 无
         """
         if index != -1:
             qt_model.RemoveStructureGroup(id=index)
@@ -255,6 +278,7 @@ class Mdb:
             element_ids: 单元编号列表(可选参数)
         example:
             mdb.add_structure_to_group(name="现有结构组1",node_ids=[1,2,3,4],element_ids=[1,2])
+        Returns: 无
         """
         if node_ids is None:
             node_ids = []
@@ -272,6 +296,7 @@ class Mdb:
             element_ids: 单元编号列表(可选参数)
         example:
             mdb.add_structure_to_group(name="现有结构组1",node_ids=[1,2,3,4],element_ids=[1,2])
+        Returns: 无
         """
         if node_ids is None:
             node_ids = []
@@ -292,6 +317,7 @@ class Mdb:
             sec_id:截面编号
         example:
             mdb.add_element(index=1,ele_type=1,node_ids=[1,2],beta_angle=1,mat_id=1,sec_id=1)
+        Returns: 无
         """
         if node_ids is None and ele_type != 4:
             raise Exception("操作错误,请输入此单元所需节点列表,[i,j]")
@@ -317,7 +343,7 @@ class Mdb:
         example:
             mdb.remove_element()
             mdb.remove_element(index=1)
-        
+        Returns: 无
         """
         if index is None:
             qt_model.RemoveAllElements()
@@ -344,7 +370,7 @@ class Mdb:
         example:
             mdb.add_material(index=1,name="混凝土材料1",mat_type="混凝土",standard="公路18规范",database="C50")
             mdb.add_material(index=1,name="自定义材料1",mat_type="自定义",data_info=[3.5e10,2.5e4,0.2,1.5e-5])
-        
+        Returns: 无
         """
         list_material = ["混凝土", "钢材", "预应力", "钢丝", "钢筋", "自定义"]
         if mat_type not in list_material:
@@ -373,7 +399,7 @@ class Mdb:
             time_parameter: 对应规范的收缩徐变参数列表,默认不改变规范中信息 (可选参数)
         example:
             mdb.add_time_material(index=1,name="收缩徐变材料1",code_index=1)
-        
+        Returns: 无
         """
         if time_parameter is None:  # 默认不修改收缩徐变相关参数
             qt_model.AddTimeParameter(id=index, name=name, codeId=code_index)
@@ -418,7 +444,7 @@ class Mdb:
             f_cuk: 材料标准抗压强度,仅自定义材料是需要输入
         example:
             mdb.update_material_creep(index=1,creep_id=1,f_cuk=5e7)
-        
+        Returns: 无
         """
         qt_model.UpdateMaterialCreep(materialId=index, timePatameterId=creep_id, fcuk=f_cuk)
 
@@ -431,7 +457,7 @@ class Mdb:
         example:
             mdb.remove_material()
             mdb.remove_material(index=1)
-        
+        Returns: 无
         """
         if index == -1:
             qt_model.RemoveAllMaterial()
@@ -476,7 +502,7 @@ class Mdb:
             mdb.add_parameter_section(name="截面2",sec_type="混凝土箱梁",box_height=2,box_number=3,
                 sec_info=[0.02,0,12,3,1,2,1,5,6,0.2,0.4,0.1,0.13,0.28,0.3,0.5,0.5,0.5,0.2],
                 charm_info=["1*0.2,0.1*0.2","0.5*0.15,0.3*0.2","0.4*0.2","0.5*0.2"])
-        
+        Returns: 无
         """
         if qt_model.GetApplicationStage() == "首页":
             raise Exception("起始页面下无法建模，请切换至前处理")
@@ -540,9 +566,8 @@ class Mdb:
                 rib_info = {"板肋1": [0.1,0.02],"T形肋1":[0.1,0.02,0.02,0.02]},
                 rib_place = [(0, 0, 0, [(0.1, "板肋1", 2, "默认名称1"), (0.2, "板肋1", 2, "默认名称2")]), (0, 0, 1, [(0.1, "T形肋1", 0, "默认名称3")])],
                 bias_type="中上")
-        
+        Returns: 无
         """
-
         if sec_info is None:
             raise Exception("操作错误,请输入此截面的截面信息，参数列表可参考截面定义窗口")
         section_type = "工字钢梁" if sec_type == 1 else "箱型钢梁"
@@ -569,7 +594,7 @@ class Mdb:
              sec_lines:线宽集合[(x1,y1,x2,y3,thick),]
         example:
             mdb.add_user_section(name="自定义特性截面",property_info=[i for i in range(25)])
-        
+        Returns: 无
         """
         if sec_type == "特性截面" and len(property_info) != 25:
             raise Exception(f"操作错误，自定义特性截面列表property_info需要25个参数")
@@ -589,7 +614,7 @@ class Mdb:
              end_id:截面末端编号
         example:
             mdb.add_tapper_section(name="变截面1",begin_id=1,end_id=2)
-        
+        Returns: 无
         """
         qt_model.AddTapperSection(id=index, name=name, beginId=begin_id, endId=end_id)
 
@@ -602,7 +627,7 @@ class Mdb:
         example:
             mdb.remove_section()
             mdb.remove_section(1)
-        
+        Returns: 无
         """
         if index == -1:
             qt_model.RemoveAllSection()
@@ -633,7 +658,7 @@ class Mdb:
         example:
             mdb.add_thickness(name="厚度1", t=0.2,thick_type=0,bias_info=(0,0.8))
             mdb.add_thickness(name="厚度2", t=0.2,thick_type=1,rib_pos=0,dist_v=0.1,rib_v=[1,1,0.02,0.02])
-        
+        Returns: 无
         """
         if rib_v is None:
             rib_v = []
@@ -656,7 +681,7 @@ class Mdb:
         example:
             mdb.remove_thickness()
             mdb.remove_thickness(index=1)
-        
+        Returns: 无
         """
         if index == -1:
             qt_model.RemoveAllThickness()
@@ -679,7 +704,7 @@ class Mdb:
              dis_h: 高度方向距离
         example:
             mdb.add_tapper_section_group(ids=[1,2,3,4],name="变截面组1")
-        
+        Returns: 无
         """
         qt_model.AddTapperSectionGroup(ids=ids, name=name, factorW=factor_w, factorH=factor_h, w=ref_w, h=ref_h, disW=dis_w, disH=dis_h)
 
@@ -697,7 +722,7 @@ class Mdb:
         example:
             mdb.update_section_bias(index=1,bias_type="中上",center_type="几何中心")
             mdb.update_section_bias(index=1,bias_type="自定义",bias_point=[0.1,0.2])
-        
+        Returns: 无
         """
         if center_type == "自定义":
             if len(bias_point) != 2:
@@ -720,7 +745,7 @@ class Mdb:
              index:边界组编号，默认自动识别当前编号 (可选参数)
         example:
             mdb.add_boundary_group(name="边界组1")
-        
+        Returns: 无
         """
         qt_model.AddBoundaryGroup(name=name, id=index)
 
@@ -733,7 +758,7 @@ class Mdb:
         example:
             mdb.remove_boundary_group()
             mdb.remove_boundary_group(name="边界组1")
-        
+        Returns: 无
         """
         if name != "":
             qt_model.RemoveBoundaryGroup(name)
@@ -747,7 +772,7 @@ class Mdb:
         Args:无
         example:
             mdb.remove_all_boundary()
-        
+        Returns: 无
         """
         qt_model.RemoveAllBoundary()
 
@@ -762,7 +787,7 @@ class Mdb:
             group:边界所处边界组名
         example:
             mdb.remove_boundary(remove_id = 1, bd_type = 1,group="边界组1")
-        
+        Returns: 无
         """
         type_list = ["一般支承", "弹性支承", "主从约束", "弹性连接", "约束方程", "梁端约束"]
         bd_name = type_list[bd_type - 1]
@@ -779,7 +804,7 @@ class Mdb:
              group_name:边界组名,默认为默认边界组
         example:
             mdb.add_general_support(node_id=1, boundary_info=[True,True,True,False,False,False])
-        
+        Returns: 无
         """
         if boundary_info is None or len(boundary_info) != 6:
             raise Exception("操作错误，要求输入一般支承列表长度为6")
@@ -796,7 +821,7 @@ class Mdb:
              group_name:边界组
         example:
             mdb.add_elastic_support(node_id=1,support_type=1,boundary_info=[1e6,0,1e6,0,0,0])
-        
+        Returns: 无
         """
         qt_model.AddElasticSupport(nodeId=node_id, supportType=support_type, boundaryInfo=boundary_info,
                                    groupName=group_name)
@@ -813,7 +838,7 @@ class Mdb:
              group_name:边界组名
         example:
             mdb.add_master_slave_link(master_id=1,slave_id=2,boundary_info=[True,True,True,False,False,False])
-        
+        Returns: 无
         """
         qt_model.AddMasterSlaveLink(masterId=master_id, slaveId=slave_id, boundaryInfo=boundary_info, groupName=group_name)
 
@@ -837,7 +862,7 @@ class Mdb:
             mdb.add_elastic_link(link_type=1,start_id=1,end_id=2,boundary_info=[1e6,1e6,1e6,0,0,0])
             mdb.add_elastic_link(link_type=2,start_id=1,end_id=2)
             mdb.add_elastic_link(link_type=3,start_id=1,end_id=2,kx=1e6)
-        
+        Returns: 无
         """
         qt_model.AddElasticLink(linkType=link_type, startId=start_id, endId=end_id, beta=beta_angle,
                                 boundaryInfo=boundary_info, groupName=group_name, disRatio=dis_ratio, kDx=kx)
@@ -853,7 +878,7 @@ class Mdb:
              group_name:边界组名
         example:
             mdb.add_beam_constraint(beam_id=2,info_i=[True,True,True,False,False,False],info_j=[True,True,True,False,False,False])
-        
+        Returns: 无
         """
         if info_i is None or len(info_i) != 6:
             raise Exception("操作错误，要求输入I端约束列表长度为6")
@@ -873,7 +898,7 @@ class Mdb:
             mdb.add_node_axis(input_type=1,node_id=1,coord_info=[45,45,45])
             mdb.add_node_axis(input_type=2,node_id=1,coord_info=[[0,0,1],[0,1,0],[1,0,0]])
             mdb.add_node_axis(input_type=3,node_id=1,coord_info=[[0,0,1],[0,1,0]])
-        
+        Returns: 无
         """
         if coord_info is None:
             raise Exception("操作错误，输入坐标系信息不能为空")
@@ -909,7 +934,7 @@ class Mdb:
              n:车厢数: 默认6节车厢 (城市轨道交通桥梁规范2017 所需参数)
         example:
             mdb.add_standard_vehicle("高速铁路",standard_code=1,load_type="高速铁路")
-        
+        Returns: 无
         """
         qt_model.AddStandardVehicle(name=name, standardIndex=standard_code, loadType=load_type, loadLength=load_length, N=n)
 
@@ -923,7 +948,7 @@ class Mdb:
              node_ids:节点列表
         example:
             mdb.add_node_tandem("节点纵列1",1,[i+1 for i in range(12)])
-        
+        Returns: 无
         """
         if node_ids is None:
             raise Exception("操作错误，输入节点列表不能为空")
@@ -938,7 +963,7 @@ class Mdb:
              tandem_names:节点纵列名称组
         example:
             mdb.add_influence_plane("影响面1",["节点纵列1","节点纵列2"])
-        
+        Returns: 无
         """
         qt_model.AddInfluencePlane(name=name, tandemNames=tandem_names)
 
@@ -954,7 +979,7 @@ class Mdb:
              lane_width:车道宽度
         example:
             mdb.add_lane_line("车道1","影响面1","节点纵列1",offset=0,lane_width=3.1)
-        
+        Returns: 无
         """
         qt_model.AddLaneLine(name, influenceName=influence_name, tandemName=tandem_name, offset=offset, laneWidth=lane_width)
 
@@ -976,7 +1001,7 @@ class Mdb:
              sub_case:子工况信息 [(车辆名称,系数,["车道1","车道2"])...]
         example:
             mdb.add_live_load_case("活载工况1","影响面1",100,sub_case=[("车辆名称",1.0,["车道1","车道2"]),])
-        
+        Returns: 无
         """
         if sub_case is None:
             raise Exception("操作错误，子工况信息列表不能为空")
@@ -992,7 +1017,7 @@ class Mdb:
         example:
             mdb.remove_vehicle(index=1)
             mdb.remove_vehicle(name="车辆名称")
-        
+        Returns: 无
         """
         if id != -1:
             qt_model.RemoveVehicle(id=index)
@@ -1009,7 +1034,7 @@ class Mdb:
         example:
             mdb.remove_node_tandem(index=1)
             mdb.remove_node_tandem(name="节点纵列1")
-        
+        Returns: 无
         """
         if index != -1:
             qt_model.RemoveNodeTandem(id=index)
@@ -1026,7 +1051,7 @@ class Mdb:
         example:
             mdb.remove_influence_plane(index=1)
             mdb.remove_influence_plane(name="影响面1")
-        
+        Returns: 无
         """
         if index != -1:
             qt_model.RemoveInfluencePlane(id=index)
@@ -1043,7 +1068,7 @@ class Mdb:
         example:
             mdb.remove_lane_line(index=1)
             mdb.remove_lane_line(name="车道线1")
-        
+        Returns: 无
         """
         if index != -1:
             qt_model.RemoveLaneLine(id=index)
@@ -1058,7 +1083,7 @@ class Mdb:
              name:移动荷载工况名
         example:
             mdb.remove_live_load_case(name="活载工况1")
-        
+        Returns: 无
         """
         qt_model.RemoveLiveLoadCase(name=name)
 
@@ -1074,7 +1099,7 @@ class Mdb:
             index: 钢束组编号(非必须参数)，默认自动识别
         example:
             mdb.add_tendon_group(name="钢束组1")
-        
+        Returns: 无
         """
         qt_model.AddTendonGroup(name=name, id=index)
 
@@ -1088,7 +1113,7 @@ class Mdb:
         example:
             mdb.remove_tendon_group(name="钢束组1")
             mdb.remove_tendon_group(index=1)
-        
+        Returns: 无
         """
         if name != "":
             qt_model.RemoveTendonGroup(name=name)
@@ -1121,7 +1146,7 @@ class Mdb:
         example:
             mdb.add_tendon_property(name="钢束1",tendon_type=0,material_id=1,duct_type=1,steel_type=1,
                                     steel_detail=[0.00014,0.10,0.25,0.0015],loos_detail=(1,1,1))
-        
+        Returns: 无
         """
         if steel_detail is None:
             raise Exception("操作错误，钢束特性信息不能为空")
@@ -1163,7 +1188,7 @@ class Mdb:
                     control_points=[(0,0,-1,0),(10,0,-1,0)],point_insert=(0,0,0))
             mdb.add_tendon_3d("BB1",property_name="22-15",num=2,position_type=2,
                     control_points=[(0,0,-1,0),(10,0,-1,0)],point_insert=(1,1,1),track_group="轨迹线结构组1")
-        
+        Returns: 无
         """
         if tendon_direction is None:
             tendon_direction = (1, 0, 0)
@@ -1187,7 +1212,7 @@ class Mdb:
             mdb.remove_tendon(name="钢束1")
             mdb.remove_tendon(index=1)
             mdb.remove_tendon()
-        
+        Returns: 无
         """
         if name != "":
             qt_model.RemoveTendon(name=name)
@@ -1207,7 +1232,7 @@ class Mdb:
             mdb.remove_tendon_property(name="钢束特性1")
             mdb.remove_tendon_property(index=1)
             mdb.remove_tendon_property()
-        
+        Returns: 无
         """
         if name != "":
             qt_model.RemoveTendonProperty(name=name)
@@ -1225,7 +1250,7 @@ class Mdb:
              mass_info:[m,rmX,rmY,rmZ]
         example:
             mdb.add_nodal_mass(node_id=1,mass_info=(100,0,0,0))
-        
+        Returns: 无
         """
         if mass_info is None:
             raise Exception("操作错误，节点质量信息列表不能为空")
@@ -1239,7 +1264,7 @@ class Mdb:
              node_id:节点号
         example:
             mdb.remove_nodal_mass(node_id=1)
-        
+        Returns: 无
         """
         qt_model.RemoveNodalMass(nodeId=node_id)
 
@@ -1256,7 +1281,7 @@ class Mdb:
              group_name:边界组
         example:
             mdb.add_pre_stress(case_name="荷载工况名",tendon_name="钢束1",force=1390000)
-        
+        Returns: 无
         """
         qt_model.AddPreStress(caseName=case_name, tendonName=tendon_name, preType=pre_type, force=force, groupName=group_name)
 
@@ -1270,7 +1295,7 @@ class Mdb:
              group_name:边界组名
         example:
             mdb.remove_pre_stress(case_name="工况1",tendon_name="钢束1",group_name="默认荷载组")
-        
+        Returns: 无
         """
         qt_model.RemovePreStress(caseName=case_name, tendonName=tendon_name, groupName=group_name)
 
@@ -1285,7 +1310,7 @@ class Mdb:
              name: 荷载组名称
         example:
             mdb.add_load_group(name="荷载组1")
-        
+        Returns: 无
         """
         if name != "":
             qt_model.AddLoadGroup(name=name)
@@ -1300,7 +1325,7 @@ class Mdb:
         example:
             mdb.remove_load_group(name="荷载组1")
             mdb.remove_load_group(index=1)
-        
+        Returns: 无
         """
         if name != "":
             qt_model.RemoveLoadGroup(name=name)
@@ -1320,7 +1345,7 @@ class Mdb:
              group_name:荷载组名
         example:
             mdb.add_nodal_force(case_name="荷载工况1",node_id=1,load_info=(1,1,1,1,1,1),group_name="默认结构组")
-        
+        Returns: 无
         """
         if load_info is None or len(load_info) != 6:
             raise Exception("操作错误，节点荷载列表信息不能为空，且其长度必须为6")
@@ -1335,7 +1360,7 @@ class Mdb:
              node_id:节点编号
         example:
             mdb.remove_nodal_force(case_name="荷载工况1",node_id=1)
-        
+        Returns: 无
         """
         qt_model.RemoveNodalForce(caseName=case_name, nodeId=node_id)
 
@@ -1351,7 +1376,7 @@ class Mdb:
             group_name:荷载组名
         example:
             mdb.add_node_displacement(case_name="荷载工况1",node_id=1,load_info=(1,0,0,0,0,0),group_name="默认荷载组")
-        
+        Returns: 无
         """
         if load_info is None or len(load_info) != 6:
             raise Exception("操作错误，节点位移列表信息不能为空，且其长度必须为6")
@@ -1366,7 +1391,7 @@ class Mdb:
             case_name:荷载工况名
         example:
             mdb.remove_nodal_displacement(case_name="荷载工况1",node_id=1)
-        
+        Returns: 无
         """
         qt_model.RemoveNodalDisplacement(caseName=case_name, nodeId=-node_id)
 
@@ -1391,7 +1416,7 @@ class Mdb:
         example:
             mdb.add_beam_load(case_name="荷载工况1",beam_id=1,load_type=1,list_x=[0.1,0.5,0.8],list_load=[100,100,100])
             mdb.add_beam_load(case_name="荷载工况1",beam_id=1,load_type=3,list_x=[0.4,0.8],list_load=[100,200])
-        
+        Returns: 无
         """
         qt_model.AddBeamLoad(caseName=case_name, beamId=beam_id, loadType=load_type,
                              coordinateSystem=coord_system, listX=list_x, listLoad=list_load, groupName=group_name,
@@ -1409,7 +1434,7 @@ class Mdb:
             group_name:边界组名
         example:
             mdb.remove_beam_load(case_name="工况1",element_id=1,load_type=1,group_name="默认荷载组")
-        
+        Returns: 无
         """
         qt_model.RemoveBeamLoad(caseName=case_name, elementId=element_id, loadType=load_type, groupName=group_name)
 
@@ -1425,7 +1450,7 @@ class Mdb:
              group_name:荷载组名
         example:
             mdb.add_initial_tension(element_id=1,case_name="工况1",tension=100,tension_type=1)
-        
+        Returns: 无
         """
         qt_model.AddInitialTension(elementId=element_id, caseName=case_name, tension=tension, tensionType=tension_type, groupName=group_name)
 
@@ -1441,7 +1466,7 @@ class Mdb:
             group_name:荷载组名
         example:
             mdb.add_cable_length_load(element_id=1,case_name="工况1",length=1,tension_type=1)
-        
+        Returns: 无
         """
         qt_model.AddCableLenghtLoad(elementId=element_id, caseName=case_name, groupName=group_name, length=length, tensionType=tension_type)
 
@@ -1464,7 +1489,7 @@ class Mdb:
              xy_list:荷载位置信息 [IJ方向绝对距离x,IL方向绝对距离y]  (仅集中荷载需要)
         example:
             mdb.add_plate_element_load(element_id=1,case_name="工况1",load_type=1,group_name="默认荷载组",load_list=[1000],xy_list=(0.2,0.5))
-        
+        Returns: 无
         """
         if load_type == 1 or load_type == 2:
             qt_model.AddPlateElementLoad(elementId=element_id, caseName=case_name, loadType=load_type,
@@ -1488,7 +1513,7 @@ class Mdb:
         example:
             mdb.add_deviation_parameter(name="梁端制造误差",element_type=1,parameters=[1,0,0,0,0,0,0])
             mdb.add_deviation_parameter(name="板端制造误差",element_type=1,parameters=[1,0,0,0,0])
-        
+        Returns: 无
         """
         if parameters is None:
             raise Exception("操作错误，制造误差信息不能为空")
@@ -1510,7 +1535,7 @@ class Mdb:
         example:
             mdb.add_deviation_load(element_id=1,case_name="工况1",parameters=["梁端误差"])
             mdb.add_deviation_load(element_id=2,case_name="工况1",parameters=["板端误差1","板端误差2","板端误差3","板端误差4"])
-        
+        Returns: 无
         """
         if parameters is None:
             raise Exception("操作错误，制造误差名称信息不能为空")
@@ -1527,7 +1552,7 @@ class Mdb:
             group_name:荷载组名
         example:
             mdb.add_element_temperature(element_id=1,case_name="自重",temperature=1,group_name="默认荷载组")
-        
+        Returns: 无
         """
         qt_model.AddElementTemperature(elementId=element_id, caseName=case_name, temperature=temperature, groupName=group_name)
 
@@ -1547,7 +1572,7 @@ class Mdb:
         example:
             mdb.add_gradient_temperature(element_id=1,case_name="荷载工况1",group_name="荷载组名1",temperature=10)
             mdb.add_gradient_temperature(element_id=2,case_name="荷载工况2",group_name="荷载组名2",temperature=10,element_type=2)
-        
+        Returns: 无
         """
         qt_model.AddGradientTemperature(elementId=element_id, caseName=case_name, temperature=temperature,
                                         sectionOriental=section_oriental, elementType=element_type, groupNmae=group_name)
@@ -1569,7 +1594,7 @@ class Mdb:
             temp_list:温度列表[T1,T2]  (仅修改时需要)
         example:
             mdb.add_beam_section_temperature(element_id=1,case_name="工况1",paving_thick=0.1)
-        
+        Returns: 无
         """
         qt_model.AddBeamSectionTemperature(elementId=element_id, caseName=case_name, pavingThickness=paving_thick, temperatureType=temperature_type,
                                            pavingType=paving_type, groupName=group_name, isModify=modify, temperatures=temp_list)
@@ -1586,7 +1611,7 @@ class Mdb:
             group_name:荷载组名
         example:
             mdb.add_index_temperature(element_id=1,case_name="工况1",temperature=20,index=2)
-        
+        Returns: 无
         """
         qt_model.AddIndexTemperature(elementId=element_id, caseName=case_name, temperature=temperature, index=index, groupName=group_name)
 
@@ -1601,7 +1626,7 @@ class Mdb:
              group_name:荷载组名
         example:
             mdb.add_top_plate_temperature(element_id=1,case_name="工况1",temperature=40,group_name="默认荷载组")
-        
+        Returns: 无
         """
         qt_model.AddTopPlateTemperature(elementId=element_id, caseName=case_name, temperature=temperature, groupName=group_name)
 
@@ -1618,7 +1643,7 @@ class Mdb:
              node_ids: 节点编号
         example:
             mdb.add_sink_group(name="沉降1",sink=0.1,node_ids=[1,2,3])
-        
+        Returns: 无
         """
         if node_ids is None:
             raise Exception("操作错误，沉降定义中节点信息不能为空")
@@ -1633,7 +1658,7 @@ class Mdb:
         example:
             mdb.remove_sink_group()
             mdb.remove_sink_group(name="沉降1")
-        
+        Returns: 无
         """
         if name == "":
             qt_model.RemoveAllSinkGroup()
@@ -1649,7 +1674,7 @@ class Mdb:
             sink_groups:沉降组名
         example:
             mdb.add_sink_case(name="沉降工况1",sink_groups=["沉降1","沉降2"])
-        
+        Returns: 无
         """
         if sink_groups is None:
             raise Exception("操作错误，沉降工况定义中沉降组信息不能为空")
@@ -1664,7 +1689,7 @@ class Mdb:
         example:
             mdb.remove_sink_case()
             mdb.remove_sink_case(name="沉降1")
-        
+        Returns: 无
         """
         if name == "":
             qt_model.RemoveAllSinkCase()
@@ -1679,7 +1704,7 @@ class Mdb:
              names: 结构组名称集合
         example:
             mdb.add_concurrent_reaction(["默认结构组"])
-        
+        Returns: 无
         """
         if names is None:
             raise Exception("操作错误，添加并发反力组时结构组名称不能为空")
@@ -1692,7 +1717,7 @@ class Mdb:
         Args:无
         example:
             mdb.remove_concurrent_reaction()
-        
+        Returns: 无
         """
         qt_model.RemoveConcurrentRection()
 
@@ -1704,7 +1729,6 @@ class Mdb:
             names: 结构组名称集合
         example:
             mdb.add_concurrent_force(["默认结构组"])
-        
         """
         qt_model.AddConcurrentForce(names=names)
 
@@ -1712,9 +1736,10 @@ class Mdb:
     def remove_concurrent_force():
         """
         删除所有并发内力组
+        Args: 无
         example:
             mdb.remove_concurrent_force()
-        
+        Returns: 无
         """
         qt_model.RemoveConcurrentForce()
 
@@ -1727,7 +1752,7 @@ class Mdb:
             case_type:荷载工况类型
         example:
             mdb.add_load_case(name="工况1",case_type=1)
-        
+        Returns: 无
         """
         case_type_list = ["施工阶段荷载", "恒载", "活载", "制动力", "风荷载",
                           "体系温度荷载", "梯度温度荷载", "长轨伸缩挠曲力荷载", "脱轨荷载", "船舶撞击荷载",
@@ -1747,7 +1772,7 @@ class Mdb:
             mdb.remove_load_case(index=1)
             mdb.remove_load_case(name="工况1")
             mdb.remove_load_case()
-        
+        Returns: 无
         """
         if name != "":
             qt_model.DeleteLoadCase(name=name)
@@ -1789,7 +1814,7 @@ class Mdb:
         example:
            mdb.add_construction_stage(name="施工阶段1",duration=5,active_structures=[("结构组1",5,1,1),("结构组2",5,1,1)],
                 active_boundaries=[("默认边界组",1)],active_loads=[("默认荷载组1",0)])
-        
+        Returns: 无
         """
         qt_model.AddConstructionStage(name=name, duration=duration, activeStructures=active_structures, inActiveStructures=delete_structures
                                       , activeBoundaries=active_boundaries, inActiveBoundaries=delete_boundaries, activeLoads=active_loads,
@@ -1824,7 +1849,7 @@ class Mdb:
         example:
            mdb.update_construction_stage(name="施工阶段1",duration=5,active_structures=[("结构组1",5,1,1),("结构组2",5,1,1)],
                active_boundaries=[("默认边界组",1)],active_loads=[("默认荷载组1",0)])
-        
+        Returns: 无
         """
         qt_model.UpdateConstructionStage(name=name, duration=duration, activeStructures=active_structures, inActiveStructures=delete_structures
                                          , activeBoundaries=active_boundaries, inActiveBoundaries=delete_boundaries, activeLoads=active_loads,
@@ -1841,7 +1866,7 @@ class Mdb:
             _0-不计自重,1-本阶段 n-第n阶段_
         example:
            mdb.update_weight_stage(stage_name="施工阶段1",structure_group_name="默认结构组",weight_stage_id=1)
-        
+        Returns: 无
         """
 
     @staticmethod
@@ -1852,7 +1877,7 @@ class Mdb:
             name:所删除施工阶段名称
         example:
             mdb.remove_construction_stage(name="施工阶段1")
-        
+        Returns: 无
         """
         if name == "":
             qt_model.RemoveAllConstructionStage()
@@ -1875,7 +1900,7 @@ class Mdb:
                 _"MV"-移动荷载工况  "SM"-沉降荷载工况_
         example:
             mdb.add_load_combine(name="荷载组合1",combine_type=1,describe="无",combine_info=[("CS","合计值",1),("CS","恒载",1)])
-        
+        Returns: 无
         """
         if combine_info is None:
             combine_info = []
@@ -1889,7 +1914,7 @@ class Mdb:
              name:指定删除荷载组合名，默认时则删除所有荷载组合
         example:
             mdb.remove_load_combine(name="荷载组合1")
-        
+        Returns: 无
         """
         if name != "":
             qt_model.DeleteLoadCombine(name=name)
