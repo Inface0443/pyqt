@@ -355,7 +355,7 @@ class Mdb:
     # region 材料操作
     @staticmethod
     def add_material(index: int = -1, name: str = "", mat_type: str = "混凝土", standard: str = "公路18规范", database: str = "C50",
-                     construct_factor: float = 1, modified: bool = False, data_info: list[float] = None):
+                     construct_factor: float = 1, modified: bool = False, data_info: list[float] = None, creep_id: int = -1, f_cuk: float = 0):
         """
         添加材料
         Args:
@@ -367,6 +367,8 @@ class Mdb:
             construct_factor:构造系数
             modified:是否修改默认材料参数,默认不修改 (可选参数)
             data_info:材料参数列表[弹性模量,容重,泊松比,热膨胀系数] (可选参数)
+            creep_id:徐变材料id (可选参数)
+            f_cuk: 立方体抗压强度标准值 (可选参数)
         example:
             mdb.add_material(index=1,name="混凝土材料1",mat_type="混凝土",standard="公路18规范",database="C50")
             mdb.add_material(index=1,name="自定义材料1",mat_type="自定义",data_info=[3.5e10,2.5e4,0.2,1.5e-5])
@@ -381,12 +383,14 @@ class Mdb:
             raise Exception("操作错误,modify_info数据无效!")
         if not modified:
             qt_model.AddMaterial(id=index, name=name, materialType=mat_type, standardName=standard,
-                                 database=database, constructFactor=construct_factor, isModified=modified)
+                                 database=database, constructFactor=construct_factor, isModified=modified,
+                                 timeParameterId=creep_id, fcuk=f_cuk)
         else:
             qt_model.AddMaterial(id=index, name=name, materialType=mat_type, standardName=standard,
                                  database=database, constructFactor=construct_factor, isModified=modified,
                                  elasticModulus=data_info[0], unitWeight=data_info[1],
-                                 posiRatio=data_info[2], temperatureCoefficient=data_info[3])
+                                 posiRatio=data_info[2], temperatureCoefficient=data_info[3],
+                                 timeParameterId=creep_id, fcuk=f_cuk)
 
     @staticmethod
     def add_time_material(index: int = -1, name: str = "", code_index: int = 1, time_parameter: list[float] = None):

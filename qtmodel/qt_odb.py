@@ -10,7 +10,7 @@ class Odb:
 
     # region 静力结果查看
     @staticmethod
-    def get_element_stress(element_id, stage_id: int = 1, result_kind: int = 1, increment_type: int = 1, operation: bool = False, case_name=""):
+    def get_element_stress(element_id, stage_id: int = 1, result_kind: int = 1, increment_type: int = 1, case_name=""):
         """
         获取单元应力,支持单个单元和单元列表
         Args:
@@ -18,17 +18,16 @@ class Odb:
             stage_id: 施工阶段号 -1-运营阶段  0-施工阶段包络 n-施工阶段号
             result_kind: 施工阶段数据的类型 1-合计 2-收缩徐变效应 3-预应力效应 4-恒载
             increment_type: 1-全量    2-增量
-            operation: 是否为运营阶段
             case_name: 运营阶段所需荷载工况名
         example:
             odb.get_element_stress(1,stage_id=1)
             odb.get_element_stress([1,2,3],stage_id=1)
-            odb.get_element_stress(1,operation=True,case_name="工况名")
+            odb.get_element_stress(1,stage_id=-1,case_name="工况名")
         Returns: list[ElementStress] or ElementStress
         """
         if type(element_id) != int and type(element_id) != list:
             raise TypeError("类型错误,element_id仅支持 int和 list[int]")
-        bf_list = qt_model.GetElementStress(element_id, stage_id, result_kind, increment_type, operation, case_name)
+        bf_list = qt_model.GetElementStress(element_id, stage_id, result_kind, increment_type, case_name)
         list_res = []
         for item in bf_list:
             if item.ElementType == "BEAM":
@@ -73,7 +72,7 @@ class Odb:
         example:
             odb.get_element_force(1,stage_id=1)
             odb.get_element_force([1,2,3],stage_id=1)
-            odb.get_element_force(1,operation=True,case_name="工况名")
+            odb.get_element_force(1,stage_id=-1,case_name="工况名")
         Returns: list[ElementForce] or ElementForce
         """
         if type(element_id) != int and type(element_id) != list:
@@ -114,7 +113,7 @@ class Odb:
         example:
             odb.get_reaction(1,stage_id=1)
             odb.get_reaction([1,2,3],stage_id=1)
-            odb.get_reaction(1,operation=True,case_name="工况名")
+            odb.get_reaction(1,stage_id=-1,case_name="工况名")
         Returns: list[SupportReaction] or SupportReaction
         """
         if type(node_id) != int and type(node_id) != list:

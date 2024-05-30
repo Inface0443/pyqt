@@ -1,4 +1,4 @@
-# 最新版本 V0.3.9 - 2024.05.29 
+# 最新版本 V0.3.10 - 2024.05.30 
 > pip install --upgrade qtmodel
 - 优化部分调用
 
@@ -1369,7 +1369,7 @@ Returns: 无
 from qtmodel import *
 odb.get_element_stress(1,stage_id=1)
 odb.get_element_stress([1,2,3],stage_id=1)
-odb.get_element_stress(1,operation=True,case_name="工况名")
+odb.get_element_stress(1,stage_id=-1,case_name="工况名")
 ```  
 Returns: list[ElementStress] or ElementStress
 ### get_element_force
@@ -1385,7 +1385,7 @@ Returns: list[ElementStress] or ElementStress
 from qtmodel import *
 odb.get_element_force(1,stage_id=1)
 odb.get_element_force([1,2,3],stage_id=1)
-odb.get_element_force(1,operation=True,case_name="工况名")
+odb.get_element_force(1,stage_id=-1,case_name="工况名")
 ```  
 Returns: list[ElementForce] or ElementForce
 ### get_reaction
@@ -1401,7 +1401,7 @@ Returns: list[ElementForce] or ElementForce
 from qtmodel import *
 odb.get_reaction(1,stage_id=1)
 odb.get_reaction([1,2,3],stage_id=1)
-odb.get_reaction(1,operation=True,case_name="工况名")
+odb.get_reaction(1,stage_id=-1,case_name="工况名")
 ```  
 Returns: list[SupportReaction] or SupportReaction
 ### get_node_displacement
