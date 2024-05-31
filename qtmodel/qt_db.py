@@ -18,6 +18,9 @@ class Node:
         dict_str = '{' + ', '.join(f"'{k}': {v}" for k, v in attrs.items()) + '}'
         return dict_str
 
+    def __repr__(self):
+        return self.__str__()
+
 
 class Element:
     def __init__(self, index: int, ele_type: str, node_list: list[int], mat_id: int, sec_id: int, beta: float = 0,
@@ -48,6 +51,9 @@ class Element:
         dict_str = '{' + ', '.join(f"'{k}': {v}" for k, v in attrs.items()) + '}'
         return dict_str
 
+    def __repr__(self):
+        return self.__str__()
+
 
 class Material:
     def __init__(self, index: int, name: str, mat_type: str, standard: str, database: str, data_info: list[float],
@@ -67,3 +73,6 @@ class Material:
         attrs = vars(self)
         dict_str = '{' + ', '.join(f"'{k}': {v}" for k, v in attrs.items()) + '}'
         return dict_str
+
+    def __repr__(self):
+        return self.__str__()

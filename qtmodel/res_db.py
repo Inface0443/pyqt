@@ -24,6 +24,9 @@ class NodeDisplacement:
         dict_str = '{' + ', '.join(f"'{k}': {v}" for k, v in attrs.items()) + '}'
         return dict_str
 
+    def __repr__(self):
+        return self.__str__()
+
     def to_json(self):
         """
         将对象转换为 JSON 格式的字符串
@@ -61,6 +64,9 @@ class SupportReaction:
         attrs = vars(self)
         dict_str = '{' + ', '.join(f"'{k}': {v}" for k, v in attrs.items()) + '}'
         return dict_str
+
+    def __repr__(self):
+        return self.__str__()
 
     def to_json(self):
         """
@@ -102,6 +108,9 @@ class BeamElementForce:
         attrs = vars(self)
         dict_str = '{' + ', '.join(f"'{k}': {v}" for k, v in attrs.items()) + '}'
         return dict_str
+
+    def __repr__(self):
+        return self.__str__()
 
     def to_json(self):
         """
@@ -145,6 +154,9 @@ class TrussElementForce:
         attrs = vars(self)
         dict_str = '{' + ', '.join(f"'{k}': {v}" for k, v in attrs.items()) + '}'
         return dict_str
+
+    def __repr__(self):
+        return self.__str__()
 
     def to_json(self):
         """
@@ -194,6 +206,9 @@ class ShellElementForce:
         dict_str = '{' + ', '.join(f"'{k}': {v}" for k, v in attrs.items()) + '}'
         return dict_str
 
+    def __repr__(self):
+        return self.__str__()
+
     def to_json(self):
         """
         将 ShellElementForce 对象转换为 JSON 格式的字符串
@@ -232,6 +247,9 @@ class BeamElementStress:
         attrs = vars(self)
         dict_str = '{' + ', '.join(f"'{k}': {v}" for k, v in attrs.items()) + '}'
         return dict_str
+
+    def __repr__(self):
+        return self.__str__()
 
     def to_json(self):
         """
@@ -286,6 +304,9 @@ class ShellElementStress:
         dict_str = '{' + ', '.join(f"'{k}': {v}" for k, v in attrs.items()) + '}'
         return dict_str
 
+    def __repr__(self):
+        return self.__str__()
+
     def to_json(self):
         """
         将 ShellElementStress 对象转换为 JSON 格式的字符串
@@ -329,6 +350,9 @@ class TrussElementStress:
         dict_str = '{' + ', '.join(f"'{k}': {v}" for k, v in attrs.items()) + '}'
         return dict_str
 
+    def __repr__(self):
+        return self.__str__()
+
     def to_json(self):
         """
         将 TrussElementStress 对象转换为 JSON 格式的字符串
@@ -360,6 +384,9 @@ class Force:
         attrs = vars(self)
         dict_str = '{' + ', '.join(f"'{k}': {v:.3f}" for k, v in attrs.items()) + '}'
         return dict_str
+
+    def __repr__(self):
+        return self.__str__()
 
     def to_json(self):
         """
@@ -395,6 +422,9 @@ class ShellStress:
         dict_str = '{' + ', '.join(f"'{k}': {v:.3f}" for k, v in attrs.items()) + '}'
         return dict_str
 
+    def __repr__(self):
+        return self.__str__()
+
     def to_json(self):
         """
         将 ShellStress 对象转换为 JSON 格式的字符串
@@ -429,6 +459,9 @@ class BeamStress:
         attrs = vars(self)
         dict_str = '{' + ', '.join(f"'{k}': {v:.3f}" for k, v in attrs.items()) + '}'
         return dict_str
+
+    def __repr__(self):
+        return self.__str__()
 
     def to_json(self):
         """
