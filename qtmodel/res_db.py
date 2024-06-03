@@ -223,6 +223,62 @@ class ShellElementForce:
         return json.dumps(obj_dict)
 
 
+class CompositeElementForce:
+    """
+    组合梁单元内力
+    """
+
+    def __init__(self, element_id: int, force_i: list[float], force_j: list[float], shear_force: float,
+                 main_force_i: list[float], main_force_j: list[float],
+                 sub_force_i: list[float], sub_force_j: list[float],
+                 is_composite: bool):
+        """
+        单元内力构造器
+        Args:
+            element_id: 单元id
+            force_i: I端单元内力 [Fx,Fy,Fz,Mx,My,Mz]
+            force_j: J端单元内力 [Fx,Fy,Fz,Mx,My,Mz]
+            main_force_i: 主材I端单元内力 [Fx,Fy,Fz,Mx,My,Mz]
+            main_force_j: 主材J端单元内力 [Fx,Fy,Fz,Mx,My,Mz]
+            sub_force_i: 辅材I端单元内力 [Fx,Fy,Fz,Mx,My,Mz]
+            sub_force_j: 辅材J端单元内力 [Fx,Fy,Fz,Mx,My,Mz]
+            is_composite: 是否结合
+            shear_force: 接合面剪力
+        """
+        if len(force_i) == 6 and len(force_j) == 6:
+            self.id = element_id
+            self.force_i = Force(*force_i)
+            self.force_j = Force(*force_j)
+            self.shear_force = shear_force
+            # 运营阶段下述信息全部为0
+            self.main_force_i = Force(*main_force_i)
+            self.main_force_j = Force(*main_force_j)
+            self.sub_force_i = Force(*sub_force_i)
+            self.sub_force_j = Force(*sub_force_j)
+            self.is_composite = is_composite
+        else:
+            raise ValueError("操作错误:  'force_i' and 'force_j' 列表有误")
+
+    def __str__(self):
+        attrs = vars(self)
+        dict_str = '{' + ', '.join(f"'{k}': {v}" for k, v in attrs.items()) + '}'
+        return dict_str
+
+    def __repr__(self):
+        return self.__str__()
+
+    def to_json(self):
+        """
+        将 BeamElementForce 对象转换为 JSON 格式的字符串
+        """
+        obj_dict = {
+            'id': self.id,
+            'force_i': self.force_i.to_json(),
+            'force_j': self.force_j.to_json()
+        }
+        return json.dumps(obj_dict)
+
+
 class BeamElementStress:
     """
     梁单元应力
@@ -241,7 +297,7 @@ class BeamElementStress:
             self.stress_i = BeamStress(*stress_i)
             self.stress_j = BeamStress(*stress_j)
         else:
-            raise ValueError("操作错误:  'stress_i' or 'stress_j' 列表有误")
+            raise ValueError("操作错误:  单元应力列表有误")
 
     def __str__(self):
         attrs = vars(self)
@@ -297,7 +353,7 @@ class ShellElementStress:
             self.stress_k_bot = ShellStress(*stress_k_bot)
             self.stress_l_bot = ShellStress(*stress_l_bot)
         else:
-            raise ValueError("操作错误:  'stress' 列表有误")
+            raise ValueError("操作错误:  单元应力列表有误")
 
     def __str__(self):
         attrs = vars(self)
@@ -361,6 +417,52 @@ class TrussElementStress:
             'id': self.id,
             'Si': self.Si,
             'Sj': self.Sj
+        }
+        return json.dumps(obj_dict)
+
+
+class CompositeBeamStress:
+    """
+        梁单元应力
+        """
+
+    def __init__(self, element_id: int, main_stress_i: list[float], main_stress_j: list[float], sub_stress_i: list[float], sub_stress_j: list[float]):
+        """
+        单元内力构造器
+        Args:
+            element_id: 单元id
+            main_stress_i: 主材I端单元应力 [top_left, top_right, bot_left, bot_right, sfx, smz_left, smz_right, smy_top, smy_bot]
+            main_stress_j: 主材J端单元应力  [top_left, top_right, bot_left, bot_right, sfx, smz_left, smz_right, smy_top, smy_bot]
+            sub_stress_i: 辅材I端单元应力  [top_left, top_right, bot_left, bot_right, sfx, smz_left, smz_right, smy_top, smy_bot]
+            sub_stress_j: 辅材J端单元应力  [top_left, top_right, bot_left, bot_right, sfx, smz_left, smz_right, smy_top, smy_bot]
+        """
+        if len(main_stress_i) == 9 and len(main_stress_j) == 9 and len(sub_stress_i) == 9 and len(sub_stress_j) == 9:
+            self.id = element_id
+            self.main_stress_i = BeamStress(*main_stress_i)
+            self.main_stress_j = BeamStress(*main_stress_j)
+            self.sub_stress_i = BeamStress(*sub_stress_i)
+            self.sub_stress_j = BeamStress(*sub_stress_j)
+        else:
+            raise ValueError("操作错误:  单元应力列表有误")
+
+    def __str__(self):
+        attrs = vars(self)
+        dict_str = '{' + ', '.join(f"'{k}': {v}" for k, v in attrs.items()) + '}'
+        return dict_str
+
+    def __repr__(self):
+        return self.__str__()
+
+    def to_json(self):
+        """
+        将 BeamElementStress 对象转换为 JSON 格式的字符串
+        """
+        obj_dict = {
+            'id': self.id,
+            'main_stress_i': self.main_stress_i.to_json(),
+            'main_stress_j': self.main_stress_j.to_json(),
+            'sub_stress_i': self.sub_stress_i.to_json(),
+            'sub_stress_j': self.sub_stress_j.to_json(),
         }
         return json.dumps(obj_dict)
 

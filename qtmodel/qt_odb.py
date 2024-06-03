@@ -36,23 +36,33 @@ class Odb:
                 stress_j = [item.StressJ[0], item.StressJ[1], item.StressJ[2], item.StressJ[3], item.StressJ[4], item.StressJ[5],
                             item.StressJ[6], item.StressJ[7], item.StressJ[8]]
                 list_res.append(BeamElementStress(item.ElementId, stress_i, stress_j))
-            elif item.ElementType == "SHELL":
+            elif item.ElementType == "SHELL" or item.ElementType == "PLATE":
                 stress_i = [item.StressI[0], item.StressI[1], item.StressI[2], item.StressI[3], item.StressI[4]]
                 stress_j = [item.StressJ[0], item.StressJ[1], item.StressJ[2], item.StressJ[3], item.StressJ[4]]
                 stress_k = [item.StressK[0], item.StressK[1], item.StressK[2], item.StressK[3], item.StressK[4]]
                 stress_l = [item.StressL[0], item.StressL[1], item.StressL[2], item.StressL[3], item.StressL[4]]
-                stress_i2 = [item.BotIStress[0], item.BotIStress[1], item.BotIStress[2], item.BotIStress[3], item.BotIStress[4]]
-                stress_j2 = [item.BotJStress[0], item.BotJStress[1], item.BotJStress[2], item.BotJStress[3], item.BotJStress[4]]
-                stress_k2 = [item.BotKStress[0], item.BotKStress[1], item.BotKStress[2], item.BotKStress[3], item.BotKStress[4]]
-                stress_l2 = [item.BotLStress[0], item.BotLStress[1], item.BotLStress[2], item.BotLStress[3], item.BotLStress[4]]
+                stress_i2 = [item.StressI2[0], item.StressI2[1], item.StressI2[2], item.StressI2[3], item.StressI2[4]]
+                stress_j2 = [item.StressJ2[0], item.StressJ2[1], item.StressJ2[2], item.StressJ2[3], item.StressJ2[4]]
+                stress_k2 = [item.StressK2[0], item.StressK2[1], item.StressK2[2], item.StressK2[3], item.StressK2[4]]
+                stress_l2 = [item.StressL2[0], item.StressL2[1], item.StressL2[2], item.StressL2[3], item.StressL2[4]]
                 list_res.append(ShellElementStress(item.ElementId, stress_i, stress_j, stress_k, stress_l,
                                                    stress_i2, stress_j2, stress_k2, stress_l2))
-            elif item.ElementType == "CABLE" or item.ElementType == "LINK":
+            elif item.ElementType == "CABLE" or item.ElementType == "LINK" or item.ElementType == "TRUSS":
                 stress_i = [item.StressI[0], item.StressI[1], item.StressI[2], item.StressI[3], item.StressI[4], item.StressI[5],
                             item.StressI[6], item.StressI[7], item.StressI[8]]
                 stress_j = [item.StressJ[0], item.StressJ[1], item.StressJ[2], item.StressJ[3], item.StressJ[4], item.StressJ[5],
                             item.StressJ[6], item.StressJ[7], item.StressJ[8]]
                 list_res.append(TrussElementStress(item.ElementId, stress_i, stress_j))
+            elif item.ElementType == "COM-BEAM":
+                stress_i = [item.StressI[0], item.StressI[1], item.StressI[2], item.StressI[3], item.StressI[4], item.StressI[5],
+                            item.StressI[6], item.StressI[7], item.StressI[8]]
+                stress_j = [item.StressJ[0], item.StressJ[1], item.StressJ[2], item.StressJ[3], item.StressJ[4], item.StressJ[5],
+                            item.StressJ[6], item.StressJ[7], item.StressJ[8]]
+                stress_i2 = [item.StressI2[0], item.StressI2[1], item.StressI2[2], item.StressI2[3], item.StressI2[4], item.StressI2[5],
+                             item.StressI2[6], item.StressI2[7], item.StressI2[8]]
+                stress_j2 = [item.StressJ2[0], item.StressJ2[1], item.StressJ2[2], item.StressJ2[3], item.StressJ2[4], item.StressJ2[5],
+                             item.StressJ2[6], item.StressJ2[7], item.StressJ2[8]]
+                list_res.append(CompositeBeamStress(element_id, stress_i, stress_j, stress_i2, stress_j2))
             else:
                 raise TypeError(f"操作错误，不存在{item.ElementType}类型")
         if len(list_res) == 1:
@@ -84,16 +94,30 @@ class Odb:
                 force_i = [item.ForceI.Fx, item.ForceI.Fy, item.ForceI.Fz, item.ForceI.Mx, item.ForceI.My, item.ForceI.Mz]
                 force_j = [item.ForceJ.Fx, item.ForceJ.Fy, item.ForceJ.Fz, item.ForceJ.Mx, item.ForceJ.My, item.ForceJ.Mz]
                 list_res.append(BeamElementForce(item.ElementId, force_i, force_j))
-            elif item.ElementType == "PLATE":
+            elif item.ElementType == "SHELL" or item.ElementType == "PLATE":
                 force_i = [item.ForceI.Fx, item.ForceI.Fy, item.ForceI.Fz, item.ForceI.Mx, item.ForceI.My, item.ForceI.Mz]
                 force_j = [item.ForceJ.Fx, item.ForceJ.Fy, item.ForceJ.Fz, item.ForceJ.Mx, item.ForceJ.My, item.ForceJ.Mz]
                 force_k = [item.ForceK.Fx, item.ForceK.Fy, item.ForceK.Fz, item.ForceK.Mx, item.ForceK.My, item.ForceK.Mz]
                 force_l = [item.ForceL.Fx, item.ForceL.Fy, item.ForceL.Fz, item.ForceL.Mx, item.ForceL.My, item.ForceL.Mz]
                 list_res.append(ShellElementForce(item.ElementId, force_i, force_j, force_k, force_l))
-            elif item.ElementType == "CABLE" or item.ElementType == "LINK":
+            elif item.ElementType == "CABLE" or item.ElementType == "LINK" or item.ElementType == "TRUSS":
                 force_i = [item.ForceI.Fx, item.ForceI.Fy, item.ForceI.Fz, item.ForceI.Mx, item.ForceI.My, item.ForceI.Mz]
                 force_j = [item.ForceJ.Fx, item.ForceJ.Fy, item.ForceJ.Fz, item.ForceJ.Mx, item.ForceJ.My, item.ForceJ.Mz]
                 list_res.append(TrussElementForce(item.ElementId, force_i, force_j))
+            elif item.ElementType == "COM-BEAM":
+                all_force_i = [item.ForceI.Fx, item.ForceI.Fy, item.ForceI.Fz, item.ForceI.Mx, item.ForceI.My, item.ForceI.Mz]
+                all_force_j = [item.ForceJ.Fx, item.ForceJ.Fy, item.ForceJ.Fz, item.ForceJ.Mx, item.ForceJ.My, item.ForceJ.Mz]
+                main_force_i = [item.MainForceI.Fx, item.MainForceI.Fy, item.MainForceI.Fz, item.MainForceI.Mx, item.MainForceI.My,
+                                item.MainForceI.Mz]
+                main_force_j = [item.MainForceJ.Fx, item.MainForceJ.Fy, item.MainForceJ.Fz, item.MainForceJ.Mx, item.MainForceJ.My,
+                                item.MainForceJ.Mz]
+                sub_force_i = [item.SubForceI.Fx, item.SubForceI.Fy, item.SubForceI.Fz, item.SubForceI.Mx, item.SubForceI.My, item.SubForceI.Mz]
+                sub_force_j = [item.SubForceJ.Fx, item.SubForceJ.Fy, item.SubForceJ.Fz, item.SubForceJ.Mx, item.SubForceJ.My, item.SubForceJ.Mz]
+                is_composite = item.IsComposite
+                shear_force = item.ShearForce
+                list_res.append(CompositeElementForce(item.ElementId, all_force_i, all_force_j, shear_force,
+                                                      main_force_i, main_force_j, sub_force_i, sub_force_j, is_composite))
+
             else:
                 raise TypeError(f"操作错误，不存在{item.ElementType}类型")
         if len(list_res) == 1:
@@ -161,8 +185,8 @@ class Odb:
     @staticmethod
     def plot_reaction_result(file_path: str, component: int = 1, load_case_name: str = "", stage_id: int = 1,
                              envelope_type: int = 1, show_number: bool = True, show_legend: bool = True,
-                             text_rotation=0, digital_count=0, show_exponential: bool = True, show_max_min: int = 1,
-                             increment: bool = False):
+                             text_rotation=0, digital_count=0, show_exponential: bool = True, max_min_kind: int = -1,
+                             show_increment: bool = False):
         """
         保存结果图片到指定文件甲
         Args:
@@ -174,21 +198,225 @@ class Odb:
             show_number: 数值选项卡开启
             show_legend: 图例选项卡开启
             text_rotation: 数值选项卡内文字旋转角度
-            show_max_min: 数值选项卡内最大最小值显示 -1-不显示最大最小值  0-显示最大值和最小值  1-最大绝对值 2-最大值 3-最小值
+            max_min_kind: 数值选项卡内最大最小值显示 -1-不显示最大最小值  0-显示最大值和最小值  1-最大绝对值 2-最大值 3-最小值
             digital_count: 小数点位数
             show_exponential: 指数显示开启
-            increment: 是否显示增量结果
+            show_increment: 是否显示增量结果
         example:
-            odb.plot_reaction_result(r"aaa.png",component=0,load_case_name="CQ:成桥(合计)",stage_id=-1)     # 获取所有节点信息
+            odb.plot_reaction_result(r"aaa.png",component=0,load_case_name="CQ:成桥(合计)",stage_id=-1)
         Returns: 无
         """
         qt_model.PlotReactionResult(file_path, component=component, loadCaseName=load_case_name, stageId=stage_id, envelopeType=envelope_type,
                                     showNumber=show_number, showLegend=show_legend, textRotationAngle=text_rotation, digitalCount=digital_count,
-                                    showAsExponential=show_exponential, maxMinValueKind=show_max_min, showIncrementResult=increment)
+                                    showAsExponential=show_exponential, maxMinValueKind=max_min_kind, showIncrementResult=show_increment)
+
+    @staticmethod
+    def plot_displacement_result(file_path: str, component: int = 1, load_case_name: str = "", stage_id: int = 1,
+                                 envelope_type: int = 1, show_deformed: bool = True, show_pre_deformed: bool = True,
+                                 deformed_scale: float = 1.0, actual_deformed: bool = True,
+                                 show_number: bool = True, show_legend: bool = True,
+                                 text_rotation=0, digital_count=0, show_exponential: bool = True, max_min_kind: int = 1,
+                                 show_increment: bool = False):
+        """
+        保存结果图片到指定文件甲
+        Args:
+            file_path: 保存路径名
+            component: 分量编号 0-Dx 1-Dy 2-Dz 3-Rx 4-Ry 5-Rz 6-Dxy 7-Dyz 8-Dxz 9-Dxyz
+            load_case_name: 详细荷载工况名，参考桥通结果输出，例如： CQ:成桥(合计)
+            stage_id: -1-运营阶段  0-施工阶段包络 n-施工阶段号
+            envelope_type: 施工阶段包络类型 1-最大 2-最小
+            show_deformed: 变形选项卡开启
+            show_pre_deformed: 显示变形前
+            deformed_scale:变形比例
+            actual_deformed:是否显示实际变形
+            show_number: 数值选项卡开启
+            show_legend: 图例选项卡开启
+            text_rotation: 数值选项卡内文字旋转角度
+            max_min_kind: 数值选项卡内最大最小值显示 -1-不显示最大最小值  0-显示最大值和最小值  1-最大绝对值 2-最大值 3-最小值
+            digital_count: 小数点位数
+            show_exponential: 指数显示开启
+            show_increment: 是否显示增量结果
+        example:
+            odb.plot_displacement_result(r"aaa.png",component=0,load_case_name="CQ:成桥(合计)",stage_id=-1)
+        Returns: 无
+        """
+        qt_model.PlotDisplacementResult(file_path, component=component, loadCaseName=load_case_name, stageId=stage_id, envelopeType=envelope_type,
+                                        showAsDeformedShape=show_deformed, showUndeformedShape=show_pre_deformed,
+                                        deformedScale=deformed_scale, deformedActual=actual_deformed,
+                                        showNumber=show_number, showLegend=show_legend, textRotationAngle=text_rotation, digitalCount=digital_count,
+                                        showAsExponential=show_exponential, maxMinValueKind=max_min_kind, showIncrementResult=show_increment)
+
+    @staticmethod
+    def plot_beam_element_force(file_path: str, component: int = 0, load_case_name: str = "合计", stage_id: int = 1,
+                                envelope_type: int = 1, show_line_chart: bool = True, show_number: bool = False,
+                                position: int = 0, flip_plot: bool = True, line_scale: float = 1.0,
+                                show_deformed: bool = True, show_pre_deformed: bool = False,
+                                deformed_actual: bool = False, deformed_scale: float = 1.0,
+                                show_legend: bool = True, text_rotation: int = 0, digital_count: int = 0,
+                                show_exponential: bool = True, max_min_kind: int = 0, show_increment: bool = False):
+        """
+        绘制梁单元结果图并保存到指定文件
+        Args:
+            file_path: 保存路径名
+            component: 分量编号 0-Fx 1-Fy 2-Fz 3-Mx 4-My 5-Mz
+            load_case_name: 详细荷载工况名
+            stage_id: 阶段编号
+            envelope_type: 包络类型
+            show_line_chart: 是否显示线图
+            show_number: 是否显示数值
+            position: 位置编号
+            flip_plot: 是否翻转绘图
+            line_scale: 线的比例
+            show_deformed: 是否显示变形形状
+            show_pre_deformed: 是否显示未变形形状
+            deformed_actual: 是否显示实际变形
+            deformed_scale: 变形比例
+            show_legend: 是否显示图例
+            text_rotation: 数值选项卡内文字旋转角度
+            digital_count: 小数点位数
+            show_exponential: 是否以指数形式显示
+            max_min_kind: 最大最小值显示类型
+            show_increment: 是否显示增量结果
+        example:
+            odb.plot_beam_element_force(r"aaa.png",component=0,load_case_name="CQ:成桥(合计)",stage_id=-1)
+        Returns: 无
+        """
+        qt_model.PlotBeamElementForce(
+            filePath=file_path, component=component, loadCaseName=load_case_name, stageId=stage_id, envelopeType=envelope_type,
+            showLineChart=show_line_chart, showNumber=show_number, position=position, flipPlot=flip_plot, lineScale=line_scale,
+            showAsDeformedShape=show_deformed, showUndeformedShape=show_pre_deformed, deformedActual=deformed_actual,
+            deformedScale=deformed_scale, showLegend=show_legend, textRotationAngle=text_rotation, digitalCount=digital_count,
+            showAsExponential=show_exponential, maxMinValueKind=max_min_kind, showIncrementResult=show_increment)
+
+    @staticmethod
+    def plot_truss_element_force(file_path: str, load_case_name: str = "合计", stage_id: int = 1,
+                                 envelope_type: int = 1, show_line_chart: bool = True, show_number: bool = False,
+                                 position: int = 0, flip_plot: bool = True, line_scale: float = 1.0,
+                                 show_deformed: bool = True, show_pre_deformed: bool = False,
+                                 deformed_actual: bool = False, deformed_scale: float = 1.0,
+                                 show_legend: bool = True, text_rotation_angle: int = 0, digital_count: int = 0,
+                                 show_as_exponential: bool = True, max_min_kind: int = 0, show_increment: bool = False):
+        """
+        绘制杆单元结果图并保存到指定文件
+        Args:
+            file_path: 保存路径名
+            load_case_name: 详细荷载工况名
+            stage_id: 阶段编号
+            envelope_type: 包络类型
+            show_line_chart: 是否显示线图
+            show_number: 是否显示数值
+            position: 位置编号
+            flip_plot: 是否翻转绘图
+            line_scale: 线的比例
+            show_deformed: 是否显示变形形状
+            show_pre_deformed: 是否显示未变形形状
+            deformed_actual: 是否显示实际变形
+            deformed_scale: 变形比例
+            show_legend: 是否显示图例
+            text_rotation_angle: 数值选项卡内文字旋转角度
+            digital_count: 小数点位数
+            show_as_exponential: 是否以指数形式显示
+            max_min_kind: 最大最小值显示类型
+            show_increment:是否显示增量结果
+        Returns: 无
+        """
+        qt_model.PlotTrussElementForce(
+            filePath=file_path, loadCaseName=load_case_name, stageId=stage_id, envelopeType=envelope_type,
+            showLineChart=show_line_chart, showNumber=show_number, position=position, flipPlot=flip_plot, lineScale=line_scale,
+            showAsDeformedShape=show_deformed, showUndeformedShape=show_pre_deformed, deformedActual=deformed_actual,
+            deformedScale=deformed_scale, showLegend=show_legend, textRotationAngle=text_rotation_angle, digitalCount=digital_count,
+            showAsExponential=show_as_exponential, maxMinValueKind=max_min_kind, showIncrementResult=show_increment)
+
+    @staticmethod
+    def plot_plate_element_force(file_path: str, component: int = 0, force_kind: int = 0, load_case_name: str = "合计",
+                                 stage_id: int = 1, envelope_type: int = 1, show_number: bool = False,
+                                 show_deformed: bool = True, show_pre_deformed: bool = False,
+                                 deformed_actual: bool = False, deformed_scale: float = 1.0,
+                                 show_legend: bool = True, text_rotation_angle: int = 0, digital_count: int = 0,
+                                 show_as_exponential: bool = True, max_min_kind: int = 0, show_increment: bool = False):
+        """
+        绘制板单元结果图并保存到指定文件
+        Args:
+            file_path: 保存路径名
+            component: 分量编号
+            force_kind: 力类型
+            load_case_name: 详细荷载工况名
+            stage_id: 阶段编号
+            envelope_type: 包络类型
+            show_number: 是否显示数值
+            show_deformed: 是否显示变形形状
+            show_pre_deformed: 是否显示未变形形状
+            deformed_actual: 是否显示实际变形
+            deformed_scale: 变形比例
+            show_legend: 是否显示图例
+            text_rotation_angle: 数值选项卡内文字旋转角度
+            digital_count: 小数点位数
+            show_as_exponential: 是否以指数形式显示
+            max_min_kind: 最大最小值显示类型
+            show_increment: 是否显示增量结果
+        Returns: 无
+        """
+        qt_model.PlotPlateElementForce(
+            filePath=file_path, component=component, forceKind=force_kind, loadCaseName=load_case_name, stageId=stage_id,
+            envelopeType=envelope_type, showNumber=show_number, showAsDeformedShape=show_deformed,
+            showUndeformedShape=show_pre_deformed, deformedActual=deformed_actual, deformedScale=deformed_scale,
+            showLegend=show_legend, textRotationAngle=text_rotation_angle, digitalCount=digital_count,
+            showAsExponential=show_as_exponential, maxMinValueKind=max_min_kind, showIncrementResult=show_increment)
 
     # endregion
 
     # region 获取模型信息
+    @staticmethod
+    def get_section_data(sec_id: int):
+        """
+        获取截面详细信息
+        Args:
+            sec_id: 目标截面编号
+        example:
+            odb.get_node_id(1,1,1)
+        Returns: int
+        """
+        return qt_model.GetSectionInfo(sec_id)
+
+    @staticmethod
+    def get_node_id(x: float = 0, y: float = 0, z: float = 0, tolerance: float = 1e-4):
+        """
+        获取节点编号，为-1时则表示未找到该坐标节点
+        Args:
+            x: 目标点X轴坐标
+            y: 目标点Y轴坐标
+            z: 目标点Z轴坐标
+            tolerance: 距离容许误差
+        example:
+            odb.get_node_id(1,1,1)
+        Returns: int
+        """
+        return qt_model.GetNodeId(x=x, y=y, z=z, tolerance=tolerance)
+
+    @staticmethod
+    def get_group_elements(group_name: str = "默认结构组"):
+        """
+        获取结构组单元编号
+        Args:
+            group_name: 结构组名
+        example:
+            odb.get_group_element(group_name)
+        Returns: list[int]
+        """
+        return list(qt_model.GetStructureGroupElements(group_name))
+
+    @staticmethod
+    def get_group_nodes(group_name: str = "默认结构组"):
+        """
+        获取结构组节点编号
+        Args:
+            group_name: 结构组名
+        example:
+            odb.get_group_nodes(group_name)
+        Returns: list[int]
+        """
+        return list(qt_model.GetStructureGroupNodes(group_name))
+
     @staticmethod
     def get_node_data(ids=None):
         """

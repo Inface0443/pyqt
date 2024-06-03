@@ -8,6 +8,17 @@ class Mdb:
 
     # region 项目管理
     @staticmethod
+    def update_bim():
+        """
+        刷新Bim模型信息
+        Args: 无
+        example:
+           mdb.update_bim()
+        Returns: 无
+        """
+        qt_model.PostLoggerRequest()
+
+    @staticmethod
     def update_model():
         """
         刷新模型信息
@@ -473,7 +484,7 @@ class Mdb:
     # region 截面操作
     @staticmethod
     def add_parameter_section(index: int = -1, name: str = "", sec_type: str = "矩形", sec_info: list[float] = None,
-                              charm_info: list[str] = None, sec_right: list[float] = None,
+                              symmetry: bool = True, charm_info: list[str] = None, sec_right: list[float] = None,
                               charm_right: list[str] = None, box_number: int = 3, box_height: float = 2,
                               mat_combine: list[float] = None,
                               bias_type: str = "中心", center_type: str = "质心", shear_consider: bool = True, bias_x: float = 0, bias_y: float = 0):
@@ -489,6 +500,7 @@ class Mdb:
                 _"带肋H截面", "钢桁箱梁1", "钢桁箱梁2", "钢桁箱梁3",_
                 _"钢工字型带肋", "钢管砼", "钢箱砼"_
             sec_info:截面信息 (必要参数)
+            symmetry:混凝土截面是否对称 (仅混凝土箱梁截面需要)
             charm_info:混凝土截面倒角信息 (仅混凝土箱梁截面需要)
             sec_right:混凝土截面右半信息 (对称时可忽略，仅混凝土箱梁截面需要)
             charm_right:混凝土截面右半倒角信息 (对称时可忽略，仅混凝土箱梁截面需要)
@@ -523,7 +535,7 @@ class Mdb:
             if len(sec_info) != 19 or len(charm_info) != 4:
                 raise Exception("操作错误，混凝土箱梁参数错误，参数列表可参考截面定义窗口！")
             qt_model.AddParameterSection(id=index, name=name, secType=sec_type, secInfo=sec_info, charmInfo=charm_info,
-                                         N=box_number, H=box_height, charmInfoR=charm_right, secInfoR=sec_right,
+                                         symmetry=symmetry, N=box_number, H=box_height, charmInfoR=charm_right, secInfoR=sec_right,
                                          biasType=bias_type, centerType=center_type, shearConsider=shear_consider,
                                          horizontalPos=bias_x, verticalPos=bias_y)
         elif sec_type == "钢管砼" or sec_type == "钢箱砼":
@@ -540,6 +552,45 @@ class Mdb:
             qt_model.AddParameterSection(id=index, name=name, secType=sec_type, secInfo=sec_info,
                                          biasType=bias_type, centerType=center_type, shearConsider=shear_consider,
                                          horizontalPos=bias_x, verticalPos=bias_y)
+
+    @staticmethod
+    def update_parameter_section(index: int = -1, name: str = "", sec_type: str = "矩形", sec_info: list[float] = None,
+                                 symmetry: bool = True, charm_info: list[str] = None, sec_right: list[float] = None,
+                                 charm_right: list[str] = None, box_number: int = 3, box_height: float = 2,
+                                 mat_combine: list[float] = None,
+                                 bias_type: str = "中心", center_type: str = "质心", shear_consider: bool = True, bias_x: float = 0, bias_y: float = 0):
+        if qt_model.GetApplicationStage() == "首页":
+            raise Exception("起始页面下无法建模，请切换至前处理")
+        sec_type_list = ["矩形", "圆形", "圆管", "箱型", "实腹八边形",
+                         "空腹八边形", "内八角形", "实腹圆端型", "T形", "倒T形",
+                         "I字形", "马蹄T形", "I字形混凝土", "混凝土箱梁", "带肋钢箱",
+                         "带肋H截面", "钢桁箱梁1", "钢桁箱梁2", "钢桁箱梁3", "钢工字型带肋",
+                         "钢管砼", "钢箱砼"]
+        if sec_type not in sec_type_list:
+            raise Exception(f"操作失败，参数截面仅支持以下截面类型{sec_type_list}")
+        if sec_info is None:
+            raise Exception("操作错误,请输入此截面的截面信息，参数列表可参考截面定义窗口!")
+        elif sec_type == "混凝土箱梁":
+            if len(sec_info) != 19 or len(charm_info) != 4:
+                raise Exception("操作错误，混凝土箱梁参数错误，参数列表可参考截面定义窗口！")
+            qt_model.UpdateParameterSection(id=index, name=name, secType=sec_type, secInfo=sec_info, charmInfo=charm_info,
+                                            symmetry=symmetry, N=box_number, H=box_height, charmInfoR=charm_right, secInfoR=sec_right,
+                                            biasType=bias_type, centerType=center_type, shearConsider=shear_consider,
+                                            horizontalPos=bias_x, verticalPos=bias_y)
+        elif sec_type == "钢管砼" or sec_type == "钢箱砼":
+            if len(mat_combine) != 5:
+                raise Exception("操作错误，材料比错误，参数列表：[弹性模量比s/c、密度比s/c、钢材泊松比、混凝土泊松比、热膨胀系数比s/c] ！")
+            if len(sec_info) != 2 or len(sec_info) != 6:
+                raise Exception("操作错误，截面参数列表：[D,t]-钢管砼  [W,H,dw,tw,tt,tb]-钢箱砼")
+            qt_model.UpdateParameterSection(id=index, name=name, secType=sec_type, secInfo=sec_info,
+                                            elasticModulusRatio=mat_combine[0], densityRatio=mat_combine[1], steelPoisson=mat_combine[2],
+                                            concretePoisson=mat_combine[3], temperatureRatio=mat_combine[4],
+                                            biasType=bias_type, centerType=center_type, shearConsider=shear_consider,
+                                            horizontalPos=bias_x, verticalPos=bias_y)
+        else:
+            qt_model.UpdateParameterSection(id=index, name=name, secType=sec_type, secInfo=sec_info,
+                                            biasType=bias_type, centerType=center_type, shearConsider=shear_consider,
+                                            horizontalPos=bias_x, verticalPos=bias_y)
 
     @staticmethod
     def add_steel_section(index: int = -1, name: str = "", sec_type: int = 1, sec_info: list[float] = None,
@@ -1400,7 +1451,8 @@ class Mdb:
         qt_model.RemoveNodalDisplacement(caseName=case_name, nodeId=-node_id)
 
     @staticmethod
-    def add_beam_load(beam_id: int = 1, case_name: str = "", load_type: int = 1, coord_system: int = 3, list_x: list[float, float] = None,
+    def add_beam_load(beam_id: int = 1, case_name: str = "", load_type: int = 1, coord_system: int = 3,
+                      is_abs=False, list_x: list[float, float] = None,
                       list_load: list[float, float] = None, group_name="默认荷载组", load_bias: tuple[bool, int, int, float] = None,
                       projected: bool = False):
         """
@@ -1412,7 +1464,8 @@ class Mdb:
                _ 1-集中荷载 2-集中弯矩 3-分布弯矩 4-分布弯矩
             coord_system:坐标系
                 _1-整体坐标X  2-整体坐标Y 3-整体坐标Z  4-局部坐标X  5-局部坐标Y  6-局部坐标Z_
-            list_x:荷载位置信息 ,荷载距离单元I端的相对距离
+            is_abs: 荷载位置输入方式，True-绝对值   False-相对值
+            list_x:荷载位置信息 ,荷载距离单元I端的距离，可输入绝对距离或相对距离
             list_load:荷载数值信息
             group_name:荷载组名
             load_bias:偏心荷载 (是否偏心,0-中心 1-偏心,偏心坐标系-int,偏心距离)
