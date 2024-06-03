@@ -318,6 +318,8 @@ class Odb:
             show_as_exponential: 是否以指数形式显示
             max_min_kind: 最大最小值显示类型
             show_increment:是否显示增量结果
+        example:
+            odb.plot_truss_element_force(r"aaa.png",load_case_name="CQ:成桥(合计)",stage_id=-1)
         Returns: 无
         """
         qt_model.PlotTrussElementForce(
@@ -354,6 +356,8 @@ class Odb:
             show_as_exponential: 是否以指数形式显示
             max_min_kind: 最大最小值显示类型
             show_increment: 是否显示增量结果
+        example:
+            odb.plot_plate_element_force(r"aaa.png",component=0,load_case_name="CQ:成桥(合计)",stage_id=-1)
         Returns: 无
         """
         qt_model.PlotPlateElementForce(
@@ -400,7 +404,7 @@ class Odb:
         Args:
             group_name: 结构组名
         example:
-            odb.get_group_element(group_name)
+            odb.get_group_elements("默认结构组")
         Returns: list[int]
         """
         return list(qt_model.GetStructureGroupElements(group_name))
@@ -412,7 +416,7 @@ class Odb:
         Args:
             group_name: 结构组名
         example:
-            odb.get_group_nodes(group_name)
+            odb.get_group_nodes("默认结构组")
         Returns: list[int]
         """
         return list(qt_model.GetStructureGroupNodes(group_name))
