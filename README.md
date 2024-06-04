@@ -1,8 +1,17 @@
-# 最新版本 V0.3.12 - 2024.06.03
+# 最新版本 V0.3.14 - 2024.06.04
 > pip install --upgrade qtmodel
 - 优化部分调用
 
 ##  项目管理
+### remove_display
+删除当前所有显示，包括边界荷载钢束等全部显示
+> 参数:  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.remove_display()
+```  
+Returns: 无
 ### update_bim
 刷新Bim模型信息
 > 参数:  

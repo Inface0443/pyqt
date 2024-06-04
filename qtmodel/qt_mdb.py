@@ -8,6 +8,17 @@ class Mdb:
 
     # region 项目管理
     @staticmethod
+    def remove_display():
+        """
+        删除当前所有显示，包括边界荷载钢束等全部显示
+        Args: 无
+        example:
+           mdb.remove_display()
+        Returns: 无
+        """
+        qt_model.DisplayReset()
+
+    @staticmethod
     def update_bim():
         """
         刷新Bim模型信息
