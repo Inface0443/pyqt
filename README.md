@@ -1369,8 +1369,6 @@ Returns: 无
 
 
 
-C:\Users\Robert\.conda\envs\py39\python.exe C:/Users/Robert/Desktop/MyWork/Python建模/test.py
-
 ##  静力结果查看
 ### get_element_stress
 获取单元应力,支持单个单元和单元列表
@@ -1566,7 +1564,8 @@ from qtmodel import *
 odb.plot_plate_element_force(r"aaa.png",component=0,load_case_name="CQ:成桥(合计)",stage_id=-1)
 ```  
 Returns: 无
-##  获取模型信息
+
+##  模型信息
 ### get_section_data
 获取截面详细信息
 > 参数:  
