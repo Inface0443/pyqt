@@ -28,7 +28,7 @@ class Mdb:
            mdb.save_png(r"D:\\QT\\aa.png")
         Returns: 无
         """
-        qt_model.DisplayReset(file_path)
+        qt_model.SavePng(file_path)
 
     @staticmethod
     def set_render(flag: bool = True):
