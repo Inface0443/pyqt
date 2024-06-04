@@ -19,6 +19,18 @@ class Mdb:
         qt_model.DisplayReset()
 
     @staticmethod
+    def save_png(file_path:str):
+        """
+        保存当前模型窗口图形信息
+        Args:
+            file_path: 文件全路径
+        example:
+           mdb.save_png(r"D:\\QT\\aa.png")
+        Returns: 无
+        """
+        qt_model.DisplayReset(file_path)
+
+    @staticmethod
     def update_bim():
         """
         刷新Bim模型信息
@@ -163,7 +175,7 @@ class Mdb:
         Returns: 无
         """
         if qt_model.GetApplicationStage() == "首页":
-            raise Exception("起始页面下无法建模，请切换至前处理")
+            raise Exception("起始页面下无法修改模型，请切换至前处理")
         qt_model.AddNodes(dataList=node_list)
 
     @staticmethod
@@ -210,7 +222,7 @@ class Mdb:
         Returns: 无
         """
         if qt_model.GetApplicationStage() == "首页":
-            raise Exception("起始页面下无法建模，请切换至前处理")
+            raise Exception("起始页面下无法修改模型，请切换至前处理")
         if ids is None:
             qt_model.MergeNode(tolerance)
         else:
@@ -244,6 +256,8 @@ class Mdb:
             mdb.renumber_node()
         Returns: 无
         """
+        if qt_model.GetApplicationStage() == "首页":
+            raise Exception("起始页面下无法修改模型，请切换至前处理")
         qt_model.RenumberNodeId()
 
     @staticmethod
@@ -273,6 +287,8 @@ class Mdb:
             mdb.add_structure_group(name="新建结构组2",index=2)
         Returns: 无
         """
+        if qt_model.GetApplicationStage() == "首页":
+            raise Exception("起始页面下无法修改模型，请切换至前处理")
         qt_model.AddStructureGroup(name=name, id=index)
 
     @staticmethod
@@ -288,7 +304,7 @@ class Mdb:
         Returns: 无
         """
         if qt_model.GetApplicationStage() == "首页":
-            raise Exception("起始页面下无法建模，请切换至前处理")
+            raise Exception("起始页面下无法修改模型，请切换至前处理")
         if index != -1:
             qt_model.RemoveStructureGroup(id=index)
         elif name != "":
@@ -309,7 +325,7 @@ class Mdb:
         Returns: 无
         """
         if qt_model.GetApplicationStage() == "首页":
-            raise Exception("起始页面下无法建模，请切换至前处理")
+            raise Exception("起始页面下无法修改模型，请切换至前处理")
         if node_ids is None:
             node_ids = []
         if element_ids is None:
@@ -329,7 +345,7 @@ class Mdb:
         Returns: 无
         """
         if qt_model.GetApplicationStage() == "首页":
-            raise Exception("起始页面下无法建模，请切换至前处理")
+            raise Exception("起始页面下无法修改模型，请切换至前处理")
         if node_ids is None:
             node_ids = []
         if element_ids is None:
@@ -378,7 +394,7 @@ class Mdb:
         Returns: 无
         """
         if qt_model.GetApplicationStage() == "首页":
-            raise Exception("起始页面下无法建模，请切换至前处理")
+            raise Exception("起始页面下无法修改模型，请切换至前处理")
         if index is None:
             qt_model.RemoveAllElements()
         else:
@@ -409,9 +425,7 @@ class Mdb:
         Returns: 无
         """
         if qt_model.GetApplicationStage() == "首页":
-            raise Exception("起始页面下无法建模，请切换至前处理")
-        if qt_model.GetApplicationStage() == "首页":
-            raise Exception("起始页面下无法建模，请切换至前处理")
+            raise Exception("起始页面下无法修改模型，请切换至前处理")
         list_material = ["混凝土", "钢材", "预应力", "钢丝", "钢筋", "自定义"]
         if mat_type not in list_material:
             raise Exception(f"操作错误,material_type不在指定列表:{list_material}中")
@@ -444,9 +458,7 @@ class Mdb:
         Returns: 无
         """
         if qt_model.GetApplicationStage() == "首页":
-            raise Exception("起始页面下无法建模，请切换至前处理")
-        if qt_model.GetApplicationStage() == "首页":
-            raise Exception("起始页面下无法建模，请切换至前处理")
+            raise Exception("起始页面下无法修改模型，请切换至前处理")
         if time_parameter is None:  # 默认不修改收缩徐变相关参数
             qt_model.AddTimeParameter(id=index, name=name, codeId=code_index)
         elif code_index == 1:  # 公规 JTG 3362-2018
@@ -493,9 +505,7 @@ class Mdb:
         Returns: 无
         """
         if qt_model.GetApplicationStage() == "首页":
-            raise Exception("起始页面下无法建模，请切换至前处理")
-        if qt_model.GetApplicationStage() == "首页":
-            raise Exception("起始页面下无法建模，请切换至前处理")
+            raise Exception("起始页面下无法修改模型，请切换至前处理")
         qt_model.UpdateMaterialCreep(materialId=index, timePatameterId=creep_id, fcuk=f_cuk)
 
     @staticmethod
@@ -510,9 +520,7 @@ class Mdb:
         Returns: 无
         """
         if qt_model.GetApplicationStage() == "首页":
-            raise Exception("起始页面下无法建模，请切换至前处理")
-        if qt_model.GetApplicationStage() == "首页":
-            raise Exception("起始页面下无法建模，请切换至前处理")
+            raise Exception("起始页面下无法修改模型，请切换至前处理")
         if index == -1:
             qt_model.RemoveAllMaterial()
         else:
@@ -597,7 +605,7 @@ class Mdb:
                                  mat_combine: list[float] = None,
                                  bias_type: str = "中心", center_type: str = "质心", shear_consider: bool = True, bias_x: float = 0, bias_y: float = 0):
         if qt_model.GetApplicationStage() == "首页":
-            raise Exception("起始页面下无法建模，请切换至前处理")
+            raise Exception("起始页面下无法修改模型，请切换至前处理")
         sec_type_list = ["矩形", "圆形", "圆管", "箱型", "实腹八边形",
                          "空腹八边形", "内八角形", "实腹圆端型", "T形", "倒T形",
                          "I字形", "马蹄T形", "I字形混凝土", "混凝土箱梁", "带肋钢箱",
@@ -753,7 +761,7 @@ class Mdb:
         Returns: 无
         """
         if qt_model.GetApplicationStage() == "首页":
-            raise Exception("起始页面下无法建模，请切换至前处理")
+            raise Exception("起始页面下无法修改模型，请切换至前处理")
         if rib_v is None:
             rib_v = []
         if rib_l is None:
@@ -777,6 +785,8 @@ class Mdb:
             mdb.remove_thickness(index=1)
         Returns: 无
         """
+        if qt_model.GetApplicationStage() == "首页":
+            raise Exception("起始页面下无法修改模型，请切换至前处理")
         if index == -1:
             qt_model.RemoveAllThickness()
         else:
@@ -800,6 +810,8 @@ class Mdb:
             mdb.add_tapper_section_group(ids=[1,2,3,4],name="变截面组1")
         Returns: 无
         """
+        if qt_model.GetApplicationStage() == "首页":
+            raise Exception("起始页面下无法修改模型，请切换至前处理")
         qt_model.AddTapperSectionGroup(ids=ids, name=name, factorW=factor_w, factorH=factor_h, w=ref_w, h=ref_h, disW=dis_w, disH=dis_h)
 
     @staticmethod
@@ -841,6 +853,8 @@ class Mdb:
             mdb.add_boundary_group(name="边界组1")
         Returns: 无
         """
+        if qt_model.GetApplicationStage() == "首页":
+            raise Exception("起始页面下无法修改模型，请切换至前处理")
         qt_model.AddBoundaryGroup(name=name, id=index)
 
     @staticmethod
@@ -854,6 +868,8 @@ class Mdb:
             mdb.remove_boundary_group(name="边界组1")
         Returns: 无
         """
+        if qt_model.GetApplicationStage() == "首页":
+            raise Exception("起始页面下无法修改模型，请切换至前处理")
         if name != "":
             qt_model.RemoveBoundaryGroup(name)
         else:
@@ -868,6 +884,8 @@ class Mdb:
             mdb.remove_all_boundary()
         Returns: 无
         """
+        if qt_model.GetApplicationStage() == "首页":
+            raise Exception("起始页面下无法修改模型，请切换至前处理")
         qt_model.RemoveAllBoundary()
 
     @staticmethod
@@ -1030,6 +1048,8 @@ class Mdb:
             mdb.add_standard_vehicle("高速铁路",standard_code=1,load_type="高速铁路")
         Returns: 无
         """
+        if qt_model.GetApplicationStage() == "首页":
+            raise Exception("起始页面下无法修改模型，请切换至前处理")
         qt_model.AddStandardVehicle(name=name, standardIndex=standard_code, loadType=load_type, loadLength=load_length, N=n)
 
     @staticmethod
@@ -1044,6 +1064,8 @@ class Mdb:
             mdb.add_node_tandem("节点纵列1",1,[i+1 for i in range(12)])
         Returns: 无
         """
+        if qt_model.GetApplicationStage() == "首页":
+            raise Exception("起始页面下无法修改模型，请切换至前处理")
         if node_ids is None:
             raise Exception("操作错误，输入节点列表不能为空")
         qt_model.AddNodeTandem(name=name, startId=start_id, nodeIds=node_ids)
@@ -1059,6 +1081,8 @@ class Mdb:
             mdb.add_influence_plane("影响面1",["节点纵列1","节点纵列2"])
         Returns: 无
         """
+        if qt_model.GetApplicationStage() == "首页":
+            raise Exception("起始页面下无法修改模型，请切换至前处理")
         qt_model.AddInfluencePlane(name=name, tandemNames=tandem_names)
 
     @staticmethod
@@ -1075,6 +1099,8 @@ class Mdb:
             mdb.add_lane_line("车道1","影响面1","节点纵列1",offset=0,lane_width=3.1)
         Returns: 无
         """
+        if qt_model.GetApplicationStage() == "首页":
+            raise Exception("起始页面下无法修改模型，请切换至前处理")
         qt_model.AddLaneLine(name, influenceName=influence_name, tandemName=tandem_name, offset=offset, laneWidth=lane_width)
 
     @staticmethod
@@ -1097,6 +1123,8 @@ class Mdb:
             mdb.add_live_load_case("活载工况1","影响面1",100,sub_case=[("车辆名称",1.0,["车道1","车道2"]),])
         Returns: 无
         """
+        if qt_model.GetApplicationStage() == "首页":
+            raise Exception("起始页面下无法修改模型，请切换至前处理")
         if sub_case is None:
             raise Exception("操作错误，子工况信息列表不能为空")
         qt_model.AddLiveLoadCase(name=name, influencePlane=influence_plane, span=span, subCase=sub_case)
@@ -1113,6 +1141,8 @@ class Mdb:
             mdb.remove_vehicle(name="车辆名称")
         Returns: 无
         """
+        if qt_model.GetApplicationStage() == "首页":
+            raise Exception("起始页面下无法修改模型，请切换至前处理")
         if id != -1:
             qt_model.RemoveVehicle(id=index)
         elif name != "":
@@ -1130,6 +1160,8 @@ class Mdb:
             mdb.remove_node_tandem(name="节点纵列1")
         Returns: 无
         """
+        if qt_model.GetApplicationStage() == "首页":
+            raise Exception("起始页面下无法修改模型，请切换至前处理")
         if index != -1:
             qt_model.RemoveNodeTandem(id=index)
         elif name != "":
@@ -1147,6 +1179,8 @@ class Mdb:
             mdb.remove_influence_plane(name="影响面1")
         Returns: 无
         """
+        if qt_model.GetApplicationStage() == "首页":
+            raise Exception("起始页面下无法修改模型，请切换至前处理")
         if index != -1:
             qt_model.RemoveInfluencePlane(id=index)
         elif name != "":
@@ -1164,6 +1198,8 @@ class Mdb:
             mdb.remove_lane_line(name="车道线1")
         Returns: 无
         """
+        if qt_model.GetApplicationStage() == "首页":
+            raise Exception("起始页面下无法修改模型，请切换至前处理")
         if index != -1:
             qt_model.RemoveLaneLine(id=index)
         elif name != "":
@@ -1179,6 +1215,8 @@ class Mdb:
             mdb.remove_live_load_case(name="活载工况1")
         Returns: 无
         """
+        if qt_model.GetApplicationStage() == "首页":
+            raise Exception("起始页面下无法修改模型，请切换至前处理")
         qt_model.RemoveLiveLoadCase(name=name)
 
     # endregion
@@ -1195,6 +1233,8 @@ class Mdb:
             mdb.add_tendon_group(name="钢束组1")
         Returns: 无
         """
+        if qt_model.GetApplicationStage() == "首页":
+            raise Exception("起始页面下无法修改模型，请切换至前处理")
         qt_model.AddTendonGroup(name=name, id=index)
 
     @staticmethod
@@ -1209,6 +1249,8 @@ class Mdb:
             mdb.remove_tendon_group(index=1)
         Returns: 无
         """
+        if qt_model.GetApplicationStage() == "首页":
+            raise Exception("起始页面下无法修改模型，请切换至前处理")
         if name != "":
             qt_model.RemoveTendonGroup(name=name)
         elif index != -1:
@@ -1242,6 +1284,8 @@ class Mdb:
                                     steel_detail=[0.00014,0.10,0.25,0.0015],loos_detail=(1,1,1))
         Returns: 无
         """
+        if qt_model.GetApplicationStage() == "首页":
+            raise Exception("起始页面下无法修改模型，请切换至前处理")
         if steel_detail is None:
             raise Exception("操作错误，钢束特性信息不能为空")
         if loos_detail is None:
@@ -1328,6 +1372,8 @@ class Mdb:
             mdb.remove_tendon_property()
         Returns: 无
         """
+        if qt_model.GetApplicationStage() == "首页":
+            raise Exception("起始页面下无法修改模型，请切换至前处理")
         if name != "":
             qt_model.RemoveTendonProperty(name=name)
         elif index != -1:
@@ -1406,6 +1452,8 @@ class Mdb:
             mdb.add_load_group(name="荷载组1")
         Returns: 无
         """
+        if qt_model.GetApplicationStage() == "首页":
+            raise Exception("起始页面下无法修改模型，请切换至前处理")
         if name != "":
             qt_model.AddLoadGroup(name=name)
 
@@ -1422,7 +1470,7 @@ class Mdb:
         Returns: 无
         """
         if qt_model.GetApplicationStage() == "首页":
-            raise Exception("起始页面下无法建模，请切换至前处理")
+            raise Exception("起始页面下无法修改模型，请切换至前处理")
         if name != "":
             qt_model.RemoveLoadGroup(name=name)
         elif index != -1:
@@ -1613,6 +1661,8 @@ class Mdb:
             mdb.add_deviation_parameter(name="板端制造误差",element_type=1,parameters=[1,0,0,0,0])
         Returns: 无
         """
+        if qt_model.GetApplicationStage() == "首页":
+            raise Exception("起始页面下无法修改模型，请切换至前处理")
         if parameters is None:
             raise Exception("操作错误，制造误差信息不能为空")
         if len(parameters) != 5 or len(parameters) != 7:
@@ -1744,7 +1794,7 @@ class Mdb:
         Returns: 无
         """
         if qt_model.GetApplicationStage() == "首页":
-            raise Exception("起始页面下无法建模，请切换至前处理")
+            raise Exception("起始页面下无法修改模型，请切换至前处理")
         if node_ids is None:
             raise Exception("操作错误，沉降定义中节点信息不能为空")
         qt_model.AddSinkGroup(name=name, sinkValue=sink, nodeIds=node_ids)
@@ -1761,7 +1811,7 @@ class Mdb:
         Returns: 无
         """
         if qt_model.GetApplicationStage() == "首页":
-            raise Exception("起始页面下无法建模，请切换至前处理")
+            raise Exception("起始页面下无法修改模型，请切换至前处理")
         if name == "":
             qt_model.RemoveAllSinkGroup()
         else:
@@ -1778,6 +1828,8 @@ class Mdb:
             mdb.add_sink_case(name="沉降工况1",sink_groups=["沉降1","沉降2"])
         Returns: 无
         """
+        if qt_model.GetApplicationStage() == "首页":
+            raise Exception("起始页面下无法修改模型，请切换至前处理")
         if sink_groups is None:
             raise Exception("操作错误，沉降工况定义中沉降组信息不能为空")
         qt_model.AddSinkCase(name=name, sinkGroups=sink_groups)
@@ -1793,6 +1845,8 @@ class Mdb:
             mdb.remove_sink_case(name="沉降1")
         Returns: 无
         """
+        if qt_model.GetApplicationStage() == "首页":
+            raise Exception("起始页面下无法修改模型，请切换至前处理")
         if name == "":
             qt_model.RemoveAllSinkCase()
         else:
@@ -1809,7 +1863,7 @@ class Mdb:
         Returns: 无
         """
         if qt_model.GetApplicationStage() == "首页":
-            raise Exception("起始页面下无法建模，请切换至前处理")
+            raise Exception("起始页面下无法修改模型，请切换至前处理")
         if names is None:
             raise Exception("操作错误，添加并发反力组时结构组名称不能为空")
         qt_model.AddConcurrentReaction(names=names)
@@ -1824,7 +1878,7 @@ class Mdb:
         Returns: 无
         """
         if qt_model.GetApplicationStage() == "首页":
-            raise Exception("起始页面下无法建模，请切换至前处理")
+            raise Exception("起始页面下无法修改模型，请切换至前处理")
         qt_model.RemoveConcurrentRection()
 
     @staticmethod
@@ -1838,7 +1892,7 @@ class Mdb:
         Returns: 无
         """
         if qt_model.GetApplicationStage() == "首页":
-            raise Exception("起始页面下无法建模，请切换至前处理")
+            raise Exception("起始页面下无法修改模型，请切换至前处理")
         qt_model.AddConcurrentForce(names=names)
 
     @staticmethod
@@ -1851,7 +1905,7 @@ class Mdb:
         Returns: 无
         """
         if qt_model.GetApplicationStage() == "首页":
-            raise Exception("起始页面下无法建模，请切换至前处理")
+            raise Exception("起始页面下无法修改模型，请切换至前处理")
         qt_model.RemoveConcurrentForce()
 
     @staticmethod
@@ -1866,7 +1920,7 @@ class Mdb:
         Returns: 无
         """
         if qt_model.GetApplicationStage() == "首页":
-            raise Exception("起始页面下无法建模，请切换至前处理")
+            raise Exception("起始页面下无法修改模型，请切换至前处理")
         case_type_list = ["施工阶段荷载", "恒载", "活载", "制动力", "风荷载",
                           "体系温度荷载", "梯度温度荷载", "长轨伸缩挠曲力荷载", "脱轨荷载", "船舶撞击荷载",
                           "汽车撞击荷载", "长轨断轨力荷载", "用户定义荷载"]
@@ -1888,7 +1942,7 @@ class Mdb:
         Returns: 无
         """
         if qt_model.GetApplicationStage() == "首页":
-            raise Exception("起始页面下无法建模，请切换至前处理")
+            raise Exception("起始页面下无法修改模型，请切换至前处理")
         if name != "":
             qt_model.DeleteLoadCase(name=name)
         elif index != -1:
@@ -1932,7 +1986,7 @@ class Mdb:
         Returns: 无
         """
         if qt_model.GetApplicationStage() == "首页":
-            raise Exception("起始页面下无法建模，请切换至前处理")
+            raise Exception("起始页面下无法修改模型，请切换至前处理")
         qt_model.AddConstructionStage(name=name, duration=duration, activeStructures=active_structures, inActiveStructures=delete_structures
                                       , activeBoundaries=active_boundaries, inActiveBoundaries=delete_boundaries, activeLoads=active_loads,
                                       inActiveLoads=delete_loads, tempLoads=temp_loads, id=index)
@@ -1969,7 +2023,7 @@ class Mdb:
         Returns: 无
         """
         if qt_model.GetApplicationStage() == "首页":
-            raise Exception("起始页面下无法建模，请切换至前处理")
+            raise Exception("起始页面下无法修改模型，请切换至前处理")
         qt_model.UpdateConstructionStage(name=name, duration=duration, activeStructures=active_structures, inActiveStructures=delete_structures
                                          , activeBoundaries=active_boundaries, inActiveBoundaries=delete_boundaries, activeLoads=active_loads,
                                          inActiveLoads=delete_loads, tempLoads=temp_loads)
@@ -1988,7 +2042,7 @@ class Mdb:
         Returns: 无
         """
         if qt_model.GetApplicationStage() == "首页":
-            raise Exception("起始页面下无法建模，请切换至前处理")
+            raise Exception("起始页面下无法修改模型，请切换至前处理")
         qt_model.UpdateWeightStage(stageName=stage_name,structureGroupName=structure_group_name,weightStageId=weight_stage_id)
 
     @staticmethod
@@ -2002,7 +2056,7 @@ class Mdb:
         Returns: 无
         """
         if qt_model.GetApplicationStage() == "首页":
-            raise Exception("起始页面下无法建模，请切换至前处理")
+            raise Exception("起始页面下无法修改模型，请切换至前处理")
         if name == "":
             qt_model.RemoveAllConstructionStage()
         else:
@@ -2027,7 +2081,7 @@ class Mdb:
         Returns: 无
         """
         if qt_model.GetApplicationStage() == "首页":
-            raise Exception("起始页面下无法建模，请切换至前处理")
+            raise Exception("起始页面下无法修改模型，请切换至前处理")
         if combine_info is None:
             combine_info = []
         qt_model.AddLoadCombine(name=name, loadCombineType=combine_type, describe=describe, caseAndFactor=combine_info)
@@ -2043,7 +2097,7 @@ class Mdb:
         Returns: 无
         """
         if qt_model.GetApplicationStage() == "首页":
-            raise Exception("起始页面下无法建模，请切换至前处理")
+            raise Exception("起始页面下无法修改模型，请切换至前处理")
         if name != "":
             qt_model.DeleteLoadCombine(name=name)
         else:

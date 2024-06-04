@@ -1,5 +1,5 @@
 # 最新版本 V0.3.14 - 2024.06.04
-> pip install --upgrade qtmodel
+> pip install --upgrade qtmodel -i https://pypi.org/simple
 - 优化部分调用
 
 ##  项目管理
@@ -10,6 +10,16 @@
 # 示例代码
 from qtmodel import *
 mdb.remove_display()
+```  
+Returns: 无
+### save_png
+保存当前模型窗口图形信息
+> 参数:  
+> file_path: 文件全路径  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.save_png(r"D:\\QT\\aa.png")
 ```  
 Returns: 无
 ### update_bim
@@ -1375,6 +1385,8 @@ from qtmodel import *
 mdb.remove_load_combine(name="荷载组合1")
 ```  
 Returns: 无
+
+
 
 
 
