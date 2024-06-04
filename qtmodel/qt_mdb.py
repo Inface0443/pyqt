@@ -42,6 +42,18 @@ class Mdb:
         """
         qt_model.DisplayReset(flag)
 
+    @staticmethod
+    def change_construct_stage(stage):
+        """
+        消隐设置开关
+        Args:
+            stage: 施工阶段名称或施工阶段号  0-基本
+        example:
+           mdb.change_construct_stage(0)
+           mdb.change_construct_stage("基本")
+        Returns: 无
+        """
+        qt_model.ChangeConstructStage(stage)
     # endregion
 
     # region 项目管理
