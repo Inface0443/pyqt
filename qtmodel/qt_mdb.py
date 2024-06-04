@@ -6,7 +6,7 @@ class Mdb:
     建模与模型修改计算，所有函数均无返回值
     """
 
-    # region 项目管理
+    # region 视图控制
     @staticmethod
     def remove_display():
         """
@@ -19,7 +19,7 @@ class Mdb:
         qt_model.DisplayReset()
 
     @staticmethod
-    def save_png(file_path:str):
+    def save_png(file_path: str):
         """
         保存当前模型窗口图形信息
         Args:
@@ -29,6 +29,22 @@ class Mdb:
         Returns: 无
         """
         qt_model.DisplayReset(file_path)
+
+    @staticmethod
+    def set_render(flag: bool = True):
+        """
+        消隐设置开关
+        Args:
+            flag: 默认设置打开消隐
+        example:
+           mdb.set_render(True)
+        Returns: 无
+        """
+        qt_model.set_render(flag)
+
+    # endregion
+
+    # region 项目管理
 
     @staticmethod
     def update_bim():
@@ -1021,7 +1037,7 @@ class Mdb:
 
     # endregion
 
-    # region 移动荷载
+    # region 移动荷载操作
     @staticmethod
     def add_standard_vehicle(name: str, standard_code: int = 1, load_type: str = "高速铁路", load_length: float = 0, n: int = 6):
         """
@@ -1952,7 +1968,7 @@ class Mdb:
 
     # endregion
 
-    # region 施工阶段
+    # region 施工阶段操作
     @staticmethod
     def add_construction_stage(name: str = "", duration: int = 0,
                                active_structures: list[tuple[str, int, int, int]] = None,
@@ -2043,7 +2059,7 @@ class Mdb:
         """
         if qt_model.GetApplicationStage() == "首页":
             raise Exception("起始页面下无法修改模型，请切换至前处理")
-        qt_model.UpdateWeightStage(stageName=stage_name,structureGroupName=structure_group_name,weightStageId=weight_stage_id)
+        qt_model.UpdateWeightStage(stageName=stage_name, structureGroupName=structure_group_name, weightStageId=weight_stage_id)
 
     @staticmethod
     def remove_construction_stage(name: str = ""):
@@ -2064,7 +2080,7 @@ class Mdb:
 
     # endregion
 
-    # region 荷载组合
+    # region 荷载组合操作
     @staticmethod
     def add_load_combine(name: str = "", combine_type: int = 1, describe: str = "", combine_info: list[tuple[str, str, float]] = None):
         """

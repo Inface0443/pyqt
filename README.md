@@ -1,8 +1,8 @@
-# 最新版本 V0.3.14 - 2024.06.04
+# 最新版本 V0.3.15 - 2024.06.04
 > pip install --upgrade qtmodel -i https://pypi.org/simple
 - 优化部分调用
 
-##  项目管理
+##  视图控制
 ### remove_display
 删除当前所有显示，包括边界荷载钢束等全部显示
 > 参数:  
@@ -22,6 +22,18 @@ from qtmodel import *
 mdb.save_png(r"D:\\QT\\aa.png")
 ```  
 Returns: 无
+##  项目管理
+### set_render
+消隐设置开关
+> 参数:  
+> flag: 默认设置打开消隐  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.set_render(True)
+```  
+Returns: 无
+##  项目管理
 ### update_bim
 刷新Bim模型信息
 > 参数:  
@@ -643,7 +655,7 @@ mdb.add_node_axis(input_type=2,node_id=1,coord_info=[[0,0,1],[0,1,0],[1,0,0]])
 mdb.add_node_axis(input_type=3,node_id=1,coord_info=[[0,0,1],[0,1,0]])
 ```  
 Returns: 无
-##  移动荷载
+##  移动荷载操作
 ### add_standard_vehicle
 添加标准车辆
 > 参数:  
@@ -1286,7 +1298,7 @@ mdb.remove_load_case(name="工况1")
 mdb.remove_load_case()
 ```  
 Returns: 无
-##  施工阶段
+##  施工阶段操作
 ### add_construction_stage
 添加施工阶段信息
 > 参数:  
@@ -1359,7 +1371,7 @@ from qtmodel import *
 mdb.remove_construction_stage(name="施工阶段1")
 ```  
 Returns: 无
-##  荷载组合
+##  荷载组合操作
 ### add_load_combine
 添加荷载组合
 > 参数:  
@@ -1385,9 +1397,6 @@ from qtmodel import *
 mdb.remove_load_combine(name="荷载组合1")
 ```  
 Returns: 无
-
-
-
 
 
 ##  静力结果查看
@@ -1585,8 +1594,7 @@ from qtmodel import *
 odb.plot_plate_element_force(r"aaa.png",component=0,load_case_name="CQ:成桥(合计)",stage_id=-1)
 ```  
 Returns: 无
-
-##  模型信息
+##  获取模型信息
 ### get_section_data
 获取截面详细信息
 > 参数:  
