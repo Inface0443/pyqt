@@ -40,7 +40,7 @@ class Mdb:
            mdb.set_render(True)
         Returns: 无
         """
-        qt_model.set_render(flag)
+        qt_model.DisplayReset(flag)
 
     # endregion
 
