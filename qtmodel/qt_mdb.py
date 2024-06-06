@@ -1605,7 +1605,7 @@ class Mdb:
             mdb.add_beam_load(case_name="荷载工况1",beam_id=1,load_type=3,list_x=[0.4,0.8],list_load=[100,200])
         Returns: 无
         """
-        qt_model.AddBeamLoad(caseName=case_name, beamId=beam_id, loadType=load_type,
+        qt_model.AddBeamLoad(caseName=case_name, beamId=beam_id, loadType=load_type,isAbs=is_abs,
                              coordinateSystem=coord_system, listX=list_x, listLoad=list_load, groupName=group_name,
                              biasInfo=load_bias, isProject=projected)
 
