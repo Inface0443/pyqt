@@ -206,9 +206,12 @@ class Odb:
             odb.plot_reaction_result(r"aaa.png",component=0,load_case_name="CQ:成桥(合计)",stage_id=-1)
         Returns: 无
         """
-        qt_model.PlotReactionResult(file_path, component=component, loadCaseName=load_case_name, stageId=stage_id, envelopeType=envelope_type,
-                                    showNumber=show_number, showLegend=show_legend, textRotationAngle=text_rotation, digitalCount=digital_count,
-                                    showAsExponential=show_exponential, maxMinValueKind=max_min_kind, showIncrementResult=show_increment)
+        try:
+            qt_model.PlotReactionResult(file_path, component=component, loadCaseName=load_case_name, stageId=stage_id, envelopeType=envelope_type,
+                                        showNumber=show_number, showLegend=show_legend, textRotationAngle=text_rotation, digitalCount=digital_count,
+                                        showAsExponential=show_exponential, maxMinValueKind=max_min_kind, showIncrementResult=show_increment)
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def plot_displacement_result(file_path: str, component: int = 1, load_case_name: str = "", stage_id: int = 1,
@@ -240,11 +243,15 @@ class Odb:
             odb.plot_displacement_result(r"aaa.png",component=0,load_case_name="CQ:成桥(合计)",stage_id=-1)
         Returns: 无
         """
-        qt_model.PlotDisplacementResult(file_path, component=component, loadCaseName=load_case_name, stageId=stage_id, envelopeType=envelope_type,
-                                        showAsDeformedShape=show_deformed, showUndeformedShape=show_pre_deformed,
-                                        deformedScale=deformed_scale, deformedActual=actual_deformed,
-                                        showNumber=show_number, showLegend=show_legend, textRotationAngle=text_rotation, digitalCount=digital_count,
-                                        showAsExponential=show_exponential, maxMinValueKind=max_min_kind, showIncrementResult=show_increment)
+        try:
+            qt_model.PlotDisplacementResult(file_path, component=component, loadCaseName=load_case_name, stageId=stage_id, envelopeType=envelope_type,
+                                            showAsDeformedShape=show_deformed, showUndeformedShape=show_pre_deformed,
+                                            deformedScale=deformed_scale, deformedActual=actual_deformed,
+                                            showNumber=show_number, showLegend=show_legend, textRotationAngle=text_rotation,
+                                            digitalCount=digital_count,
+                                            showAsExponential=show_exponential, maxMinValueKind=max_min_kind, showIncrementResult=show_increment)
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def plot_beam_element_force(file_path: str, component: int = 0, load_case_name: str = "合计", stage_id: int = 1,
@@ -281,12 +288,15 @@ class Odb:
             odb.plot_beam_element_force(r"aaa.png",component=0,load_case_name="CQ:成桥(合计)",stage_id=-1)
         Returns: 无
         """
-        qt_model.PlotBeamElementForce(
-            filePath=file_path, component=component, loadCaseName=load_case_name, stageId=stage_id, envelopeType=envelope_type,
-            showLineChart=show_line_chart, showNumber=show_number, position=position, flipPlot=flip_plot, lineScale=line_scale,
-            showAsDeformedShape=show_deformed, showUndeformedShape=show_pre_deformed, deformedActual=deformed_actual,
-            deformedScale=deformed_scale, showLegend=show_legend, textRotationAngle=text_rotation, digitalCount=digital_count,
-            showAsExponential=show_exponential, maxMinValueKind=max_min_kind, showIncrementResult=show_increment)
+        try:
+            qt_model.PlotBeamElementForce(
+                filePath=file_path, component=component, loadCaseName=load_case_name, stageId=stage_id, envelopeType=envelope_type,
+                showLineChart=show_line_chart, showNumber=show_number, position=position, flipPlot=flip_plot, lineScale=line_scale,
+                showAsDeformedShape=show_deformed, showUndeformedShape=show_pre_deformed, deformedActual=deformed_actual,
+                deformedScale=deformed_scale, showLegend=show_legend, textRotationAngle=text_rotation, digitalCount=digital_count,
+                showAsExponential=show_exponential, maxMinValueKind=max_min_kind, showIncrementResult=show_increment)
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def plot_truss_element_force(file_path: str, load_case_name: str = "合计", stage_id: int = 1,
@@ -322,12 +332,15 @@ class Odb:
             odb.plot_truss_element_force(r"aaa.png",load_case_name="CQ:成桥(合计)",stage_id=-1)
         Returns: 无
         """
-        qt_model.PlotTrussElementForce(
-            filePath=file_path, loadCaseName=load_case_name, stageId=stage_id, envelopeType=envelope_type,
-            showLineChart=show_line_chart, showNumber=show_number, position=position, flipPlot=flip_plot, lineScale=line_scale,
-            showAsDeformedShape=show_deformed, showUndeformedShape=show_pre_deformed, deformedActual=deformed_actual,
-            deformedScale=deformed_scale, showLegend=show_legend, textRotationAngle=text_rotation_angle, digitalCount=digital_count,
-            showAsExponential=show_as_exponential, maxMinValueKind=max_min_kind, showIncrementResult=show_increment)
+        try:
+            qt_model.PlotTrussElementForce(
+                filePath=file_path, loadCaseName=load_case_name, stageId=stage_id, envelopeType=envelope_type,
+                showLineChart=show_line_chart, showNumber=show_number, position=position, flipPlot=flip_plot, lineScale=line_scale,
+                showAsDeformedShape=show_deformed, showUndeformedShape=show_pre_deformed, deformedActual=deformed_actual,
+                deformedScale=deformed_scale, showLegend=show_legend, textRotationAngle=text_rotation_angle, digitalCount=digital_count,
+                showAsExponential=show_as_exponential, maxMinValueKind=max_min_kind, showIncrementResult=show_increment)
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def plot_plate_element_force(file_path: str, component: int = 0, force_kind: int = 0, load_case_name: str = "合计",
@@ -360,12 +373,15 @@ class Odb:
             odb.plot_plate_element_force(r"aaa.png",component=0,load_case_name="CQ:成桥(合计)",stage_id=-1)
         Returns: 无
         """
-        qt_model.PlotPlateElementForce(
-            filePath=file_path, component=component, forceKind=force_kind, loadCaseName=load_case_name, stageId=stage_id,
-            envelopeType=envelope_type, showNumber=show_number, showAsDeformedShape=show_deformed,
-            showUndeformedShape=show_pre_deformed, deformedActual=deformed_actual, deformedScale=deformed_scale,
-            showLegend=show_legend, textRotationAngle=text_rotation_angle, digitalCount=digital_count,
-            showAsExponential=show_as_exponential, maxMinValueKind=max_min_kind, showIncrementResult=show_increment)
+        try:
+            qt_model.PlotPlateElementForce(
+                filePath=file_path, component=component, forceKind=force_kind, loadCaseName=load_case_name, stageId=stage_id,
+                envelopeType=envelope_type, showNumber=show_number, showAsDeformedShape=show_deformed,
+                showUndeformedShape=show_pre_deformed, deformedActual=deformed_actual, deformedScale=deformed_scale,
+                showLegend=show_legend, textRotationAngle=text_rotation_angle, digitalCount=digital_count,
+                showAsExponential=show_as_exponential, maxMinValueKind=max_min_kind, showIncrementResult=show_increment)
+        except Exception as ex:
+            raise Exception(ex)
 
     # endregion
 
@@ -380,7 +396,10 @@ class Odb:
             odb.get_node_id(1,1,1)
         Returns: int
         """
-        return qt_model.GetSectionInfo(sec_id)
+        try:
+            return qt_model.GetSectionInfo(sec_id)
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def get_node_id(x: float = 0, y: float = 0, z: float = 0, tolerance: float = 1e-4):
@@ -395,7 +414,10 @@ class Odb:
             odb.get_node_id(1,1,1)
         Returns: int
         """
-        return qt_model.GetNodeId(x=x, y=y, z=z, tolerance=tolerance)
+        try:
+            return qt_model.GetNodeId(x=x, y=y, z=z, tolerance=tolerance)
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def get_group_elements(group_name: str = "默认结构组"):
@@ -407,7 +429,10 @@ class Odb:
             odb.get_group_elements("默认结构组")
         Returns: list[int]
         """
-        return list(qt_model.GetStructureGroupElements(group_name))
+        try:
+            return list(qt_model.GetStructureGroupElements(group_name))
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def get_group_nodes(group_name: str = "默认结构组"):
@@ -419,7 +444,10 @@ class Odb:
             odb.get_group_nodes("默认结构组")
         Returns: list[int]
         """
-        return list(qt_model.GetStructureGroupNodes(group_name))
+        try:
+            return list(qt_model.GetStructureGroupNodes(group_name))
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def get_node_data(ids=None):
@@ -432,16 +460,19 @@ class Odb:
             odb.get_node_data([1,2])    # 获取多个节点信息
         Returns: list[Node] 或 Node
         """
-        if ids is None:
-            node_list = qt_model.GetNodeData()
-        else:
-            node_list = qt_model.GetNodeData(ids)
-        res_list = []
-        for item in node_list:
-            res_list.append(Node(item.Id, item.XCoor, item.YCoor, item.ZCoor))
-        if len(res_list) == 1:
-            return res_list[0]
-        return res_list
+        try:
+            if ids is None:
+                node_list = qt_model.GetNodeData()
+            else:
+                node_list = qt_model.GetNodeData(ids)
+            res_list = []
+            for item in node_list:
+                res_list.append(Node(item.Id, item.XCoor, item.YCoor, item.ZCoor))
+            if len(res_list) == 1:
+                return res_list[0]
+            return res_list
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def get_element_data(ids=None):
@@ -453,32 +484,35 @@ class Odb:
             odb.get_element_data(1) # 获取指定编号单元信息
         Returns: list[Element]
         """
-        ele_list = []
-        target_ids = []
-        if ids is None:
-            ele_list.extend(Odb.get_beam_element())
-            ele_list.extend(Odb.get_plate_element())
-            ele_list.extend(Odb.get_cable_element())
-            ele_list.extend(Odb.get_link_element())
-            if len(ele_list) == 1:
-                return ele_list[0]
+        try:
+            ele_list = []
+            target_ids = []
+            if ids is None:
+                ele_list.extend(Odb.get_beam_element())
+                ele_list.extend(Odb.get_plate_element())
+                ele_list.extend(Odb.get_cable_element())
+                ele_list.extend(Odb.get_link_element())
+                if len(ele_list) == 1:
+                    return ele_list[0]
+                else:
+                    return ele_list
+            if isinstance(ids, int):
+                target_ids.append(ids)
             else:
-                return ele_list
-        if isinstance(ids, int):
-            target_ids.append(ids)
-        else:
-            target_ids.extend(ids)
-        for item_id in target_ids:
-            ele_type = Odb.get_element_type(item_id)
-            if ele_type == "BEAM":
-                ele_list.append(Odb.get_beam_element(item_id)[0])
-            if ele_type == "PLATE":
-                ele_list.append(Odb.get_plate_element(item_id)[0])
-            if ele_type == "CABLE":
-                ele_list.append(Odb.get_cable_element(item_id)[0])
-            if ele_type == "LINK":
-                ele_list.append(Odb.get_link_element(item_id)[0])
-        return ele_list
+                target_ids.extend(ids)
+            for item_id in target_ids:
+                ele_type = Odb.get_element_type(item_id)
+                if ele_type == "BEAM":
+                    ele_list.append(Odb.get_beam_element(item_id)[0])
+                if ele_type == "PLATE":
+                    ele_list.append(Odb.get_plate_element(item_id)[0])
+                if ele_type == "CABLE":
+                    ele_list.append(Odb.get_cable_element(item_id)[0])
+                if ele_type == "LINK":
+                    ele_list.append(Odb.get_link_element(item_id)[0])
+            return ele_list
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def get_element_type(ele_id: int) -> str:
@@ -490,7 +524,10 @@ class Odb:
             odb.get_element_type(1) # 获取所有单元信息
         Returns: str类型 返回 BEAM PLATE CABLE LINK
         """
-        return qt_model.GetElementType(ele_id)
+        try:
+            return qt_model.GetElementType(ele_id)
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def get_beam_element(ids=None) -> list[Element]:
@@ -502,14 +539,17 @@ class Odb:
             odb.get_beam_element() # 获取所有单元信息
         Returns: list[Element]
         """
-        res_list = []
-        if ids is None:
-            ele_list = qt_model.GetBeamElementData()
-        else:
-            ele_list = qt_model.GetBeamElementData(ids)
-        for item in ele_list:
-            res_list.append(Element(item.Id, "BEAM", [item.StartNode.Id, item.EndNode.Id], item.MaterialId, item.SectionId, item.BetaAngle))
-        return res_list
+        try:
+            res_list = []
+            if ids is None:
+                ele_list = qt_model.GetBeamElementData()
+            else:
+                ele_list = qt_model.GetBeamElementData(ids)
+            for item in ele_list:
+                res_list.append(Element(item.Id, "BEAM", [item.StartNode.Id, item.EndNode.Id], item.MaterialId, item.SectionId, item.BetaAngle))
+            return res_list
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def get_plate_element(ids=None) -> list[Element]:
@@ -521,15 +561,18 @@ class Odb:
             odb.get_plate_element() # 获取所有单元信息
         Returns: list[Element]
         """
-        res_list = []
-        if ids is None:
-            ele_list = qt_model.GetPlateElementData()
-        else:
-            ele_list = qt_model.GetPlateElementData(ids)
-        for item in ele_list:
-            res_list.append(Element(item.Id, "PLATE", [item.NodeI.Id, item.NodeJ.Id, item.NodeK.Id, item.NodeL.Id],
-                                    item.MaterialId, item.ThicknessId, item.BetaAngle))
-        return res_list
+        try:
+            res_list = []
+            if ids is None:
+                ele_list = qt_model.GetPlateElementData()
+            else:
+                ele_list = qt_model.GetPlateElementData(ids)
+            for item in ele_list:
+                res_list.append(Element(item.Id, "PLATE", [item.NodeI.Id, item.NodeJ.Id, item.NodeK.Id, item.NodeL.Id],
+                                        item.MaterialId, item.ThicknessId, item.BetaAngle))
+            return res_list
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def get_cable_element(ids=None) -> list[Element]:
@@ -541,15 +584,18 @@ class Odb:
             odb.get_cable_element() # 获取所有单元信息
         Returns: list[Element]
         """
-        res_list = []
-        if ids is None:
-            ele_list = qt_model.GetCableElementData()
-        else:
-            ele_list = qt_model.GetCableElementData(ids)
-        for item in ele_list:
-            res_list.append(Element(item.Id, "CABLE", [item.StartNode.Id, item.EndNode.Id], item.MaterialId, item.SectionId, item.BetaAngle,
-                                    int(item.InitialParameterType), item.InitialParameter))
-        return res_list
+        try:
+            res_list = []
+            if ids is None:
+                ele_list = qt_model.GetCableElementData()
+            else:
+                ele_list = qt_model.GetCableElementData(ids)
+            for item in ele_list:
+                res_list.append(Element(item.Id, "CABLE", [item.StartNode.Id, item.EndNode.Id], item.MaterialId, item.SectionId, item.BetaAngle,
+                                        int(item.InitialParameterType), item.InitialParameter))
+            return res_list
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def get_link_element(ids=None) -> list[Element]:
@@ -561,14 +607,17 @@ class Odb:
             odb.get_link_element() # 获取所有单元信息
         Returns: list[Element]
         """
-        res_list = []
-        if ids is None:
-            ele_list = qt_model.GetLinkElementData()
-        else:
-            ele_list = qt_model.GetLinkElementData(ids)
-        for item in ele_list:
-            res_list.append(Element(item.Id, "LINK", [item.StartNode.Id, item.EndNode.Id], item.MaterialId, item.SectionId, item.BetaAngle))
-        return res_list
+        try:
+            res_list = []
+            if ids is None:
+                ele_list = qt_model.GetLinkElementData()
+            else:
+                ele_list = qt_model.GetLinkElementData(ids)
+            for item in ele_list:
+                res_list.append(Element(item.Id, "LINK", [item.StartNode.Id, item.EndNode.Id], item.MaterialId, item.SectionId, item.BetaAngle))
+            return res_list
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def get_material_data(ids=None):

@@ -16,7 +16,10 @@ class Mdb:
            mdb.remove_display()
         Returns: 无
         """
-        qt_model.DisplayReset()
+        try:
+            qt_model.DisplayReset()
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def save_png(file_path: str):
@@ -28,7 +31,10 @@ class Mdb:
            mdb.save_png(r"D:\\QT\\aa.png")
         Returns: 无
         """
-        qt_model.SavePng(file_path)
+        try:
+            qt_model.SavePng(file_path)
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def set_render(flag: bool = True):
@@ -40,7 +46,10 @@ class Mdb:
            mdb.set_render(True)
         Returns: 无
         """
-        qt_model.SetRender(flag)
+        try:
+            qt_model.SetRender(flag)
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def change_construct_stage(stage):
@@ -53,7 +62,10 @@ class Mdb:
            mdb.change_construct_stage("基本")
         Returns: 无
         """
-        qt_model.ChangeConstructStage(stage)
+        try:
+            qt_model.ChangeConstructStage(stage)
+        except Exception as ex:
+            raise Exception(ex)
 
     # endregion
 
@@ -68,7 +80,10 @@ class Mdb:
            mdb.update_bim()
         Returns: 无
         """
-        qt_model.PostLoggerRequest()
+        try:
+            qt_model.PostLoggerRequest()
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def update_model():
@@ -79,7 +94,10 @@ class Mdb:
             mdb.update_model()
         Returns: 无
         """
-        qt_model.UpdateModel()
+        try:
+            qt_model.UpdateModel()
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def update_app_stage(num: int = 1):
@@ -92,6 +110,10 @@ class Mdb:
             mdb.update_app_stage(2)
         Returns: 无
         """
+        try:
+            qt_model.UpdateAppStage(num)
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def do_solve():
@@ -102,7 +124,10 @@ class Mdb:
             mdb.do_solve()
         Returns: 无
         """
-        qt_model.DoSolve()
+        try:
+            qt_model.DoSolve()
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def initial():
@@ -113,7 +138,10 @@ class Mdb:
             mdb.initial()
         Returns: 无
         """
-        qt_model.Initial()
+        try:
+            qt_model.Initial()
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def open_file(file_path: str):
@@ -125,9 +153,12 @@ class Mdb:
             mdb.open_file("a.bfmd")
         Returns: 无
         """
-        if not file_path.endswith(".bfmd"):
-            raise Exception("操作错误，仅支持bfmd文件")
-        qt_model.OpenFile(file_path)
+        try:
+            if not file_path.endswith(".bfmd"):
+                raise Exception("操作错误，仅支持bfmd文件")
+            qt_model.OpenFile(file_path)
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def close_project():
@@ -138,7 +169,10 @@ class Mdb:
             mdb.close_project()
         Returns: 无
         """
-        qt_model.CloseFile()
+        try:
+            qt_model.CloseFile()
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def save_file(file_path: str):
@@ -150,7 +184,10 @@ class Mdb:
             mdb.save_file("a.bfmd")
         Returns: 无
         """
-        qt_model.SaveFile(file_path)
+        try:
+            qt_model.SaveFile(file_path)
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def import_command(command: str, command_type: int = 1):
@@ -163,7 +200,10 @@ class Mdb:
             mdb.import_command("*SECTION")
         Returns: 无
         """
-        qt_model.ImportQtCommand(command)
+        try:
+            qt_model.ImportQtCommand(command)
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def import_file(file_path: str):
@@ -175,7 +215,10 @@ class Mdb:
             mdb.import_file("a.mct")
         Returns: 无
         """
-        qt_model.ImportFile(file_path)
+        try:
+            qt_model.ImportFile(file_path)
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def export_file(file_path: str):
@@ -187,7 +230,10 @@ class Mdb:
             mdb.export_file("a.mct")
         Returns: 无
         """
-        qt_model.ExportFile(file_path)
+        try:
+            qt_model.ExportFile(file_path)
+        except Exception as ex:
+            raise Exception(ex)
 
     # endregion
 
@@ -203,9 +249,11 @@ class Mdb:
             mdb.add_nodes([[1,1,2,3],[2,4,5,6]])
         Returns: 无
         """
-        if qt_model.GetApplicationStage() == "首页":
-            raise Exception("起始页面下无法修改模型，请切换至前处理")
-        qt_model.AddNodes(dataList=node_list)
+        try:
+            qt_model.AddNodes(dataList=node_list)
+            qt_model.UpdateModel()
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def add_node(x: float = 1, y: float = 1, z: float = 1, index: int = -1):
@@ -221,10 +269,13 @@ class Mdb:
             mdb.add_node(x= 1,y = 2,z = 4,index = 2)
         Returns: 无
         """
-        if index != -1:
-            qt_model.AddNode(id=index, x=x, y=y, z=z)
-        else:
-            qt_model.AddNode(x=x, y=y, z=z)
+        try:
+            if index != -1:
+                qt_model.AddNode(id=index, x=x, y=y, z=z)
+            else:
+                qt_model.AddNode(x=x, y=y, z=z)
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def update_node_id(node_id: int, new_id: int):
@@ -237,7 +288,10 @@ class Mdb:
             mdb.update_node_id(1,2)
         Returns: 无
         """
-        qt_model.UpdateNodeId(nodeId=node_id, newId=new_id)
+        try:
+            qt_model.UpdateNodeId(nodeId=node_id, newId=new_id)
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def merge_nodes(ids: list[int] = None, tolerance: float = 1e-4):
@@ -250,12 +304,14 @@ class Mdb:
             mdb.merge_nodes()
         Returns: 无
         """
-        if qt_model.GetApplicationStage() == "首页":
-            raise Exception("起始页面下无法修改模型，请切换至前处理")
-        if ids is None:
-            qt_model.MergeNode(tolerance)
-        else:
-            qt_model.MergeNodeByIds(ids, tolerance)
+        try:
+            if ids is None:
+                qt_model.MergeNode(tolerance)
+            else:
+                qt_model.MergeNodeByIds(ids, tolerance)
+            qt_model.UpdateModel()
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def remove_node(ids=None):
@@ -269,12 +325,15 @@ class Mdb:
             mdb.remove_node(ids=[1,2,3])
         Returns: 无
         """
-        if ids is None:
-            qt_model.RemoveAllNodes()
-        elif type(ids) == int:
-            qt_model.RemoveNode(id=ids)
-        else:
-            qt_model.RemoveNodes(ids=ids)
+        try:
+            if ids is None:
+                qt_model.RemoveAllNodes()
+            elif type(ids) == int:
+                qt_model.RemoveNode(id=ids)
+            else:
+                qt_model.RemoveNodes(ids=ids)
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def renumber_node():
@@ -285,9 +344,11 @@ class Mdb:
             mdb.renumber_node()
         Returns: 无
         """
-        if qt_model.GetApplicationStage() == "首页":
-            raise Exception("起始页面下无法修改模型，请切换至前处理")
-        qt_model.RenumberNodeId()
+        try:
+            qt_model.RenumberNodeId()
+            qt_model.UpdateModel()
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def move_node(node_id: int, offset_x: float = 0, offset_y: float = 0, offset_z: float = 0):
@@ -302,7 +363,10 @@ class Mdb:
             mdb.move_node(1,1.5,1.5,1.5)
         Returns: 无
         """
-        qt_model.MoveNode(node_id, offsets=[offset_x, offset_y, offset_z])
+        try:
+            qt_model.MoveNode(node_id, offsets=[offset_x, offset_y, offset_z])
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def add_structure_group(name: str = "", index: int = -1):
@@ -316,9 +380,11 @@ class Mdb:
             mdb.add_structure_group(name="新建结构组2",index=2)
         Returns: 无
         """
-        if qt_model.GetApplicationStage() == "首页":
-            raise Exception("起始页面下无法修改模型，请切换至前处理")
-        qt_model.AddStructureGroup(name=name, id=index)
+        try:
+            qt_model.AddStructureGroup(name=name, id=index)
+            qt_model.UpdateModel()
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def remove_structure_group(name: str = "", index: int = -1):
@@ -332,14 +398,16 @@ class Mdb:
             mdb.remove_structure_group(index = 2)
         Returns: 无
         """
-        if qt_model.GetApplicationStage() == "首页":
-            raise Exception("起始页面下无法修改模型，请切换至前处理")
-        if index != -1:
-            qt_model.RemoveStructureGroup(id=index)
-        elif name != "":
-            qt_model.RemoveStructureGroup(name=name)
-        else:
-            qt_model.RemoveAllStructureGroup()
+        try:
+            if index != -1:
+                qt_model.RemoveStructureGroup(id=index)
+            elif name != "":
+                qt_model.RemoveStructureGroup(name=name)
+            else:
+                qt_model.RemoveAllStructureGroup()
+            qt_model.UpdateModel()
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def add_structure_to_group(name: str = "", node_ids: list[int] = None, element_ids: list[int] = None):
@@ -353,13 +421,15 @@ class Mdb:
             mdb.add_structure_to_group(name="现有结构组1",node_ids=[1,2,3,4],element_ids=[1,2])
         Returns: 无
         """
-        if qt_model.GetApplicationStage() == "首页":
-            raise Exception("起始页面下无法修改模型，请切换至前处理")
-        if node_ids is None:
-            node_ids = []
-        if element_ids is None:
-            element_ids = []
-        qt_model.AddStructureToGroup(name=name, nodeIds=node_ids, elementIds=element_ids)
+        try:
+            if node_ids is None:
+                node_ids = []
+            if element_ids is None:
+                element_ids = []
+            qt_model.AddStructureToGroup(name=name, nodeIds=node_ids, elementIds=element_ids)
+            qt_model.UpdateModel()
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def remove_structure_in_group(name: str = "", node_ids: list[int] = None, element_ids=None):
@@ -373,13 +443,15 @@ class Mdb:
             mdb.add_structure_to_group(name="现有结构组1",node_ids=[1,2,3,4],element_ids=[1,2])
         Returns: 无
         """
-        if qt_model.GetApplicationStage() == "首页":
-            raise Exception("起始页面下无法修改模型，请切换至前处理")
-        if node_ids is None:
-            node_ids = []
-        if element_ids is None:
-            element_ids = []
-        qt_model.RemoveStructureOnGroup(name=name, nodeIds=node_ids, elementIds=element_ids)
+        try:
+            if node_ids is None:
+                node_ids = []
+            if element_ids is None:
+                element_ids = []
+            qt_model.RemoveStructureOnGroup(name=name, nodeIds=node_ids, elementIds=element_ids)
+            qt_model.UpdateModel()
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def add_element(index: int = 1, ele_type: int = 1, node_ids: list[int] = None, beta_angle: float = 0, mat_id: int = -1, sec_id: int = -1):
@@ -396,20 +468,23 @@ class Mdb:
             mdb.add_element(index=1,ele_type=1,node_ids=[1,2],beta_angle=1,mat_id=1,sec_id=1)
         Returns: 无
         """
-        if node_ids is None and ele_type != 4:
-            raise Exception("操作错误,请输入此单元所需节点列表,[i,j]")
-        if node_ids is None and ele_type == 4:
-            raise Exception("操作错误,请输入此板单元所需节点列表,[i,j,k,l]")
-        if ele_type == 1:
-            qt_model.AddBeam(id=index, idI=node_ids[0], idJ=node_ids[1], betaAngle=beta_angle, materialId=mat_id, sectionId=sec_id)
-        elif ele_type == 2:
-            qt_model.AddCable(id=index, idI=node_ids[0], idJ=node_ids[1], betaAngle=beta_angle, materialId=mat_id, sectionId=sec_id)
-        elif ele_type == 3:
-            qt_model.AddLink(id=index, idI=node_ids[0], idJ=node_ids[1], betaAngle=beta_angle, materialId=mat_id, sectionId=sec_id)
-        else:
-            qt_model.AddPlate(id=index, idI=node_ids[0], idJ=node_ids[1], idK=node_ids[2], idL=node_ids[3], betaAngle=beta_angle,
-                              materialId=mat_id,
-                              sectionId=sec_id)
+        try:
+            if node_ids is None and ele_type != 4:
+                raise Exception("操作错误,请输入此单元所需节点列表,[i,j]")
+            if node_ids is None and ele_type == 4:
+                raise Exception("操作错误,请输入此板单元所需节点列表,[i,j,k,l]")
+            if ele_type == 1:
+                qt_model.AddBeam(id=index, idI=node_ids[0], idJ=node_ids[1], betaAngle=beta_angle, materialId=mat_id, sectionId=sec_id)
+            elif ele_type == 2:
+                qt_model.AddCable(id=index, idI=node_ids[0], idJ=node_ids[1], betaAngle=beta_angle, materialId=mat_id, sectionId=sec_id)
+            elif ele_type == 3:
+                qt_model.AddLink(id=index, idI=node_ids[0], idJ=node_ids[1], betaAngle=beta_angle, materialId=mat_id, sectionId=sec_id)
+            else:
+                qt_model.AddPlate(id=index, idI=node_ids[0], idJ=node_ids[1], idK=node_ids[2], idL=node_ids[3], betaAngle=beta_angle,
+                                  materialId=mat_id,
+                                  sectionId=sec_id)
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def remove_element(index: int = None):
@@ -422,12 +497,13 @@ class Mdb:
             mdb.remove_element(index=1)
         Returns: 无
         """
-        if qt_model.GetApplicationStage() == "首页":
-            raise Exception("起始页面下无法修改模型，请切换至前处理")
-        if index is None:
-            qt_model.RemoveAllElements()
-        else:
-            qt_model.RemoveElement(index=index)
+        try:
+            if index is None:
+                qt_model.RemoveAllElements()
+            else:
+                qt_model.RemoveElement(index=index)
+        except Exception as ex:
+            raise Exception(ex)
 
     # endregion
 
@@ -453,25 +529,27 @@ class Mdb:
             mdb.add_material(index=1,name="自定义材料1",mat_type="自定义",data_info=[3.5e10,2.5e4,0.2,1.5e-5])
         Returns: 无
         """
-        if qt_model.GetApplicationStage() == "首页":
-            raise Exception("起始页面下无法修改模型，请切换至前处理")
-        list_material = ["混凝土", "钢材", "预应力", "钢丝", "钢筋", "自定义"]
-        if mat_type not in list_material:
-            raise Exception(f"操作错误,material_type不在指定列表:{list_material}中")
-        if mat_type == "自定义":
-            modified = True
-        if modified and len(data_info) != 4:
-            raise Exception("操作错误,modify_info数据无效!")
-        if not modified:
-            qt_model.AddMaterial(id=index, name=name, materialType=mat_type, standardName=standard,
-                                 database=database, constructFactor=construct_factor, isModified=modified,
-                                 timeParameterId=creep_id, fcuk=f_cuk)
-        else:
-            qt_model.AddMaterial(id=index, name=name, materialType=mat_type, standardName=standard,
-                                 database=database, constructFactor=construct_factor, isModified=modified,
-                                 elasticModulus=data_info[0], unitWeight=data_info[1],
-                                 posiRatio=data_info[2], temperatureCoefficient=data_info[3],
-                                 timeParameterId=creep_id, fcuk=f_cuk)
+        try:
+            list_material = ["混凝土", "钢材", "预应力", "钢丝", "钢筋", "自定义"]
+            if mat_type not in list_material:
+                raise Exception(f"操作错误,material_type不在指定列表:{list_material}中")
+            if mat_type == "自定义":
+                modified = True
+            if modified and len(data_info) != 4:
+                raise Exception("操作错误,modify_info数据无效!")
+            if not modified:
+                qt_model.AddMaterial(id=index, name=name, materialType=mat_type, standardName=standard,
+                                     database=database, constructFactor=construct_factor, isModified=modified,
+                                     timeParameterId=creep_id, fcuk=f_cuk)
+            else:
+                qt_model.AddMaterial(id=index, name=name, materialType=mat_type, standardName=standard,
+                                     database=database, constructFactor=construct_factor, isModified=modified,
+                                     elasticModulus=data_info[0], unitWeight=data_info[1],
+                                     posiRatio=data_info[2], temperatureCoefficient=data_info[3],
+                                     timeParameterId=creep_id, fcuk=f_cuk)
+            qt_model.UpdateModel()
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def add_time_material(index: int = -1, name: str = "", code_index: int = 1, time_parameter: list[float] = None):
@@ -486,40 +564,42 @@ class Mdb:
             mdb.add_time_material(index=1,name="收缩徐变材料1",code_index=1)
         Returns: 无
         """
-        if qt_model.GetApplicationStage() == "首页":
-            raise Exception("起始页面下无法修改模型，请切换至前处理")
-        if time_parameter is None:  # 默认不修改收缩徐变相关参数
-            qt_model.AddTimeParameter(id=index, name=name, codeId=code_index)
-        elif code_index == 1:  # 公规 JTG 3362-2018
-            if len(time_parameter) != 4:
-                raise Exception("操作错误,time_parameter数据无效!")
-            qt_model.AddTimeParameter(id=index, name=name, codeId=code_index, rh=time_parameter[0], bsc=time_parameter[1],
-                                      timeStart=time_parameter[2], flyashCotent=time_parameter[3])
-        elif code_index == 2:  # 公规 JTG D62-2004
-            if len(time_parameter) != 3:
-                raise Exception("操作错误,time_parameter数据无效!")
-            qt_model.AddTimeParameter(id=index, name=name, codeId=code_index, rh=time_parameter[0], bsc=time_parameter[1],
-                                      timeStart=time_parameter[2])
-        elif code_index == 3:  # 公规 JTJ 023-85
-            if len(time_parameter) != 4:
-                raise Exception("操作错误,time_parameter数据无效!")
-            qt_model.AddTimeParameter(id=index, name=name, codeId=code_index, creepBaseF1=time_parameter[0], creepNamda=time_parameter[1],
-                                      shrinkSpeek=time_parameter[2], shrinkEnd=time_parameter[3])
-        elif code_index == 4:  # 铁规 TB 10092-2017
-            if len(time_parameter) != 5:
-                raise Exception("操作错误,time_parameter数据无效!")
-            qt_model.AddTimeParameter(id=index, name=name, codeId=code_index, rh=time_parameter[0], creepBaseF1=time_parameter[1],
-                                      creepNamda=time_parameter[2], shrinkSpeek=time_parameter[3], shrinkEnd=time_parameter[4])
-        elif code_index == 5:  # 地铁 GB 50157-2013
-            if len(time_parameter) != 3:
-                raise Exception("操作错误,time_parameter数据无效!")
-            qt_model.AddTimeParameter(id=index, name=name, codeId=code_index, rh=time_parameter[0], shrinkSpeek=time_parameter[1],
-                                      shrinkEnd=time_parameter[2])
-        elif code_index == 6:  # 老化理论
-            if len(time_parameter) != 4:
-                raise Exception("操作错误,time_parameter数据无效!")
-            qt_model.AddTimeParameter(id=index, name=name, codeId=code_index, creepEnd=time_parameter[0], creepSpeek=time_parameter[1],
-                                      shrinkSpeek=time_parameter[2], shrinkEnd=time_parameter[3])
+        try:
+            if time_parameter is None:  # 默认不修改收缩徐变相关参数
+                qt_model.AddTimeParameter(id=index, name=name, codeId=code_index)
+            elif code_index == 1:  # 公规 JTG 3362-2018
+                if len(time_parameter) != 4:
+                    raise Exception("操作错误,time_parameter数据无效!")
+                qt_model.AddTimeParameter(id=index, name=name, codeId=code_index, rh=time_parameter[0], bsc=time_parameter[1],
+                                          timeStart=time_parameter[2], flyashCotent=time_parameter[3])
+            elif code_index == 2:  # 公规 JTG D62-2004
+                if len(time_parameter) != 3:
+                    raise Exception("操作错误,time_parameter数据无效!")
+                qt_model.AddTimeParameter(id=index, name=name, codeId=code_index, rh=time_parameter[0], bsc=time_parameter[1],
+                                          timeStart=time_parameter[2])
+            elif code_index == 3:  # 公规 JTJ 023-85
+                if len(time_parameter) != 4:
+                    raise Exception("操作错误,time_parameter数据无效!")
+                qt_model.AddTimeParameter(id=index, name=name, codeId=code_index, creepBaseF1=time_parameter[0], creepNamda=time_parameter[1],
+                                          shrinkSpeek=time_parameter[2], shrinkEnd=time_parameter[3])
+            elif code_index == 4:  # 铁规 TB 10092-2017
+                if len(time_parameter) != 5:
+                    raise Exception("操作错误,time_parameter数据无效!")
+                qt_model.AddTimeParameter(id=index, name=name, codeId=code_index, rh=time_parameter[0], creepBaseF1=time_parameter[1],
+                                          creepNamda=time_parameter[2], shrinkSpeek=time_parameter[3], shrinkEnd=time_parameter[4])
+            elif code_index == 5:  # 地铁 GB 50157-2013
+                if len(time_parameter) != 3:
+                    raise Exception("操作错误,time_parameter数据无效!")
+                qt_model.AddTimeParameter(id=index, name=name, codeId=code_index, rh=time_parameter[0], shrinkSpeek=time_parameter[1],
+                                          shrinkEnd=time_parameter[2])
+            elif code_index == 6:  # 老化理论
+                if len(time_parameter) != 4:
+                    raise Exception("操作错误,time_parameter数据无效!")
+                qt_model.AddTimeParameter(id=index, name=name, codeId=code_index, creepEnd=time_parameter[0], creepSpeek=time_parameter[1],
+                                          shrinkSpeek=time_parameter[2], shrinkEnd=time_parameter[3])
+            qt_model.UpdateModel()
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def update_material_creep(index: int = 1, creep_id: int = 1, f_cuk: float = 0):
@@ -533,9 +613,11 @@ class Mdb:
             mdb.update_material_creep(index=1,creep_id=1,f_cuk=5e7)
         Returns: 无
         """
-        if qt_model.GetApplicationStage() == "首页":
-            raise Exception("起始页面下无法修改模型，请切换至前处理")
-        qt_model.UpdateMaterialCreep(materialId=index, timePatameterId=creep_id, fcuk=f_cuk)
+        try:
+            qt_model.UpdateMaterialCreep(materialId=index, timePatameterId=creep_id, fcuk=f_cuk)
+            qt_model.UpdateModel()
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def remove_material(index: int = -1):
@@ -548,12 +630,14 @@ class Mdb:
             mdb.remove_material(index=1)
         Returns: 无
         """
-        if qt_model.GetApplicationStage() == "首页":
-            raise Exception("起始页面下无法修改模型，请切换至前处理")
-        if index == -1:
-            qt_model.RemoveAllMaterial()
-        else:
-            qt_model.RemoveMaterial(id=index)
+        try:
+            if index == -1:
+                qt_model.RemoveAllMaterial()
+            else:
+                qt_model.RemoveMaterial(id=index)
+            qt_model.UpdateModel()
+        except Exception as ex:
+            raise Exception(ex)
 
     # endregion
 
@@ -596,36 +680,39 @@ class Mdb:
                 charm_info=["1*0.2,0.1*0.2","0.5*0.15,0.3*0.2","0.4*0.2","0.5*0.2"])
         Returns: 无
         """
-        sec_type_list = ["矩形", "圆形", "圆管", "箱型", "实腹八边形",
-                         "空腹八边形", "内八角形", "实腹圆端型", "T形", "倒T形",
-                         "I字形", "马蹄T形", "I字形混凝土", "混凝土箱梁", "带肋钢箱",
-                         "带肋H截面", "钢桁箱梁1", "钢桁箱梁2", "钢桁箱梁3", "钢工字型带肋",
-                         "钢管砼", "钢箱砼"]
-        if sec_type not in sec_type_list:
-            raise Exception(f"操作失败，参数截面仅支持以下截面类型{sec_type_list}")
-        if sec_info is None:
-            raise Exception("操作错误,请输入此截面的截面信息，参数列表可参考截面定义窗口!")
-        elif sec_type == "混凝土箱梁":
-            if len(sec_info) != 19 or len(charm_info) != 4:
-                raise Exception("操作错误，混凝土箱梁参数错误，参数列表可参考截面定义窗口！")
-            qt_model.AddParameterSection(id=index, name=name, secType=sec_type, secInfo=sec_info, charmInfo=charm_info,
-                                         symmetry=symmetry, N=box_number, H=box_height, charmInfoR=charm_right, secInfoR=sec_right,
-                                         biasType=bias_type, centerType=center_type, shearConsider=shear_consider,
-                                         horizontalPos=bias_x, verticalPos=bias_y)
-        elif sec_type == "钢管砼" or sec_type == "钢箱砼":
-            if len(mat_combine) != 5:
-                raise Exception("操作错误，材料比错误，参数列表：[弹性模量比s/c、密度比s/c、钢材泊松比、混凝土泊松比、热膨胀系数比s/c] ！")
-            if len(sec_info) != 2 or len(sec_info) != 6:
-                raise Exception("操作错误，截面参数列表：[D,t]-钢管砼  [W,H,dw,tw,tt,tb]-钢箱砼")
-            qt_model.AddParameterSection(id=index, name=name, secType=sec_type, secInfo=sec_info,
-                                         elasticModulusRatio=mat_combine[0], densityRatio=mat_combine[1], steelPoisson=mat_combine[2],
-                                         concretePoisson=mat_combine[3], temperatureRatio=mat_combine[4],
-                                         biasType=bias_type, centerType=center_type, shearConsider=shear_consider,
-                                         horizontalPos=bias_x, verticalPos=bias_y)
-        else:
-            qt_model.AddParameterSection(id=index, name=name, secType=sec_type, secInfo=sec_info,
-                                         biasType=bias_type, centerType=center_type, shearConsider=shear_consider,
-                                         horizontalPos=bias_x, verticalPos=bias_y)
+        try:
+            sec_type_list = ["矩形", "圆形", "圆管", "箱型", "实腹八边形",
+                             "空腹八边形", "内八角形", "实腹圆端型", "T形", "倒T形",
+                             "I字形", "马蹄T形", "I字形混凝土", "混凝土箱梁", "带肋钢箱",
+                             "带肋H截面", "钢桁箱梁1", "钢桁箱梁2", "钢桁箱梁3", "钢工字型带肋",
+                             "钢管砼", "钢箱砼"]
+            if sec_type not in sec_type_list:
+                raise Exception(f"操作失败，参数截面仅支持以下截面类型{sec_type_list}")
+            if sec_info is None:
+                raise Exception("操作错误,请输入此截面的截面信息，参数列表可参考截面定义窗口!")
+            elif sec_type == "混凝土箱梁":
+                if len(sec_info) != 19 or len(charm_info) != 4:
+                    raise Exception("操作错误，混凝土箱梁参数错误，参数列表可参考截面定义窗口！")
+                qt_model.AddParameterSection(id=index, name=name, secType=sec_type, secInfo=sec_info, charmInfo=charm_info,
+                                             symmetry=symmetry, N=box_number, H=box_height, charmInfoR=charm_right, secInfoR=sec_right,
+                                             biasType=bias_type, centerType=center_type, shearConsider=shear_consider,
+                                             horizontalPos=bias_x, verticalPos=bias_y)
+            elif sec_type == "钢管砼" or sec_type == "钢箱砼":
+                if len(mat_combine) != 5:
+                    raise Exception("操作错误，材料比错误，参数列表：[弹性模量比s/c、密度比s/c、钢材泊松比、混凝土泊松比、热膨胀系数比s/c] ！")
+                if len(sec_info) != 2 or len(sec_info) != 6:
+                    raise Exception("操作错误，截面参数列表：[D,t]-钢管砼  [W,H,dw,tw,tt,tb]-钢箱砼")
+                qt_model.AddParameterSection(id=index, name=name, secType=sec_type, secInfo=sec_info,
+                                             elasticModulusRatio=mat_combine[0], densityRatio=mat_combine[1], steelPoisson=mat_combine[2],
+                                             concretePoisson=mat_combine[3], temperatureRatio=mat_combine[4],
+                                             biasType=bias_type, centerType=center_type, shearConsider=shear_consider,
+                                             horizontalPos=bias_x, verticalPos=bias_y)
+            else:
+                qt_model.AddParameterSection(id=index, name=name, secType=sec_type, secInfo=sec_info,
+                                             biasType=bias_type, centerType=center_type, shearConsider=shear_consider,
+                                             horizontalPos=bias_x, verticalPos=bias_y)
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def update_parameter_section(index: int = -1, name: str = "", sec_type: str = "矩形", sec_info: list[float] = None,
@@ -633,38 +720,39 @@ class Mdb:
                                  charm_right: list[str] = None, box_number: int = 3, box_height: float = 2,
                                  mat_combine: list[float] = None,
                                  bias_type: str = "中心", center_type: str = "质心", shear_consider: bool = True, bias_x: float = 0, bias_y: float = 0):
-        if qt_model.GetApplicationStage() == "首页":
-            raise Exception("起始页面下无法修改模型，请切换至前处理")
-        sec_type_list = ["矩形", "圆形", "圆管", "箱型", "实腹八边形",
-                         "空腹八边形", "内八角形", "实腹圆端型", "T形", "倒T形",
-                         "I字形", "马蹄T形", "I字形混凝土", "混凝土箱梁", "带肋钢箱",
-                         "带肋H截面", "钢桁箱梁1", "钢桁箱梁2", "钢桁箱梁3", "钢工字型带肋",
-                         "钢管砼", "钢箱砼"]
-        if sec_type not in sec_type_list:
-            raise Exception(f"操作失败，参数截面仅支持以下截面类型{sec_type_list}")
-        if sec_info is None:
-            raise Exception("操作错误,请输入此截面的截面信息，参数列表可参考截面定义窗口!")
-        elif sec_type == "混凝土箱梁":
-            if len(sec_info) != 19 or len(charm_info) != 4:
-                raise Exception("操作错误，混凝土箱梁参数错误，参数列表可参考截面定义窗口！")
-            qt_model.UpdateParameterSection(id=index, name=name, secType=sec_type, secInfo=sec_info, charmInfo=charm_info,
-                                            symmetry=symmetry, N=box_number, H=box_height, charmInfoR=charm_right, secInfoR=sec_right,
-                                            biasType=bias_type, centerType=center_type, shearConsider=shear_consider,
-                                            horizontalPos=bias_x, verticalPos=bias_y)
-        elif sec_type == "钢管砼" or sec_type == "钢箱砼":
-            if len(mat_combine) != 5:
-                raise Exception("操作错误，材料比错误，参数列表：[弹性模量比s/c、密度比s/c、钢材泊松比、混凝土泊松比、热膨胀系数比s/c] ！")
-            if len(sec_info) != 2 or len(sec_info) != 6:
-                raise Exception("操作错误，截面参数列表：[D,t]-钢管砼  [W,H,dw,tw,tt,tb]-钢箱砼")
-            qt_model.UpdateParameterSection(id=index, name=name, secType=sec_type, secInfo=sec_info,
-                                            elasticModulusRatio=mat_combine[0], densityRatio=mat_combine[1], steelPoisson=mat_combine[2],
-                                            concretePoisson=mat_combine[3], temperatureRatio=mat_combine[4],
-                                            biasType=bias_type, centerType=center_type, shearConsider=shear_consider,
-                                            horizontalPos=bias_x, verticalPos=bias_y)
-        else:
-            qt_model.UpdateParameterSection(id=index, name=name, secType=sec_type, secInfo=sec_info,
-                                            biasType=bias_type, centerType=center_type, shearConsider=shear_consider,
-                                            horizontalPos=bias_x, verticalPos=bias_y)
+        try:
+            sec_type_list = ["矩形", "圆形", "圆管", "箱型", "实腹八边形",
+                             "空腹八边形", "内八角形", "实腹圆端型", "T形", "倒T形",
+                             "I字形", "马蹄T形", "I字形混凝土", "混凝土箱梁", "带肋钢箱",
+                             "带肋H截面", "钢桁箱梁1", "钢桁箱梁2", "钢桁箱梁3", "钢工字型带肋",
+                             "钢管砼", "钢箱砼"]
+            if sec_type not in sec_type_list:
+                raise Exception(f"操作失败，参数截面仅支持以下截面类型{sec_type_list}")
+            if sec_info is None:
+                raise Exception("操作错误,请输入此截面的截面信息，参数列表可参考截面定义窗口!")
+            elif sec_type == "混凝土箱梁":
+                if len(sec_info) != 19 or len(charm_info) != 4:
+                    raise Exception("操作错误，混凝土箱梁参数错误，参数列表可参考截面定义窗口！")
+                qt_model.UpdateParameterSection(id=index, name=name, secType=sec_type, secInfo=sec_info, charmInfo=charm_info,
+                                                symmetry=symmetry, N=box_number, H=box_height, charmInfoR=charm_right, secInfoR=sec_right,
+                                                biasType=bias_type, centerType=center_type, shearConsider=shear_consider,
+                                                horizontalPos=bias_x, verticalPos=bias_y)
+            elif sec_type == "钢管砼" or sec_type == "钢箱砼":
+                if len(mat_combine) != 5:
+                    raise Exception("操作错误，材料比错误，参数列表：[弹性模量比s/c、密度比s/c、钢材泊松比、混凝土泊松比、热膨胀系数比s/c] ！")
+                if len(sec_info) != 2 or len(sec_info) != 6:
+                    raise Exception("操作错误，截面参数列表：[D,t]-钢管砼  [W,H,dw,tw,tt,tb]-钢箱砼")
+                qt_model.UpdateParameterSection(id=index, name=name, secType=sec_type, secInfo=sec_info,
+                                                elasticModulusRatio=mat_combine[0], densityRatio=mat_combine[1], steelPoisson=mat_combine[2],
+                                                concretePoisson=mat_combine[3], temperatureRatio=mat_combine[4],
+                                                biasType=bias_type, centerType=center_type, shearConsider=shear_consider,
+                                                horizontalPos=bias_x, verticalPos=bias_y)
+            else:
+                qt_model.UpdateParameterSection(id=index, name=name, secType=sec_type, secInfo=sec_info,
+                                                biasType=bias_type, centerType=center_type, shearConsider=shear_consider,
+                                                horizontalPos=bias_x, verticalPos=bias_y)
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def add_steel_section(index: int = -1, name: str = "", sec_type: int = 1, sec_info: list[float] = None,
@@ -697,15 +785,18 @@ class Mdb:
                 bias_type="中上")
         Returns: 无
         """
-        if sec_info is None:
-            raise Exception("操作错误,请输入此截面的截面信息，参数列表可参考截面定义窗口")
-        section_type = "工字钢梁" if sec_type == 1 else "箱型钢梁"
-        rib_names = list(rib_info.keys())
-        rib_data = list(rib_info.values())
-        qt_model.AddSteelSection(id=index, name=name, sectionType=section_type, sectionInfoList=sec_info,
-                                 ribNameList=rib_names, ribInfoList=rib_data,
-                                 ribPlaceList=rib_place, baisType=bias_type, centerType=center_type,
-                                 shearConsider=shear_consider, horizontalPos=bias_x, verticalPos=bias_y)
+        try:
+            if sec_info is None:
+                raise Exception("操作错误,请输入此截面的截面信息，参数列表可参考截面定义窗口")
+            section_type = "工字钢梁" if sec_type == 1 else "箱型钢梁"
+            rib_names = list(rib_info.keys())
+            rib_data = list(rib_info.values())
+            qt_model.AddSteelSection(id=index, name=name, sectionType=section_type, sectionInfoList=sec_info,
+                                     ribNameList=rib_names, ribInfoList=rib_data,
+                                     ribPlaceList=rib_place, baisType=bias_type, centerType=center_type,
+                                     shearConsider=shear_consider, horizontalPos=bias_x, verticalPos=bias_y)
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def add_user_section(index: int = -1, name: str = "", sec_type: str = "特性截面", property_info: list[float] = None,
@@ -725,12 +816,15 @@ class Mdb:
             mdb.add_user_section(name="自定义特性截面",property_info=[i for i in range(25)])
         Returns: 无
         """
-        if sec_type == "特性截面" and len(property_info) != 25:
-            raise Exception(f"操作错误，自定义特性截面列表property_info需要25个参数")
-        if property_info is None:
-            raise Exception("操作错误,请输入此截面的截面特性，特性列表可参考截面定义窗口")
-        qt_model.AddUserSection(id=index, name=name, type=sec_type, propertyInfo=property_info,
-                                mainLoop=main_loop, subLoops=sub_loops, secLines=sec_lines)
+        try:
+            if sec_type == "特性截面" and len(property_info) != 25:
+                raise Exception(f"操作错误，自定义特性截面列表property_info需要25个参数")
+            if property_info is None:
+                raise Exception("操作错误,请输入此截面的截面特性，特性列表可参考截面定义窗口")
+            qt_model.AddUserSection(id=index, name=name, type=sec_type, propertyInfo=property_info,
+                                    mainLoop=main_loop, subLoops=sub_loops, secLines=sec_lines)
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def add_tapper_section(index: int = -1, name: str = "", begin_id: int = 1, end_id: int = 1):
@@ -745,7 +839,10 @@ class Mdb:
             mdb.add_tapper_section(name="变截面1",begin_id=1,end_id=2)
         Returns: 无
         """
-        qt_model.AddTapperSection(id=index, name=name, beginId=begin_id, endId=end_id)
+        try:
+            qt_model.AddTapperSection(id=index, name=name, beginId=begin_id, endId=end_id)
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def remove_section(index: int = -1):
@@ -758,10 +855,13 @@ class Mdb:
             mdb.remove_section(1)
         Returns: 无
         """
-        if index == -1:
-            qt_model.RemoveAllSection()
-        else:
-            qt_model.RemoveSection(id=index)
+        try:
+            if index == -1:
+                qt_model.RemoveAllSection()
+            else:
+                qt_model.RemoveSection(id=index)
+        except Exception as ex:
+            raise Exception(ex)
 
     # endregion
 
@@ -789,19 +889,21 @@ class Mdb:
             mdb.add_thickness(name="厚度2", t=0.2,thick_type=1,rib_pos=0,dist_v=0.1,rib_v=[1,1,0.02,0.02])
         Returns: 无
         """
-        if qt_model.GetApplicationStage() == "首页":
-            raise Exception("起始页面下无法修改模型，请切换至前处理")
-        if rib_v is None:
-            rib_v = []
-        if rib_l is None:
-            rib_l = []
-        if bias_info is None:
-            qt_model.AddThickness(id=index, name=name, t=t, type=thick_type, isBiased=False, ribPos=rib_pos,
-                                  verticalDis=dist_v, lateralDis=dist_l, verticalRib=rib_v, lateralRib=rib_l)
-        else:
-            qt_model.AddThickness(id=index, name=name, t=t, type=thick_type, isBiased=False, ribPos=rib_pos,
-                                  offSetType=bias_info[0], offSetValue=bias_info[1],
-                                  verticalDis=dist_v, lateralDis=dist_l, verticalRib=rib_v, lateralRib=rib_l)
+        try:
+            if rib_v is None:
+                rib_v = []
+            if rib_l is None:
+                rib_l = []
+            if bias_info is None:
+                qt_model.AddThickness(id=index, name=name, t=t, type=thick_type, isBiased=False, ribPos=rib_pos,
+                                      verticalDis=dist_v, lateralDis=dist_l, verticalRib=rib_v, lateralRib=rib_l)
+            else:
+                qt_model.AddThickness(id=index, name=name, t=t, type=thick_type, isBiased=False, ribPos=rib_pos,
+                                      offSetType=bias_info[0], offSetValue=bias_info[1],
+                                      verticalDis=dist_v, lateralDis=dist_l, verticalRib=rib_v, lateralRib=rib_l)
+            qt_model.UpdateModel()
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def remove_thickness(index: int = -1):
@@ -814,12 +916,14 @@ class Mdb:
             mdb.remove_thickness(index=1)
         Returns: 无
         """
-        if qt_model.GetApplicationStage() == "首页":
-            raise Exception("起始页面下无法修改模型，请切换至前处理")
-        if index == -1:
-            qt_model.RemoveAllThickness()
-        else:
-            qt_model.RemoveThickness(id=index)
+        try:
+            if index == -1:
+                qt_model.RemoveAllThickness()
+            else:
+                qt_model.RemoveThickness(id=index)
+            qt_model.UpdateModel()
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def add_tapper_section_group(ids: list[int] = None, name: str = "", factor_w: float = 1.0, factor_h: float = 1.0,
@@ -839,9 +943,11 @@ class Mdb:
             mdb.add_tapper_section_group(ids=[1,2,3,4],name="变截面组1")
         Returns: 无
         """
-        if qt_model.GetApplicationStage() == "首页":
-            raise Exception("起始页面下无法修改模型，请切换至前处理")
-        qt_model.AddTapperSectionGroup(ids=ids, name=name, factorW=factor_w, factorH=factor_h, w=ref_w, h=ref_h, disW=dis_w, disH=dis_h)
+        try:
+            qt_model.AddTapperSectionGroup(ids=ids, name=name, factorW=factor_w, factorH=factor_h, w=ref_w, h=ref_h, disW=dis_w, disH=dis_h)
+            qt_model.UpdateModel()
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def update_section_bias(index: int = 1, bias_type: str = "中心", center_type: str = "质心", shear_consider: bool = True,
@@ -859,14 +965,17 @@ class Mdb:
             mdb.update_section_bias(index=1,bias_type="自定义",bias_point=[0.1,0.2])
         Returns: 无
         """
-        if center_type == "自定义":
-            if len(bias_point) != 2:
-                raise Exception("操作错误,bias_point数据无效!")
-            qt_model.UpdateSectionBias(id=index, biasType=bias_type, centerType=center_type,
-                                       shearConsider=shear_consider, horizontalPos=bias_point[0], verticalPos=bias_point[1])
-        else:
-            qt_model.UpdateSectionBias(id=index, biasType=bias_type, centerType=center_type,
-                                       shearConsider=shear_consider)
+        try:
+            if center_type == "自定义":
+                if len(bias_point) != 2:
+                    raise Exception("操作错误,bias_point数据无效!")
+                qt_model.UpdateSectionBias(id=index, biasType=bias_type, centerType=center_type,
+                                           shearConsider=shear_consider, horizontalPos=bias_point[0], verticalPos=bias_point[1])
+            else:
+                qt_model.UpdateSectionBias(id=index, biasType=bias_type, centerType=center_type,
+                                           shearConsider=shear_consider)
+        except Exception as ex:
+            raise Exception(ex)
 
     # endregion
 
@@ -882,9 +991,11 @@ class Mdb:
             mdb.add_boundary_group(name="边界组1")
         Returns: 无
         """
-        if qt_model.GetApplicationStage() == "首页":
-            raise Exception("起始页面下无法修改模型，请切换至前处理")
-        qt_model.AddBoundaryGroup(name=name, id=index)
+        try:
+            qt_model.AddBoundaryGroup(name=name, id=index)
+            qt_model.UpdateModel()
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def remove_boundary_group(name: str = ""):
@@ -897,12 +1008,14 @@ class Mdb:
             mdb.remove_boundary_group(name="边界组1")
         Returns: 无
         """
-        if qt_model.GetApplicationStage() == "首页":
-            raise Exception("起始页面下无法修改模型，请切换至前处理")
-        if name != "":
-            qt_model.RemoveBoundaryGroup(name)
-        else:
-            qt_model.RemoveAllBoundaryGroup()
+        try:
+            if name != "":
+                qt_model.RemoveBoundaryGroup(name)
+            else:
+                qt_model.RemoveAllBoundaryGroup()
+            qt_model.UpdateModel()
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def remove_all_boundary():
@@ -913,9 +1026,11 @@ class Mdb:
             mdb.remove_all_boundary()
         Returns: 无
         """
-        if qt_model.GetApplicationStage() == "首页":
-            raise Exception("起始页面下无法修改模型，请切换至前处理")
-        qt_model.RemoveAllBoundary()
+        try:
+            qt_model.RemoveAllBoundary()
+            qt_model.UpdateModel()
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def remove_boundary(remove_id: int, bd_type: int, group: str = "默认边界组"):
@@ -930,9 +1045,12 @@ class Mdb:
             mdb.remove_boundary(remove_id = 1, bd_type = 1,group="边界组1")
         Returns: 无
         """
-        type_list = ["一般支承", "弹性支承", "主从约束", "弹性连接", "约束方程", "梁端约束"]
-        bd_name = type_list[bd_type - 1]
-        qt_model.RemoveBoundary(controlId=remove_id, type=bd_name, group=group)
+        try:
+            type_list = ["一般支承", "弹性支承", "主从约束", "弹性连接", "约束方程", "梁端约束"]
+            bd_name = type_list[bd_type - 1]
+            qt_model.RemoveBoundary(controlId=remove_id, type=bd_name, group=group)
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def add_general_support(node_id: int = 1, boundary_info: list[bool] = None, group_name: str = "默认边界组"):
@@ -947,9 +1065,12 @@ class Mdb:
             mdb.add_general_support(node_id=1, boundary_info=[True,True,True,False,False,False])
         Returns: 无
         """
-        if boundary_info is None or len(boundary_info) != 6:
-            raise Exception("操作错误，要求输入一般支承列表长度为6")
-        qt_model.AddGeneralSupport(nodeId=node_id, boundaryInfo=boundary_info, groupName=group_name)
+        try:
+            if boundary_info is None or len(boundary_info) != 6:
+                raise Exception("操作错误，要求输入一般支承列表长度为6")
+            qt_model.AddGeneralSupport(nodeId=node_id, boundaryInfo=boundary_info, groupName=group_name)
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def add_elastic_support(node_id: int = 1, support_type: int = 1, boundary_info: list[float] = None, group_name: str = "默认边界组"):
@@ -964,8 +1085,11 @@ class Mdb:
             mdb.add_elastic_support(node_id=1,support_type=1,boundary_info=[1e6,0,1e6,0,0,0])
         Returns: 无
         """
-        qt_model.AddElasticSupport(nodeId=node_id, supportType=support_type, boundaryInfo=boundary_info,
-                                   groupName=group_name)
+        try:
+            qt_model.AddElasticSupport(nodeId=node_id, supportType=support_type, boundaryInfo=boundary_info,
+                                       groupName=group_name)
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def add_master_slave_link(master_id: int = 1, slave_id: int = 2, boundary_info: list[bool] = None, group_name: str = "默认边界组"):
@@ -981,7 +1105,10 @@ class Mdb:
             mdb.add_master_slave_link(master_id=1,slave_id=2,boundary_info=[True,True,True,False,False,False])
         Returns: 无
         """
-        qt_model.AddMasterSlaveLink(masterId=master_id, slaveId=slave_id, boundaryInfo=boundary_info, groupName=group_name)
+        try:
+            qt_model.AddMasterSlaveLink(masterId=master_id, slaveId=slave_id, boundaryInfo=boundary_info, groupName=group_name)
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def add_elastic_link(link_type: int = 1, start_id: int = 1, end_id: int = 2, beta_angle: float = 0,
@@ -1005,8 +1132,11 @@ class Mdb:
             mdb.add_elastic_link(link_type=3,start_id=1,end_id=2,kx=1e6)
         Returns: 无
         """
-        qt_model.AddElasticLink(linkType=link_type, startId=start_id, endId=end_id, beta=beta_angle,
-                                boundaryInfo=boundary_info, groupName=group_name, disRatio=dis_ratio, kDx=kx)
+        try:
+            qt_model.AddElasticLink(linkType=link_type, startId=start_id, endId=end_id, beta=beta_angle,
+                                    boundaryInfo=boundary_info, groupName=group_name, disRatio=dis_ratio, kDx=kx)
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def add_beam_constraint(beam_id: int = 2, info_i: list[bool] = None, info_j: list[bool] = None, group_name: str = "默认边界组"):
@@ -1021,11 +1151,14 @@ class Mdb:
             mdb.add_beam_constraint(beam_id=2,info_i=[True,True,True,False,False,False],info_j=[True,True,True,False,False,False])
         Returns: 无
         """
-        if info_i is None or len(info_i) != 6:
-            raise Exception("操作错误，要求输入I端约束列表长度为6")
-        if info_j is None or len(info_j) != 6:
-            raise Exception("操作错误，要求输入J端约束列表长度为6")
-        qt_model.AddBeamConstraint(beamId=beam_id, nodeInfoI=info_i, nodeInfo2=info_j, groupName=group_name)
+        try:
+            if info_i is None or len(info_i) != 6:
+                raise Exception("操作错误，要求输入I端约束列表长度为6")
+            if info_j is None or len(info_j) != 6:
+                raise Exception("操作错误，要求输入J端约束列表长度为6")
+            qt_model.AddBeamConstraint(beamId=beam_id, nodeInfoI=info_i, nodeInfo2=info_j, groupName=group_name)
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def add_node_axis(input_type: int = 1, node_id: int = 1, coord_info: list = None):
@@ -1041,12 +1174,15 @@ class Mdb:
             mdb.add_node_axis(input_type=3,node_id=1,coord_info=[[0,0,1],[0,1,0]])
         Returns: 无
         """
-        if coord_info is None:
-            raise Exception("操作错误，输入坐标系信息不能为空")
-        if input_type == 1:
-            qt_model.AddNodalAxises(inputType=input_type, nodeId=node_id, angleInfo=coord_info)
-        else:
-            qt_model.AddNodalAxises(inputType=input_type, nodeId=node_id, nodeInfo=coord_info)
+        try:
+            if coord_info is None:
+                raise Exception("操作错误，输入坐标系信息不能为空")
+            if input_type == 1:
+                qt_model.AddNodalAxises(inputType=input_type, nodeId=node_id, angleInfo=coord_info)
+            else:
+                qt_model.AddNodalAxises(inputType=input_type, nodeId=node_id, nodeInfo=coord_info)
+        except Exception as ex:
+            raise Exception(ex)
 
     # endregion
 
@@ -1077,9 +1213,11 @@ class Mdb:
             mdb.add_standard_vehicle("高速铁路",standard_code=1,load_type="高速铁路")
         Returns: 无
         """
-        if qt_model.GetApplicationStage() == "首页":
-            raise Exception("起始页面下无法修改模型，请切换至前处理")
-        qt_model.AddStandardVehicle(name=name, standardIndex=standard_code, loadType=load_type, loadLength=load_length, N=n)
+        try:
+            qt_model.AddStandardVehicle(name=name, standardIndex=standard_code, loadType=load_type, loadLength=load_length, N=n)
+            qt_model.UpdateModel()
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def add_node_tandem(name: str, start_id: int, node_ids: list[int]):
@@ -1093,11 +1231,13 @@ class Mdb:
             mdb.add_node_tandem("节点纵列1",1,[i+1 for i in range(12)])
         Returns: 无
         """
-        if qt_model.GetApplicationStage() == "首页":
-            raise Exception("起始页面下无法修改模型，请切换至前处理")
-        if node_ids is None:
-            raise Exception("操作错误，输入节点列表不能为空")
-        qt_model.AddNodeTandem(name=name, startId=start_id, nodeIds=node_ids)
+        try:
+            if node_ids is None:
+                raise Exception("操作错误，输入节点列表不能为空")
+            qt_model.AddNodeTandem(name=name, startId=start_id, nodeIds=node_ids)
+            qt_model.UpdateModel()
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def add_influence_plane(name: str, tandem_names: list[str]):
@@ -1110,9 +1250,11 @@ class Mdb:
             mdb.add_influence_plane("影响面1",["节点纵列1","节点纵列2"])
         Returns: 无
         """
-        if qt_model.GetApplicationStage() == "首页":
-            raise Exception("起始页面下无法修改模型，请切换至前处理")
-        qt_model.AddInfluencePlane(name=name, tandemNames=tandem_names)
+        try:
+            qt_model.AddInfluencePlane(name=name, tandemNames=tandem_names)
+            qt_model.UpdateModel()
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def add_lane_line(name: str, influence_name: str, tandem_name: str, offset: float = 0, lane_width: float = 0):
@@ -1128,9 +1270,11 @@ class Mdb:
             mdb.add_lane_line("车道1","影响面1","节点纵列1",offset=0,lane_width=3.1)
         Returns: 无
         """
-        if qt_model.GetApplicationStage() == "首页":
-            raise Exception("起始页面下无法修改模型，请切换至前处理")
-        qt_model.AddLaneLine(name, influenceName=influence_name, tandemName=tandem_name, offset=offset, laneWidth=lane_width)
+        try:
+            qt_model.AddLaneLine(name, influenceName=influence_name, tandemName=tandem_name, offset=offset, laneWidth=lane_width)
+            qt_model.UpdateModel()
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def add_live_load_case(name: str, influence_plane: str, span: float,
@@ -1152,11 +1296,13 @@ class Mdb:
             mdb.add_live_load_case("活载工况1","影响面1",100,sub_case=[("车辆名称",1.0,["车道1","车道2"]),])
         Returns: 无
         """
-        if qt_model.GetApplicationStage() == "首页":
-            raise Exception("起始页面下无法修改模型，请切换至前处理")
-        if sub_case is None:
-            raise Exception("操作错误，子工况信息列表不能为空")
-        qt_model.AddLiveLoadCase(name=name, influencePlane=influence_plane, span=span, subCase=sub_case)
+        try:
+            if sub_case is None:
+                raise Exception("操作错误，子工况信息列表不能为空")
+            qt_model.AddLiveLoadCase(name=name, influencePlane=influence_plane, span=span, subCase=sub_case)
+            qt_model.UpdateModel()
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def remove_vehicle(index: int = -1, name: str = ""):
@@ -1170,12 +1316,14 @@ class Mdb:
             mdb.remove_vehicle(name="车辆名称")
         Returns: 无
         """
-        if qt_model.GetApplicationStage() == "首页":
-            raise Exception("起始页面下无法修改模型，请切换至前处理")
-        if id != -1:
-            qt_model.RemoveVehicle(id=index)
-        elif name != "":
-            qt_model.RemoveVehicle(name=name)
+        try:
+            if id != -1:
+                qt_model.RemoveVehicle(id=index)
+            elif name != "":
+                qt_model.RemoveVehicle(name=name)
+            qt_model.UpdateModel()
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def remove_node_tandem(index: int = -1, name: str = ""):
@@ -1189,12 +1337,14 @@ class Mdb:
             mdb.remove_node_tandem(name="节点纵列1")
         Returns: 无
         """
-        if qt_model.GetApplicationStage() == "首页":
-            raise Exception("起始页面下无法修改模型，请切换至前处理")
-        if index != -1:
-            qt_model.RemoveNodeTandem(id=index)
-        elif name != "":
-            qt_model.RemoveNodeTandem(name=name)
+        try:
+            if index != -1:
+                qt_model.RemoveNodeTandem(id=index)
+            elif name != "":
+                qt_model.RemoveNodeTandem(name=name)
+            qt_model.UpdateModel()
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def remove_influence_plane(index: int = -1, name: str = ""):
@@ -1208,12 +1358,14 @@ class Mdb:
             mdb.remove_influence_plane(name="影响面1")
         Returns: 无
         """
-        if qt_model.GetApplicationStage() == "首页":
-            raise Exception("起始页面下无法修改模型，请切换至前处理")
-        if index != -1:
-            qt_model.RemoveInfluencePlane(id=index)
-        elif name != "":
-            qt_model.RemoveInfluencePlane(name=name)
+        try:
+            if index != -1:
+                qt_model.RemoveInfluencePlane(id=index)
+            elif name != "":
+                qt_model.RemoveInfluencePlane(name=name)
+            qt_model.UpdateModel()
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def remove_lane_line(name: str = "", index: int = -1):
@@ -1227,12 +1379,14 @@ class Mdb:
             mdb.remove_lane_line(name="车道线1")
         Returns: 无
         """
-        if qt_model.GetApplicationStage() == "首页":
-            raise Exception("起始页面下无法修改模型，请切换至前处理")
-        if index != -1:
-            qt_model.RemoveLaneLine(id=index)
-        elif name != "":
-            qt_model.RemoveLaneLine(name=name)
+        try:
+            if index != -1:
+                qt_model.RemoveLaneLine(id=index)
+            elif name != "":
+                qt_model.RemoveLaneLine(name=name)
+            qt_model.UpdateModel()
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def remove_live_load_case(name: str = ""):
@@ -1244,9 +1398,11 @@ class Mdb:
             mdb.remove_live_load_case(name="活载工况1")
         Returns: 无
         """
-        if qt_model.GetApplicationStage() == "首页":
-            raise Exception("起始页面下无法修改模型，请切换至前处理")
-        qt_model.RemoveLiveLoadCase(name=name)
+        try:
+            qt_model.RemoveLiveLoadCase(name=name)
+            qt_model.UpdateModel()
+        except Exception as ex:
+            raise Exception(ex)
 
     # endregion
 
@@ -1262,9 +1418,11 @@ class Mdb:
             mdb.add_tendon_group(name="钢束组1")
         Returns: 无
         """
-        if qt_model.GetApplicationStage() == "首页":
-            raise Exception("起始页面下无法修改模型，请切换至前处理")
-        qt_model.AddTendonGroup(name=name, id=index)
+        try:
+            qt_model.AddTendonGroup(name=name, id=index)
+            qt_model.UpdateModel()
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def remove_tendon_group(name: str = "", index: int = -1):
@@ -1278,14 +1436,16 @@ class Mdb:
             mdb.remove_tendon_group(index=1)
         Returns: 无
         """
-        if qt_model.GetApplicationStage() == "首页":
-            raise Exception("起始页面下无法修改模型，请切换至前处理")
-        if name != "":
-            qt_model.RemoveTendonGroup(name=name)
-        elif index != -1:
-            qt_model.RemoveTendonGroup(id=index)
-        else:
-            qt_model.RemoveAllStructureGroup()
+        try:
+            if name != "":
+                qt_model.RemoveTendonGroup(name=name)
+            elif index != -1:
+                qt_model.RemoveTendonGroup(id=index)
+            else:
+                qt_model.RemoveAllStructureGroup()
+            qt_model.UpdateModel()
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def add_tendon_property(name: str = "", index: int = -1, tendon_type: int = 0, material_id: int = 1, duct_type: int = 1,
@@ -1313,17 +1473,19 @@ class Mdb:
                                     steel_detail=[0.00014,0.10,0.25,0.0015],loos_detail=(1,1,1))
         Returns: 无
         """
-        if qt_model.GetApplicationStage() == "首页":
-            raise Exception("起始页面下无法修改模型，请切换至前处理")
-        if steel_detail is None:
-            raise Exception("操作错误，钢束特性信息不能为空")
-        if loos_detail is None:
-            loos_detail = (1, 1, 1)
-        if slip_info is None:
-            slip_info = (0.006, 0.006)
-        qt_model.AddTendonProperty(name=name, id=index, tendonType=tendon_type, materialId=material_id,
-                                   ductType=duct_type, steelType=steel_type, steelDetail=steel_detail,
-                                   loosDetail=loos_detail, slipInfo=slip_info)
+        try:
+            if steel_detail is None:
+                raise Exception("操作错误，钢束特性信息不能为空")
+            if loos_detail is None:
+                loos_detail = (1, 1, 1)
+            if slip_info is None:
+                slip_info = (0.006, 0.006)
+            qt_model.AddTendonProperty(name=name, id=index, tendonType=tendon_type, materialId=material_id,
+                                       ductType=duct_type, steelType=steel_type, steelDetail=steel_detail,
+                                       loosDetail=loos_detail, slipInfo=slip_info)
+            qt_model.UpdateModel()
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def add_tendon_3d(name: str, property_name: str = "", group_name: str = "默认钢束组",
@@ -1357,16 +1519,19 @@ class Mdb:
                     control_points=[(0,0,-1,0),(10,0,-1,0)],point_insert=(1,1,1),track_group="轨迹线结构组1")
         Returns: 无
         """
-        if tendon_direction is None:
-            tendon_direction = (1, 0, 0)
-        if control_points is None:
-            raise Exception("操作错误，钢束形状控制点不能为空")
-        if point_insert is None or len(point_insert) != 3:
-            raise Exception("操作错误，钢束插入点信息不能为空且长度必须为3")
-        qt_model.AddTendon3D(name=name, propertyName=property_name, groupName=group_name, num=num, lineType=line_type,
-                             positionType=position_type, controlPoints=control_points,
-                             pointInsert=point_insert, tendonDirection=tendon_direction,
-                             rotationAngle=rotation_angle, trackGroup=track_group, isProjection=projection)
+        try:
+            if tendon_direction is None:
+                tendon_direction = (1, 0, 0)
+            if control_points is None:
+                raise Exception("操作错误，钢束形状控制点不能为空")
+            if point_insert is None or len(point_insert) != 3:
+                raise Exception("操作错误，钢束插入点信息不能为空且长度必须为3")
+            qt_model.AddTendon3D(name=name, propertyName=property_name, groupName=group_name, num=num, lineType=line_type,
+                                 positionType=position_type, controlPoints=control_points,
+                                 pointInsert=point_insert, tendonDirection=tendon_direction,
+                                 rotationAngle=rotation_angle, trackGroup=track_group, isProjection=projection)
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def update_tendon_element(ids: list[int] = None):
@@ -1378,7 +1543,11 @@ class Mdb:
            mdb.update_tendon_element([1,2,3,4])
         Returns: 无
         """
-        qt_model.UpdatePreStressElement(ids)
+        try:
+            qt_model.UpdatePreStressElement(ids)
+            qt_model.UpdateModel()
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def remove_tendon(name: str = "", index: int = -1):
@@ -1393,12 +1562,15 @@ class Mdb:
             mdb.remove_tendon()
         Returns: 无
         """
-        if name != "":
-            qt_model.RemoveTendon(name=name)
-        elif index != -1:
-            qt_model.RemoveTendon(id=index)
-        else:
-            qt_model.RemoveAllTendon()
+        try:
+            if name != "":
+                qt_model.RemoveTendon(name=name)
+            elif index != -1:
+                qt_model.RemoveTendon(id=index)
+            else:
+                qt_model.RemoveAllTendon()
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def remove_tendon_property(name: str = "", index: int = -1):
@@ -1413,14 +1585,16 @@ class Mdb:
             mdb.remove_tendon_property()
         Returns: 无
         """
-        if qt_model.GetApplicationStage() == "首页":
-            raise Exception("起始页面下无法修改模型，请切换至前处理")
-        if name != "":
-            qt_model.RemoveTendonProperty(name=name)
-        elif index != -1:
-            qt_model.RemoveTendonProperty(id=index)
-        else:
-            qt_model.RemoveAllTendonGroup()
+        try:
+            if name != "":
+                qt_model.RemoveTendonProperty(name=name)
+            elif index != -1:
+                qt_model.RemoveTendonProperty(id=index)
+            else:
+                qt_model.RemoveAllTendonGroup()
+            qt_model.UpdateModel()
+        except Exception as ex:
+            raise Exception(ex)
 
     # endregion
 
@@ -1435,10 +1609,12 @@ class Mdb:
             mdb.add_load_group(name="荷载组1")
         Returns: 无
         """
-        if qt_model.GetApplicationStage() == "首页":
-            raise Exception("起始页面下无法修改模型，请切换至前处理")
-        if name != "":
-            qt_model.AddLoadGroup(name=name)
+        try:
+            if name != "":
+                qt_model.AddLoadGroup(name=name)
+            qt_model.UpdateModel()
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def remove_load_group(name: str = "", index: int = -1):
@@ -1452,14 +1628,16 @@ class Mdb:
             mdb.remove_load_group(index=1)
         Returns: 无
         """
-        if qt_model.GetApplicationStage() == "首页":
-            raise Exception("起始页面下无法修改模型，请切换至前处理")
-        if name != "":
-            qt_model.RemoveLoadGroup(name=name)
-        elif index != -1:
-            qt_model.RemoveLoadGroup(id=index)
-        else:
-            qt_model.RemoveAllLoadGroup()
+        try:
+            if name != "":
+                qt_model.RemoveLoadGroup(name=name)
+            elif index != -1:
+                qt_model.RemoveLoadGroup(id=index)
+            else:
+                qt_model.RemoveAllLoadGroup()
+            qt_model.UpdateModel()
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def add_nodal_mass(node_id: int = 1, mass_info: tuple[float, float, float, float] = None):
@@ -1472,9 +1650,13 @@ class Mdb:
             mdb.add_nodal_mass(node_id=1,mass_info=(100,0,0,0))
         Returns: 无
         """
-        if mass_info is None:
-            raise Exception("操作错误，节点质量信息列表不能为空")
-        qt_model.AddNodalMass(nodeId=node_id, massInfo=mass_info)
+        try:
+            if mass_info is None:
+                raise Exception("操作错误，节点质量信息列表不能为空")
+            qt_model.AddNodalMass(nodeId=node_id, massInfo=mass_info)
+            qt_model.UpdateModel()
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def remove_nodal_mass(node_id: int = -1):
@@ -1486,7 +1668,10 @@ class Mdb:
             mdb.remove_nodal_mass(node_id=1)
         Returns: 无
         """
-        qt_model.RemoveNodalMass(nodeId=node_id)
+        try:
+            qt_model.RemoveNodalMass(nodeId=node_id)
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def add_pre_stress(case_name: str = "", tendon_name: str = "", pre_type: int = 2, force: float = 1395000, group_name: str = "默认荷载组"):
@@ -1503,7 +1688,10 @@ class Mdb:
             mdb.add_pre_stress(case_name="荷载工况名",tendon_name="钢束1",force=1390000)
         Returns: 无
         """
-        qt_model.AddPreStress(caseName=case_name, tendonName=tendon_name, preType=pre_type, force=force, groupName=group_name)
+        try:
+            qt_model.AddPreStress(caseName=case_name, tendonName=tendon_name, preType=pre_type, force=force, groupName=group_name)
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def remove_pre_stress(case_name: str = "", tendon_name: str = "", group_name: str = "默认荷载组"):
@@ -1517,7 +1705,10 @@ class Mdb:
             mdb.remove_pre_stress(case_name="工况1",tendon_name="钢束1",group_name="默认荷载组")
         Returns: 无
         """
-        qt_model.RemovePreStress(caseName=case_name, tendonName=tendon_name, groupName=group_name)
+        try:
+            qt_model.RemovePreStress(caseName=case_name, tendonName=tendon_name, groupName=group_name)
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def add_nodal_force(node_id: int = 1, case_name: str = "", load_info: tuple[float, float, float, float, float, float] = None,
@@ -1532,9 +1723,12 @@ class Mdb:
             mdb.add_nodal_force(case_name="荷载工况1",node_id=1,load_info=(1,1,1,1,1,1),group_name="默认结构组")
         Returns: 无
         """
-        if load_info is None or len(load_info) != 6:
-            raise Exception("操作错误，节点荷载列表信息不能为空，且其长度必须为6")
-        qt_model.AddNodalForce(caseName=case_name, nodeId=node_id, loadInfo=load_info, groupName=group_name)
+        try:
+            if load_info is None or len(load_info) != 6:
+                raise Exception("操作错误，节点荷载列表信息不能为空，且其长度必须为6")
+            qt_model.AddNodalForce(caseName=case_name, nodeId=node_id, loadInfo=load_info, groupName=group_name)
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def remove_nodal_force(node_id: int = -1, case_name: str = ""):
@@ -1547,7 +1741,10 @@ class Mdb:
             mdb.remove_nodal_force(case_name="荷载工况1",node_id=1)
         Returns: 无
         """
-        qt_model.RemoveNodalForce(caseName=case_name, nodeId=node_id)
+        try:
+            qt_model.RemoveNodalForce(caseName=case_name, nodeId=node_id)
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def add_node_displacement(node_id: int = 1, case_name: str = "", load_info: tuple[float, float, float, float, float, float] = None,
@@ -1563,9 +1760,12 @@ class Mdb:
             mdb.add_node_displacement(case_name="荷载工况1",node_id=1,load_info=(1,0,0,0,0,0),group_name="默认荷载组")
         Returns: 无
         """
-        if load_info is None or len(load_info) != 6:
-            raise Exception("操作错误，节点位移列表信息不能为空，且其长度必须为6")
-        qt_model.AddNodeDisplacement(caseName=case_name, nodeId=node_id, loadInfo=load_info, groupName=group_name)
+        try:
+            if load_info is None or len(load_info) != 6:
+                raise Exception("操作错误，节点位移列表信息不能为空，且其长度必须为6")
+            qt_model.AddNodeDisplacement(caseName=case_name, nodeId=node_id, loadInfo=load_info, groupName=group_name)
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def remove_nodal_displacement(node_id: int = -1, case_name: str = ""):
@@ -1578,7 +1778,10 @@ class Mdb:
             mdb.remove_nodal_displacement(case_name="荷载工况1",node_id=1)
         Returns: 无
         """
-        qt_model.RemoveNodalDisplacement(caseName=case_name, nodeId=-node_id)
+        try:
+            qt_model.RemoveNodalDisplacement(caseName=case_name, nodeId=-node_id)
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def add_beam_load(beam_id: int = 1, case_name: str = "", load_type: int = 1, coord_system: int = 3,
@@ -1605,9 +1808,12 @@ class Mdb:
             mdb.add_beam_load(case_name="荷载工况1",beam_id=1,load_type=3,list_x=[0.4,0.8],list_load=[100,200])
         Returns: 无
         """
-        qt_model.AddBeamLoad(caseName=case_name, beamId=beam_id, loadType=load_type,isAbs=is_abs,
-                             coordinateSystem=coord_system, listX=list_x, listLoad=list_load, groupName=group_name,
-                             biasInfo=load_bias, isProject=projected)
+        try:
+            qt_model.AddBeamLoad(caseName=case_name, beamId=beam_id, loadType=load_type, isAbs=is_abs,
+                                 coordinateSystem=coord_system, listX=list_x, listLoad=list_load, groupName=group_name,
+                                 biasInfo=load_bias, isProject=projected)
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def remove_beam_load(element_id: int = 1, case_name: str = "", load_type: int = 1, group_name: str = "默认荷载组"):
@@ -1623,7 +1829,10 @@ class Mdb:
             mdb.remove_beam_load(case_name="工况1",element_id=1,load_type=1,group_name="默认荷载组")
         Returns: 无
         """
-        qt_model.RemoveBeamLoad(caseName=case_name, elementId=element_id, loadType=load_type, groupName=group_name)
+        try:
+            qt_model.RemoveBeamLoad(caseName=case_name, elementId=element_id, loadType=load_type, groupName=group_name)
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def add_initial_tension(element_id: int = 1, case_name: str = "", group_name: str = "默认荷载组", tension: float = 0, tension_type: int = 1):
@@ -1639,7 +1848,10 @@ class Mdb:
             mdb.add_initial_tension(element_id=1,case_name="工况1",tension=100,tension_type=1)
         Returns: 无
         """
-        qt_model.AddInitialTension(elementId=element_id, caseName=case_name, tension=tension, tensionType=tension_type, groupName=group_name)
+        try:
+            qt_model.AddInitialTension(elementId=element_id, caseName=case_name, tension=tension, tensionType=tension_type, groupName=group_name)
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def add_cable_length_load(element_id: int = 1, case_name: str = "", group_name: str = "默认荷载组", length: float = 0, tension_type: int = 1):
@@ -1655,7 +1867,10 @@ class Mdb:
             mdb.add_cable_length_load(element_id=1,case_name="工况1",length=1,tension_type=1)
         Returns: 无
         """
-        qt_model.AddCableLenghtLoad(elementId=element_id, caseName=case_name, groupName=group_name, length=length, tensionType=tension_type)
+        try:
+            qt_model.AddCableLenghtLoad(elementId=element_id, caseName=case_name, groupName=group_name, length=length, tensionType=tension_type)
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def add_plate_element_load(element_id: int = 1, case_name: str = "", load_type: int = 1, load_place: int = 1, coord_system: int = 3,
@@ -1678,14 +1893,17 @@ class Mdb:
             mdb.add_plate_element_load(element_id=1,case_name="工况1",load_type=1,group_name="默认荷载组",load_list=[1000],xy_list=(0.2,0.5))
         Returns: 无
         """
-        if load_type == 1 or load_type == 2:
-            qt_model.AddPlateElementLoad(elementId=element_id, caseName=case_name, loadType=load_type,
-                                         coordSystem=coord_system, groupName=group_name, loads=load_list[0])
-        elif load_type == 3 or load_type == 4:
-            if load_place == 0:
-                load_type = load_type + 2
-            qt_model.AddPlateElementLoad(elementId=element_id, caseName=case_name, loadType=load_type, loadPosition=load_place,
-                                         distanceList=xy_list, coordSystem=coord_system, groupName=group_name, loads=load_list[0])
+        try:
+            if load_type == 1 or load_type == 2:
+                qt_model.AddPlateElementLoad(elementId=element_id, caseName=case_name, loadType=load_type,
+                                             coordSystem=coord_system, groupName=group_name, loads=load_list[0])
+            elif load_type == 3 or load_type == 4:
+                if load_place == 0:
+                    load_type = load_type + 2
+                qt_model.AddPlateElementLoad(elementId=element_id, caseName=case_name, loadType=load_type, loadPosition=load_place,
+                                             distanceList=xy_list, coordSystem=coord_system, groupName=group_name, loads=load_list[0])
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def add_deviation_parameter(name: str = "", element_type: int = 1, parameters: list[float] = None):
@@ -1702,13 +1920,15 @@ class Mdb:
             mdb.add_deviation_parameter(name="板端制造误差",element_type=1,parameters=[1,0,0,0,0])
         Returns: 无
         """
-        if qt_model.GetApplicationStage() == "首页":
-            raise Exception("起始页面下无法修改模型，请切换至前处理")
-        if parameters is None:
-            raise Exception("操作错误，制造误差信息不能为空")
-        if len(parameters) != 5 or len(parameters) != 7:
-            raise Exception("操作错误，误差列表有误")
-        qt_model.AddDeviationParameter(name=name, elementType=element_type, parameterInfo=parameters)
+        try:
+            if parameters is None:
+                raise Exception("操作错误，制造误差信息不能为空")
+            if len(parameters) != 5 or len(parameters) != 7:
+                raise Exception("操作错误，误差列表有误")
+            qt_model.AddDeviationParameter(name=name, elementType=element_type, parameterInfo=parameters)
+            qt_model.UpdateModel()
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def add_deviation_load(element_id: int = 1, case_name: str = "", parameters: list[str] = None, group_name: str = "默认荷载组"):
@@ -1726,9 +1946,12 @@ class Mdb:
             mdb.add_deviation_load(element_id=2,case_name="工况1",parameters=["板端误差1","板端误差2","板端误差3","板端误差4"])
         Returns: 无
         """
-        if parameters is None:
-            raise Exception("操作错误，制造误差名称信息不能为空")
-        qt_model.AddDeviationLoad(elementId=element_id, caseName=case_name, parameterName=parameters, groupName=group_name)
+        try:
+            if parameters is None:
+                raise Exception("操作错误，制造误差名称信息不能为空")
+            qt_model.AddDeviationLoad(elementId=element_id, caseName=case_name, parameterName=parameters, groupName=group_name)
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def add_element_temperature(element_id: int = 1, case_name: str = "", temperature: float = 1, group_name: str = "默认荷载组"):
@@ -1743,7 +1966,10 @@ class Mdb:
             mdb.add_element_temperature(element_id=1,case_name="自重",temperature=1,group_name="默认荷载组")
         Returns: 无
         """
-        qt_model.AddElementTemperature(elementId=element_id, caseName=case_name, temperature=temperature, groupName=group_name)
+        try:
+            qt_model.AddElementTemperature(elementId=element_id, caseName=case_name, temperature=temperature, groupName=group_name)
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def add_gradient_temperature(element_id: int = 1, case_name: str = "", temperature: float = 1, section_oriental: int = 1,
@@ -1763,8 +1989,11 @@ class Mdb:
             mdb.add_gradient_temperature(element_id=2,case_name="荷载工况2",group_name="荷载组名2",temperature=10,element_type=2)
         Returns: 无
         """
-        qt_model.AddGradientTemperature(elementId=element_id, caseName=case_name, temperature=temperature,
-                                        sectionOriental=section_oriental, elementType=element_type, groupNmae=group_name)
+        try:
+            qt_model.AddGradientTemperature(elementId=element_id, caseName=case_name, temperature=temperature,
+                                            sectionOriental=section_oriental, elementType=element_type, groupNmae=group_name)
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def add_beam_section_temperature(element_id: int = 1, case_name: str = "", paving_thick: float = 0, temperature_type: int = 1,
@@ -1785,8 +2014,12 @@ class Mdb:
             mdb.add_beam_section_temperature(element_id=1,case_name="工况1",paving_thick=0.1)
         Returns: 无
         """
-        qt_model.AddBeamSectionTemperature(elementId=element_id, caseName=case_name, pavingThickness=paving_thick, temperatureType=temperature_type,
-                                           pavingType=paving_type, groupName=group_name, isModify=modify, temperatures=temp_list)
+        try:
+            qt_model.AddBeamSectionTemperature(elementId=element_id, caseName=case_name, pavingThickness=paving_thick,
+                                               temperatureType=temperature_type,
+                                               pavingType=paving_type, groupName=group_name, isModify=modify, temperatures=temp_list)
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def add_index_temperature(element_id: int = 1, case_name: str = "", temperature: float = 0, index: float = 1, group_name: str = "默认荷载组"):
@@ -1802,7 +2035,10 @@ class Mdb:
             mdb.add_index_temperature(element_id=1,case_name="工况1",temperature=20,index=2)
         Returns: 无
         """
-        qt_model.AddIndexTemperature(elementId=element_id, caseName=case_name, temperature=temperature, index=index, groupName=group_name)
+        try:
+            qt_model.AddIndexTemperature(elementId=element_id, caseName=case_name, temperature=temperature, index=index, groupName=group_name)
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def add_top_plate_temperature(element_id: int = 1, case_name: str = "", temperature: float = 0, group_name: str = "默认荷载组"):
@@ -1817,7 +2053,10 @@ class Mdb:
             mdb.add_top_plate_temperature(element_id=1,case_name="工况1",temperature=40,group_name="默认荷载组")
         Returns: 无
         """
-        qt_model.AddTopPlateTemperature(elementId=element_id, caseName=case_name, temperature=temperature, groupName=group_name)
+        try:
+            qt_model.AddTopPlateTemperature(elementId=element_id, caseName=case_name, temperature=temperature, groupName=group_name)
+        except Exception as ex:
+            raise Exception(ex)
 
     # endregion
 
@@ -1834,11 +2073,13 @@ class Mdb:
             mdb.add_sink_group(name="沉降1",sink=0.1,node_ids=[1,2,3])
         Returns: 无
         """
-        if qt_model.GetApplicationStage() == "首页":
-            raise Exception("起始页面下无法修改模型，请切换至前处理")
-        if node_ids is None:
-            raise Exception("操作错误，沉降定义中节点信息不能为空")
-        qt_model.AddSinkGroup(name=name, sinkValue=sink, nodeIds=node_ids)
+        try:
+            if node_ids is None:
+                raise Exception("操作错误，沉降定义中节点信息不能为空")
+            qt_model.AddSinkGroup(name=name, sinkValue=sink, nodeIds=node_ids)
+            qt_model.UpdateModel()
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def remove_sink_group(name: str = ""):
@@ -1851,12 +2092,14 @@ class Mdb:
             mdb.remove_sink_group(name="沉降1")
         Returns: 无
         """
-        if qt_model.GetApplicationStage() == "首页":
-            raise Exception("起始页面下无法修改模型，请切换至前处理")
-        if name == "":
-            qt_model.RemoveAllSinkGroup()
-        else:
-            qt_model.RemoveSinkGroup(name=name)
+        try:
+            if name == "":
+                qt_model.RemoveAllSinkGroup()
+            else:
+                qt_model.RemoveSinkGroup(name=name)
+            qt_model.UpdateModel()
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def add_sink_case(name: str, sink_groups: list[str] = None):
@@ -1869,11 +2112,13 @@ class Mdb:
             mdb.add_sink_case(name="沉降工况1",sink_groups=["沉降1","沉降2"])
         Returns: 无
         """
-        if qt_model.GetApplicationStage() == "首页":
-            raise Exception("起始页面下无法修改模型，请切换至前处理")
-        if sink_groups is None:
-            raise Exception("操作错误，沉降工况定义中沉降组信息不能为空")
-        qt_model.AddSinkCase(name=name, sinkGroups=sink_groups)
+        try:
+            if sink_groups is None:
+                raise Exception("操作错误，沉降工况定义中沉降组信息不能为空")
+            qt_model.AddSinkCase(name=name, sinkGroups=sink_groups)
+            qt_model.UpdateModel()
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def remove_sink_case(name=""):
@@ -1886,12 +2131,14 @@ class Mdb:
             mdb.remove_sink_case(name="沉降1")
         Returns: 无
         """
-        if qt_model.GetApplicationStage() == "首页":
-            raise Exception("起始页面下无法修改模型，请切换至前处理")
-        if name == "":
-            qt_model.RemoveAllSinkCase()
-        else:
-            qt_model.RemoveSinkCase()
+        try:
+            if name == "":
+                qt_model.RemoveAllSinkCase()
+            else:
+                qt_model.RemoveSinkCase()
+            qt_model.UpdateModel()
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def add_concurrent_reaction(names: list[str]):
@@ -1903,11 +2150,13 @@ class Mdb:
             mdb.add_concurrent_reaction(["默认结构组"])
         Returns: 无
         """
-        if qt_model.GetApplicationStage() == "首页":
-            raise Exception("起始页面下无法修改模型，请切换至前处理")
-        if names is None:
-            raise Exception("操作错误，添加并发反力组时结构组名称不能为空")
-        qt_model.AddConcurrentReaction(names=names)
+        try:
+            if names is None:
+                raise Exception("操作错误，添加并发反力组时结构组名称不能为空")
+            qt_model.AddConcurrentReaction(names=names)
+            qt_model.UpdateModel()
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def remove_concurrent_reaction():
@@ -1918,9 +2167,11 @@ class Mdb:
             mdb.remove_concurrent_reaction()
         Returns: 无
         """
-        if qt_model.GetApplicationStage() == "首页":
-            raise Exception("起始页面下无法修改模型，请切换至前处理")
-        qt_model.RemoveConcurrentRection()
+        try:
+            qt_model.RemoveConcurrentRection()
+            qt_model.UpdateModel()
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def add_concurrent_force(names: list[str]):
@@ -1932,9 +2183,11 @@ class Mdb:
             mdb.add_concurrent_force(["默认结构组"])
         Returns: 无
         """
-        if qt_model.GetApplicationStage() == "首页":
-            raise Exception("起始页面下无法修改模型，请切换至前处理")
-        qt_model.AddConcurrentForce(names=names)
+        try:
+            qt_model.AddConcurrentForce(names=names)
+            qt_model.UpdateModel()
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def remove_concurrent_force():
@@ -1945,9 +2198,11 @@ class Mdb:
             mdb.remove_concurrent_force()
         Returns: 无
         """
-        if qt_model.GetApplicationStage() == "首页":
-            raise Exception("起始页面下无法修改模型，请切换至前处理")
-        qt_model.RemoveConcurrentForce()
+        try:
+            qt_model.RemoveConcurrentForce()
+            qt_model.UpdateModel()
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def add_load_case(name: str = "", case_type: int = 1):
@@ -1960,14 +2215,16 @@ class Mdb:
             mdb.add_load_case(name="工况1",case_type=1)
         Returns: 无
         """
-        if qt_model.GetApplicationStage() == "首页":
-            raise Exception("起始页面下无法修改模型，请切换至前处理")
-        case_type_list = ["施工阶段荷载", "恒载", "活载", "制动力", "风荷载",
-                          "体系温度荷载", "梯度温度荷载", "长轨伸缩挠曲力荷载", "脱轨荷载", "船舶撞击荷载",
-                          "汽车撞击荷载", "长轨断轨力荷载", "用户定义荷载"]
-        if case_type < 1 or case_type > 13:
-            raise TypeError("输入类型错误，荷载工况类型有误，仅支持int类型")
-        qt_model.AddLoadCase(name=name, loadCaseType=case_type_list[case_type - 1])
+        try:
+            case_type_list = ["施工阶段荷载", "恒载", "活载", "制动力", "风荷载",
+                              "体系温度荷载", "梯度温度荷载", "长轨伸缩挠曲力荷载", "脱轨荷载", "船舶撞击荷载",
+                              "汽车撞击荷载", "长轨断轨力荷载", "用户定义荷载"]
+            if case_type < 1 or case_type > 13:
+                raise TypeError("输入类型错误，荷载工况类型有误，仅支持int类型")
+            qt_model.AddLoadCase(name=name, loadCaseType=case_type_list[case_type - 1])
+            qt_model.UpdateModel()
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def remove_load_case(index: int = -1, name: str = ""):
@@ -1982,14 +2239,16 @@ class Mdb:
             mdb.remove_load_case()
         Returns: 无
         """
-        if qt_model.GetApplicationStage() == "首页":
-            raise Exception("起始页面下无法修改模型，请切换至前处理")
-        if name != "":
-            qt_model.DeleteLoadCase(name=name)
-        elif index != -1:
-            qt_model.DeleteLoadCase(id=index)
-        else:
-            qt_model.DeleteAllLoadCase()
+        try:
+            if name != "":
+                qt_model.DeleteLoadCase(name=name)
+            elif index != -1:
+                qt_model.DeleteLoadCase(id=index)
+            else:
+                qt_model.DeleteAllLoadCase()
+            qt_model.UpdateModel()
+        except Exception as ex:
+            raise Exception(ex)
 
     # endregion
 
@@ -2026,11 +2285,13 @@ class Mdb:
                 active_boundaries=[("默认边界组",1)],active_loads=[("默认荷载组1",0)])
         Returns: 无
         """
-        if qt_model.GetApplicationStage() == "首页":
-            raise Exception("起始页面下无法修改模型，请切换至前处理")
-        qt_model.AddConstructionStage(name=name, duration=duration, activeStructures=active_structures, inActiveStructures=delete_structures
-                                      , activeBoundaries=active_boundaries, inActiveBoundaries=delete_boundaries, activeLoads=active_loads,
-                                      inActiveLoads=delete_loads, tempLoads=temp_loads, id=index)
+        try:
+            qt_model.AddConstructionStage(name=name, duration=duration, activeStructures=active_structures, inActiveStructures=delete_structures
+                                          , activeBoundaries=active_boundaries, inActiveBoundaries=delete_boundaries, activeLoads=active_loads,
+                                          inActiveLoads=delete_loads, tempLoads=temp_loads, id=index)
+            qt_model.UpdateModel()
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def update_construction_stage(name: str = "", duration: int = 0,
@@ -2063,11 +2324,13 @@ class Mdb:
                active_boundaries=[("默认边界组",1)],active_loads=[("默认荷载组1",0)])
         Returns: 无
         """
-        if qt_model.GetApplicationStage() == "首页":
-            raise Exception("起始页面下无法修改模型，请切换至前处理")
-        qt_model.UpdateConstructionStage(name=name, duration=duration, activeStructures=active_structures, inActiveStructures=delete_structures
-                                         , activeBoundaries=active_boundaries, inActiveBoundaries=delete_boundaries, activeLoads=active_loads,
-                                         inActiveLoads=delete_loads, tempLoads=temp_loads)
+        try:
+            qt_model.UpdateConstructionStage(name=name, duration=duration, activeStructures=active_structures, inActiveStructures=delete_structures
+                                             , activeBoundaries=active_boundaries, inActiveBoundaries=delete_boundaries, activeLoads=active_loads,
+                                             inActiveLoads=delete_loads, tempLoads=temp_loads)
+            qt_model.UpdateModel()
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def update_weight_stage(stage_name: str = "", structure_group_name: str = "", weight_stage_id: int = 1):
@@ -2082,9 +2345,11 @@ class Mdb:
            mdb.update_weight_stage(stage_name="施工阶段1",structure_group_name="默认结构组",weight_stage_id=1)
         Returns: 无
         """
-        if qt_model.GetApplicationStage() == "首页":
-            raise Exception("起始页面下无法修改模型，请切换至前处理")
-        qt_model.UpdateWeightStage(stageName=stage_name, structureGroupName=structure_group_name, weightStageId=weight_stage_id)
+        try:
+            qt_model.UpdateWeightStage(stageName=stage_name, structureGroupName=structure_group_name, weightStageId=weight_stage_id)
+            qt_model.UpdateModel()
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def remove_construction_stage(name: str = ""):
@@ -2096,12 +2361,14 @@ class Mdb:
             mdb.remove_construction_stage(name="施工阶段1")
         Returns: 无
         """
-        if qt_model.GetApplicationStage() == "首页":
-            raise Exception("起始页面下无法修改模型，请切换至前处理")
-        if name == "":
-            qt_model.RemoveAllConstructionStage()
-        else:
-            qt_model.RemoveConstructionStage(name=name)
+        try:
+            if name == "":
+                qt_model.RemoveAllConstructionStage()
+            else:
+                qt_model.RemoveConstructionStage(name=name)
+            qt_model.UpdateModel()
+        except Exception as ex:
+            raise Exception(ex)
 
     # endregion
 
@@ -2121,11 +2388,13 @@ class Mdb:
             mdb.add_load_combine(name="荷载组合1",combine_type=1,describe="无",combine_info=[("CS","合计值",1),("CS","恒载",1)])
         Returns: 无
         """
-        if qt_model.GetApplicationStage() == "首页":
-            raise Exception("起始页面下无法修改模型，请切换至前处理")
-        if combine_info is None:
-            combine_info = []
-        qt_model.AddLoadCombine(name=name, loadCombineType=combine_type, describe=describe, caseAndFactor=combine_info)
+        try:
+            if combine_info is None:
+                combine_info = []
+            qt_model.AddLoadCombine(name=name, loadCombineType=combine_type, describe=describe, caseAndFactor=combine_info)
+            qt_model.UpdateModel()
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def update_load_combine(name: str = "", combine_type: int = 1, describe: str = "", combine_info: list[tuple[str, str, float]] = None):
@@ -2142,11 +2411,13 @@ class Mdb:
             mdb.update_load_combine(name="荷载组合1",combine_type=1,describe="无",combine_info=[("CS","合计值",1),("CS","恒载",1)])
         Returns: 无
         """
-        if qt_model.GetApplicationStage() == "首页":
-            raise Exception("起始页面下无法修改模型，请切换至前处理")
-        if combine_info is None:
-            combine_info = []
-        qt_model.UpdateLoadCombine(name=name, loadCombineType=combine_type, describe=describe, caseAndFactor=combine_info)
+        try:
+            if combine_info is None:
+                combine_info = []
+            qt_model.UpdateLoadCombine(name=name, loadCombineType=combine_type, describe=describe, caseAndFactor=combine_info)
+            qt_model.UpdateModel()
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def remove_load_combine(name: str = ""):
@@ -2158,11 +2429,13 @@ class Mdb:
             mdb.remove_load_combine(name="荷载组合1")
         Returns: 无
         """
-        if qt_model.GetApplicationStage() == "首页":
-            raise Exception("起始页面下无法修改模型，请切换至前处理")
-        if name != "":
-            qt_model.DeleteLoadCombine(name=name)
-        else:
-            qt_model.DeleteAllLoadCombine()
+        try:
+            if name != "":
+                qt_model.DeleteLoadCombine(name=name)
+            else:
+                qt_model.DeleteAllLoadCombine()
+            qt_model.UpdateModel()
+        except Exception as ex:
+            raise Exception(ex)
 
     # endregion
