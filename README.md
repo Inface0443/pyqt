@@ -1,6 +1,6 @@
-# 最新版本 V0.3.18 - 2024.06.04
+# 最新版本 V0.4.1 - 2024.06.04
 > pip install --upgrade qtmodel -i https://pypi.org/simple
-- 优化部分调用
+- 优化报错提示
 
 ##  视图控制
 ### remove_display
