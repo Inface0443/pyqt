@@ -40,7 +40,7 @@ class Mdb:
            mdb.set_render(True)
         Returns: 无
         """
-        qt_model.DisplayReset(flag)
+        qt_model.SetRender(flag)
 
     @staticmethod
     def change_construct_stage(stage):
@@ -54,6 +54,7 @@ class Mdb:
         Returns: 无
         """
         qt_model.ChangeConstructStage(stage)
+
     # endregion
 
     # region 项目管理
@@ -1368,6 +1369,18 @@ class Mdb:
                              rotationAngle=rotation_angle, trackGroup=track_group, isProjection=projection)
 
     @staticmethod
+    def update_tendon_element(ids: list[int] = None):
+        """
+        赋予钢束构件
+        Args:
+            ids: 钢束构件所在单元编号集合
+        example:
+           mdb.update_tendon_element([1,2,3,4])
+        Returns: 无
+        """
+        qt_model.UpdatePreStressElement(ids)
+
+    @staticmethod
     def remove_tendon(name: str = "", index: int = -1):
         """
         按照名称或编号删除钢束,默认时删除所有钢束
@@ -1408,6 +1421,45 @@ class Mdb:
             qt_model.RemoveTendonProperty(id=index)
         else:
             qt_model.RemoveAllTendonGroup()
+
+    # endregion
+
+    # region 荷载操作
+    @staticmethod
+    def add_load_group(name: str = ""):
+        """
+        根据荷载组名称添加荷载组
+        Args:
+             name: 荷载组名称
+        example:
+            mdb.add_load_group(name="荷载组1")
+        Returns: 无
+        """
+        if qt_model.GetApplicationStage() == "首页":
+            raise Exception("起始页面下无法修改模型，请切换至前处理")
+        if name != "":
+            qt_model.AddLoadGroup(name=name)
+
+    @staticmethod
+    def remove_load_group(name: str = "", index: int = -1):
+        """
+        根据荷载组名称或荷载组id删除荷载组,参数为默认时删除所有荷载组
+        Args:
+             name: 荷载组名称
+             index: 荷载组编号
+        example:
+            mdb.remove_load_group(name="荷载组1")
+            mdb.remove_load_group(index=1)
+        Returns: 无
+        """
+        if qt_model.GetApplicationStage() == "首页":
+            raise Exception("起始页面下无法修改模型，请切换至前处理")
+        if name != "":
+            qt_model.RemoveLoadGroup(name=name)
+        elif index != -1:
+            qt_model.RemoveLoadGroup(id=index)
+        else:
+            qt_model.RemoveAllLoadGroup()
 
     @staticmethod
     def add_nodal_mass(node_id: int = 1, mass_info: tuple[float, float, float, float] = None):
@@ -1466,45 +1518,6 @@ class Mdb:
         Returns: 无
         """
         qt_model.RemovePreStress(caseName=case_name, tendonName=tendon_name, groupName=group_name)
-
-    # endregion
-
-    # region 荷载操作
-    @staticmethod
-    def add_load_group(name: str = ""):
-        """
-        根据荷载组名称添加荷载组
-        Args:
-             name: 荷载组名称
-        example:
-            mdb.add_load_group(name="荷载组1")
-        Returns: 无
-        """
-        if qt_model.GetApplicationStage() == "首页":
-            raise Exception("起始页面下无法修改模型，请切换至前处理")
-        if name != "":
-            qt_model.AddLoadGroup(name=name)
-
-    @staticmethod
-    def remove_load_group(name: str = "", index: int = -1):
-        """
-        根据荷载组名称或荷载组id删除荷载组,参数为默认时删除所有荷载组
-        Args:
-             name: 荷载组名称
-             index: 荷载组编号
-        example:
-            mdb.remove_load_group(name="荷载组1")
-            mdb.remove_load_group(index=1)
-        Returns: 无
-        """
-        if qt_model.GetApplicationStage() == "首页":
-            raise Exception("起始页面下无法修改模型，请切换至前处理")
-        if name != "":
-            qt_model.RemoveLoadGroup(name=name)
-        elif index != -1:
-            qt_model.RemoveLoadGroup(id=index)
-        else:
-            qt_model.RemoveAllLoadGroup()
 
     @staticmethod
     def add_nodal_force(node_id: int = 1, case_name: str = "", load_info: tuple[float, float, float, float, float, float] = None,
@@ -2113,6 +2126,27 @@ class Mdb:
         if combine_info is None:
             combine_info = []
         qt_model.AddLoadCombine(name=name, loadCombineType=combine_type, describe=describe, caseAndFactor=combine_info)
+
+    @staticmethod
+    def update_load_combine(name: str = "", combine_type: int = 1, describe: str = "", combine_info: list[tuple[str, str, float]] = None):
+        """
+        更新荷载组合
+        Args:
+            name:荷载组合名
+            combine_type:荷载组合类型 1-叠加  2-判别  3-包络
+            describe:描述
+            combine_info:荷载组合信息 [(荷载工况类型,工况名,系数)...] 工况类型如下
+                _"ST"-静力荷载工况  "CS"-施工阶段荷载工况  "CB"-荷载组合_
+                _"MV"-移动荷载工况  "SM"-沉降荷载工况_
+        example:
+            mdb.update_load_combine(name="荷载组合1",combine_type=1,describe="无",combine_info=[("CS","合计值",1),("CS","恒载",1)])
+        Returns: 无
+        """
+        if qt_model.GetApplicationStage() == "首页":
+            raise Exception("起始页面下无法修改模型，请切换至前处理")
+        if combine_info is None:
+            combine_info = []
+        qt_model.UpdateLoadCombine(name=name, loadCombineType=combine_type, describe=describe, caseAndFactor=combine_info)
 
     @staticmethod
     def remove_load_combine(name: str = ""):

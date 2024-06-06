@@ -213,7 +213,7 @@ class Odb:
     @staticmethod
     def plot_displacement_result(file_path: str, component: int = 1, load_case_name: str = "", stage_id: int = 1,
                                  envelope_type: int = 1, show_deformed: bool = True, show_pre_deformed: bool = True,
-                                 deformed_scale: float = 1.0, actual_deformed: bool = True,
+                                 deformed_scale: float = 1.0, actual_deformed: bool = False,
                                  show_number: bool = True, show_legend: bool = True,
                                  text_rotation=0, digital_count=0, show_exponential: bool = True, max_min_kind: int = 1,
                                  show_increment: bool = False):
@@ -340,7 +340,7 @@ class Odb:
         绘制板单元结果图并保存到指定文件
         Args:
             file_path: 保存路径名
-            component: 分量编号
+            component: 分量编号 0-Fxx 1-Fyy 2-Fxy 3-Mxx 4-Myy 5-Mxy
             force_kind: 力类型
             load_case_name: 详细荷载工况名
             stage_id: 阶段编号
