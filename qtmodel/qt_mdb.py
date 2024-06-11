@@ -1058,8 +1058,7 @@ class Mdb:
         添加一般支承
         Args:
              node_id:节点编号
-             boundary_info:边界信息  [X,Y,Z,Rx,Ry,Rz]
-                _ture-固定 false-自由_
+             boundary_info:边界信息  [X,Y,Z,Rx,Ry,Rz]  ture-固定 false-自由
              group_name:边界组名,默认为默认边界组
         example:
             mdb.add_general_support(node_id=1, boundary_info=[True,True,True,False,False,False])

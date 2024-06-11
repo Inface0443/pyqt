@@ -630,12 +630,12 @@ class Odb:
         Returns: list[Material]
         """
         mat_list = []
-        # if ids is None:
-        #     mat_list.extend(qt_model.GetConcreteMaterialData())
-        #     mat_list.extend(qt_model.GeSteelPlateMaterialData())
-        #     mat_list.extend(qt_model.GetSteelBarMaterialData())
-        #     mat_list.extend(qt_model.GetPreStressedBarMaterialData())
-        #     mat_list.extend(qt_model.GetUserDefinedMaterialData())
+        if ids is None:
+            mat_list.extend(Odb.get_concrete_material())
+            mat_list.extend(Odb.get_steel_plate_material())
+            mat_list.extend(Odb.get_pre_stress_bar_material())
+            mat_list.extend(Odb.get_steel_bar_material())
+            mat_list.extend(Odb.get_user_define_material())
 
     @staticmethod
     def get_concrete_material(ids=None) -> list[Material]:
@@ -648,13 +648,114 @@ class Odb:
         Returns: list[Material]
         """
         res_list = []
-        if ids is None:
-            ele_list = qt_model.GetConcreteMaterialData()
-        else:
-            ele_list = qt_model.GetConcreteMaterialData(ids)
+        ele_list = qt_model.GetConcreteMaterialData(ids)
         for item in ele_list:
-            res_list.append(Material(item.Id, item.Name, "混凝土", item.Standard, item.Database,
-                                     [item.ElasticModulus, item.UnitWeight, item.PosiRatio, item.TemperatureCoefficient],
-                                     item.Standard, item.IsModifiedByUser))
+            creep_id = -1 if item.IsCalShrinkCreep is False else item.ConcreteTimeDependency.Id
+            res_list.append(Material(mat_id=item.Id, name=item.Name, mat_type="混凝土", standard=item.Standard, database=item.Database,
+                                     data_info=[item.ElasticModulus, item.UnitWeight, item.PosiRatio, item.TemperatureCoefficient],
+                                     modified=item.IsModifiedByUser, construct_factor=item.ConstructionCoefficient,
+                                     creep_id=creep_id, f_cuk=item.StrengthCheck.Fcuk))
         return res_list
+
+    @staticmethod
+    def get_steel_plate_material(ids=None):
+        """
+        获取钢材材料信息
+        Args:
+            ids: 材料号，默认时输出全部材料
+        example:
+            odb.get_steel_plate_material() # 获取所有钢材材料信息
+        Returns: list[Material]
+        """
+        res_list = []
+        ele_list = qt_model.GetSteelPlateMaterialData(ids)
+        for item in ele_list:
+            res_list.append(Material(mat_id=item.Id, name=item.Name, mat_type="钢材", standard=item.Standard, database=item.Database,
+                                     data_info=[item.ElasticModulus, item.UnitWeight, item.PosiRatio, item.TemperatureCoefficient],
+                                     modified=item.IsModifiedByUser, construct_factor=item.ConstructionCoefficient,
+                                     creep_id=-1, f_cuk=0))
+        return res_list
+
+    @staticmethod
+    def get_pre_stress_bar_material(ids=None):
+        """
+        获取钢材材料信息
+        Args:
+            ids: 材料号，默认时输出全部材料
+        example:
+            odb.get_pre_stress_bar_material() # 获取所有预应力材料信息
+        Returns: list[Material]
+        """
+        res_list = []
+        ele_list = qt_model.GetSteelPlateMaterialData(ids)
+        for item in ele_list:
+            res_list.append(Material(mat_id=item.Id, name=item.Name, mat_type="预应力", standard=item.Standard, database=item.Database,
+                                     data_info=[item.ElasticModulus, item.UnitWeight, item.PosiRatio, item.TemperatureCoefficient],
+                                     modified=item.IsModifiedByUser, construct_factor=item.ConstructionCoefficient,
+                                     creep_id=-1, f_cuk=0))
+        return res_list
+
+    @staticmethod
+    def get_steel_bar_material(ids=None):
+        """
+        获取钢筋材料信息
+        Args:
+            ids: 材料号，默认时输出全部材料
+        example:
+            odb.get_steel_bar_material() # 获取所有钢筋材料信息
+        Returns: list[Material]
+        """
+        res_list = []
+        ele_list = qt_model.GetSteelPlateMaterialData(ids)
+        for item in ele_list:
+            res_list.append(Material(mat_id=item.Id, name=item.Name, mat_type="钢筋", standard=item.Standard, database=item.Database,
+                                     data_info=[item.ElasticModulus, item.UnitWeight, item.PosiRatio, item.TemperatureCoefficient],
+                                     modified=item.IsModifiedByUser, construct_factor=item.ConstructionCoefficient,
+                                     creep_id=-1, f_cuk=0))
+        return res_list
+
+    @staticmethod
+    def get_user_define_material(ids=None):
+        """
+        获取自定义材料信息
+        Args:
+            ids: 材料号，默认时输出全部材料
+        example:
+            odb.get_user_define_material() # 获取所有自定义材料信息
+        Returns: list[Material]
+        """
+        res_list = []
+        ele_list = qt_model.GetSteelPlateMaterialData(ids)
+        for item in ele_list:
+            creep_id = -1 if item.IsCalShrinkCreep is False else item.ConcreteTimeDependency.Id
+            res_list.append(Material(mat_id=item.Id, name=item.Name, mat_type="自定义", standard="null", database="null",
+                                     data_info=[item.ElasticModulus, item.UnitWeight, item.PosiRatio, item.TemperatureCoefficient],
+                                     modified=item.IsModifiedByUser, construct_factor=item.ConstructionCoefficient,
+                                     creep_id=creep_id, f_cuk=item.Fcuk))
+        return res_list
+
+    # endregion
+
+    # region 获取模型边界信息
+    @staticmethod
+    def get_boundary_group_names():
+        """
+        获取自边界组名称
+        Args:无
+        example:
+            odb.get_boundary_group_names() # 获取所有自定义材料信息
+        Returns: list[str]
+        """
+        return list(qt_model.GetBoundaryGroupNames())
+
+    @staticmethod
+    def get_general_support_data():
+        res_list = []
+        for item in Odb.get_boundary_group_names():
+            ele_list = qt_model.GetGeneralSupportData(item)
+            for data in ele_list:
+                res_list.append(GeneralSupport(data.Id, node_id=data.Node.Id, boundary_info=(data.IsFixedX, data.IsFixedY, data.IsFixedZ,
+                                                                                             data.IsFixedRx, data.IsFixedRy, data.IsFixedRZ),
+                                               group_name=item, node_system=int(data.NodalCoordinateSystem)))
+
     # endregion
