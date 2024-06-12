@@ -1091,33 +1091,13 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def add_master_slave_link(master_id: int = 1, slave_id: int = 2, boundary_info: list[bool] = None, group_name: str = "默认边界组"):
-        """
-        添加主从约束
-        Args:
-             master_id:主节点号
-             slave_id:从节点号
-             boundary_info:边界信息 [X,Y,Z,Rx,Ry,Rz]
-                _ture-固定 false-自由_
-             group_name:边界组名
-        example:
-            mdb.add_master_slave_link(master_id=1,slave_id=2,boundary_info=[True,True,True,False,False,False])
-        Returns: 无
-        """
-        try:
-            qt_model.AddMasterSlaveLink(masterId=master_id, slaveId=slave_id, boundaryInfo=boundary_info, groupName=group_name)
-        except Exception as ex:
-            raise Exception(ex)
-
-    @staticmethod
     def add_elastic_link(link_type: int = 1, start_id: int = 1, end_id: int = 2, beta_angle: float = 0,
                          boundary_info: list[float] = None,
                          group_name: str = "默认边界组", dis_ratio: float = 0.5, kx: float = 0):
         """
         添加弹性连接
         Args:
-             link_type:节点类型
-                _1-一般弹性连接 2-刚性连接 3-受拉弹性连接 4-受压弹性连接_
+             link_type:节点类型 1-一般弹性连接 2-刚性连接 3-受拉弹性连接 4-受压弹性连接
              start_id:起始节点号
              end_id:终节点号
              beta_angle:贝塔角
@@ -1134,6 +1114,48 @@ class Mdb:
         try:
             qt_model.AddElasticLink(linkType=link_type, startId=start_id, endId=end_id, beta=beta_angle,
                                     boundaryInfo=boundary_info, groupName=group_name, disRatio=dis_ratio, kDx=kx)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def add_master_slave_link(master_id: int = 1, slave_id: int = 2, boundary_info: list[bool] = None, group_name: str = "默认边界组"):
+        """
+        添加主从约束
+        Args:
+             master_id:主节点号
+             slave_id:从节点号
+             boundary_info:边界信息 [X,Y,Z,Rx,Ry,Rz] ture-固定 false-自由
+             group_name:边界组名
+        example:
+            mdb.add_master_slave_link(master_id=1,slave_id=2,boundary_info=[True,True,True,False,False,False])
+        Returns: 无
+        """
+        try:
+            qt_model.AddMasterSlaveLink(masterId=master_id, slaveId=slave_id, boundaryInfo=boundary_info, groupName=group_name)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def add_node_axis(input_type: int = 1, node_id: int = 1, coord_info: list = None):
+        """
+        添加节点坐标
+        Args:
+             input_type:输入方式 1-角度 2-三点  3-向量
+             node_id:节点号
+             coord_info:局部坐标信息 -List<float>(角)  -List<List<float>>(三点 or 向量)
+        example:
+            mdb.add_node_axis(input_type=1,node_id=1,coord_info=[45,45,45])
+            mdb.add_node_axis(input_type=2,node_id=1,coord_info=[[0,0,1],[0,1,0],[1,0,0]])
+            mdb.add_node_axis(input_type=3,node_id=1,coord_info=[[0,0,1],[0,1,0]])
+        Returns: 无
+        """
+        try:
+            if coord_info is None:
+                raise Exception("操作错误，输入坐标系信息不能为空")
+            if input_type == 1:
+                qt_model.AddNodalAxises(inputType=input_type, nodeId=node_id, angleInfo=coord_info)
+            else:
+                qt_model.AddNodalAxises(inputType=input_type, nodeId=node_id, nodeInfo=coord_info)
         except Exception as ex:
             raise Exception(ex)
 
@@ -1160,26 +1182,22 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def add_node_axis(input_type: int = 1, node_id: int = 1, coord_info: list = None):
+    def add_constraint_equation(name: str, sec_node: int, sec_dof: int,
+                                master_info: list[tuple[int, int, float]] = None, group_name: str = "默认边界组"):
         """
-        添加节点坐标
+        添加约束方程
         Args:
-             input_type:输入方式 1-角度 2-三点  3-向量
-             node_id:节点号
-             coord_info:局部坐标信息 -List<float>(角)  -List<List<float>>(三点 or 向量)
+             name:约束方程名
+             sec_node:从节点号
+             sec_dof: 从节点自由度 1-x 2-y 3-z 4-rx 5-ry 6-rz
+             master_info:主节点约束信息列表
+             group_name:边界组名
         example:
-            mdb.add_node_axis(input_type=1,node_id=1,coord_info=[45,45,45])
-            mdb.add_node_axis(input_type=2,node_id=1,coord_info=[[0,0,1],[0,1,0],[1,0,0]])
-            mdb.add_node_axis(input_type=3,node_id=1,coord_info=[[0,0,1],[0,1,0]])
+            mdb.add_beam_constraint(beam_id=2,info_i=[True,True,True,False,False,False],info_j=[True,True,True,False,False,False])
         Returns: 无
         """
         try:
-            if coord_info is None:
-                raise Exception("操作错误，输入坐标系信息不能为空")
-            if input_type == 1:
-                qt_model.AddNodalAxises(inputType=input_type, nodeId=node_id, angleInfo=coord_info)
-            else:
-                qt_model.AddNodalAxises(inputType=input_type, nodeId=node_id, nodeInfo=coord_info)
+            qt_model.AddConstraintEquation(name=name, nodeId=sec_node, dofDirect=sec_dof, masterNodeInfo=master_info, groupName=group_name)
         except Exception as ex:
             raise Exception(ex)
 

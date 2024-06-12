@@ -743,19 +743,202 @@ class Odb:
         获取自边界组名称
         Args:无
         example:
-            odb.get_boundary_group_names() # 获取所有自定义材料信息
+            odb.get_boundary_group_names()
         Returns: list[str]
         """
         return list(qt_model.GetBoundaryGroupNames())
 
     @staticmethod
-    def get_general_support_data():
+    def get_general_support_data(group_name: str = None):
+        """
+        获取一般支承信息
+        Args:
+             group_name:默认输出所有边界组信息
+        example:
+            odb.get_general_support_data()
+        Returns: list[GeneralSupport]
+        """
         res_list = []
-        for item in Odb.get_boundary_group_names():
-            ele_list = qt_model.GetGeneralSupportData(item)
+        if group_name is None:
+            group_names = Odb.get_boundary_group_names()
+        else:
+            group_names = [group_name]
+        for group in group_names:
+            ele_list = qt_model.GetGeneralSupportData(group)
             for data in ele_list:
-                res_list.append(GeneralSupport(data.Id, node_id=data.Node.Id, boundary_info=(data.IsFixedX, data.IsFixedY, data.IsFixedZ,
-                                                                                             data.IsFixedRx, data.IsFixedRy, data.IsFixedRZ),
-                                               group_name=item, node_system=int(data.NodalCoordinateSystem)))
+                res_list.append(GeneralSupport(data.Id, node_id=data.Node.Id,
+                                               boundary_info=(data.IsFixedX, data.IsFixedY, data.IsFixedZ,
+                                                              data.IsFixedRx, data.IsFixedRy, data.IsFixedRZ),
+                                               group_name=group, node_system=int(data.NodalCoordinateSystem)))
+        return res_list
+
+    @staticmethod
+    def get_elastic_link_data(group_name: str = None):
+        """
+        获取弹性连接信息
+        Args:
+            group_name:默认输出所有边界组信息
+        example:
+            odb.get_elastic_link_data()
+        Returns: list[ElasticLink]
+        """
+        res_list = []
+        if group_name is None:
+            group_names = Odb.get_boundary_group_names()
+        else:
+            group_names = [group_name]
+        for group in group_names:
+            ele_list = qt_model.GetElasticLinkData(group)
+            for data in ele_list:
+                res_list.append(ElasticLink(link_id=data.Id, link_type=int(data.Type) + 1,
+                                            start_id=data.StartNode.Id, end_id=data.EndNode.Id, beta_angle=data.Beta,
+                                            boundary_info=(data.Kx, data.Ky, data.Kz, data.Krx, data.Kry, data.Krz),
+                                            group_name=group, dis_ratio=data.DistanceRatio, kx=data.Kx))
+        return res_list
+
+    @staticmethod
+    def get_elastic_support_data(group_name: str = None):
+        """
+        获取弹性支承信息
+        Args:
+            group_name:默认输出所有边界组信息
+        example:
+            odb.get_elastic_support_data()
+        Returns: list[ElasticSupport]
+        """
+        res_list = []
+        if group_name is None:
+            group_names = Odb.get_boundary_group_names()
+        else:
+            group_names = [group_name]
+        for group in group_names:
+            ele_list = qt_model.GetElasticSupportData(group)
+            for data in ele_list:
+                res_list.append(ElasticSupport(support_id=data.Id, node_id=data.Node.Id, support_type=int(data.Type) + 1,
+                                               boundary_info=(data.Kx, data.Ky, data.Kz, data.Krx, data.Kry, data.Krz),
+                                               group_name=group, node_system=int(data.NodalCoordinateSystem)))
+        return res_list
+
+    @staticmethod
+    def get_master_slave_link_data(group_name: str = None):
+        """
+        获取主从连接信息
+        Args:
+            group_name:默认输出所有边界组信息
+        example:
+            odb.get_master_slave_link_data()
+        Returns: list[MasterSlaveLink]
+        """
+        res_list = []
+        if group_name is None:
+            group_names = Odb.get_boundary_group_names()
+        else:
+            group_names = [group_name]
+        for group in group_names:
+            ele_list = qt_model.GetMasterSlaveLinkData(group)
+            for data in ele_list:
+                res_list.append(MasterSlaveLink(link_id=data.Id, master_id=data.MasterNode.Id, slave_id=data.SlaveNode.Id,
+                                                boundary_info=(data.IsFixedX, data.IsFixedY, data.IsFixedZ,
+                                                               data.IsFixedRx, data.IsFixedRy, data.IsFixedRZ),
+                                                group_name=group))
+        return res_list
+
+    @staticmethod
+    def get_node_local_axis_data():
+        """
+        获取节点坐标信息
+        Args:无
+        example:
+            odb.get_node_local_axis_data()
+        Returns: list[NodalLocalAxis]
+        """
+        res_list = []
+        for group in Odb.get_boundary_group_names():
+            ele_list = qt_model.GetNodalLocalAxisData(group)
+            for data in ele_list:
+                res_list.append(NodalLocalAxis(data.Node.Id, (data.VectorX.X, data.VectorX.Y, data.VectorX.Z),
+                                               (data.VectorY.X, data.VectorY.Y, data.VectorY.Z)))
+        return res_list
+
+    @staticmethod
+    def get_beam_constraint_data(group_name: str = None) -> list[BeamConstraint]:
+        """
+           获取节点坐标信息
+           Args:
+               group_name:默认输出所有边界组信息
+           example:
+               odb.get_beam_constraint_data()
+           Returns: list[BeamConstraint]
+        """
+        res_list = []
+        if group_name is None:
+            group_names = Odb.get_boundary_group_names()
+        else:
+            group_names = [group_name]
+        for group in group_names:
+            ele_list = qt_model.GetBeamConstraintData(group)
+            for data in ele_list:
+                info_i = (not data.IsIFreedX, not data.IsIFreedY, not data.IsIFreedZ, not data.IsIFreedRx, not data.IsIFreedRy, not data.IsIFreedRZ)
+                info_j = (not data.IsJFreedX, not data.IsJFreedY, not data.IsJFreedZ, not data.IsJFreedRx, not data.IsJFreedRy, not data.IsJFreedRZ)
+                res_list.append(BeamConstraint(constraint_id=data.Id, beam_id=data.Beam.Id, info_i=info_i, info_j=info_j, group_name=group))
+        return res_list
+
+    @staticmethod
+    def get_constraint_equation_data(group_name: str = None) -> list[ConstraintEquation]:
+        """
+         获取约束方程信息
+         Args:
+             group_name:默认输出所有边界组信息
+         example:
+             odb.get_constraint_equation_data()
+         Returns: list[ConstraintEquation]
+         """
+        res_list = []
+        if group_name is None:
+            group_names = Odb.get_boundary_group_names()
+        else:
+            group_names = [group_name]
+        for group in group_names:
+            ele_list = qt_model.GetConstraintEquationData(group)
+            for data in ele_list:
+                master_info = []
+                for info in data.ConstraintEquationMasterDofDatas:
+                    master_info.append((info.MasterNode.Id, int(info.MasterDof) + 1, info.Factor))
+                res_list.append(ConstraintEquation(data.Id, name=data.Name, sec_node=data.SecondaryNode.Id, sec_dof=int(data.SecondaryDof) + 1,
+                                                   master_info=master_info, group_name=group))
+        return res_list
 
     # endregion
+
+    # region 获取施工阶段信息
+    @staticmethod
+    def get_elements_of_stage(stage_id: int) -> list[int]:
+        """
+        获取指定施工阶段单元编号信息
+        Args:
+            stage_id: 施工阶段编号
+        example:
+            odb.get_elements_of_stage(1)
+        Returns: list[int]
+        """
+        return list(qt_model.GetElementIdsOfStage(stage_id))
+
+    @staticmethod
+    def get_nodes_of_stage(stage_id: int) -> list[int]:
+        """
+        获取指定施工阶段节点编号信息
+        Args:
+            stage_id: 施工阶段编号
+        example:
+            odb.get_nodes_of_stage(1)
+        Returns: list[int]
+        """
+        return list(qt_model.GetNodeIdsOfStage(stage_id))
+
+    @staticmethod
+    def get_groups_of_stage(stage_id: int) -> dict:
+        """
+        获取施工阶段结构组、边界组、荷载组名集合
+        """
+        pass
+# endregion
