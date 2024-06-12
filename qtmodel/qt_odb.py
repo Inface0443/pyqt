@@ -485,17 +485,17 @@ class Odb:
         Returns: list[Element]
         """
         try:
-            ele_list = []
+            item_list = []
             target_ids = []
             if ids is None:
-                ele_list.extend(Odb.get_beam_element())
-                ele_list.extend(Odb.get_plate_element())
-                ele_list.extend(Odb.get_cable_element())
-                ele_list.extend(Odb.get_link_element())
-                if len(ele_list) == 1:
-                    return ele_list[0]
+                item_list.extend(Odb.get_beam_element())
+                item_list.extend(Odb.get_plate_element())
+                item_list.extend(Odb.get_cable_element())
+                item_list.extend(Odb.get_link_element())
+                if len(item_list) == 1:
+                    return item_list[0]
                 else:
-                    return ele_list
+                    return item_list
             if isinstance(ids, int):
                 target_ids.append(ids)
             else:
@@ -503,14 +503,14 @@ class Odb:
             for item_id in target_ids:
                 ele_type = Odb.get_element_type(item_id)
                 if ele_type == "BEAM":
-                    ele_list.append(Odb.get_beam_element(item_id)[0])
+                    item_list.append(Odb.get_beam_element(item_id)[0])
                 if ele_type == "PLATE":
-                    ele_list.append(Odb.get_plate_element(item_id)[0])
+                    item_list.append(Odb.get_plate_element(item_id)[0])
                 if ele_type == "CABLE":
-                    ele_list.append(Odb.get_cable_element(item_id)[0])
+                    item_list.append(Odb.get_cable_element(item_id)[0])
                 if ele_type == "LINK":
-                    ele_list.append(Odb.get_link_element(item_id)[0])
-            return ele_list
+                    item_list.append(Odb.get_link_element(item_id)[0])
+            return item_list
         except Exception as ex:
             raise Exception(ex)
 
@@ -542,10 +542,10 @@ class Odb:
         try:
             res_list = []
             if ids is None:
-                ele_list = qt_model.GetBeamElementData()
+                item_list = qt_model.GetBeamElementData()
             else:
-                ele_list = qt_model.GetBeamElementData(ids)
-            for item in ele_list:
+                item_list = qt_model.GetBeamElementData(ids)
+            for item in item_list:
                 res_list.append(Element(item.Id, "BEAM", [item.StartNode.Id, item.EndNode.Id], item.MaterialId, item.SectionId, item.BetaAngle))
             return res_list
         except Exception as ex:
@@ -564,10 +564,10 @@ class Odb:
         try:
             res_list = []
             if ids is None:
-                ele_list = qt_model.GetPlateElementData()
+                item_list = qt_model.GetPlateElementData()
             else:
-                ele_list = qt_model.GetPlateElementData(ids)
-            for item in ele_list:
+                item_list = qt_model.GetPlateElementData(ids)
+            for item in item_list:
                 res_list.append(Element(item.Id, "PLATE", [item.NodeI.Id, item.NodeJ.Id, item.NodeK.Id, item.NodeL.Id],
                                         item.MaterialId, item.ThicknessId, item.BetaAngle))
             return res_list
@@ -587,10 +587,10 @@ class Odb:
         try:
             res_list = []
             if ids is None:
-                ele_list = qt_model.GetCableElementData()
+                item_list = qt_model.GetCableElementData()
             else:
-                ele_list = qt_model.GetCableElementData(ids)
-            for item in ele_list:
+                item_list = qt_model.GetCableElementData(ids)
+            for item in item_list:
                 res_list.append(Element(item.Id, "CABLE", [item.StartNode.Id, item.EndNode.Id], item.MaterialId, item.SectionId, item.BetaAngle,
                                         int(item.InitialParameterType), item.InitialParameter))
             return res_list
@@ -610,10 +610,10 @@ class Odb:
         try:
             res_list = []
             if ids is None:
-                ele_list = qt_model.GetLinkElementData()
+                item_list = qt_model.GetLinkElementData()
             else:
-                ele_list = qt_model.GetLinkElementData(ids)
-            for item in ele_list:
+                item_list = qt_model.GetLinkElementData(ids)
+            for item in item_list:
                 res_list.append(Element(item.Id, "LINK", [item.StartNode.Id, item.EndNode.Id], item.MaterialId, item.SectionId, item.BetaAngle))
             return res_list
         except Exception as ex:
@@ -648,8 +648,8 @@ class Odb:
         Returns: list[Material]
         """
         res_list = []
-        ele_list = qt_model.GetConcreteMaterialData(ids)
-        for item in ele_list:
+        item_list = qt_model.GetConcreteMaterialData(ids)
+        for item in item_list:
             creep_id = -1 if item.IsCalShrinkCreep is False else item.ConcreteTimeDependency.Id
             res_list.append(Material(mat_id=item.Id, name=item.Name, mat_type="混凝土", standard=item.Standard, database=item.Database,
                                      data_info=[item.ElasticModulus, item.UnitWeight, item.PosiRatio, item.TemperatureCoefficient],
@@ -668,8 +668,8 @@ class Odb:
         Returns: list[Material]
         """
         res_list = []
-        ele_list = qt_model.GetSteelPlateMaterialData(ids)
-        for item in ele_list:
+        item_list = qt_model.GetSteelPlateMaterialData(ids)
+        for item in item_list:
             res_list.append(Material(mat_id=item.Id, name=item.Name, mat_type="钢材", standard=item.Standard, database=item.Database,
                                      data_info=[item.ElasticModulus, item.UnitWeight, item.PosiRatio, item.TemperatureCoefficient],
                                      modified=item.IsModifiedByUser, construct_factor=item.ConstructionCoefficient,
@@ -687,8 +687,8 @@ class Odb:
         Returns: list[Material]
         """
         res_list = []
-        ele_list = qt_model.GetSteelPlateMaterialData(ids)
-        for item in ele_list:
+        item_list = qt_model.GetSteelPlateMaterialData(ids)
+        for item in item_list:
             res_list.append(Material(mat_id=item.Id, name=item.Name, mat_type="预应力", standard=item.Standard, database=item.Database,
                                      data_info=[item.ElasticModulus, item.UnitWeight, item.PosiRatio, item.TemperatureCoefficient],
                                      modified=item.IsModifiedByUser, construct_factor=item.ConstructionCoefficient,
@@ -706,8 +706,8 @@ class Odb:
         Returns: list[Material]
         """
         res_list = []
-        ele_list = qt_model.GetSteelPlateMaterialData(ids)
-        for item in ele_list:
+        item_list = qt_model.GetSteelPlateMaterialData(ids)
+        for item in item_list:
             res_list.append(Material(mat_id=item.Id, name=item.Name, mat_type="钢筋", standard=item.Standard, database=item.Database,
                                      data_info=[item.ElasticModulus, item.UnitWeight, item.PosiRatio, item.TemperatureCoefficient],
                                      modified=item.IsModifiedByUser, construct_factor=item.ConstructionCoefficient,
@@ -725,8 +725,8 @@ class Odb:
         Returns: list[Material]
         """
         res_list = []
-        ele_list = qt_model.GetSteelPlateMaterialData(ids)
-        for item in ele_list:
+        item_list = qt_model.GetSteelPlateMaterialData(ids)
+        for item in item_list:
             creep_id = -1 if item.IsCalShrinkCreep is False else item.ConcreteTimeDependency.Id
             res_list.append(Material(mat_id=item.Id, name=item.Name, mat_type="自定义", standard="null", database="null",
                                      data_info=[item.ElasticModulus, item.UnitWeight, item.PosiRatio, item.TemperatureCoefficient],
@@ -764,8 +764,8 @@ class Odb:
         else:
             group_names = [group_name]
         for group in group_names:
-            ele_list = qt_model.GetGeneralSupportData(group)
-            for data in ele_list:
+            item_list = qt_model.GetGeneralSupportData(group)
+            for data in item_list:
                 res_list.append(GeneralSupport(data.Id, node_id=data.Node.Id,
                                                boundary_info=(data.IsFixedX, data.IsFixedY, data.IsFixedZ,
                                                               data.IsFixedRx, data.IsFixedRy, data.IsFixedRZ),
@@ -788,8 +788,8 @@ class Odb:
         else:
             group_names = [group_name]
         for group in group_names:
-            ele_list = qt_model.GetElasticLinkData(group)
-            for data in ele_list:
+            item_list = qt_model.GetElasticLinkData(group)
+            for data in item_list:
                 res_list.append(ElasticLink(link_id=data.Id, link_type=int(data.Type) + 1,
                                             start_id=data.StartNode.Id, end_id=data.EndNode.Id, beta_angle=data.Beta,
                                             boundary_info=(data.Kx, data.Ky, data.Kz, data.Krx, data.Kry, data.Krz),
@@ -812,8 +812,8 @@ class Odb:
         else:
             group_names = [group_name]
         for group in group_names:
-            ele_list = qt_model.GetElasticSupportData(group)
-            for data in ele_list:
+            item_list = qt_model.GetElasticSupportData(group)
+            for data in item_list:
                 res_list.append(ElasticSupport(support_id=data.Id, node_id=data.Node.Id, support_type=int(data.Type) + 1,
                                                boundary_info=(data.Kx, data.Ky, data.Kz, data.Krx, data.Kry, data.Krz),
                                                group_name=group, node_system=int(data.NodalCoordinateSystem)))
@@ -835,8 +835,8 @@ class Odb:
         else:
             group_names = [group_name]
         for group in group_names:
-            ele_list = qt_model.GetMasterSlaveLinkData(group)
-            for data in ele_list:
+            item_list = qt_model.GetMasterSlaveLinkData(group)
+            for data in item_list:
                 res_list.append(MasterSlaveLink(link_id=data.Id, master_id=data.MasterNode.Id, slave_id=data.SlaveNode.Id,
                                                 boundary_info=(data.IsFixedX, data.IsFixedY, data.IsFixedZ,
                                                                data.IsFixedRx, data.IsFixedRy, data.IsFixedRZ),
@@ -854,8 +854,8 @@ class Odb:
         """
         res_list = []
         for group in Odb.get_boundary_group_names():
-            ele_list = qt_model.GetNodalLocalAxisData(group)
-            for data in ele_list:
+            item_list = qt_model.GetNodalLocalAxisData(group)
+            for data in item_list:
                 res_list.append(NodalLocalAxis(data.Node.Id, (data.VectorX.X, data.VectorX.Y, data.VectorX.Z),
                                                (data.VectorY.X, data.VectorY.Y, data.VectorY.Z)))
         return res_list
@@ -876,8 +876,8 @@ class Odb:
         else:
             group_names = [group_name]
         for group in group_names:
-            ele_list = qt_model.GetBeamConstraintData(group)
-            for data in ele_list:
+            item_list = qt_model.GetBeamConstraintData(group)
+            for data in item_list:
                 info_i = (not data.IsIFreedX, not data.IsIFreedY, not data.IsIFreedZ, not data.IsIFreedRx, not data.IsIFreedRy, not data.IsIFreedRZ)
                 info_j = (not data.IsJFreedX, not data.IsJFreedY, not data.IsJFreedZ, not data.IsJFreedRx, not data.IsJFreedRy, not data.IsJFreedRZ)
                 res_list.append(BeamConstraint(constraint_id=data.Id, beam_id=data.Beam.Id, info_i=info_i, info_j=info_j, group_name=group))
@@ -899,8 +899,8 @@ class Odb:
         else:
             group_names = [group_name]
         for group in group_names:
-            ele_list = qt_model.GetConstraintEquationData(group)
-            for data in ele_list:
+            item_list = qt_model.GetConstraintEquationData(group)
+            for data in item_list:
                 master_info = []
                 for info in data.ConstraintEquationMasterDofDatas:
                     master_info.append((info.MasterNode.Id, int(info.MasterDof) + 1, info.Factor))
@@ -939,6 +939,50 @@ class Odb:
     def get_groups_of_stage(stage_id: int) -> dict:
         """
         获取施工阶段结构组、边界组、荷载组名集合
+        Args:
+            stage_id: 施工阶段编号
+        example:
+            odb.get_groups_of_stage(1)
+        Returns: dict
+        """
+        res_dict = {"结构组": list(qt_model.GetStructtureGroupOfStage(stage_id)),
+                    "边界组": list(qt_model.GetBoundaryGroupOfStage(stage_id)),
+                    "荷载组": list(qt_model.GetLoadGroupOfStage(stage_id))}
+        return res_dict
+
+    # endregion
+
+    # region 荷载信息
+    @staticmethod
+    def get_load_case_names() -> list[str]:
+        """
+        获取荷载工况名
+        Args: 无
+        example:
+            odb.get_load_case_names()
+        Returns: list[str]
+        """
+        return qt_model.GetLoadCaseNames()
+
+    @staticmethod
+    def get_pre_stress_load(case_name: str):
+        """
+        获取预应力荷载
+        Args: 无
+        example:
+            odb.get_pre_stress_load()
+        Returns: list[PreStressLoad]
+        """
+        res_list = []
+        item_list = qt_model.GetPrestressLoadData(case_name)
+        for data in item_list:
+            res_list.append(PreStressLoad(case_name=case_name, tendon_name=data.Tendon.Name,
+                                          tension_type=int(data.TendonTensionType), force=data.TensionForce, group_name=data.LoadGroup.Name))
+
+    @staticmethod
+    def get_node_mass_data():
+        """
+
         """
         pass
-# endregion
+    # endregion

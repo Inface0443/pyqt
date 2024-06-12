@@ -1691,13 +1691,13 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def add_pre_stress(case_name: str = "", tendon_name: str = "", pre_type: int = 2, force: float = 1395000, group_name: str = "默认荷载组"):
+    def add_pre_stress(case_name: str = "", tendon_name: str = "", tension_type: int = 2, force: float = 1395000, group_name: str = "默认荷载组"):
         """
         添加预应力
         Args:
              case_name:荷载工况名
              tendon_name:钢束名
-             pre_type:预应力类型
+             tension_type:预应力类型
                 _0-始端 1-末端 2-两端_
              force:预应力
              group_name:边界组
@@ -1706,7 +1706,7 @@ class Mdb:
         Returns: 无
         """
         try:
-            qt_model.AddPreStress(caseName=case_name, tendonName=tendon_name, preType=pre_type, force=force, groupName=group_name)
+            qt_model.AddPreStress(caseName=case_name, tendonName=tendon_name, preType=tension_type, force=force, groupName=group_name)
         except Exception as ex:
             raise Exception(ex)
 
@@ -1732,10 +1732,11 @@ class Mdb:
                         group_name: str = "默认荷载组"):
         """
         添加节点荷载
-             case_name:荷载工况名
-             node_id:节点编号
-             load_info:荷载信息列表 [Fx,Fy,Fz,Mx,My,Mz]
-             group_name:荷载组名
+        Args:
+            node_id:节点编号
+            case_name:荷载工况名
+            load_info:荷载信息列表 [Fx,Fy,Fz,Mx,My,Mz]
+            group_name:荷载组名
         example:
             mdb.add_nodal_force(case_name="荷载工况1",node_id=1,load_info=(1,1,1,1,1,1),group_name="默认结构组")
         Returns: 无

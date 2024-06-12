@@ -283,3 +283,121 @@ class NodalLocalAxis:
 
     def __repr__(self):
         return self.__str__()
+
+
+class PreStressLoad:
+    def __init__(self, case_name: str, tendon_name: str, tension_type: int, force: float, group_name: str = "默认荷载组"):
+        """
+        预应力荷载
+        Args:
+            case_name: 荷载工况名
+            tendon_name:钢束名称
+            tension_type:0-始端 1-末端 2-两端
+            force:节点局部坐标Y方向向量
+            group_name: 荷载组名称
+        """
+        self.case_name = case_name
+        self.tendon_name = tendon_name
+        self.tension_type = tension_type
+        self.force = force
+        self.group_name = group_name
+
+    def __str__(self):
+        attrs = vars(self)
+        dict_str = '{' + ', '.join(f"'{k}': {v}" for k, v in attrs.items()) + '}'
+        return dict_str
+
+    def __repr__(self):
+        return self.__str__()
+
+
+class NodalMass:
+    def __init__(self, node_id: int, mass_info: tuple[float, float, float, float] = None):
+        """
+        节点质量
+        Args:
+             node_id:节点编号
+             mass_info:[m,rmX,rmY,rmZ]
+        """
+        self.node_id = node_id
+        self.mass_info = mass_info
+
+    def __str__(self):
+        attrs = vars(self)
+        dict_str = '{' + ', '.join(f"'{k}': {v}" for k, v in attrs.items()) + '}'
+        return dict_str
+
+    def __repr__(self):
+        return self.__str__()
+
+
+class NodalForce:
+    def __init__(self, node_id: int, case_name: str, load_info: tuple[float, float, float, float, float, float] = None, group_name: str = "默认荷载组"):
+        """
+        节点质量
+        Args:
+            node_id:节点编号
+            case_name:荷载工况名
+            load_info:荷载信息列表 [Fx,Fy,Fz,Mx,My,Mz]
+            group_name:荷载组名
+        """
+        self.node_id = node_id
+        self.case_name = case_name
+        self.load_info = load_info
+        self.group_name = group_name
+
+    def __str__(self):
+        attrs = vars(self)
+        dict_str = '{' + ', '.join(f"'{k}': {v}" for k, v in attrs.items()) + '}'
+        return dict_str
+
+    def __repr__(self):
+        return self.__str__()
+
+
+class NodalForceDisplacement:
+    def __init__(self, node_id: int = 1, case_name: str = "", load_info: tuple[float, float, float, float, float, float] = None,
+                 group_name: str = "默认荷载组"):
+        """
+        节点位移信息
+        Args:
+            node_id:节点编号
+            case_name:荷载工况名
+            load_info:节点位移列表 [Dx,Dy,Dz,Rx,Ry,Rz]
+            group_name:荷载组名
+        """
+        self.node_id = node_id
+        self.case_name = case_name
+        self.load_info = load_info
+        self.group_name = group_name
+
+    def __str__(self):
+        attrs = vars(self)
+        dict_str = '{' + ', '.join(f"'{k}': {v}" for k, v in attrs.items()) + '}'
+        return dict_str
+
+    def __repr__(self):
+        return self.__str__()
+
+
+class FrameConcentratedLoad:
+    def __init__(self, beam_id: int, case_name: str,load_type:int, coord_system: int,
+                 load_distance:float,load_force: float, group_name="默认荷载组",
+                 load_bias: tuple[bool, int, int, float] = None, projected: bool = False):
+        self.beam_id = beam_id
+        self.case_name = case_name
+        self.load_type = load_type
+        self.coord_system = coord_system
+        self.load_distance = load_distance
+        self.load_force = load_force
+        self.group_name = group_name
+        self.load_bias = load_bias
+        self.projected = projected
+
+    def __str__(self):
+        attrs = vars(self)
+        dict_str = '{' + ', '.join(f"'{k}': {v}" for k, v in attrs.items()) + '}'
+        return dict_str
+
+    def __repr__(self):
+        return self.__str__()
