@@ -425,12 +425,9 @@ class PlateElementLoad:
         Args:
             element_id:单元id
             case_name:荷载工况名
-            load_type:荷载类型
-               _1-集中力  2-集中弯矩  3-分布力  4-分布弯矩_
-            load_place:荷载位置
-               _0-面IJKL 1-边IJ  2-边JK  3-边KL  4-边LI  (仅分布荷载需要)_
-            coord_system:坐标系  (默认3)
-               _1-整体坐标X  2-整体坐标Y 3-整体坐标Z  4-局部坐标X  5-局部坐标Y  6-局部坐标Z_
+            load_type:荷载类型 1-集中力  2-集中弯矩  3-分布力  4-分布弯矩
+            load_place:荷载位置 0-面IJKL 1-边IJ  2-边JK  3-边KL  4-边LI  (仅分布荷载需要)
+            coord_system:坐标系 1-整体坐标X  2-整体坐标Y 3-整体坐标Z  4-局部坐标X  5-局部坐标Y  6-局部坐标Z
             group_name:荷载组名
             load_list:荷载列表
             xy_list:荷载位置信息 [IJ方向绝对距离x,IL方向绝对距离y]  (仅集中荷载需要)
@@ -452,6 +449,59 @@ class PlateElementLoad:
     def __repr__(self):
         return self.__str__()
 
+
+class InitialTension:
+    def __init__(self, element_id: int, case_name: str, group_name: str, tension: float, tension_type: int):
+        """
+        初始拉力
+        Args:
+             element_id:单元编号
+             case_name:荷载工况名
+             tension:初始拉力
+             tension_type:张拉类型  0-增量 1-全量
+             group_name:荷载组名
+        """
+        self.element_id = element_id
+        self.case_name = case_name
+        self.group_name = group_name
+        self.tension = tension
+        self.tension_type = tension_type
+
+    def __str__(self):
+        attrs = vars(self)
+        dict_str = '{' + ', '.join(f"'{k}': {v}" for k, v in attrs.items()) + '}'
+        return dict_str
+
+    def __repr__(self):
+        return self.__str__()
+
+
+class CableLengthLoad:
+    def __init__(self, element_id: int, case_name: str, group_name: str, length: float, tension_type: int):
+        """
+        初始拉力
+        Args:
+             element_id:单元编号
+             case_name:荷载工况名
+             length:无应力长度
+             tension_type:张拉类型  0-增量 1-全量
+             group_name:荷载组名
+        """
+        self.element_id = element_id
+        self.case_name = case_name
+        self.group_name = group_name
+        self.length = length
+        self.tension_type = tension_type
+
+
+def __str__(self):
+    attrs = vars(self)
+    dict_str = '{' + ', '.join(f"'{k}': {v}" for k, v in attrs.items()) + '}'
+    return dict_str
+
+
+def __repr__(self):
+    return self.__str__()
 
 class DeviationParameter:
     def __init__(self, name: str, element_type: int = 1, parameters: list[float] = None):
@@ -636,4 +686,3 @@ class TopPlateTemperature:
 
     def __repr__(self):
         return self.__str__()
-

@@ -965,13 +965,13 @@ class Odb:
         return qt_model.GetLoadCaseNames()
 
     @staticmethod
-    def get_pre_stress_load(case_name: str):
+    def get_pre_stress_load(case_name: str) -> list[PreStressLoad]:
         """
         获取预应力荷载
         Args:
             case_name: 荷载工况名
         example:
-            odb.get_pre_stress_load()
+            odb.get_pre_stress_load("荷载工况1")
         Returns: list[PreStressLoad]
         """
         res_list = []
@@ -982,7 +982,7 @@ class Odb:
         return res_list
 
     @staticmethod
-    def get_node_mass_data():
+    def get_node_mass_data() -> list[NodalMass]:
         """
         获取节点质量
         Args: 无
@@ -1000,21 +1000,129 @@ class Odb:
         return res_list
 
     @staticmethod
-    def get_nodal_force_load(case_name: str):
+    def get_nodal_force_load(case_name: str) -> list[NodalForce]:
         """
         获取节点力荷载
         Args:
             case_name: 荷载工况名
         example:
-            odb.get_nodal_force_load()
-        Returns: list[NodalMass]
+            odb.get_nodal_force_load("荷载工况1")
+        Returns: list[NodalForce]
         """
         res_list = []
-        item_list = qt_model.GetNodeForceLoadData()
+        item_list = qt_model.GetNodeForceLoadData(case_name)
         for data in item_list:
-            data_force = data.Force
+            load = data.Force
             res_list.append(NodalForce(node_id=data.Node.Id, case_name=case_name,
-                                       load_info=(data_force.ForceX, data_force.ForceY, data_force.ForceZ,
-                                                  data_force.MomentX, data_force.MomentY, data_force.MomentZ), group_name=data.LoadGroup.Name))
+                                       load_info=(load.ForceX, load.ForceY, load.ForceZ,
+                                                  load.MomentX, load.MomentY, load.MomentZ), group_name=data.LoadGroup.Name))
+        return res_list
+
+    @staticmethod
+    def get_nodal_displacement_load(case_name: str) -> list[NodalForceDisplacement]:
+        """
+        获取节点位移荷载
+        Args:
+            case_name: 荷载工况名
+        example:
+            odb.get_nodal_displacement_load("荷载工况1")
+        Returns: list[NodalForceDisplacement]
+        """
+        res_list = []
+        item_list = qt_model.GetNodeForceLoadData(case_name)
+        for data in item_list:
+            load = data.NodalForceDisplacement
+            res_list.append(NodalForceDisplacement(node_id=data.Node.Id, case_name=case_name,
+                                                   load_info=(load.DispX, load.DispY, load.DispZ,
+                                                              load.DispRx, load.DispRy, load.DispRz), group_name=data.LoadGroup.Name))
+        return res_list
+
+    @staticmethod
+    def get_beam_element_load(case_name: str) -> list[BeamElementLoad]:
+        """
+        获取梁单元荷载
+        Args:
+            case_name: 荷载工况名
+        example:
+            odb.get_beam_element_load("荷载工况1")
+        Returns: list[BeamElementLoad]
+        """
+        res_list = []
+        item_list_concentrated_load = qt_model.GetBeamConcentratedLoadData(case_name)
+        for item in item_list_concentrated_load:
+            load_bias = (item.FrameLoadBias.IsBias, item.FrameLoadBias.LoadBiasPosition,
+                         int(item.FrameLoadBias.CoordinateSystem) + 1, item.FrameLoadBias.Distance)
+            res_list.append(BeamElementLoad(item.ElementId, case_name, int(item.ElementLoadType) + 1, int(item.LoadCoordinateSystem),
+                                            list_x=[item.Distance], list_load=[item.Force], group_name=item.LoadGroup.Name,
+                                            load_bias=load_bias, projected=False))
+        item_list_distribute_load = qt_model.GetBeamDistributeLoadData(case_name)
+        for item in item_list_distribute_load:
+            load_bias = (item.FrameLoadBias.IsBias, item.FrameLoadBias.LoadBiasPosition,
+                         int(item.FrameLoadBias.CoordinateSystem) + 1, item.FrameLoadBias.Distance)
+            res_list.append(BeamElementLoad(item.ElementId, case_name, int(item.ElementLoadType) + 1, int(item.LoadCoordinateSystem),
+                                            list_x=[item.StartDistance, item.EndDistance], list_load=[item.StartForce, item.EndForce],
+                                            group_name=item.LoadGroup.Name, load_bias=load_bias, projected=item.IsProjection))
+        return res_list
+
+    @staticmethod
+    def get_plate_element_load(case_name: str) -> list[PlateElementLoad]:
+        """
+        获取梁单元荷载
+        Args:
+            case_name: 荷载工况名
+        example:
+            odb.get_beam_element_load("荷载工况1")
+        Returns: list[BeamElementLoad]
+        """
+        res_list = []
+        item_list_concentrated_load = qt_model.GetPlateConcentratedLoadData(case_name)
+        for item in item_list_concentrated_load:
+            res_list.append(PlateElementLoad(element_id=item.ElementId, case_name=case_name, load_type=int(item.ElementLoadType) + 1,
+                                             load_place=0, coord_system=int(item.LoadCoordinateSystem) + 1,
+                                             group_name=item.LoadGroup.Name, load_list=[item.P], xy_list=(item.Dx, item.Dy)))
+        line_load_list = qt_model.GetPlateDistributeLineLoadData(case_name)
+        for item in line_load_list:
+            res_list.append(PlateElementLoad(element_id=item.ElementId, case_name=case_name, load_type=int(item.ElementLoadType) + 1,
+                                             load_place=int(item.PlateLoadPosition) - 1, coord_system=int(item.LoadCoordinateSystem) + 1,
+                                             group_name=item.LoadGroup.Name, load_list=[item.P1, item.P2], xy_list=None))
+        line_load_list = qt_model.GetPlateDistributeAreaLoadData(case_name)
+        for item in line_load_list:
+            res_list.append(PlateElementLoad(element_id=item.ElementId, case_name=case_name, load_type=int(item.ElementLoadType) + 1,
+                                             load_place=0, coord_system=int(item.LoadCoordinateSystem) + 1,
+                                             group_name=item.LoadGroup.Name, load_list=[item.P1, item.P2, item.P3, item.P4], xy_list=None))
+        return res_list
+
+    @staticmethod
+    def get_initial_tension_load(case_name: str) -> list[InitialTension]:
+        """
+            获取初拉力荷载数据
+            Args:
+                case_name: 荷载工况名
+            example:
+                odb.get_initial_tension("荷载工况1")
+            Returns: list[InitialTension]
+        """
+        res_list = []
+        item_list_load = qt_model.GetInitialTensionLoadData(case_name)
+        for item in item_list_load:
+            res_list.append(InitialTension(element_id=item.ElementId, case_name=case_name, group_name=item.LoadGroup.Name,
+                                           tension_type=int(item.CableTensionType), tension=item.Tension))
+        return res_list
+
+    @staticmethod
+    def get_cable_length_load(case_name: str) -> list[CableLengthLoad]:
+        """
+            获取初拉力荷载数据
+            Args:
+                case_name: 荷载工况名
+            example:
+                odb.get_cable_length_load("荷载工况1")
+            Returns: list[CableLengthLoad]
+        """
+        res_list = []
+        item_list_load = qt_model.GetCableLengthLoadData(case_name)
+        for item in item_list_load:
+            res_list.append(CableLengthLoad(element_id=item.ElementId, case_name=case_name, group_name=item.LoadGroup.Name,
+                                            tension_type=int(item.CableTensionType), length=item.UnstressedLength))
         return res_list
     # endregion

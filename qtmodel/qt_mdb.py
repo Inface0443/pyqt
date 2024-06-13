@@ -1860,7 +1860,7 @@ class Mdb:
              element_id:单元编号
              case_name:荷载工况名
              tension:初始拉力
-             tension_type:张拉类型  1-全量   2-增量
+             tension_type:张拉类型  0-增量 1-全量
              group_name:荷载组名
         example:
             mdb.add_initial_tension(element_id=1,case_name="工况1",tension=100,tension_type=1)
@@ -1879,7 +1879,7 @@ class Mdb:
             element_id:单元类型
             case_name:荷载工况名
             length:长度
-            tension_type:张拉类型  1-全量   2-增量
+            tension_type:张拉类型  0-增量 1-全量
             group_name:荷载组名
         example:
             mdb.add_cable_length_load(element_id=1,case_name="工况1",length=1,tension_type=1)
