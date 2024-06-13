@@ -1099,7 +1099,7 @@ class Odb:
             Args:
                 case_name: 荷载工况名
             example:
-                odb.get_initial_tension("荷载工况1")
+                odb.get_initial_tension_load("荷载工况1")
             Returns: list[InitialTension]
         """
         res_list = []

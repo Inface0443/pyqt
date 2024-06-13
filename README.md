@@ -1,6 +1,6 @@
-# 最新版本 V0.4.1 - 2024.06.04
+# 最新版本 V0.4.3 - 2024.06.13
 > pip install --upgrade qtmodel -i https://pypi.org/simple
-- 优化报错提示
+- 增加模型查询接口
 
 ##  视图控制
 ### remove_display
@@ -22,7 +22,6 @@ from qtmodel import *
 mdb.save_png(r"D:\\QT\\aa.png")
 ```  
 Returns: 无
-##  项目管理
 ### set_render
 消隐设置开关
 > 参数:  
@@ -31,6 +30,17 @@ Returns: 无
 # 示例代码
 from qtmodel import *
 mdb.set_render(True)
+```  
+Returns: 无
+### change_construct_stage
+消隐设置开关
+> 参数:  
+> stage: 施工阶段名称或施工阶段号  0-基本  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.change_construct_stage(0)
+mdb.change_construct_stage("基本")
 ```  
 Returns: 无
 ##  项目管理
@@ -572,8 +582,7 @@ Returns: 无
 添加一般支承
 > 参数:  
 > node_id:节点编号  
-> boundary_info:边界信息  [X,Y,Z,Rx,Ry,Rz]  
-> _ture-固定 false-自由_  
+> boundary_info:边界信息  [X,Y,Z,Rx,Ry,Rz]  ture-固定 false-自由  
 > group_name:边界组名,默认为默认边界组  
 ```Python
 # 示例代码
@@ -594,25 +603,10 @@ from qtmodel import *
 mdb.add_elastic_support(node_id=1,support_type=1,boundary_info=[1e6,0,1e6,0,0,0])
 ```  
 Returns: 无
-### add_master_slave_link
-添加主从约束
-> 参数:  
-> master_id:主节点号  
-> slave_id:从节点号  
-> boundary_info:边界信息 [X,Y,Z,Rx,Ry,Rz]  
-> _ture-固定 false-自由_  
-> group_name:边界组名  
-```Python
-# 示例代码
-from qtmodel import *
-mdb.add_master_slave_link(master_id=1,slave_id=2,boundary_info=[True,True,True,False,False,False])
-```  
-Returns: 无
 ### add_elastic_link
 添加弹性连接
 > 参数:  
-> link_type:节点类型  
-> _1-一般弹性连接 2-刚性连接 3-受拉弹性连接 4-受压弹性连接_  
+> link_type:节点类型 1-一般弹性连接 2-刚性连接 3-受拉弹性连接 4-受压弹性连接  
 > start_id:起始节点号  
 > end_id:终节点号  
 > beta_angle:贝塔角  
@@ -628,17 +622,17 @@ mdb.add_elastic_link(link_type=2,start_id=1,end_id=2)
 mdb.add_elastic_link(link_type=3,start_id=1,end_id=2,kx=1e6)
 ```  
 Returns: 无
-### add_beam_constraint
-添加梁端约束
+### add_master_slave_link
+添加主从约束
 > 参数:  
-> beam_id:梁号  
-> info_i:i端约束信息 [X,Y,Z,Rx,Ry,Rz] ture-固定 false-自由  
-> info_j:j端约束信息 [X,Y,Z,Rx,Ry,Rz] ture-固定 false-自由  
+> master_id:主节点号  
+> slave_id:从节点号  
+> boundary_info:边界信息 [X,Y,Z,Rx,Ry,Rz] ture-固定 false-自由  
 > group_name:边界组名  
 ```Python
 # 示例代码
 from qtmodel import *
-mdb.add_beam_constraint(beam_id=2,info_i=[True,True,True,False,False,False],info_j=[True,True,True,False,False,False])
+mdb.add_master_slave_link(master_id=1,slave_id=2,boundary_info=[True,True,True,False,False,False])
 ```  
 Returns: 无
 ### add_node_axis
@@ -653,6 +647,33 @@ from qtmodel import *
 mdb.add_node_axis(input_type=1,node_id=1,coord_info=[45,45,45])
 mdb.add_node_axis(input_type=2,node_id=1,coord_info=[[0,0,1],[0,1,0],[1,0,0]])
 mdb.add_node_axis(input_type=3,node_id=1,coord_info=[[0,0,1],[0,1,0]])
+```  
+Returns: 无
+### add_beam_constraint
+添加梁端约束
+> 参数:  
+> beam_id:梁号  
+> info_i:i端约束信息 [X,Y,Z,Rx,Ry,Rz] ture-固定 false-自由  
+> info_j:j端约束信息 [X,Y,Z,Rx,Ry,Rz] ture-固定 false-自由  
+> group_name:边界组名  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.add_beam_constraint(beam_id=2,info_i=[True,True,True,False,False,False],info_j=[True,True,True,False,False,False])
+```  
+Returns: 无
+### add_constraint_equation
+添加约束方程
+> 参数:  
+> name:约束方程名  
+> sec_node:从节点号  
+> sec_dof: 从节点自由度 1-x 2-y 3-z 4-rx 5-ry 6-rz  
+> master_info:主节点约束信息列表  
+> group_name:边界组名  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.add_beam_constraint(beam_id=2,info_i=[True,True,True,False,False,False],info_j=[True,True,True,False,False,False])
 ```  
 Returns: 无
 ##  移动荷载操作
@@ -868,6 +889,16 @@ mdb.add_tendon_3d("BB1",property_name="22-15",num=2,position_type=2,
 control_points=[(0,0,-1,0),(10,0,-1,0)],point_insert=(1,1,1),track_group="轨迹线结构组1")
 ```  
 Returns: 无
+### update_tendon_element
+赋予钢束构件
+> 参数:  
+> ids: 钢束构件所在单元编号集合  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.update_tendon_element([1,2,3,4])
+```  
+Returns: 无
 ### remove_tendon
 按照名称或编号删除钢束,默认时删除所有钢束
 > 参数:  
@@ -892,6 +923,29 @@ from qtmodel import *
 mdb.remove_tendon_property(name="钢束特性1")
 mdb.remove_tendon_property(index=1)
 mdb.remove_tendon_property()
+```  
+Returns: 无
+##  荷载操作
+### add_load_group
+根据荷载组名称添加荷载组
+> 参数:  
+> name: 荷载组名称  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.add_load_group(name="荷载组1")
+```  
+Returns: 无
+### remove_load_group
+根据荷载组名称或荷载组id删除荷载组,参数为默认时删除所有荷载组
+> 参数:  
+> name: 荷载组名称  
+> index: 荷载组编号  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.remove_load_group(name="荷载组1")
+mdb.remove_load_group(index=1)
 ```  
 Returns: 无
 ### add_nodal_mass
@@ -920,7 +974,7 @@ Returns: 无
 > 参数:  
 > case_name:荷载工况名  
 > tendon_name:钢束名  
-> pre_type:预应力类型  
+> tension_type:预应力类型  
 > _0-始端 1-末端 2-两端_  
 > force:预应力  
 > group_name:边界组  
@@ -942,31 +996,13 @@ from qtmodel import *
 mdb.remove_pre_stress(case_name="工况1",tendon_name="钢束1",group_name="默认荷载组")
 ```  
 Returns: 无
-##  荷载操作
-### add_load_group
-根据荷载组名称添加荷载组
-> 参数:  
-> name: 荷载组名称  
-```Python
-# 示例代码
-from qtmodel import *
-mdb.add_load_group(name="荷载组1")
-```  
-Returns: 无
-### remove_load_group
-根据荷载组名称或荷载组id删除荷载组,参数为默认时删除所有荷载组
-> 参数:  
-> name: 荷载组名称  
-> index: 荷载组编号  
-```Python
-# 示例代码
-from qtmodel import *
-mdb.remove_load_group(name="荷载组1")
-mdb.remove_load_group(index=1)
-```  
-Returns: 无
 ### add_nodal_force
 添加节点荷载
+> 参数:  
+> node_id:节点编号  
+> case_name:荷载工况名  
+> load_info:荷载信息列表 [Fx,Fy,Fz,Mx,My,Mz]  
+> group_name:荷载组名  
 ```Python
 # 示例代码
 from qtmodel import *
@@ -1014,7 +1050,7 @@ Returns: 无
 > beam_id:单元编号  
 > case_name:荷载工况名  
 > load_type:荷载类型  
-> _ 1-集中荷载 2-集中弯矩 3-分布弯矩 4-分布弯矩  
+> _ 1-集中力 2-集中弯矩 3-分布弯矩 4-分布弯矩  
 > coord_system:坐标系  
 > _1-整体坐标X  2-整体坐标Y 3-整体坐标Z  4-局部坐标X  5-局部坐标Y  6-局部坐标Z_  
 > is_abs: 荷载位置输入方式，True-绝对值   False-相对值  
@@ -1022,7 +1058,7 @@ Returns: 无
 > list_load:荷载数值信息  
 > group_name:荷载组名  
 > load_bias:偏心荷载 (是否偏心,0-中心 1-偏心,偏心坐标系-int,偏心距离)  
-> projected:是否投影  
+> projected:荷载是否投影  
 ```Python
 # 示例代码
 from qtmodel import *
@@ -1050,7 +1086,7 @@ Returns: 无
 > element_id:单元编号  
 > case_name:荷载工况名  
 > tension:初始拉力  
-> tension_type:张拉类型  1-全量   2-增量  
+> tension_type:张拉类型  0-增量 1-全量  
 > group_name:荷载组名  
 ```Python
 # 示例代码
@@ -1064,7 +1100,7 @@ Returns: 无
 > element_id:单元类型  
 > case_name:荷载工况名  
 > length:长度  
-> tension_type:张拉类型  1-全量   2-增量  
+> tension_type:张拉类型  0-增量 1-全量  
 > group_name:荷载组名  
 ```Python
 # 示例代码
@@ -1387,6 +1423,21 @@ from qtmodel import *
 mdb.add_load_combine(name="荷载组合1",combine_type=1,describe="无",combine_info=[("CS","合计值",1),("CS","恒载",1)])
 ```  
 Returns: 无
+### update_load_combine
+更新荷载组合
+> 参数:  
+> name:荷载组合名  
+> combine_type:荷载组合类型 1-叠加  2-判别  3-包络  
+> describe:描述  
+> combine_info:荷载组合信息 [(荷载工况类型,工况名,系数)...] 工况类型如下  
+> _"ST"-静力荷载工况  "CS"-施工阶段荷载工况  "CB"-荷载组合_  
+> _"MV"-移动荷载工况  "SM"-沉降荷载工况_  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.update_load_combine(name="荷载组合1",combine_type=1,describe="无",combine_info=[("CS","合计值",1),("CS","恒载",1)])
+```  
+Returns: 无
 ### remove_load_combine
 删除荷载组合
 > 参数:  
@@ -1397,7 +1448,6 @@ from qtmodel import *
 mdb.remove_load_combine(name="荷载组合1")
 ```  
 Returns: 无
-
 
 ##  静力结果查看
 ### get_element_stress
@@ -1572,7 +1622,7 @@ Returns: 无
 绘制板单元结果图并保存到指定文件
 > 参数:  
 > file_path: 保存路径名  
-> component: 分量编号  
+> component: 分量编号 0-Fxx 1-Fyy 2-Fxy 3-Mxx 4-Myy 5-Mxy  
 > force_kind: 力类型  
 > load_case_name: 详细荷载工况名  
 > stage_id: 阶段编号  
@@ -1594,7 +1644,7 @@ from qtmodel import *
 odb.plot_plate_element_force(r"aaa.png",component=0,load_case_name="CQ:成桥(合计)",stage_id=-1)
 ```  
 Returns: 无
-##  获取模型信息
+##  获取节点单元材料信息
 ### get_section_data
 获取截面详细信息
 > 参数:  
@@ -1729,4 +1779,243 @@ from qtmodel import *
 odb.get_concrete_material() # 获取所有材料信息
 ```  
 Returns: list[Material]
+### get_steel_plate_material
+获取钢材材料信息
+> 参数:  
+> ids: 材料号，默认时输出全部材料  
+```Python
+# 示例代码
+from qtmodel import *
+odb.get_steel_plate_material() # 获取所有钢材材料信息
+```  
+Returns: list[Material]
+### get_pre_stress_bar_material
+获取钢材材料信息
+> 参数:  
+> ids: 材料号，默认时输出全部材料  
+```Python
+# 示例代码
+from qtmodel import *
+odb.get_pre_stress_bar_material() # 获取所有预应力材料信息
+```  
+Returns: list[Material]
+### get_steel_bar_material
+获取钢筋材料信息
+> 参数:  
+> ids: 材料号，默认时输出全部材料  
+```Python
+# 示例代码
+from qtmodel import *
+odb.get_steel_bar_material() # 获取所有钢筋材料信息
+```  
+Returns: list[Material]
+### get_user_###ine_material
+获取自定义材料信息
+> 参数:  
+> ids: 材料号，默认时输出全部材料  
+```Python
+# 示例代码
+from qtmodel import *
+odb.get_user_define_material() # 获取所有自定义材料信息
+```  
+Returns: list[Material]
+##  获取模型边界信息
+### get_boundary_group_names
+获取自边界组名称
+> 参数:  
+```Python
+# 示例代码
+from qtmodel import *
+odb.get_boundary_group_names()
+```  
+Returns: list[str]
+### get_general_support_data
+获取一般支承信息
+> 参数:  
+> group_name:默认输出所有边界组信息  
+```Python
+# 示例代码
+from qtmodel import *
+odb.get_general_support_data()
+```  
+Returns: list[GeneralSupport]
+### get_elastic_link_data
+获取弹性连接信息
+> 参数:  
+> group_name:默认输出所有边界组信息  
+```Python
+# 示例代码
+from qtmodel import *
+odb.get_elastic_link_data()
+```  
+Returns: list[ElasticLink]
+### get_elastic_support_data
+获取弹性支承信息
+> 参数:  
+> group_name:默认输出所有边界组信息  
+```Python
+# 示例代码
+from qtmodel import *
+odb.get_elastic_support_data()
+```  
+Returns: list[ElasticSupport]
+### get_master_slave_link_data
+获取主从连接信息
+> 参数:  
+> group_name:默认输出所有边界组信息  
+```Python
+# 示例代码
+from qtmodel import *
+odb.get_master_slave_link_data()
+```  
+Returns: list[MasterSlaveLink]
+### get_node_local_axis_data
+获取节点坐标信息
+> 参数:  
+```Python
+# 示例代码
+from qtmodel import *
+odb.get_node_local_axis_data()
+```  
+Returns: list[NodalLocalAxis]
+### get_beam_constraint_data
+获取节点坐标信息
+> 参数:  
+> group_name:默认输出所有边界组信息  
+```Python
+# 示例代码
+from qtmodel import *
+odb.get_beam_constraint_data()
+```  
+Returns: list[BeamConstraint]
+### get_constraint_equation_data
+获取约束方程信息
+> 参数:  
+> group_name:默认输出所有边界组信息  
+```Python
+# 示例代码
+from qtmodel import *
+odb.get_constraint_equation_data()
+```  
+Returns: list[ConstraintEquation]
+##  获取施工阶段信息
+### get_elements_of_stage
+获取指定施工阶段单元编号信息
+> 参数:  
+> stage_id: 施工阶段编号  
+```Python
+# 示例代码
+from qtmodel import *
+odb.get_elements_of_stage(1)
+```  
+Returns: list[int]
+### get_nodes_of_stage
+获取指定施工阶段节点编号信息
+> 参数:  
+> stage_id: 施工阶段编号  
+```Python
+# 示例代码
+from qtmodel import *
+odb.get_nodes_of_stage(1)
+```  
+Returns: list[int]
+### get_groups_of_stage
+获取施工阶段结构组、边界组、荷载组名集合
+> 参数:  
+> stage_id: 施工阶段编号  
+```Python
+# 示例代码
+from qtmodel import *
+odb.get_groups_of_stage(1)
+```  
+Returns: dict
+##  荷载信息
+### get_load_case_names
+获取荷载工况名
+> 参数:  
+```Python
+# 示例代码
+from qtmodel import *
+odb.get_load_case_names()
+```  
+Returns: list[str]
+### get_pre_stress_load
+获取预应力荷载
+> 参数:  
+> case_name: 荷载工况名  
+```Python
+# 示例代码
+from qtmodel import *
+odb.get_pre_stress_load("荷载工况1")
+```  
+Returns: list[PreStressLoad]
+### get_node_mass_data
+获取节点质量
+> 参数:  
+```Python
+# 示例代码
+from qtmodel import *
+odb.get_node_mass_data()
+```  
+Returns: list[NodalMass]
+### get_nodal_force_load
+获取节点力荷载
+> 参数:  
+> case_name: 荷载工况名  
+```Python
+# 示例代码
+from qtmodel import *
+odb.get_nodal_force_load("荷载工况1")
+```  
+Returns: list[NodalForce]
+### get_nodal_displacement_load
+获取节点位移荷载
+> 参数:  
+> case_name: 荷载工况名  
+```Python
+# 示例代码
+from qtmodel import *
+odb.get_nodal_displacement_load("荷载工况1")
+```  
+Returns: list[NodalForceDisplacement]
+### get_beam_element_load
+获取梁单元荷载
+> 参数:  
+> case_name: 荷载工况名  
+```Python
+# 示例代码
+from qtmodel import *
+odb.get_beam_element_load("荷载工况1")
+```  
+Returns: list[BeamElementLoad]
+### get_plate_element_load
+获取梁单元荷载
+> 参数:  
+> case_name: 荷载工况名  
+```Python
+# 示例代码
+from qtmodel import *
+odb.get_beam_element_load("荷载工况1")
+```  
+Returns: list[BeamElementLoad]
+### get_initial_tension_load
+获取初拉力荷载数据
+> 参数:  
+> case_name: 荷载工况名  
+```Python
+# 示例代码
+from qtmodel import *
+odb.get_initial_tension_load("荷载工况1")
+```  
+Returns: list[InitialTension]
+### get_cable_length_load
+获取初拉力荷载数据
+> 参数:  
+> case_name: 荷载工况名  
+```Python
+# 示例代码
+from qtmodel import *
+odb.get_cable_length_load("荷载工况1")
+```  
+Returns: list[CableLengthLoad]
 

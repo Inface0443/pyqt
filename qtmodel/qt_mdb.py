@@ -66,11 +66,9 @@ class Mdb:
             qt_model.ChangeConstructStage(stage)
         except Exception as ex:
             raise Exception(ex)
-
     # endregion
 
     # region 项目管理
-
     @staticmethod
     def update_bim():
         """
