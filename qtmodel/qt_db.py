@@ -316,8 +316,8 @@ class NodalMass:
         """
         节点质量
         Args:
-             node_id:节点编号
-             mass_info:[m,rmX,rmY,rmZ]
+            node_id:节点编号
+            mass_info:[m,rmX,rmY,rmZ]
         """
         self.node_id = node_id
         self.mass_info = mass_info
@@ -380,16 +380,30 @@ class NodalForceDisplacement:
         return self.__str__()
 
 
-class FrameConcentratedLoad:
-    def __init__(self, beam_id: int, case_name: str,load_type:int, coord_system: int,
-                 load_distance:float,load_force: float, group_name="默认荷载组",
+class BeamElementLoad:
+    def __init__(self, beam_id: int, case_name: str, load_type: int, coord_system: int,
+                 list_x: list[float, float] = None,
+                 list_load: list[float, float] = None, group_name="默认荷载组",
                  load_bias: tuple[bool, int, int, float] = None, projected: bool = False):
+        """
+        节点位移信息
+        Args:
+            beam_id:梁单元号
+            case_name:荷载工况名
+            load_type:荷载类型  1-集中力 2-集中弯矩 3-分布弯矩 4-分布弯矩
+            coord_system: 1-整体坐标X  2-整体坐标Y 3-整体坐标Z  4-局部坐标X  5-局部坐标Y  6-局部坐标Z
+            list_x:位置信息列表
+            list_load:荷载信息列表
+            group_name:荷载组名
+            load_bias:偏心荷载 (是否偏心,0-中心 1-偏心,偏心坐标系-int,偏心距离)
+            projected:荷载是否投影
+        """
         self.beam_id = beam_id
         self.case_name = case_name
         self.load_type = load_type
         self.coord_system = coord_system
-        self.load_distance = load_distance
-        self.load_force = load_force
+        self.list_x = list_x
+        self.list_load = list_load
         self.group_name = group_name
         self.load_bias = load_bias
         self.projected = projected
@@ -401,3 +415,225 @@ class FrameConcentratedLoad:
 
     def __repr__(self):
         return self.__str__()
+
+
+class PlateElementLoad:
+    def __init__(self, element_id: int, case_name: str, load_type: int, load_place: int, coord_system: int,
+                 group_name: str = "默认荷载组", load_list: list[float] = None, xy_list: tuple[float, float] = None):
+        """
+        板单元荷载
+        Args:
+            element_id:单元id
+            case_name:荷载工况名
+            load_type:荷载类型
+               _1-集中力  2-集中弯矩  3-分布力  4-分布弯矩_
+            load_place:荷载位置
+               _0-面IJKL 1-边IJ  2-边JK  3-边KL  4-边LI  (仅分布荷载需要)_
+            coord_system:坐标系  (默认3)
+               _1-整体坐标X  2-整体坐标Y 3-整体坐标Z  4-局部坐标X  5-局部坐标Y  6-局部坐标Z_
+            group_name:荷载组名
+            load_list:荷载列表
+            xy_list:荷载位置信息 [IJ方向绝对距离x,IL方向绝对距离y]  (仅集中荷载需要)
+        """
+        self.element_id = element_id
+        self.case_name = case_name
+        self.load_type = load_type
+        self.load_place = load_place
+        self.coord_system = coord_system
+        self.group_name = group_name
+        self.load_list = load_list
+        self.xy_list = xy_list
+
+    def __str__(self):
+        attrs = vars(self)
+        dict_str = '{' + ', '.join(f"'{k}': {v}" for k, v in attrs.items()) + '}'
+        return dict_str
+
+    def __repr__(self):
+        return self.__str__()
+
+
+class DeviationParameter:
+    def __init__(self, name: str, element_type: int = 1, parameters: list[float] = None):
+        """
+        制造偏差参数
+        Args:
+            name:名称
+            element_type:单元类型  1-梁单元  2-板单元
+            parameters:参数列表
+                    _梁杆单元:[轴向,I端X向转角,I端Y向转角,I端Z向转角,J端X向转角,J端Y向转角,J端Z向转角]_
+                    _板单元:[X向位移,Y向位移,Z向位移,X向转角,Y向转角]_
+        """
+        self.name = name
+        self.element_type = element_type
+        self.parameters = parameters
+
+    def __str__(self):
+        attrs = vars(self)
+        dict_str = '{' + ', '.join(f"'{k}': {v}" for k, v in attrs.items()) + '}'
+        return dict_str
+
+    def __repr__(self):
+        return self.__str__()
+
+
+class DeviationLoad:
+    def __init__(self, element_id: int = 1, case_name: str = "", parameters: list[str] = None, group_name: str = "默认荷载组"):
+        """
+        Args:
+            element_id:单元编号
+            case_name:荷载工况名
+            parameters:参数名列表
+                _梁杆单元时-[制造误差参数名称]_
+                _板单元时-[I端误差名,J端误差名,K端误差名,L端误差名]_
+            group_name:荷载组名
+        """
+        self.element_id = element_id
+        self.case_name = case_name
+        self.parameters = parameters
+        self.group_name = group_name
+
+    def __str__(self):
+        attrs = vars(self)
+        dict_str = '{' + ', '.join(f"'{k}': {v}" for k, v in attrs.items()) + '}'
+        return dict_str
+
+    def __repr__(self):
+        return self.__str__()
+
+
+class ElementTemperature:
+    def __init__(self, element_id: int = 1, case_name: str = "", temperature: float = 1, group_name: str = "默认荷载组"):
+        """
+        单元温度
+        Args:
+            element_id:单元编号
+            case_name:荷载工况名
+            temperature:最终温度
+            group_name:荷载组名
+        """
+        self.element_id = element_id
+        self.case_name = case_name
+        self.temperature = temperature
+        self.group_name = group_name
+
+    def __str__(self):
+        attrs = vars(self)
+        dict_str = '{' + ', '.join(f"'{k}': {v}" for k, v in attrs.items()) + '}'
+        return dict_str
+
+    def __repr__(self):
+        return self.__str__()
+
+
+class GradientTemperature:
+    def __init__(self, element_id: int, case_name: str, temperature: float, section_oriental: int = 1,
+                 element_type: int = 1, group_name: str = "默认荷载组"):
+        """
+        添加梯度温度
+        Args:
+             element_id:单元编号
+             case_name:荷载工况名
+             temperature:温差
+             section_oriental:截面方向 (仅梁单元需要) 1-截面Y向(默认)  2-截面Z向
+             element_type:单元类型 1-梁单元(默认)  2-板单元
+             group_name:荷载组名
+        """
+        self.element_id = element_id
+        self.case_name = case_name
+        self.temperature = temperature
+        self.section_oriental = section_oriental
+        self.element_type = element_type
+        self.group_name = group_name
+
+    def __str__(self):
+        attrs = vars(self)
+        dict_str = '{' + ', '.join(f"'{k}': {v}" for k, v in attrs.items()) + '}'
+        return dict_str
+
+    def __repr__(self):
+        return self.__str__()
+
+
+class BeamSectionTemperature:
+    def __init__(self, element_id: int, case_name: str, paving_thick: float, temperature_type: int = 1,
+                 paving_type: int = 1, group_name: str = "默认荷载组", modify: bool = False, temp_list: tuple[float, float] = None):
+        """
+        梁截面温度
+        Args:
+            element_id:单元编号
+            case_name:荷载工况名
+            paving_thick:铺设厚度(m)
+            temperature_type:温度类型  1-升温(默认) 2-降温
+            paving_type:铺设类型 1-沥青混凝土(默认)  2-水泥混凝土
+            group_name:荷载组名
+            modify:是否修改规范温度
+            temp_list:温度列表[T1,T2]  (仅修改时需要)
+        """
+        self.element_id = element_id
+        self.case_name = case_name
+        self.paving_thick = paving_thick
+        self.temperature_type = temperature_type
+        self.paving_type = paving_type
+        self.modify = modify
+        self.temp_list = temp_list
+        self.group_name = group_name
+
+    def __str__(self):
+        attrs = vars(self)
+        dict_str = '{' + ', '.join(f"'{k}': {v}" for k, v in attrs.items()) + '}'
+        return dict_str
+
+    def __repr__(self):
+        return self.__str__()
+
+
+class IndexTemperature:
+    def __init__(self, element_id: int, case_name: str, temperature: float = 0, index: float = 1, group_name: str = "默认荷载组"):
+        """
+        指数温度
+        Args:
+            element_id:单元编号
+            case_name:荷载工况名
+            temperature:温差
+            index:指数
+            group_name:荷载组名
+        """
+        self.element_id = element_id
+        self.case_name = case_name
+        self.temperature = temperature
+        self.index = index
+        self.group_name = group_name
+
+    def __str__(self):
+        attrs = vars(self)
+        dict_str = '{' + ', '.join(f"'{k}': {v}" for k, v in attrs.items()) + '}'
+        return dict_str
+
+    def __repr__(self):
+        return self.__str__()
+
+
+class TopPlateTemperature:
+    def __init__(self, element_id: int, case_name: str, temperature: float = 0, group_name: str = "默认荷载组"):
+        """
+        顶板温度
+        Args:
+            element_id:单元编号
+            case_name:荷载工况名
+            temperature:温差
+            group_name:荷载组名
+        """
+        self.element_id = element_id
+        self.case_name = case_name
+        self.temperature = temperature
+        self.group_name = group_name
+
+    def __str__(self):
+        attrs = vars(self)
+        dict_str = '{' + ', '.join(f"'{k}': {v}" for k, v in attrs.items()) + '}'
+        return dict_str
+
+    def __repr__(self):
+        return self.__str__()
+

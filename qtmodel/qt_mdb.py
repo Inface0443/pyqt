@@ -1812,7 +1812,7 @@ class Mdb:
             beam_id:单元编号
             case_name:荷载工况名
             load_type:荷载类型
-               _ 1-集中荷载 2-集中弯矩 3-分布弯矩 4-分布弯矩
+               _ 1-集中力 2-集中弯矩 3-分布弯矩 4-分布弯矩
             coord_system:坐标系
                 _1-整体坐标X  2-整体坐标Y 3-整体坐标Z  4-局部坐标X  5-局部坐标Y  6-局部坐标Z_
             is_abs: 荷载位置输入方式，True-绝对值   False-相对值
@@ -1820,7 +1820,7 @@ class Mdb:
             list_load:荷载数值信息
             group_name:荷载组名
             load_bias:偏心荷载 (是否偏心,0-中心 1-偏心,偏心坐标系-int,偏心距离)
-            projected:是否投影
+            projected:荷载是否投影
         example:
             mdb.add_beam_load(case_name="荷载工况1",beam_id=1,load_type=1,list_x=[0.1,0.5,0.8],list_load=[100,100,100])
             mdb.add_beam_load(case_name="荷载工况1",beam_id=1,load_type=3,list_x=[0.4,0.8],list_load=[100,200])
@@ -1991,7 +1991,7 @@ class Mdb:
 
     @staticmethod
     def add_gradient_temperature(element_id: int = 1, case_name: str = "", temperature: float = 1, section_oriental: int = 1,
-                                 element_type: int = 1, group_name: str = ""):
+                                 element_type: int = 1, group_name: str = "默认荷载组"):
         """
         添加梯度温度
              element_id:单元编号

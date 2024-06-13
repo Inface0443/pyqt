@@ -968,7 +968,8 @@ class Odb:
     def get_pre_stress_load(case_name: str):
         """
         获取预应力荷载
-        Args: 无
+        Args:
+            case_name: 荷载工况名
         example:
             odb.get_pre_stress_load()
         Returns: list[PreStressLoad]
@@ -978,11 +979,42 @@ class Odb:
         for data in item_list:
             res_list.append(PreStressLoad(case_name=case_name, tendon_name=data.Tendon.Name,
                                           tension_type=int(data.TendonTensionType), force=data.TensionForce, group_name=data.LoadGroup.Name))
+        return res_list
 
     @staticmethod
     def get_node_mass_data():
         """
-
+        获取节点质量
+        Args: 无
+        example:
+            odb.get_node_mass_data()
+        Returns: list[NodalMass]
         """
-        pass
+        res_list = []
+        item_list = qt_model.GetNodalMassLoadData()
+        for data in item_list:
+            res_list.append(NodalMass(data.Node.Id, mass_info=(data.MassAlongZ,
+                                                               data.InertialMassMomentAlongX,
+                                                               data.InertialMassMomentAlongY,
+                                                               data.InertialMassMomentAlongZ)))
+        return res_list
+
+    @staticmethod
+    def get_nodal_force_load(case_name: str):
+        """
+        获取节点力荷载
+        Args:
+            case_name: 荷载工况名
+        example:
+            odb.get_nodal_force_load()
+        Returns: list[NodalMass]
+        """
+        res_list = []
+        item_list = qt_model.GetNodeForceLoadData()
+        for data in item_list:
+            data_force = data.Force
+            res_list.append(NodalForce(node_id=data.Node.Id, case_name=case_name,
+                                       load_info=(data_force.ForceX, data_force.ForceY, data_force.ForceZ,
+                                                  data_force.MomentX, data_force.MomentY, data_force.MomentZ), group_name=data.LoadGroup.Name))
+        return res_list
     # endregion
