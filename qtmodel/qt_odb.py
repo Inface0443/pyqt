@@ -1112,17 +1112,64 @@ class Odb:
     @staticmethod
     def get_cable_length_load(case_name: str) -> list[CableLengthLoad]:
         """
-            获取初拉力荷载数据
-            Args:
-                case_name: 荷载工况名
-            example:
-                odb.get_cable_length_load("荷载工况1")
-            Returns: list[CableLengthLoad]
+        获取初拉力荷载数据
+        Args:
+            case_name: 荷载工况名
+        example:
+            odb.get_cable_length_load("荷载工况1")
+        Returns: list[CableLengthLoad]
         """
         res_list = []
         item_list_load = qt_model.GetCableLengthLoadData(case_name)
         for item in item_list_load:
             res_list.append(CableLengthLoad(element_id=item.ElementId, case_name=case_name, group_name=item.LoadGroup.Name,
                                             tension_type=int(item.CableTensionType), length=item.UnstressedLength))
+        return res_list
+
+    @staticmethod
+    def get_deviation_parameter() -> list[DeviationParameter]:
+        """
+        获取制造偏差参数
+        Args: 无
+        example:
+            odb.get_deviation_parameter()
+        Returns: list[DeviationParameter]
+        """
+        res_list = []
+        beam_list_parameter = qt_model.GetBeamDeviationParameterData()
+        for item in beam_list_parameter:
+            res_list.append(DeviationParameter(item.Name, element_type=1,
+                                               parameters=[item.AxialDeviation, item.StartAngleDeviationDirectX,
+                                                           item.StartAngleDeviationDirectY, item.StartAngleDeviationDirectZ,
+                                                           item.EndAngleDeviationDirectX, item.EndAngleDeviationDirectY,
+                                                           item.EndAngleDeviationDirectZ]))
+        plate_list_parameter = qt_model.GetPlateDeviationParameterData()
+        for item in plate_list_parameter:
+            res_list.append(DeviationParameter(item.Name, element_type=2,
+                                               parameters=[item.DisplacementDirectX, item.DisplacementDirectY, item.DisplacementDirectZ,
+                                                           item.RotationDirectX, item.RotationDirectY]))
+        return res_list
+
+    @staticmethod
+    def get_deviation_load(case_name: str):
+        """
+        获取制造偏差荷载
+        Args:
+            case_name:荷载工况名
+        example:
+            odb.get_deviation_load()
+        Returns: list[DeviationLoad]
+        """
+        res_list = []
+        beam_list_load = qt_model.GetBeamDeviationLoadData(case_name)
+        for item in beam_list_load:
+            res_list.append(DeviationLoad(item.Element.Id, case_name=case_name,
+                                          parameters=[item.BeamDeviationParameter.Name],
+                                          group_name=item.LoadGroup.Name))
+        plate_list_load = qt_model.GetPlateDeviationLoadData(case_name)
+        for item in plate_list_load:
+            res_list.append(DeviationLoad(item.Element.Id, case_name=case_name,
+                                          parameters=[item.PlateDeviation[0].Name, item.PlateDeviation[0].Name,
+                                                      item.PlateDeviation[2].Name, item.PlateDeviation[3].Name]))
         return res_list
     # endregion
