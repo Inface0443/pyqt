@@ -1076,10 +1076,12 @@ class Mdb:
         Args:
              node_id:节点编号
              support_type:支承类型 1-线性  2-受拉  3-受压
-             boundary_info:边界信息 受拉和受压时列表长度为1  线性时列表长度为6
+             boundary_info:边界信息 受拉和受压时列表长度为2-[direct(1-X 2-Y 3-Z),stiffness]  线性时列表长度为6-[kx,ky,kz,krx,kry,krz]
              group_name:边界组
         example:
             mdb.add_elastic_support(node_id=1,support_type=1,boundary_info=[1e6,0,1e6,0,0,0])
+            mdb.add_elastic_support(node_id=1,support_type=2,boundary_info=[1,1e6])
+            mdb.add_elastic_support(node_id=1,support_type=3,boundary_info=[1,1e6])
         Returns: 无
         """
         try:

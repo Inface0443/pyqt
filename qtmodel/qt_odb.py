@@ -667,10 +667,20 @@ class Odb:
             odb.get_steel_plate_material() # 获取所有钢材材料信息
         Returns: list[Material]
         """
+        steel_plate_dictionary = {
+            "Q235(≤16)": "Q235(0_16)", "Q235(16~40)": "Q235(16_40)", "Q235(40~100)": "Q235(40_100)", "Q345(≤16)": "Q345(0_16)",
+            "Q345(16~40)": "Q345(16_40)", "Q345(40~63)": "Q345(40_63)", "Q345(63~80)": "Q345(63_80)", "Q345(80~100)": "Q345(80_100)",
+            "Q390(≤16)": "Q390(0_16)", "Q390(16~40)": "Q390(16_40)", "Q390(40~63)": "Q390(40_63)", "Q390(63~100)": "Q390(63_100)",
+            "Q420(≤16)": "Q420(0_16)", "Q420(16~40)": "Q420(16_40)", "Q420(40~63)": "Q420(40_63)", "Q420(63~100)": "Q420(63_100)",
+            "Q235qD": "Q235qD", "Q345qD": "Q345qD", "Q345qE": "Q345qE", "Q370qD": "Q370qD", "Q370qE": "Q370qE", "Q420qD": "Q420qD",
+            "Q420qE": "Q420qE", "Q500qD": "Q500qD", "Q500qE": "Q500qE", "ZG230-450Ⅱ": "ZG230-450II", "ZG270-500Ⅱ": "ZG270-500II",
+            "35号锻钢": "35号锻钢", "35CrMo": "35CrMo",
+        }
         res_list = []
         item_list = qt_model.GetSteelPlateMaterialData(ids)
         for item in item_list:
-            res_list.append(Material(mat_id=item.Id, name=item.Name, mat_type="钢材", standard=item.Standard, database=item.Database,
+            res_list.append(Material(mat_id=item.Id, name=item.Name, mat_type="钢材", standard=item.Standard,
+                                     database=steel_plate_dictionary[item.StrengthCheck.Database],
                                      data_info=[item.ElasticModulus, item.UnitWeight, item.PosiRatio, item.TemperatureCoefficient],
                                      modified=item.IsModifiedByUser, construct_factor=item.ConstructionCoefficient,
                                      creep_id=-1, f_cuk=0))
@@ -686,8 +696,9 @@ class Odb:
             odb.get_pre_stress_bar_material() # 获取所有预应力材料信息
         Returns: list[Material]
         """
+
         res_list = []
-        item_list = qt_model.GetSteelPlateMaterialData(ids)
+        item_list = qt_model.GetPreStressedBarMaterialData(ids)
         for item in item_list:
             res_list.append(Material(mat_id=item.Id, name=item.Name, mat_type="预应力", standard=item.Standard, database=item.Database,
                                      data_info=[item.ElasticModulus, item.UnitWeight, item.PosiRatio, item.TemperatureCoefficient],
@@ -706,7 +717,7 @@ class Odb:
         Returns: list[Material]
         """
         res_list = []
-        item_list = qt_model.GetSteelPlateMaterialData(ids)
+        item_list = qt_model.GetSteelBarMaterialData(ids)
         for item in item_list:
             res_list.append(Material(mat_id=item.Id, name=item.Name, mat_type="钢筋", standard=item.Standard, database=item.Database,
                                      data_info=[item.ElasticModulus, item.UnitWeight, item.PosiRatio, item.TemperatureCoefficient],
@@ -725,7 +736,7 @@ class Odb:
         Returns: list[Material]
         """
         res_list = []
-        item_list = qt_model.GetSteelPlateMaterialData(ids)
+        item_list = qt_model.GetUserDefinedMaterialData(ids)
         for item in item_list:
             creep_id = -1 if item.IsCalShrinkCreep is False else item.ConcreteTimeDependency.Id
             res_list.append(Material(mat_id=item.Id, name=item.Name, mat_type="自定义", standard="null", database="null",
