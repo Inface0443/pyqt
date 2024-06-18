@@ -20,17 +20,6 @@ class NodeDisplacement:
             raise ValueError("操作错误:  'displacements' 列表有误")
 
     def __str__(self):
-        attrs = vars(self)
-        dict_str = '{' + ', '.join(f"'{k}': {v}" for k, v in attrs.items()) + '}'
-        return dict_str
-
-    def __repr__(self):
-        return self.__str__()
-
-    def to_json(self):
-        """
-        将对象转换为 JSON 格式的字符串
-        """
         obj_dict = {
             'id': self.id,
             'dx': self.dx,
@@ -41,6 +30,9 @@ class NodeDisplacement:
             'rz': self.rz
         }
         return json.dumps(obj_dict)
+
+    def __repr__(self):
+        return self.__str__()
 
 
 class SupportReaction:
@@ -61,17 +53,6 @@ class SupportReaction:
             raise ValueError("操作错误:  'force' 列表有误")
 
     def __str__(self):
-        attrs = vars(self)
-        dict_str = '{' + ', '.join(f"'{k}': {v}" for k, v in attrs.items()) + '}'
-        return dict_str
-
-    def __repr__(self):
-        return self.__str__()
-
-    def to_json(self):
-        """
-        将对象转换为 JSON 格式的字符串
-        """
         obj_dict = {
             'support_id': self.support_id,
             'fx': self.fx,
@@ -82,6 +63,9 @@ class SupportReaction:
             'mz': self.mz
         }
         return json.dumps(obj_dict)
+
+    def __repr__(self):
+        return self.__str__()
 
 
 class BeamElementForce:
@@ -105,23 +89,15 @@ class BeamElementForce:
             raise ValueError("操作错误:  'force_i' and 'force_j' 列表有误")
 
     def __str__(self):
-        attrs = vars(self)
-        dict_str = '{' + ', '.join(f"'{k}': {v}" for k, v in attrs.items()) + '}'
-        return dict_str
+        obj_dict = {
+            'id': self.id,
+            'force_i': self.force_i.__str__(),
+            'force_j': self.force_j.__str__()
+        }
+        return json.dumps(obj_dict)
 
     def __repr__(self):
         return self.__str__()
-
-    def to_json(self):
-        """
-        将 BeamElementForce 对象转换为 JSON 格式的字符串
-        """
-        obj_dict = {
-            'id': self.id,
-            'force_i': self.force_i.to_json(),
-            'force_j': self.force_j.to_json()
-        }
-        return json.dumps(obj_dict)
 
 
 class TrussElementForce:
@@ -151,17 +127,6 @@ class TrussElementForce:
             raise ValueError("操作错误:  'stress_i' and 'stress_j' 列表有误")
 
     def __str__(self):
-        attrs = vars(self)
-        dict_str = '{' + ', '.join(f"'{k}': {v}" for k, v in attrs.items()) + '}'
-        return dict_str
-
-    def __repr__(self):
-        return self.__str__()
-
-    def to_json(self):
-        """
-        将对象转换为 JSON 格式的字符串
-        """
         obj_dict = {
             'id': self.id,
             'Ni': self.Ni,
@@ -174,6 +139,9 @@ class TrussElementForce:
             'Fzj': self.Fzj
         }
         return json.dumps(obj_dict)
+
+    def __repr__(self):
+        return self.__str__()
 
 
 class ShellElementForce:
@@ -202,25 +170,17 @@ class ShellElementForce:
             raise ValueError("操作错误:  内力列表有误")
 
     def __str__(self):
-        attrs = vars(self)
-        dict_str = '{' + ', '.join(f"'{k}': {v}" for k, v in attrs.items()) + '}'
-        return dict_str
+        obj_dict = {
+            'id': self.id,
+            'force_i': self.force_i.__str__(),
+            'force_j': self.force_j.__str__(),
+            'force_k': self.force_k.__str__(),
+            'force_l': self.force_l.__str__()
+        }
+        return json.dumps(obj_dict)
 
     def __repr__(self):
         return self.__str__()
-
-    def to_json(self):
-        """
-        将 ShellElementForce 对象转换为 JSON 格式的字符串
-        """
-        obj_dict = {
-            'id': self.id,
-            'force_i': self.force_i.to_json(),
-            'force_j': self.force_j.to_json(),
-            'force_k': self.force_k.to_json(),
-            'force_l': self.force_l.to_json()
-        }
-        return json.dumps(obj_dict)
 
 
 class CompositeElementForce:
@@ -260,23 +220,15 @@ class CompositeElementForce:
             raise ValueError("操作错误:  'force_i' and 'force_j' 列表有误")
 
     def __str__(self):
-        attrs = vars(self)
-        dict_str = '{' + ', '.join(f"'{k}': {v}" for k, v in attrs.items()) + '}'
-        return dict_str
+        obj_dict = {
+            'id': self.id,
+            'force_i': self.force_i.__str__(),
+            'force_j': self.force_j.__str__()
+        }
+        return json.dumps(obj_dict)
 
     def __repr__(self):
         return self.__str__()
-
-    def to_json(self):
-        """
-        将 BeamElementForce 对象转换为 JSON 格式的字符串
-        """
-        obj_dict = {
-            'id': self.id,
-            'force_i': self.force_i.to_json(),
-            'force_j': self.force_j.to_json()
-        }
-        return json.dumps(obj_dict)
 
 
 class BeamElementStress:
@@ -300,23 +252,15 @@ class BeamElementStress:
             raise ValueError("操作错误:  单元应力列表有误")
 
     def __str__(self):
-        attrs = vars(self)
-        dict_str = '{' + ', '.join(f"'{k}': {v}" for k, v in attrs.items()) + '}'
-        return dict_str
+        obj_dict = {
+            'id': self.id,
+            'stress_i': self.stress_i.__str__(),
+            'stress_j': self.stress_j.__str__()
+        }
+        return json.dumps(obj_dict)
 
     def __repr__(self):
         return self.__str__()
-
-    def to_json(self):
-        """
-        将 BeamElementStress 对象转换为 JSON 格式的字符串
-        """
-        obj_dict = {
-            'id': self.id,
-            'stress_i': self.stress_i.to_json(),
-            'stress_j': self.stress_j.to_json()
-        }
-        return json.dumps(obj_dict)
 
 
 class ShellElementStress:
@@ -356,29 +300,21 @@ class ShellElementStress:
             raise ValueError("操作错误:  单元应力列表有误")
 
     def __str__(self):
-        attrs = vars(self)
-        dict_str = '{' + ', '.join(f"'{k}': {v}" for k, v in attrs.items()) + '}'
-        return dict_str
+        obj_dict = {
+            'id': self.id,
+            'stress_i_top': self.stress_i_top.__str__(),
+            'stress_j_top': self.stress_j_top.__str__(),
+            'stress_k_top': self.stress_k_top.__str__(),
+            'stress_l_top': self.stress_l_top.__str__(),
+            'stress_i_bot': self.stress_i_bot.__str__(),
+            'stress_j_bot': self.stress_j_bot.__str__(),
+            'stress_k_bot': self.stress_k_bot.__str__(),
+            'stress_l_bot': self.stress_l_bot.__str__()
+        }
+        return json.dumps(obj_dict)
 
     def __repr__(self):
         return self.__str__()
-
-    def to_json(self):
-        """
-        将 ShellElementStress 对象转换为 JSON 格式的字符串
-        """
-        obj_dict = {
-            'id': self.id,
-            'stress_i_top': self.stress_i_top.to_json(),
-            'stress_j_top': self.stress_j_top.to_json(),
-            'stress_k_top': self.stress_k_top.to_json(),
-            'stress_l_top': self.stress_l_top.to_json(),
-            'stress_i_bot': self.stress_i_bot.to_json(),
-            'stress_j_bot': self.stress_j_bot.to_json(),
-            'stress_k_bot': self.stress_k_bot.to_json(),
-            'stress_l_bot': self.stress_l_bot.to_json()
-        }
-        return json.dumps(obj_dict)
 
 
 class TrussElementStress:
@@ -402,23 +338,15 @@ class TrussElementStress:
             raise ValueError("操作错误:  'stress_i' and 'stress_j' 列表有误")
 
     def __str__(self):
-        attrs = vars(self)
-        dict_str = '{' + ', '.join(f"'{k}': {v}" for k, v in attrs.items()) + '}'
-        return dict_str
-
-    def __repr__(self):
-        return self.__str__()
-
-    def to_json(self):
-        """
-        将 TrussElementStress 对象转换为 JSON 格式的字符串
-        """
         obj_dict = {
             'id': self.id,
             'Si': self.Si,
             'Sj': self.Sj
         }
         return json.dumps(obj_dict)
+
+    def __repr__(self):
+        return self.__str__()
 
 
 class CompositeBeamStress:
@@ -446,25 +374,17 @@ class CompositeBeamStress:
             raise ValueError("操作错误:  单元应力列表有误")
 
     def __str__(self):
-        attrs = vars(self)
-        dict_str = '{' + ', '.join(f"'{k}': {v}" for k, v in attrs.items()) + '}'
-        return dict_str
+        obj_dict = {
+            'id': self.id,
+            'main_stress_i': self.main_stress_i.__str__(),
+            'main_stress_j': self.main_stress_j.__str__(),
+            'sub_stress_i': self.sub_stress_i.__str__(),
+            'sub_stress_j': self.sub_stress_j.__str__(),
+        }
+        return json.dumps(obj_dict)
 
     def __repr__(self):
         return self.__str__()
-
-    def to_json(self):
-        """
-        将 BeamElementStress 对象转换为 JSON 格式的字符串
-        """
-        obj_dict = {
-            'id': self.id,
-            'main_stress_i': self.main_stress_i.to_json(),
-            'main_stress_j': self.main_stress_j.to_json(),
-            'sub_stress_i': self.sub_stress_i.to_json(),
-            'sub_stress_j': self.sub_stress_j.to_json(),
-        }
-        return json.dumps(obj_dict)
 
 
 class Force:
@@ -483,17 +403,6 @@ class Force:
         self.m_xyz = math.sqrt((self.mx * self.mx + self.my * self.my + self.mz * self.mz))
 
     def __str__(self):
-        attrs = vars(self)
-        dict_str = '{' + ', '.join(f"'{k}': {v:.3f}" for k, v in attrs.items()) + '}'
-        return dict_str
-
-    def __repr__(self):
-        return self.__str__()
-
-    def to_json(self):
-        """
-        将 Force 对象转换为 JSON 格式的字典
-        """
         obj_dict = {
             'fx': self.fx,
             'fy': self.fy,
@@ -505,6 +414,9 @@ class Force:
             'm_xyz': self.m_xyz
         }
         return obj_dict
+
+    def __repr__(self):
+        return self.__str__()
 
 
 class ShellStress:
@@ -520,17 +432,6 @@ class ShellStress:
         self.s2 = s2
 
     def __str__(self):
-        attrs = vars(self)
-        dict_str = '{' + ', '.join(f"'{k}': {v:.3f}" for k, v in attrs.items()) + '}'
-        return dict_str
-
-    def __repr__(self):
-        return self.__str__()
-
-    def to_json(self):
-        """
-        将 ShellStress 对象转换为 JSON 格式的字符串
-        """
         obj_dict = {
             'sx': self.sx,
             'sy': self.sy,
@@ -539,6 +440,9 @@ class ShellStress:
             's2': self.s2
         }
         return json.dumps(obj_dict)
+
+    def __repr__(self):
+        return self.__str__()
 
 
 class BeamStress:
@@ -558,17 +462,6 @@ class BeamStress:
         self.smy_bot = smy_bot  # My引起的-z轴应力
 
     def __str__(self):
-        attrs = vars(self)
-        dict_str = '{' + ', '.join(f"'{k}': {v:.3f}" for k, v in attrs.items()) + '}'
-        return dict_str
-
-    def __repr__(self):
-        return self.__str__()
-
-    def to_json(self):
-        """
-        将 BeamStress 对象转换为 JSON 格式的字典
-        """
         obj_dict = {
             'top_left': self.top_left,
             'top_right': self.top_right,
@@ -581,3 +474,6 @@ class BeamStress:
             'smy_bot': self.smy_bot
         }
         return obj_dict
+
+    def __repr__(self):
+        return self.__str__()

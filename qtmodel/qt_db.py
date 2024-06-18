@@ -1,3 +1,6 @@
+import json
+
+
 class Node:
     def __init__(self, node_id: int, x: float, y: float, z: float):
         """
@@ -14,9 +17,13 @@ class Node:
         self.z = z
 
     def __str__(self):
-        attrs = vars(self)
-        dict_str = '{' + ', '.join(f"'{k}': {v}" for k, v in attrs.items()) + '}'
-        return dict_str
+        obj_dict = {
+            'node_id': self.node_id,
+            'x': self.x,
+            'y': self.y,
+            'z': self.z,
+        }
+        return json.dumps(obj_dict, ensure_ascii=False)
 
     def __repr__(self):
         return self.__str__()
@@ -47,9 +54,17 @@ class Element:
         self.initial_value = initial_value
 
     def __str__(self):
-        attrs = vars(self)
-        dict_str = '{' + ', '.join(f"'{k}': {v}" for k, v in attrs.items()) + '}'
-        return dict_str
+        obj_dict = {
+            'index': self.index,
+            'ele_type': self.ele_type,
+            'node_list': self.node_list,
+            'mat_id': self.mat_id,
+            'sec_id': self.sec_id,
+            'beta': self.beta,
+            'initial_type': self.initial_type,
+            'initial_value': self.initial_value,
+        }
+        return json.dumps(obj_dict, ensure_ascii=False)
 
     def __repr__(self):
         return self.__str__()
@@ -84,9 +99,19 @@ class Material:
         self.f_cuk = f_cuk
 
     def __str__(self):
-        attrs = vars(self)
-        dict_str = '{' + ', '.join(f"'{k}': {v}" for k, v in attrs.items()) + '}'
-        return dict_str
+        obj_dict = {
+            'mat_id': self.mat_id,
+            'name': self.name,
+            'mat_type': self.mat_type,
+            'standard': self.standard,
+            'database': self.database,
+            'construct_factor': self.construct_factor,
+            'modified': self.modified,
+            'data_info': self.data_info,
+            'is_creep': self.is_creep,
+            'f_cuk': self.f_cuk,
+        }
+        return json.dumps(obj_dict, ensure_ascii=False)
 
     def __repr__(self):
         return self.__str__()
@@ -111,9 +136,14 @@ class GeneralSupport:
         self.node_system = node_system
 
     def __str__(self):
-        attrs = vars(self)
-        dict_str = '{' + ', '.join(f"'{k}': {v}" for k, v in attrs.items()) + '}'
-        return dict_str
+        obj_dict = {
+            'support_id': self.support_id,
+            'node_id': self.node_id,
+            'boundary_info': self.boundary_info,
+            'group_name': self.group_name,
+            'node_system': self.node_system,
+        }
+        return json.dumps(obj_dict, ensure_ascii=False)
 
     def __repr__(self):
         return self.__str__()
@@ -147,9 +177,18 @@ class ElasticLink:
         self.kx = kx
 
     def __str__(self):
-        attrs = vars(self)
-        dict_str = '{' + ', '.join(f"'{k}': {v}" for k, v in attrs.items()) + '}'
-        return dict_str
+        obj_dict = {
+            'link_id': self.link_id,
+            'link_type': self.link_type,
+            'start_id': self.start_id,
+            'end_id': self.end_id,
+            'beta_angle': self.beta_angle,
+            'boundary_info': self.boundary_info,
+            'group_name': self.group_name,
+            'dis_ratio': self.dis_ratio,
+            'kx': self.kx,
+        }
+        return json.dumps(obj_dict, ensure_ascii=False)
 
     def __repr__(self):
         return self.__str__()
@@ -174,9 +213,15 @@ class ElasticSupport:
         self.node_system = node_system
 
     def __str__(self):
-        attrs = vars(self)
-        dict_str = '{' + ', '.join(f"'{k}': {v}" for k, v in attrs.items()) + '}'
-        return dict_str
+        obj_dict = {
+            'support_id': self.support_id,
+            'node_id': self.node_id,
+            'support_type': self.support_type,
+            'boundary_info': self.boundary_info,
+            'group_name': self.group_name,
+            'node_system': self.node_system,
+        }
+        return json.dumps(obj_dict, ensure_ascii=False)
 
     def __repr__(self):
         return self.__str__()
@@ -200,9 +245,14 @@ class MasterSlaveLink:
         self.group_name = group_name
 
     def __str__(self):
-        attrs = vars(self)
-        dict_str = '{' + ', '.join(f"'{k}': {v}" for k, v in attrs.items()) + '}'
-        return dict_str
+        obj_dict = {
+            'link_id': self.link_id,
+            'master_id': self.master_id,
+            'slave_id': self.slave_id,
+            'boundary_info': self.boundary_info,
+            'group_name': self.group_name,
+        }
+        return json.dumps(obj_dict, ensure_ascii=False)
 
     def __repr__(self):
         return self.__str__()
@@ -228,9 +278,15 @@ class ConstraintEquation:
         self.group_name = group_name
 
     def __str__(self):
-        attrs = vars(self)
-        dict_str = '{' + ', '.join(f"'{k}': {v}" for k, v in attrs.items()) + '}'
-        return dict_str
+        obj_dict = {
+            'constraint_id': self.constraint_id,
+            'name': self.name,
+            'sec_node': self.sec_node,
+            'sec_dof': self.sec_dof,
+            'master_info': self.master_info,
+            'group_name': self.group_name,
+        }
+        return json.dumps(obj_dict, ensure_ascii=False)
 
     def __repr__(self):
         return self.__str__()
@@ -255,9 +311,14 @@ class BeamConstraint:
         self.group_name = group_name
 
     def __str__(self):
-        attrs = vars(self)
-        dict_str = '{' + ', '.join(f"'{k}': {v}" for k, v in attrs.items()) + '}'
-        return dict_str
+        obj_dict = {
+            'constraint_id': self.constraint_id,
+            'beam_id': self.beam_id,
+            'info_i': self.info_i,
+            'info_j': self.info_j,
+            'group_name': self.group_name,
+        }
+        return json.dumps(obj_dict, ensure_ascii=False)
 
     def __repr__(self):
         return self.__str__()
@@ -277,9 +338,12 @@ class NodalLocalAxis:
         self.vector_y = vector_y
 
     def __str__(self):
-        attrs = vars(self)
-        dict_str = '{' + ', '.join(f"'{k}': {v}" for k, v in attrs.items()) + '}'
-        return dict_str
+        obj_dict = {
+            'node_id': self.node_id,
+            'vector_x': self.vector_x,
+            'vector_y': self.vector_y,
+        }
+        return json.dumps(obj_dict, ensure_ascii=False)
 
     def __repr__(self):
         return self.__str__()
@@ -303,9 +367,14 @@ class PreStressLoad:
         self.group_name = group_name
 
     def __str__(self):
-        attrs = vars(self)
-        dict_str = '{' + ', '.join(f"'{k}': {v}" for k, v in attrs.items()) + '}'
-        return dict_str
+        obj_dict = {
+            'case_name': self.case_name,
+            'tendon_name': self.tendon_name,
+            'tension_type': self.tension_type,
+            'force': self.force,
+            'group_name': self.group_name,
+        }
+        return json.dumps(obj_dict, ensure_ascii=False)
 
     def __repr__(self):
         return self.__str__()
@@ -323,9 +392,11 @@ class NodalMass:
         self.mass_info = mass_info
 
     def __str__(self):
-        attrs = vars(self)
-        dict_str = '{' + ', '.join(f"'{k}': {v}" for k, v in attrs.items()) + '}'
-        return dict_str
+        obj_dict = {
+            'node_id': self.node_id,
+            'mass_info': self.mass_info,
+        }
+        return json.dumps(obj_dict, ensure_ascii=False)
 
     def __repr__(self):
         return self.__str__()
@@ -347,9 +418,13 @@ class NodalForce:
         self.group_name = group_name
 
     def __str__(self):
-        attrs = vars(self)
-        dict_str = '{' + ', '.join(f"'{k}': {v}" for k, v in attrs.items()) + '}'
-        return dict_str
+        obj_dict = {
+            'node_id': self.node_id,
+            'case_name': self.case_name,
+            'load_info': self.load_info,
+            'group_name': self.group_name,
+        }
+        return json.dumps(obj_dict, ensure_ascii=False)
 
     def __repr__(self):
         return self.__str__()
@@ -372,9 +447,13 @@ class NodalForceDisplacement:
         self.group_name = group_name
 
     def __str__(self):
-        attrs = vars(self)
-        dict_str = '{' + ', '.join(f"'{k}': {v}" for k, v in attrs.items()) + '}'
-        return dict_str
+        obj_dict = {
+            'node_id': self.node_id,
+            'case_name': self.case_name,
+            'load_info': self.load_info,
+            'group_name': self.group_name,
+        }
+        return json.dumps(obj_dict, ensure_ascii=False)
 
     def __repr__(self):
         return self.__str__()
@@ -409,9 +488,18 @@ class BeamElementLoad:
         self.projected = projected
 
     def __str__(self):
-        attrs = vars(self)
-        dict_str = '{' + ', '.join(f"'{k}': {v}" for k, v in attrs.items()) + '}'
-        return dict_str
+        obj_dict = {
+            'beam_id': self.beam_id,
+            'case_name': self.case_name,
+            'load_type': self.load_type,
+            'coord_system': self.coord_system,
+            'list_x': self.list_x,
+            'list_load': self.list_load,
+            'group_name': self.group_name,
+            'load_bias': self.load_bias,
+            'projected': self.projected,
+        }
+        return json.dumps(obj_dict, ensure_ascii=False)
 
     def __repr__(self):
         return self.__str__()
@@ -442,9 +530,17 @@ class PlateElementLoad:
         self.xy_list = xy_list
 
     def __str__(self):
-        attrs = vars(self)
-        dict_str = '{' + ', '.join(f"'{k}': {v}" for k, v in attrs.items()) + '}'
-        return dict_str
+        obj_dict = {
+            'element_id': self.element_id,
+            'case_name': self.case_name,
+            'load_type': self.load_type,
+            'load_place': self.load_place,
+            'coord_system': self.coord_system,
+            'group_name': self.group_name,
+            'load_list': self.load_list,
+            'xy_list': self.xy_list,
+        }
+        return json.dumps(obj_dict, ensure_ascii=False)
 
     def __repr__(self):
         return self.__str__()
@@ -468,9 +564,14 @@ class InitialTension:
         self.tension_type = tension_type
 
     def __str__(self):
-        attrs = vars(self)
-        dict_str = '{' + ', '.join(f"'{k}': {v}" for k, v in attrs.items()) + '}'
-        return dict_str
+        obj_dict = {
+            'element_id': self.element_id,
+            'case_name': self.case_name,
+            'group_name': self.group_name,
+            'tension': self.tension,
+            'tension_type': self.tension_type,
+        }
+        return json.dumps(obj_dict, ensure_ascii=False)
 
     def __repr__(self):
         return self.__str__()
@@ -493,15 +594,19 @@ class CableLengthLoad:
         self.length = length
         self.tension_type = tension_type
 
+    def __str__(self):
+        obj_dict = {
+            'element_id': self.element_id,
+            'case_name': self.case_name,
+            'group_name': self.group_name,
+            'length': self.length,
+            'tension_type': self.tension_type,
+        }
+        return json.dumps(obj_dict, ensure_ascii=False)
 
-def __str__(self):
-    attrs = vars(self)
-    dict_str = '{' + ', '.join(f"'{k}': {v}" for k, v in attrs.items()) + '}'
-    return dict_str
+    def __repr__(self):
+        return self.__str__()
 
-
-def __repr__(self):
-    return self.__str__()
 
 class DeviationParameter:
     def __init__(self, name: str, element_type: int = 1, parameters: list[float] = None):
@@ -519,9 +624,12 @@ class DeviationParameter:
         self.parameters = parameters
 
     def __str__(self):
-        attrs = vars(self)
-        dict_str = '{' + ', '.join(f"'{k}': {v}" for k, v in attrs.items()) + '}'
-        return dict_str
+        obj_dict = {
+            'name': self.name,
+            'element_type': self.element_type,
+            'parameters': self.parameters,
+        }
+        return json.dumps(obj_dict, ensure_ascii=False)
 
     def __repr__(self):
         return self.__str__()
@@ -544,9 +652,13 @@ class DeviationLoad:
         self.group_name = group_name
 
     def __str__(self):
-        attrs = vars(self)
-        dict_str = '{' + ', '.join(f"'{k}': {v}" for k, v in attrs.items()) + '}'
-        return dict_str
+        obj_dict = {
+            'element_id': self.element_id,
+            'case_name': self.case_name,
+            'parameters': self.parameters,
+            'group_name': self.group_name,
+        }
+        return json.dumps(obj_dict, ensure_ascii=False)
 
     def __repr__(self):
         return self.__str__()
@@ -597,9 +709,13 @@ class GradientTemperature:
         self.group_name = group_name
 
     def __str__(self):
-        attrs = vars(self)
-        dict_str = '{' + ', '.join(f"'{k}': {v}" for k, v in attrs.items()) + '}'
-        return dict_str
+        obj_dict = {
+            'element_id': self.element_id,
+            'case_name': self.case_name,
+            'temperature': self.temperature,
+            'group_name': self.group_name,
+        }
+        return json.dumps(obj_dict, ensure_ascii=False)
 
     def __repr__(self):
         return self.__str__()
@@ -630,9 +746,17 @@ class BeamSectionTemperature:
         self.group_name = group_name
 
     def __str__(self):
-        attrs = vars(self)
-        dict_str = '{' + ', '.join(f"'{k}': {v}" for k, v in attrs.items()) + '}'
-        return dict_str
+        obj_dict = {
+            'element_id': self.element_id,
+            'case_name': self.case_name,
+            'paving_thick': self.paving_thick,
+            'temperature_type': self.temperature_type,
+            'paving_type': self.paving_type,
+            'modify': self.modify,
+            'temp_list': self.temp_list,
+            'group_name': self.group_name,
+        }
+        return json.dumps(obj_dict, ensure_ascii=False)
 
     def __repr__(self):
         return self.__str__()
@@ -656,9 +780,14 @@ class IndexTemperature:
         self.group_name = group_name
 
     def __str__(self):
-        attrs = vars(self)
-        dict_str = '{' + ', '.join(f"'{k}': {v}" for k, v in attrs.items()) + '}'
-        return dict_str
+        obj_dict = {
+            'element_id': self.element_id,
+            'case_name': self.case_name,
+            'temperature': self.temperature,
+            'index': self.index,
+            'group_name': self.group_name,
+        }
+        return json.dumps(obj_dict, ensure_ascii=False)
 
     def __repr__(self):
         return self.__str__()
@@ -680,9 +809,13 @@ class TopPlateTemperature:
         self.group_name = group_name
 
     def __str__(self):
-        attrs = vars(self)
-        dict_str = '{' + ', '.join(f"'{k}': {v}" for k, v in attrs.items()) + '}'
-        return dict_str
+        obj_dict = {
+            'element_id': self.element_id,
+            'case_name': self.case_name,
+            'temperature': self.temperature,
+            'group_name': self.group_name,
+        }
+        return json.dumps(obj_dict, ensure_ascii=False)
 
     def __repr__(self):
         return self.__str__()
