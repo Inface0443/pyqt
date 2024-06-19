@@ -1,4 +1,4 @@
-# 最新版本 V0.4.3 - 2024.06.13
+# 最新版本 V0.4.7 - 2024.06.19
 > pip install --upgrade qtmodel -i https://pypi.org/simple
 - 增加模型查询接口
 

@@ -70,6 +70,12 @@ class Element:
         return self.__str__()
 
 
+class GeneralParameterSection:
+    def __init__(self, index: int, name: str, sec_type: str, sec_info: list[float] = None, bias_type: str = "自定义", center_type: str = "质心",
+                 shear_consider: bool = True, bias_point: list[float] = None, property_info: list[float] = None):
+        pass
+
+
 class Material:
     def __init__(self, mat_id: int, name: str, mat_type: str, standard: str, database: str, data_info: list[float] = None,
                  modified: bool = False, construct_factor: float = 1.0, creep_id: int = -1, f_cuk: float = 0):

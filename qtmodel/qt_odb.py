@@ -389,15 +389,29 @@ class Odb:
     @staticmethod
     def get_section_data(sec_id: int):
         """
-        获取截面详细信息
+        获取截面详细信息，截面特性详见UI自定义特性截面
         Args:
             sec_id: 目标截面编号
         example:
-            odb.get_node_id(1,1,1)
-        Returns: int
+            odb.get_section_data(1)
+        Returns: dict
         """
         try:
             return qt_model.GetSectionInfo(sec_id)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def get_section_ids():
+        """
+        获取模型所有截面号
+        Args: 无
+        example:
+            odb.get_section_ids()
+        Returns: list[int]
+        """
+        try:
+            return list(qt_model.GetAllSectionIds())
         except Exception as ex:
             raise Exception(ex)
 

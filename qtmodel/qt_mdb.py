@@ -66,6 +66,7 @@ class Mdb:
             qt_model.ChangeConstructStage(stage)
         except Exception as ex:
             raise Exception(ex)
+
     # endregion
 
     # region 项目管理
@@ -806,7 +807,10 @@ class Mdb:
              index:截面编号
              name:截面名称
              sec_type:截面类型
-             property_info:截面特性列表
+             property_info:截面特性列表，共计25个参数
+                - [Area, AreaY, AreaZ, InertialX, InertialY, InertialZ, InertialYz,
+                    Cyp, Cym, Czp, Czm, Peri0, PeriI, CentY, CentZ,
+                    Y1, Z1, Y2, Z2, Y3, Z3, Y4, Z4, ShearCenterY, ShearCenterZ]
              main_loop:主线圈坐标集合 [(-1,-1),(5,0),(5,5),(-1,5)] 目前只支持单一线圈
              sub_loops:次线圈坐标集合 [[(0,0),(0,1),(1,1,)], [(2,2),(3,2),(3,3)]]
              sec_lines:线宽集合[(x1,y1,x2,y3,thick),]
