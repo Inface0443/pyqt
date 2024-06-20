@@ -19,7 +19,7 @@ class Odb:
             result_kind: 施工阶段数据的类型 1-合计 2-收缩徐变效应 3-预应力效应 4-恒载
             increment_type: 1-全量    2-增量
             case_name: 运营阶段所需荷载工况名
-        example:
+        Example:
             odb.get_element_stress(1,stage_id=1)
             odb.get_element_stress([1,2,3],stage_id=1)
             odb.get_element_stress(1,stage_id=-1,case_name="工况名")
@@ -79,7 +79,7 @@ class Odb:
             result_kind: 施工阶段数据的类型 1-合计 2-收缩徐变效应 3-预应力效应 4-恒载
             increment_type: 1-全量    2-增量
             case_name: 运营阶段所需荷载工况名
-        example:
+        Example:
             odb.get_element_force(1,stage_id=1)
             odb.get_element_force([1,2,3],stage_id=1)
             odb.get_element_force(1,stage_id=-1,case_name="工况名")
@@ -134,7 +134,7 @@ class Odb:
             result_kind: 施工阶段数据的类型 1-合计 2-收缩徐变效应 3-预应力效应 4-恒载
             increment_type: 1-全量    2-增量
             case_name: 运营阶段所需荷载工况名
-        example:
+        Example:
             odb.get_reaction(1,stage_id=1)
             odb.get_reaction([1,2,3],stage_id=1)
             odb.get_reaction(1,stage_id=-1,case_name="工况名")
@@ -161,7 +161,7 @@ class Odb:
             result_kind: 施工阶段数据的类型 1-合计 2-收缩徐变效应 3-预应力效应 4-恒载
             increment_type: 1-全量    2-增量
             case_name: 运营阶段所需荷载工况名
-        example:
+        Example:
             odb.get_node_displacement(1,stage_id=1)
             odb.get_node_displacement([1,2,3],stage_id=1)
             odb.get_node_displacement(1,stage_id=-1,case_name="工况名")
@@ -202,7 +202,7 @@ class Odb:
             digital_count: 小数点位数
             show_exponential: 指数显示开启
             show_increment: 是否显示增量结果
-        example:
+        Example:
             odb.plot_reaction_result(r"aaa.png",component=0,load_case_name="CQ:成桥(合计)",stage_id=-1)
         Returns: 无
         """
@@ -239,7 +239,7 @@ class Odb:
             digital_count: 小数点位数
             show_exponential: 指数显示开启
             show_increment: 是否显示增量结果
-        example:
+        Example:
             odb.plot_displacement_result(r"aaa.png",component=0,load_case_name="CQ:成桥(合计)",stage_id=-1)
         Returns: 无
         """
@@ -284,7 +284,7 @@ class Odb:
             show_exponential: 是否以指数形式显示
             max_min_kind: 最大最小值显示类型
             show_increment: 是否显示增量结果
-        example:
+        Example:
             odb.plot_beam_element_force(r"aaa.png",component=0,load_case_name="CQ:成桥(合计)",stage_id=-1)
         Returns: 无
         """
@@ -328,7 +328,7 @@ class Odb:
             show_as_exponential: 是否以指数形式显示
             max_min_kind: 最大最小值显示类型
             show_increment:是否显示增量结果
-        example:
+        Example:
             odb.plot_truss_element_force(r"aaa.png",load_case_name="CQ:成桥(合计)",stage_id=-1)
         Returns: 无
         """
@@ -369,7 +369,7 @@ class Odb:
             show_as_exponential: 是否以指数形式显示
             max_min_kind: 最大最小值显示类型
             show_increment: 是否显示增量结果
-        example:
+        Example:
             odb.plot_plate_element_force(r"aaa.png",component=0,load_case_name="CQ:成桥(合计)",stage_id=-1)
         Returns: 无
         """
@@ -392,7 +392,7 @@ class Odb:
         获取截面详细信息，截面特性详见UI自定义特性截面
         Args:
             sec_id: 目标截面编号
-        example:
+        Example:
             odb.get_section_data(1)
         Returns: dict
         """
@@ -406,7 +406,7 @@ class Odb:
         """
         获取模型所有截面号
         Args: 无
-        example:
+        Example:
             odb.get_section_ids()
         Returns: list[int]
         """
@@ -424,7 +424,7 @@ class Odb:
             y: 目标点Y轴坐标
             z: 目标点Z轴坐标
             tolerance: 距离容许误差
-        example:
+        Example:
             odb.get_node_id(1,1,1)
         Returns: int
         """
@@ -439,7 +439,7 @@ class Odb:
         获取结构组单元编号
         Args:
             group_name: 结构组名
-        example:
+        Example:
             odb.get_group_elements("默认结构组")
         Returns: list[int]
         """
@@ -454,7 +454,7 @@ class Odb:
         获取结构组节点编号
         Args:
             group_name: 结构组名
-        example:
+        Example:
             odb.get_group_nodes("默认结构组")
         Returns: list[int]
         """
@@ -468,7 +468,7 @@ class Odb:
         """
         获取节点信息 默认获取所有节点信息
         Args: 无
-        example:
+        Example:
             odb.get_node_data()     # 获取所有节点信息
             odb.get_node_data(1)    # 获取单个节点信息
             odb.get_node_data([1,2])    # 获取多个节点信息
@@ -493,7 +493,7 @@ class Odb:
         """
         获取单元信息
         Args: 无
-        example:
+        Example:
             odb.get_element_data() # 获取所有单元结果
             odb.get_element_data(1) # 获取指定编号单元信息
         Returns: list[Element]
@@ -534,7 +534,7 @@ class Odb:
         获取单元类型
         Args:
             ele_id: 单元号
-        example:
+        Example:
             odb.get_element_type(1) # 获取所有单元信息
         Returns: str类型 返回 BEAM PLATE CABLE LINK
         """
@@ -549,7 +549,7 @@ class Odb:
         获取梁单元信息
         Args:
             ids: 梁单元号，默认时获取所有梁单元
-        example:
+        Example:
             odb.get_beam_element() # 获取所有单元信息
         Returns: list[Element]
         """
@@ -571,7 +571,7 @@ class Odb:
         获取板单元信息
         Args:
             ids: 板单元号，默认时获取所有板单元
-        example:
+        Example:
             odb.get_plate_element() # 获取所有单元信息
         Returns: list[Element]
         """
@@ -594,7 +594,7 @@ class Odb:
         获取索单元信息
         Args:
             ids: 索单元号，默认时获取所有索单元
-        example:
+        Example:
             odb.get_cable_element() # 获取所有单元信息
         Returns: list[Element]
         """
@@ -617,7 +617,7 @@ class Odb:
         获取杆单元信息
         Args:
             ids: 杆单元号，默认时输出全部杆单元
-        example:
+        Example:
             odb.get_link_element() # 获取所有单元信息
         Returns: list[Element]
         """
@@ -639,7 +639,7 @@ class Odb:
         获取材料信息
         Args:
             ids: 材料号，默认时输出全部材料
-        example:
+        Example:
             odb.get_material_data() # 获取所有材料信息
         Returns: list[Material]
         """
@@ -657,7 +657,7 @@ class Odb:
         获取混凝土材料信息
         Args:
             ids: 材料号，默认时输出全部材料
-        example:
+        Example:
             odb.get_concrete_material() # 获取所有材料信息
         Returns: list[Material]
         """
@@ -677,7 +677,7 @@ class Odb:
         获取钢材材料信息
         Args:
             ids: 材料号，默认时输出全部材料
-        example:
+        Example:
             odb.get_steel_plate_material() # 获取所有钢材材料信息
         Returns: list[Material]
         """
@@ -706,7 +706,7 @@ class Odb:
         获取钢材材料信息
         Args:
             ids: 材料号，默认时输出全部材料
-        example:
+        Example:
             odb.get_pre_stress_bar_material() # 获取所有预应力材料信息
         Returns: list[Material]
         """
@@ -726,7 +726,7 @@ class Odb:
         获取钢筋材料信息
         Args:
             ids: 材料号，默认时输出全部材料
-        example:
+        Example:
             odb.get_steel_bar_material() # 获取所有钢筋材料信息
         Returns: list[Material]
         """
@@ -745,7 +745,7 @@ class Odb:
         获取自定义材料信息
         Args:
             ids: 材料号，默认时输出全部材料
-        example:
+        Example:
             odb.get_user_define_material() # 获取所有自定义材料信息
         Returns: list[Material]
         """
@@ -767,7 +767,7 @@ class Odb:
         """
         获取自边界组名称
         Args:无
-        example:
+        Example:
             odb.get_boundary_group_names()
         Returns: list[str]
         """
@@ -779,7 +779,7 @@ class Odb:
         获取一般支承信息
         Args:
              group_name:默认输出所有边界组信息
-        example:
+        Example:
             odb.get_general_support_data()
         Returns: list[GeneralSupport]
         """
@@ -803,7 +803,7 @@ class Odb:
         获取弹性连接信息
         Args:
             group_name:默认输出所有边界组信息
-        example:
+        Example:
             odb.get_elastic_link_data()
         Returns: list[ElasticLink]
         """
@@ -827,7 +827,7 @@ class Odb:
         获取弹性支承信息
         Args:
             group_name:默认输出所有边界组信息
-        example:
+        Example:
             odb.get_elastic_support_data()
         Returns: list[ElasticSupport]
         """
@@ -850,7 +850,7 @@ class Odb:
         获取主从连接信息
         Args:
             group_name:默认输出所有边界组信息
-        example:
+        Example:
             odb.get_master_slave_link_data()
         Returns: list[MasterSlaveLink]
         """
@@ -873,7 +873,7 @@ class Odb:
         """
         获取节点坐标信息
         Args:无
-        example:
+        Example:
             odb.get_node_local_axis_data()
         Returns: list[NodalLocalAxis]
         """
@@ -891,7 +891,7 @@ class Odb:
            获取节点坐标信息
            Args:
                group_name:默认输出所有边界组信息
-           example:
+           Example:
                odb.get_beam_constraint_data()
            Returns: list[BeamConstraint]
         """
@@ -914,7 +914,7 @@ class Odb:
          获取约束方程信息
          Args:
              group_name:默认输出所有边界组信息
-         example:
+         Example:
              odb.get_constraint_equation_data()
          Returns: list[ConstraintEquation]
          """
@@ -942,7 +942,7 @@ class Odb:
         获取指定施工阶段单元编号信息
         Args:
             stage_id: 施工阶段编号
-        example:
+        Example:
             odb.get_elements_of_stage(1)
         Returns: list[int]
         """
@@ -954,7 +954,7 @@ class Odb:
         获取指定施工阶段节点编号信息
         Args:
             stage_id: 施工阶段编号
-        example:
+        Example:
             odb.get_nodes_of_stage(1)
         Returns: list[int]
         """
@@ -966,7 +966,7 @@ class Odb:
         获取施工阶段结构组、边界组、荷载组名集合
         Args:
             stage_id: 施工阶段编号
-        example:
+        Example:
             odb.get_groups_of_stage(1)
         Returns: dict
         """
@@ -983,7 +983,7 @@ class Odb:
         """
         获取荷载工况名
         Args: 无
-        example:
+        Example:
             odb.get_load_case_names()
         Returns: list[str]
         """
@@ -995,7 +995,7 @@ class Odb:
         获取预应力荷载
         Args:
             case_name: 荷载工况名
-        example:
+        Example:
             odb.get_pre_stress_load("荷载工况1")
         Returns: list[PreStressLoad]
         """
@@ -1011,7 +1011,7 @@ class Odb:
         """
         获取节点质量
         Args: 无
-        example:
+        Example:
             odb.get_node_mass_data()
         Returns: list[NodalMass]
         """
@@ -1030,7 +1030,7 @@ class Odb:
         获取节点力荷载
         Args:
             case_name: 荷载工况名
-        example:
+        Example:
             odb.get_nodal_force_load("荷载工况1")
         Returns: list[NodalForce]
         """
@@ -1049,7 +1049,7 @@ class Odb:
         获取节点位移荷载
         Args:
             case_name: 荷载工况名
-        example:
+        Example:
             odb.get_nodal_displacement_load("荷载工况1")
         Returns: list[NodalForceDisplacement]
         """
@@ -1068,7 +1068,7 @@ class Odb:
         获取梁单元荷载
         Args:
             case_name: 荷载工况名
-        example:
+        Example:
             odb.get_beam_element_load("荷载工况1")
         Returns: list[BeamElementLoad]
         """
@@ -1095,7 +1095,7 @@ class Odb:
         获取梁单元荷载
         Args:
             case_name: 荷载工况名
-        example:
+        Example:
             odb.get_beam_element_load("荷载工况1")
         Returns: list[BeamElementLoad]
         """
@@ -1123,7 +1123,7 @@ class Odb:
             获取初拉力荷载数据
             Args:
                 case_name: 荷载工况名
-            example:
+            Example:
                 odb.get_initial_tension_load("荷载工况1")
             Returns: list[InitialTension]
         """
@@ -1140,7 +1140,7 @@ class Odb:
         获取初拉力荷载数据
         Args:
             case_name: 荷载工况名
-        example:
+        Example:
             odb.get_cable_length_load("荷载工况1")
         Returns: list[CableLengthLoad]
         """
@@ -1156,7 +1156,7 @@ class Odb:
         """
         获取制造偏差参数
         Args: 无
-        example:
+        Example:
             odb.get_deviation_parameter()
         Returns: list[DeviationParameter]
         """
@@ -1181,7 +1181,7 @@ class Odb:
         获取制造偏差荷载
         Args:
             case_name:荷载工况名
-        example:
+        Example:
             odb.get_deviation_load()
         Returns: list[DeviationLoad]
         """
