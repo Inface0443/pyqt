@@ -1182,7 +1182,7 @@ class Odb:
         Args:
             case_name:荷载工况名
         Example:
-            odb.get_deviation_load()
+            odb.get_deviation_load("荷载工况1")
         Returns: list[DeviationLoad]
         """
         res_list = []
