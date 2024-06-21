@@ -330,6 +330,21 @@ class Mdb:
             liveLoadAnalyticalType=live_load_analytical_type
         )
 
+    @staticmethod
+    def update_self_vibration_setting(do_analysis: bool = False, method: int = 1, matrix_type: int = 0, mode_num: int = 3):
+        """
+        更新自振分析设置
+        Args:
+            do_analysis: 是否进行运营阶段分析
+            method: 计算方法 1-子空间迭代法 2-滤频法  3-多重Ritz法  4-兰索斯法
+            matrix_type: 矩阵类型 0-集中质量矩阵  1-一致质量矩阵
+            mode_num: 振型数量
+        Example:
+            mdb.update_self_vibration_setting(False,1,0,3)
+        Returns: 无
+        """
+        qt_model.UpdateSelfVibrationSetting(doAnalysis=do_analysis, method=method, matrixType=matrix_type, modeNumber=mode_num)
+
     # endregion
 
     # region 节点单元操作
