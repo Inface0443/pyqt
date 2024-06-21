@@ -388,20 +388,32 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
+    def update_node(node_id: int, x: float = 1, y: float = 1, z: float = 1):
+        """
+        根据节点号修改节点坐标
+        Args:
+             node_id: 节点编号
+             x: 更新后x坐标
+             y: 更新后y坐标
+             z: 更新后z坐标
+        example:
+            mdb.update_node(1,2,2,2)
+        Returns: 无
+        """
+        qt_model.UpdateNode(id=node_id, x=x, y=y, z=z)
+
+    @staticmethod
     def update_node_id(node_id: int, new_id: int):
         """
-        根据坐标信息和节点编号添加节点，默认自动识别编号
+        修改节点Id
         Args:
              node_id: 节点编号
              new_id: 新节点编号
-        Example:
+        example:
             mdb.update_node_id(1,2)
         Returns: 无
         """
-        try:
-            qt_model.UpdateNodeId(nodeId=node_id, newId=new_id)
-        except Exception as ex:
-            raise Exception(ex)
+        qt_model.UpdateNodeId(nodeId=node_id, newId=new_id)
 
     @staticmethod
     def merge_nodes(ids: list[int] = None, tolerance: float = 1e-4):
