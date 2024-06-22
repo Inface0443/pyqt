@@ -1,4 +1,4 @@
-# 最新版本 V0.4.8 - 2024.06.20
+# 最新版本 V0.4.12 - 2024.06.22
 
 > pip install --upgrade qtmodel -i https://pypi.org/simple
 
@@ -316,46 +316,66 @@ mdb.update_operation_stage_setting(True, "final_stage", True, None, False, None,
 
 Returns: 无
 
-## 节点单元操作
+### update_self_vibration_setting
 
-### add_nodes
-
-添加多个节点，可以选择指定节点编号
+更新自振分析设置
 > 参数:  
-> node_list:节点坐标信息 [[x1,y1,z1],...]或 [[id1,x1,y1,z1]...]
+> do_analysis: 是否进行运营阶段分析  
+> method: 计算方法 1-子空间迭代法 2-滤频法 3-多重Ritz法 4-兰索斯法  
+> matrix_type: 矩阵类型 0-集中质量矩阵 1-一致质量矩阵  
+> mode_num: 振型数量
 
 ```Python
 # 示例代码
 from qtmodel import *
 
-mdb.add_nodes([[1, 2, 3], [4, 5, 6]])
-mdb.add_nodes([[1, 1, 2, 3], [2, 4, 5, 6]])
+mdb.update_self_vibration_setting(False, 1, 0, 3)
 ```  
 
 Returns: 无
+
+## 节点单元操作
 
 ### add_node
 
 根据坐标信息和节点编号添加节点，默认自动识别编号
 > 参数:  
-> x: 节点坐标x  
-> y: 节点坐标y  
-> z: 节点坐标z  
-> index: 节点编号，默认自动识别编号 (可选参数)
+> node_data: [id,x,y,z]  或 [x,y,z]  
+> intersected: 是否交叉分割  
+> is_merged: 是否忽略位置重复节点  
+> merge_error: 合并容许误差
 
 ```Python
 # 示例代码
 from qtmodel import *
 
-mdb.add_node(1, 2, 3)
-mdb.add_node(x=1, y=2, z=4, index=2)
+mdb.add_node([1, 2, 3])
+mdb.add_node([1, 1, 2, 3])
+```  
+
+Returns: 无
+
+### update_node
+
+根据节点号修改节点坐标
+> 参数:  
+> node_id: 节点编号  
+> x: 更新后x坐标  
+> y: 更新后y坐标  
+> z: 更新后z坐标
+
+```Python
+# 示例代码
+from qtmodel import *
+
+mdb.update_node(1, 2, 2, 2)
 ```  
 
 Returns: 无
 
 ### update_node_id
 
-根据坐标信息和节点编号添加节点，默认自动识别编号
+修改节点Id
 > 参数:  
 > node_id: 节点编号  
 > new_id: 新节点编号

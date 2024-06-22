@@ -349,28 +349,27 @@ class Mdb:
 
     # region 节点单元操作
     @staticmethod
-    def add_node(x: float, y: float, z: float, index: int = -1, intersected: bool = True,
+    def add_node(node_data: list[float], intersected: bool = True,
                  is_merged: bool = False, merge_error: float = 1e-4):
         """
         根据坐标信息和节点编号添加节点，默认自动识别编号
         Args:
-             x: 节点坐标x
-             y: 节点坐标y
-             z: 节点坐标z
-             index: 节点编号，默认自动识别编号 (可选参数)
+             node_data: [id,x,y,z]  或 [x,y,z]
              intersected: 是否交叉分割
              is_merged: 是否忽略位置重复节点
              merge_error: 合并容许误差
         Example:
-            mdb.add_node(1,2,3)
-            mdb.add_node(x= 1,y = 2,z = 4,index = 2)
+            mdb.add_node([1,2,3])
+            mdb.add_node([1,1,2,3])
         Returns: 无
         """
         try:
-            if index != -1:
-                qt_model.AddNode(id=index, x=x, y=y, z=z, intersected=intersected, isMerged=is_merged, merge_error=merge_error)
-            else:
-                qt_model.AddNode(x=x, y=y, z=z, intersected=intersected, isMerged=is_merged, merge_error=merge_error)
+            if len(node_data) == 4:
+                qt_model.AddNode(id=node_data[0], x=node_data[1], y=node_data[2], z=node_data[3],
+                                 intersected=intersected, isMerged=is_merged, merge_error=merge_error)
+            elif len(node_data) == 3:
+                qt_model.AddNode(x=node_data[0], y=node_data[1], z=node_data[2],
+                                 intersected=intersected, isMerged=is_merged, merge_error=merge_error)
         except Exception as ex:
             raise Exception(ex)
 
@@ -383,7 +382,7 @@ class Mdb:
              x: 更新后x坐标
              y: 更新后y坐标
              z: 更新后z坐标
-        example:
+        Example:
             mdb.update_node(1,2,2,2)
         Returns: 无
         """
@@ -396,7 +395,7 @@ class Mdb:
         Args:
              node_id: 节点编号
              new_id: 新节点编号
-        example:
+        Example:
             mdb.update_node_id(1,2)
         Returns: 无
         """
