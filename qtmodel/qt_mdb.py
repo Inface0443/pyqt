@@ -349,24 +349,8 @@ class Mdb:
 
     # region 节点单元操作
     @staticmethod
-    def add_nodes(node_list):
-        """
-        添加多个节点，可以选择指定节点编号
-        Args:
-             node_list:节点坐标信息 [[x1,y1,z1],...]或 [[id1,x1,y1,z1]...]
-        Example:
-            mdb.add_nodes([[1,2,3],[4,5,6]])
-            mdb.add_nodes([[1,1,2,3],[2,4,5,6]])
-        Returns: 无
-        """
-        try:
-            qt_model.AddNodes(dataList=node_list)
-            qt_model.UpdateModel()
-        except Exception as ex:
-            raise Exception(ex)
-
-    @staticmethod
-    def add_node(x: float = 1, y: float = 1, z: float = 1, index: int = -1):
+    def add_node(x: float, y: float, z: float, index: int = -1, intersected: bool = True,
+                 is_merged: bool = False, merge_error: float = 1e-4):
         """
         根据坐标信息和节点编号添加节点，默认自动识别编号
         Args:
@@ -374,6 +358,9 @@ class Mdb:
              y: 节点坐标y
              z: 节点坐标z
              index: 节点编号，默认自动识别编号 (可选参数)
+             intersected: 是否交叉分割
+             is_merged: 是否忽略位置重复节点
+             merge_error: 合并容许误差
         Example:
             mdb.add_node(1,2,3)
             mdb.add_node(x= 1,y = 2,z = 4,index = 2)
@@ -381,9 +368,9 @@ class Mdb:
         """
         try:
             if index != -1:
-                qt_model.AddNode(id=index, x=x, y=y, z=z)
+                qt_model.AddNode(id=index, x=x, y=y, z=z, intersected=intersected, isMerged=is_merged, merge_error=merge_error)
             else:
-                qt_model.AddNode(x=x, y=y, z=z)
+                qt_model.AddNode(x=x, y=y, z=z, intersected=intersected, isMerged=is_merged, merge_error=merge_error)
         except Exception as ex:
             raise Exception(ex)
 
