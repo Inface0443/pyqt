@@ -617,7 +617,7 @@ class Mdb:
 
     # region 材料操作
     @staticmethod
-    def add_material(index: int = -1, name: str = "", mat_type: str = "混凝土", standard: str = "公路18规范", database: str = "C50",
+    def add_material(index: int = -1, name: str = "", mat_type: int = 1, standard: int = 1, database: str = "C50",
                      construct_factor: float = 1, modified: bool = False, data_info: list[float] = None, creep_id: int = -1, f_cuk: float = 0):
         """
         添加材料
@@ -646,11 +646,11 @@ class Mdb:
             if modified and len(data_info) != 4:
                 raise Exception("操作错误,modify_info数据无效!")
             if not modified:
-                qt_model.AddMaterial(id=index, name=name, materialType=mat_type, standardName=standard,
+                qt_model.AddMaterial(id=index, name=name, materialType=mat_type, standardIndex=standard,
                                      database=database, constructFactor=construct_factor, isModified=modified,
                                      timeParameterId=creep_id, fcuk=f_cuk)
             else:
-                qt_model.AddMaterial(id=index, name=name, materialType=mat_type, standardName=standard,
+                qt_model.AddMaterial(id=index, name=name, materialType=mat_type, standardIndex=standard,
                                      database=database, constructFactor=construct_factor, isModified=modified,
                                      elasticModulus=data_info[0], unitWeight=data_info[1],
                                      posiRatio=data_info[2], temperatureCoefficient=data_info[3],
@@ -928,8 +928,8 @@ class Mdb:
         Returns: 无
         """
         try:
-            if sec_type == "特性截面" and len(property_info) != 25:
-                raise Exception(f"操作错误，自定义特性截面列表property_info需要25个参数")
+            if sec_type == "特性截面" and len(property_info) < 27:
+                raise Exception(f"操作错误，自定义特性截面列表property_info需要26个参数")
             if property_info is None:
                 raise Exception("操作错误,请输入此截面的截面特性，特性列表可参考截面定义窗口")
             qt_model.AddUserSection(id=index, name=name, type=sec_type, propertyInfo=property_info,
