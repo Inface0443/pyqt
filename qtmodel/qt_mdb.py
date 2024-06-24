@@ -624,17 +624,17 @@ class Mdb:
         Args:
             index:材料编号,默认自动识别 (可选参数)
             name:材料名称
-            mat_type: 材料类型
-            standard:规范名称
-            database:数据库
+            mat_type: 材料类型,1-混凝土 2-钢材 3-预应力 4-钢筋 5-自定义
+            standard:规范序号,参考UI 默认从1开始
+            database:数据库名称
             construct_factor:构造系数
             modified:是否修改默认材料参数,默认不修改 (可选参数)
             data_info:材料参数列表[弹性模量,容重,泊松比,热膨胀系数] (可选参数)
             creep_id:徐变材料id (可选参数)
             f_cuk: 立方体抗压强度标准值 (可选参数)
         Example:
-            mdb.add_material(index=1,name="混凝土材料1",mat_type="混凝土",standard="公路18规范",database="C50")
-            mdb.add_material(index=1,name="自定义材料1",mat_type="自定义",data_info=[3.5e10,2.5e4,0.2,1.5e-5])
+            mdb.add_material(index=1,name="混凝土材料1",mat_type=1,standard=1,database="C50")
+            mdb.add_material(index=1,name="自定义材料1",mat_type=5,data_info=[3.5e10,2.5e4,0.2,1.5e-5])
         Returns: 无
         """
         try:

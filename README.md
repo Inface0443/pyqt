@@ -566,9 +566,9 @@ Returns: 无
 > 参数:  
 > index:材料编号,默认自动识别 (可选参数)  
 > name:材料名称  
-> mat_type: 材料类型  
-> standard:规范名称  
-> database:数据库  
+> mat_type: 材料类型,1-混凝土 2-钢材 3-预应力 4-钢筋 5-自定义  
+> standard:规范序号,参考UI 默认从1开始  
+> database:数据库名称  
 > construct_factor:构造系数  
 > modified:是否修改默认材料参数,默认不修改 (可选参数)  
 > data_info:材料参数列表[弹性模量,容重,泊松比,热膨胀系数] (可选参数)  
@@ -579,8 +579,8 @@ Returns: 无
 # 示例代码
 from qtmodel import *
 
-mdb.add_material(index=1, name="混凝土材料1", mat_type="混凝土", standard="公路18规范", database="C50")
-mdb.add_material(index=1, name="自定义材料1", mat_type="自定义", data_info=[3.5e10, 2.5e4, 0.2, 1.5e-5])
+mdb.add_material(index=1, name="混凝土材料1", mat_type=1, standard=1, database="C50")
+mdb.add_material(index=1, name="自定义材料1", mat_type=5, data_info=[3.5e10, 2.5e4, 0.2, 1.5e-5])
 ```  
 
 Returns: 无
@@ -718,10 +718,10 @@ Returns: 无
 > index:截面编号  
 > name:截面名称  
 > sec_type:截面类型  
-> property_info:截面特性列表，共计25个参数
+> property_info:截面特性列表，共计26个参数
 > - [Area, AreaY, AreaZ, InertialX, InertialY, InertialZ, InertialYz,  
     > Cyp, Cym, Czp, Czm, Peri0, PeriI, CentY, CentZ,  
-    > Y1, Z1, Y2, Z2, Y3, Z3, Y4, Z4, ShearCenterY, ShearCenterZ]  
+    > Y1, Z1, Y2, Z2, Y3, Z3, Y4, Z4, ShearCenterY, ShearCenterZ,Thw]  
     > main_loop:主线圈坐标集合 [(-1,-1),(5,0),(5,5),(-1,5)] 目前只支持单一线圈  
     > sub_loops:次线圈坐标集合 [[(0,0),(0,1),(1,1,)], [(2,2),(3,2),(3,3)]]  
     > sec_lines:线宽集合[(x1,y1,x2,y3,thick),]
