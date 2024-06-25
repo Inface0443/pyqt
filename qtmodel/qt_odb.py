@@ -23,7 +23,7 @@ class Odb:
             odb.get_element_stress(1,stage_id=1)
             odb.get_element_stress([1,2,3],stage_id=1)
             odb.get_element_stress(1,stage_id=-1,case_name="工况名")
-        Returns: list[str] or str
+        Returns: list[json_str] or json_str
         """
         if type(element_id) != int and type(element_id) != list:
             raise TypeError("类型错误,element_id仅支持 int和 list[int]")
@@ -83,7 +83,7 @@ class Odb:
             odb.get_element_force(1,stage_id=1)
             odb.get_element_force([1,2,3],stage_id=1)
             odb.get_element_force(1,stage_id=-1,case_name="工况名")
-        Returns: list[str] or str
+        Returns: list[json_str] or json_str
         """
         if type(element_id) != int and type(element_id) != list:
             raise TypeError("类型错误,element_id仅支持 int和 list[int]")
@@ -138,7 +138,7 @@ class Odb:
             odb.get_reaction(1,stage_id=1)
             odb.get_reaction([1,2,3],stage_id=1)
             odb.get_reaction(1,stage_id=-1,case_name="工况名")
-        Returns: list[str] or str
+        Returns: list[json_str] or json_str
         """
         if type(node_id) != int and type(node_id) != list:
             raise TypeError("类型错误,beam_id int和 list[int]")
@@ -165,7 +165,7 @@ class Odb:
             odb.get_node_displacement(1,stage_id=1)
             odb.get_node_displacement([1,2,3],stage_id=1)
             odb.get_node_displacement(1,stage_id=-1,case_name="工况名")
-        Returns: list[str] or str
+        Returns: list[json_str] or json_str
         """
         if type(node_id) != int and type(node_id) != list:
             raise TypeError("类型错误,node_id仅支持 int和 list[int]")
@@ -487,7 +487,7 @@ class Odb:
             odb.get_node_data()     # 获取所有节点信息
             odb.get_node_data(1)    # 获取单个节点信息
             odb.get_node_data([1,2])    # 获取多个节点信息
-        Returns: list[str] 或 str
+        Returns: list[json_str] 或 json_str
         """
         try:
             if ids is None:
@@ -511,7 +511,7 @@ class Odb:
         Example:
             odb.get_element_data() # 获取所有单元结果
             odb.get_element_data(1) # 获取指定编号单元信息
-        Returns: list[str]
+        Returns: list[json_str]
         """
         try:
             item_list = []
@@ -559,14 +559,14 @@ class Odb:
             raise Exception(ex)
 
     @staticmethod
-    def get_beam_element(ids=None) -> list[str]:
+    def get_beam_element(ids=None) :
         """
         获取梁单元信息
         Args:
             ids: 梁单元号，默认时获取所有梁单元
         Example:
             odb.get_beam_element() # 获取所有单元信息
-        Returns: list[str]
+        Returns: list[json_str]
         """
         try:
             res_list = []
@@ -581,14 +581,14 @@ class Odb:
             raise Exception(ex)
 
     @staticmethod
-    def get_plate_element(ids=None) -> list[Element]:
+    def get_plate_element(ids=None) :
         """
         获取板单元信息
         Args:
             ids: 板单元号，默认时获取所有板单元
         Example:
             odb.get_plate_element() # 获取所有单元信息
-        Returns: list[Element]
+        Returns: list[json_str]
         """
         try:
             res_list = []
@@ -597,21 +597,21 @@ class Odb:
             else:
                 item_list = qt_model.GetPlateElementData(ids)
             for item in item_list:
-                res_list.append(Element(item.Id, "PLATE", [item.NodeI.Id, item.NodeJ.Id, item.NodeK.Id, item.NodeL.Id],
-                                        item.MaterialId, item.ThicknessId, item.BetaAngle))
+                res_list.append(str(Element(item.Id, "PLATE", [item.NodeI.Id, item.NodeJ.Id, item.NodeK.Id, item.NodeL.Id],
+                                        item.MaterialId, item.ThicknessId, item.BetaAngle)))
             return res_list
         except Exception as ex:
             raise Exception(ex)
 
     @staticmethod
-    def get_cable_element(ids=None) -> list[str]:
+    def get_cable_element(ids=None) :
         """
         获取索单元信息
         Args:
             ids: 索单元号，默认时获取所有索单元
         Example:
             odb.get_cable_element() # 获取所有单元信息
-        Returns: list[Element]
+        Returns: list[json_str]
         """
         try:
             res_list = []
@@ -627,14 +627,14 @@ class Odb:
             raise Exception(ex)
 
     @staticmethod
-    def get_link_element(ids=None) -> list[str]:
+    def get_link_element(ids=None) :
         """
         获取杆单元信息
         Args:
             ids: 杆单元号，默认时输出全部杆单元
         Example:
             odb.get_link_element() # 获取所有单元信息
-        Returns: list[str]
+        Returns: list[json_str]
         """
         try:
             res_list = []
@@ -656,7 +656,7 @@ class Odb:
             ids: 材料号，默认时输出全部材料
         Example:
             odb.get_material_data() # 获取所有材料信息
-        Returns: list[str]
+        Returns: list[json_str]
         """
         mat_list = []
         if ids is None:
@@ -667,14 +667,14 @@ class Odb:
             mat_list.extend(Odb.get_user_define_material())
 
     @staticmethod
-    def get_concrete_material(ids=None) -> list[str]:
+    def get_concrete_material(ids=None):
         """
         获取混凝土材料信息
         Args:
             ids: 材料号，默认时输出全部材料
         Example:
             odb.get_concrete_material() # 获取所有材料信息
-        Returns: list[Material]
+        Returns: list[json_str]
         """
         res_list = []
         item_list = qt_model.GetConcreteMaterialData(ids)
@@ -694,7 +694,7 @@ class Odb:
             ids: 材料号，默认时输出全部材料
         Example:
             odb.get_steel_plate_material() # 获取所有钢材材料信息
-        Returns: list[str]
+        Returns: list[json_str]
         """
         steel_plate_dictionary = {
             "Q235(≤16)": "Q235(0_16)", "Q235(16~40)": "Q235(16_40)", "Q235(40~100)": "Q235(40_100)", "Q345(≤16)": "Q345(0_16)",
@@ -723,7 +723,7 @@ class Odb:
             ids: 材料号，默认时输出全部材料
         Example:
             odb.get_pre_stress_bar_material() # 获取所有预应力材料信息
-        Returns: list[str]
+        Returns: list[json_str]
         """
 
         res_list = []
@@ -743,7 +743,7 @@ class Odb:
             ids: 材料号，默认时输出全部材料
         Example:
             odb.get_steel_bar_material() # 获取所有钢筋材料信息
-        Returns: list[Material]
+        Returns: list[json_str]
         """
         res_list = []
         item_list = qt_model.GetSteelBarMaterialData(ids)
@@ -762,16 +762,16 @@ class Odb:
             ids: 材料号，默认时输出全部材料
         Example:
             odb.get_user_define_material() # 获取所有自定义材料信息
-        Returns: list[Material]
+        Returns: list[json_str]
         """
         res_list = []
         item_list = qt_model.GetUserDefinedMaterialData(ids)
         for item in item_list:
             creep_id = -1 if item.IsCalShrinkCreep is False else item.ConcreteTimeDependency.Id
-            res_list.append(Material(mat_id=item.Id, name=item.Name, mat_type="自定义", standard="null", database="null",
+            res_list.append(str(Material(mat_id=item.Id, name=item.Name, mat_type="自定义", standard="null", database="null",
                                      data_info=[item.ElasticModulus, item.UnitWeight, item.PosiRatio, item.TemperatureCoefficient],
                                      modified=item.IsModifiedByUser, construct_factor=item.ConstructionCoefficient,
-                                     creep_id=creep_id, f_cuk=item.Fcuk))
+                                     creep_id=creep_id, f_cuk=item.Fcuk)))
         return res_list
 
     # endregion
@@ -796,7 +796,7 @@ class Odb:
              group_name:默认输出所有边界组信息
         Example:
             odb.get_general_support_data()
-        Returns: list[str]
+        Returns: list[json_str]
         """
         res_list = []
         if group_name is None:
@@ -820,7 +820,7 @@ class Odb:
             group_name:默认输出所有边界组信息
         Example:
             odb.get_elastic_link_data()
-        Returns: list[str]
+        Returns: list[json_str]
         """
         res_list = []
         if group_name is None:
@@ -844,7 +844,7 @@ class Odb:
             group_name:默认输出所有边界组信息
         Example:
             odb.get_elastic_support_data()
-        Returns: list[str]
+        Returns: list[json_str]
         """
         res_list = []
         if group_name is None:
@@ -867,7 +867,7 @@ class Odb:
             group_name:默认输出所有边界组信息
         Example:
             odb.get_master_slave_link_data()
-        Returns: list[str]
+        Returns: list[json_str]
         """
         res_list = []
         if group_name is None:
@@ -890,7 +890,7 @@ class Odb:
         Args:无
         Example:
             odb.get_node_local_axis_data()
-        Returns: list[str]
+        Returns: list[json_str]
         """
         res_list = []
         for group in Odb.get_boundary_group_names():
@@ -908,7 +908,7 @@ class Odb:
                group_name:默认输出所有边界组信息
            Example:
                odb.get_beam_constraint_data()
-           Returns: list[str]
+           Returns: list[json_str]
         """
         res_list = []
         if group_name is None:
@@ -920,7 +920,7 @@ class Odb:
             for data in item_list:
                 info_i = (not data.IsIFreedX, not data.IsIFreedY, not data.IsIFreedZ, not data.IsIFreedRx, not data.IsIFreedRy, not data.IsIFreedRZ)
                 info_j = (not data.IsJFreedX, not data.IsJFreedY, not data.IsJFreedZ, not data.IsJFreedRx, not data.IsJFreedRy, not data.IsJFreedRZ)
-                res_list.append(BeamConstraint(constraint_id=data.Id, beam_id=data.Beam.Id, info_i=info_i, info_j=info_j, group_name=group))
+                res_list.append(str(BeamConstraint(constraint_id=data.Id, beam_id=data.Beam.Id, info_i=info_i, info_j=info_j, group_name=group)))
         return res_list
 
     @staticmethod
@@ -931,7 +931,7 @@ class Odb:
              group_name:默认输出所有边界组信息
          Example:
              odb.get_constraint_equation_data()
-         Returns: list[str]
+         Returns: list[json_str]
          """
         res_list = []
         if group_name is None:
@@ -994,7 +994,7 @@ class Odb:
 
     # region 荷载信息
     @staticmethod
-    def get_load_case_names() -> list[str]:
+    def get_load_case_names():
         """
         获取荷载工况名
         Args: 无
@@ -1012,7 +1012,7 @@ class Odb:
             case_name: 荷载工况名
         Example:
             odb.get_pre_stress_load("荷载工况1")
-        Returns: list[str]
+        Returns: list[json_str]
         """
         res_list = []
         item_list = qt_model.GetPrestressLoadData(case_name)
@@ -1028,7 +1028,7 @@ class Odb:
         Args: 无
         Example:
             odb.get_node_mass_data()
-        Returns: list[str]
+        Returns: list[json_str]
         """
         res_list = []
         item_list = qt_model.GetNodalMassLoadData()
@@ -1047,7 +1047,7 @@ class Odb:
             case_name: 荷载工况名
         Example:
             odb.get_nodal_force_load("荷载工况1")
-        Returns: list[str]
+        Returns: list[json_str]
         """
         res_list = []
         item_list = qt_model.GetNodeForceLoadData(case_name)
@@ -1066,7 +1066,7 @@ class Odb:
             case_name: 荷载工况名
         Example:
             odb.get_nodal_displacement_load("荷载工况1")
-        Returns: list[NodalForceDisplacement]
+        Returns: list[json_str]
         """
         res_list = []
         item_list = qt_model.GetNodeForceLoadData(case_name)
@@ -1085,7 +1085,7 @@ class Odb:
             case_name: 荷载工况名
         Example:
             odb.get_beam_element_load("荷载工况1")
-        Returns: list[BeamElementLoad]
+        Returns: list[json_str]
         """
         res_list = []
         item_list_concentrated_load = qt_model.GetBeamConcentratedLoadData(case_name)
@@ -1112,7 +1112,7 @@ class Odb:
             case_name: 荷载工况名
         Example:
             odb.get_beam_element_load("荷载工况1")
-        Returns: list[str]
+        Returns: list[json_str]
         """
         res_list = []
         item_list_concentrated_load = qt_model.GetPlateConcentratedLoadData(case_name)
@@ -1140,7 +1140,7 @@ class Odb:
                 case_name: 荷载工况名
             Example:
                 odb.get_initial_tension_load("荷载工况1")
-            Returns: list[str]
+            Returns: list[json_str]
         """
         res_list = []
         item_list_load = qt_model.GetInitialTensionLoadData(case_name)
@@ -1157,7 +1157,7 @@ class Odb:
             case_name: 荷载工况名
         Example:
             odb.get_cable_length_load("荷载工况1")
-        Returns: list[CableLengthLoad]
+        Returns: list[json_str]
         """
         res_list = []
         item_list_load = qt_model.GetCableLengthLoadData(case_name)
@@ -1173,7 +1173,7 @@ class Odb:
         Args: 无
         Example:
             odb.get_deviation_parameter()
-        Returns: list[DeviationParameter]
+        Returns: list[json_str]
         """
         res_list = []
         beam_list_parameter = qt_model.GetBeamDeviationParameterData()
@@ -1198,7 +1198,7 @@ class Odb:
             case_name:荷载工况名
         Example:
             odb.get_deviation_load("荷载工况1")
-        Returns: list[DeviationLoad]
+        Returns: list[json_str]
         """
         res_list = []
         beam_list_load = qt_model.GetBeamDeviationLoadData(case_name)

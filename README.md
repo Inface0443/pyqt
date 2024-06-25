@@ -1,8 +1,8 @@
-# 最新版本 V0.4.12 - 2024.06.22
+# 最新版本 V0.4.16 - 2024.06.25
 
 > pip install --upgrade qtmodel -i https://pypi.org/simple
 
-- 增加分析设置接口
+- 调整所有获取函数返回值
 
 ## 视图控制
 
@@ -2135,7 +2135,7 @@ odb.get_element_stress([1, 2, 3], stage_id=1)
 odb.get_element_stress(1, stage_id=-1, case_name="工况名")
 ```  
 
-Returns: list[ElementStress] or ElementStress
+Returns: list[json_str] or json_str
 
 ### get_element_force
 
@@ -2156,7 +2156,7 @@ odb.get_element_force([1, 2, 3], stage_id=1)
 odb.get_element_force(1, stage_id=-1, case_name="工况名")
 ```  
 
-Returns: list[ElementForce] or ElementForce
+Returns: list[json_str] or json_str
 
 ### get_reaction
 
@@ -2177,7 +2177,7 @@ odb.get_reaction([1, 2, 3], stage_id=1)
 odb.get_reaction(1, stage_id=-1, case_name="工况名")
 ```  
 
-Returns: list[SupportReaction] or SupportReaction
+Returns: list[json_str] or json_str
 
 ### get_node_displacement
 
@@ -2198,7 +2198,7 @@ odb.get_node_displacement([1, 2, 3], stage_id=1)
 odb.get_node_displacement(1, stage_id=-1, case_name="工况名")
 ```  
 
-Returns: list[NodeDisplacement] or NodeDisplacement
+Returns: list[json_str] or json_str
 
 ## 绘制模型结果
 
@@ -2358,6 +2358,21 @@ Returns: 无
 
 ## 获取模型信息
 
+### get_section_shape
+
+获取截面形状信息
+> 参数:  
+> sec_id: 目标截面编号
+
+```Python
+# 示例代码
+from qtmodel import *
+
+odb.get_section_shape(1)
+```  
+
+Returns: str
+
 ### get_section_data
 
 获取截面详细信息，截面特性详见UI自定义特性截面
@@ -2371,7 +2386,7 @@ from qtmodel import *
 odb.get_section_data(1)
 ```  
 
-Returns: dict
+Returns: str
 
 ### get_section_ids
 
@@ -2449,7 +2464,7 @@ odb.get_node_data(1)  # 获取单个节点信息
 odb.get_node_data([1, 2])  # 获取多个节点信息
 ```  
 
-Returns: list[Node] 或 Node
+Returns: list[json_str] 或 json_str
 
 ### get_element_data
 
@@ -2464,7 +2479,7 @@ odb.get_element_data()  # 获取所有单元结果
 odb.get_element_data(1)  # 获取指定编号单元信息
 ```  
 
-Returns: list[Element]
+Returns: list[json_str]
 
 ### get_element_type
 
@@ -2494,7 +2509,7 @@ from qtmodel import *
 odb.get_beam_element()  # 获取所有单元信息
 ```  
 
-Returns: list[Element]
+Returns: list[json_str]
 
 ### get_plate_element
 
@@ -2509,7 +2524,7 @@ from qtmodel import *
 odb.get_plate_element()  # 获取所有单元信息
 ```  
 
-Returns: list[Element]
+Returns: list[json_str]
 
 ### get_cable_element
 
@@ -2524,7 +2539,7 @@ from qtmodel import *
 odb.get_cable_element()  # 获取所有单元信息
 ```  
 
-Returns: list[Element]
+Returns: list[json_str]
 
 ### get_link_element
 
@@ -2539,7 +2554,7 @@ from qtmodel import *
 odb.get_link_element()  # 获取所有单元信息
 ```  
 
-Returns: list[Element]
+Returns: list[json_str]
 
 ### get_material_data
 
@@ -2554,7 +2569,7 @@ from qtmodel import *
 odb.get_material_data()  # 获取所有材料信息
 ```  
 
-Returns: list[Material]
+Returns: list[json_str]
 
 ### get_concrete_material
 
@@ -2569,7 +2584,7 @@ from qtmodel import *
 odb.get_concrete_material()  # 获取所有材料信息
 ```  
 
-Returns: list[Material]
+Returns: list[json_str]
 
 ### get_steel_plate_material
 
@@ -2584,7 +2599,7 @@ from qtmodel import *
 odb.get_steel_plate_material()  # 获取所有钢材材料信息
 ```  
 
-Returns: list[Material]
+Returns: list[json_str]
 
 ### get_pre_stress_bar_material
 
@@ -2599,7 +2614,7 @@ from qtmodel import *
 odb.get_pre_stress_bar_material()  # 获取所有预应力材料信息
 ```  
 
-Returns: list[Material]
+Returns: list[json_str]
 
 ### get_steel_bar_material
 
@@ -2614,7 +2629,7 @@ from qtmodel import *
 odb.get_steel_bar_material()  # 获取所有钢筋材料信息
 ```  
 
-Returns: list[Material]
+Returns: list[json_str]
 
 ### get_user_###ine_material
 
@@ -2629,7 +2644,7 @@ from qtmodel import *
 odb.get_user_define_material()  # 获取所有自定义材料信息
 ```  
 
-Returns: list[Material]
+Returns: list[json_str]
 
 ## 获取模型边界信息
 
@@ -2660,7 +2675,7 @@ from qtmodel import *
 odb.get_general_support_data()
 ```  
 
-Returns: list[GeneralSupport]
+Returns: list[json_str]
 
 ### get_elastic_link_data
 
@@ -2675,7 +2690,7 @@ from qtmodel import *
 odb.get_elastic_link_data()
 ```  
 
-Returns: list[ElasticLink]
+Returns: list[json_str]
 
 ### get_elastic_support_data
 
@@ -2690,7 +2705,7 @@ from qtmodel import *
 odb.get_elastic_support_data()
 ```  
 
-Returns: list[ElasticSupport]
+Returns: list[json_str]
 
 ### get_master_slave_link_data
 
@@ -2705,7 +2720,7 @@ from qtmodel import *
 odb.get_master_slave_link_data()
 ```  
 
-Returns: list[MasterSlaveLink]
+Returns: list[json_str]
 
 ### get_node_local_axis_data
 
@@ -2719,7 +2734,7 @@ from qtmodel import *
 odb.get_node_local_axis_data()
 ```  
 
-Returns: list[NodalLocalAxis]
+Returns: list[json_str]
 
 ### get_beam_constraint_data
 
@@ -2734,7 +2749,7 @@ from qtmodel import *
 odb.get_beam_constraint_data()
 ```  
 
-Returns: list[BeamConstraint]
+Returns: list[json_str]
 
 ### get_constraint_equation_data
 
@@ -2749,7 +2764,7 @@ from qtmodel import *
 odb.get_constraint_equation_data()
 ```  
 
-Returns: list[ConstraintEquation]
+Returns: list[json_str]
 
 ## 获取施工阶段信息
 
@@ -2827,7 +2842,7 @@ from qtmodel import *
 odb.get_pre_stress_load("荷载工况1")
 ```  
 
-Returns: list[PreStressLoad]
+Returns: list[json_str]
 
 ### get_node_mass_data
 
@@ -2841,7 +2856,7 @@ from qtmodel import *
 odb.get_node_mass_data()
 ```  
 
-Returns: list[NodalMass]
+Returns: list[json_str]
 
 ### get_nodal_force_load
 
@@ -2856,7 +2871,7 @@ from qtmodel import *
 odb.get_nodal_force_load("荷载工况1")
 ```  
 
-Returns: list[NodalForce]
+Returns: list[json_str]
 
 ### get_nodal_displacement_load
 
@@ -2871,7 +2886,7 @@ from qtmodel import *
 odb.get_nodal_displacement_load("荷载工况1")
 ```  
 
-Returns: list[NodalForceDisplacement]
+Returns: list[json_str]
 
 ### get_beam_element_load
 
@@ -2886,7 +2901,7 @@ from qtmodel import *
 odb.get_beam_element_load("荷载工况1")
 ```  
 
-Returns: list[BeamElementLoad]
+Returns: list[json_str]
 
 ### get_plate_element_load
 
@@ -2901,7 +2916,7 @@ from qtmodel import *
 odb.get_beam_element_load("荷载工况1")
 ```  
 
-Returns: list[BeamElementLoad]
+Returns: list[json_str]
 
 ### get_initial_tension_load
 
@@ -2916,7 +2931,7 @@ from qtmodel import *
 odb.get_initial_tension_load("荷载工况1")
 ```  
 
-Returns: list[InitialTension]
+Returns: list[json_str]
 
 ### get_cable_length_load
 
@@ -2931,7 +2946,7 @@ from qtmodel import *
 odb.get_cable_length_load("荷载工况1")
 ```  
 
-Returns: list[CableLengthLoad]
+Returns: list[json_str]
 
 ### get_deviation_parameter
 
@@ -2945,7 +2960,7 @@ from qtmodel import *
 odb.get_deviation_parameter()
 ```  
 
-Returns: list[DeviationParameter]
+Returns: list[json_str]
 
 ### get_deviation_load
 
@@ -2960,5 +2975,5 @@ from qtmodel import *
 odb.get_deviation_load("荷载工况1")
 ```  
 
-Returns: list[DeviationLoad]
+Returns: list[json_str]
 
