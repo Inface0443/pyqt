@@ -825,3 +825,50 @@ class TopPlateTemperature:
 
     def __repr__(self):
         return self.__str__()
+
+
+class SectionLoopSegment:
+    def __init__(self, main_loop: list[tuple[float, float]], sub_loops: list[list[tuple[float, float]]] = None):
+        """
+        线圈型截面子截面,每个子截面包含一个外圈和多个内圈(内圈可有可无),线圈型截面由多个子截面组成-list[SectionLoopSegment]
+        Args:
+            main_loop:主线圈点
+            sub_loops:子线圈集合
+        """
+        self.main_loop = main_loop
+        self.sub_loops = sub_loops
+
+    def __str__(self):
+        obj_dict = {
+            'main_loop': self.main_loop,
+            'sub_loops': self.sub_loops,
+        }
+        return json.dumps(obj_dict, ensure_ascii=False)
+
+    def __repr__(self):
+        return self.__str__()
+
+
+class SectionLineSegment:
+    def __init__(self, point_start: tuple[float, float], point_end: tuple[float, float], thickness: float):
+        """
+        线宽型截面子线段,线宽型截面由多个线段组成-list[SectionLineSegment]
+        Args:
+            point_start: 线段起点
+            point_end:线段终点
+            thickness:线段厚度
+        """
+        self.point_start = point_start
+        self.point_end = point_end
+        self.thickness = thickness
+
+    def __str__(self):
+        obj_dict = {
+            'point_start': self.point_start,
+            'point_end': self.point_end,
+            'thickness': self.thickness,
+        }
+        return json.dumps(obj_dict, ensure_ascii=False)
+
+    def __repr__(self):
+        return self.__str__()

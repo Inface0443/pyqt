@@ -387,6 +387,21 @@ class Odb:
 
     # region 获取模型信息
     @staticmethod
+    def get_section_shape(sec_id: int):
+        """
+        获取截面形状信息
+        Args:
+            sec_id: 目标截面编号
+        Example:
+            odb.get_section_shape(1)
+        Returns: list[dict]
+        """
+        try:
+            return qt_model.GetSectionShape(sec_id)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
     def get_section_data(sec_id: int):
         """
         获取截面详细信息，截面特性详见UI自定义特性截面
