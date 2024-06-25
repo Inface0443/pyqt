@@ -23,7 +23,7 @@ class Odb:
             odb.get_element_stress(1,stage_id=1)
             odb.get_element_stress([1,2,3],stage_id=1)
             odb.get_element_stress(1,stage_id=-1,case_name="工况名")
-        Returns: list[ElementStress] or ElementStress
+        Returns: list[str] or str
         """
         if type(element_id) != int and type(element_id) != list:
             raise TypeError("类型错误,element_id仅支持 int和 list[int]")
@@ -35,7 +35,7 @@ class Odb:
                             item.StressI[6], item.StressI[7], item.StressI[8]]
                 stress_j = [item.StressJ[0], item.StressJ[1], item.StressJ[2], item.StressJ[3], item.StressJ[4], item.StressJ[5],
                             item.StressJ[6], item.StressJ[7], item.StressJ[8]]
-                list_res.append(BeamElementStress(item.ElementId, stress_i, stress_j))
+                list_res.append(str(BeamElementStress(item.ElementId, stress_i, stress_j)))
             elif item.ElementType == "SHELL" or item.ElementType == "PLATE":
                 stress_i = [item.StressI[0], item.StressI[1], item.StressI[2], item.StressI[3], item.StressI[4]]
                 stress_j = [item.StressJ[0], item.StressJ[1], item.StressJ[2], item.StressJ[3], item.StressJ[4]]
@@ -45,14 +45,14 @@ class Odb:
                 stress_j2 = [item.StressJ2[0], item.StressJ2[1], item.StressJ2[2], item.StressJ2[3], item.StressJ2[4]]
                 stress_k2 = [item.StressK2[0], item.StressK2[1], item.StressK2[2], item.StressK2[3], item.StressK2[4]]
                 stress_l2 = [item.StressL2[0], item.StressL2[1], item.StressL2[2], item.StressL2[3], item.StressL2[4]]
-                list_res.append(ShellElementStress(item.ElementId, stress_i, stress_j, stress_k, stress_l,
-                                                   stress_i2, stress_j2, stress_k2, stress_l2))
+                list_res.append(str(ShellElementStress(item.ElementId, stress_i, stress_j, stress_k, stress_l,
+                                                       stress_i2, stress_j2, stress_k2, stress_l2)))
             elif item.ElementType == "CABLE" or item.ElementType == "LINK" or item.ElementType == "TRUSS":
                 stress_i = [item.StressI[0], item.StressI[1], item.StressI[2], item.StressI[3], item.StressI[4], item.StressI[5],
                             item.StressI[6], item.StressI[7], item.StressI[8]]
                 stress_j = [item.StressJ[0], item.StressJ[1], item.StressJ[2], item.StressJ[3], item.StressJ[4], item.StressJ[5],
                             item.StressJ[6], item.StressJ[7], item.StressJ[8]]
-                list_res.append(TrussElementStress(item.ElementId, stress_i, stress_j))
+                list_res.append(str(TrussElementStress(item.ElementId, stress_i, stress_j)))
             elif item.ElementType == "COM-BEAM":
                 stress_i = [item.StressI[0], item.StressI[1], item.StressI[2], item.StressI[3], item.StressI[4], item.StressI[5],
                             item.StressI[6], item.StressI[7], item.StressI[8]]
@@ -62,7 +62,7 @@ class Odb:
                              item.StressI2[6], item.StressI2[7], item.StressI2[8]]
                 stress_j2 = [item.StressJ2[0], item.StressJ2[1], item.StressJ2[2], item.StressJ2[3], item.StressJ2[4], item.StressJ2[5],
                              item.StressJ2[6], item.StressJ2[7], item.StressJ2[8]]
-                list_res.append(CompositeBeamStress(element_id, stress_i, stress_j, stress_i2, stress_j2))
+                list_res.append(str(CompositeBeamStress(element_id, stress_i, stress_j, stress_i2, stress_j2)))
             else:
                 raise TypeError(f"操作错误，不存在{item.ElementType}类型")
         if len(list_res) == 1:
@@ -83,7 +83,7 @@ class Odb:
             odb.get_element_force(1,stage_id=1)
             odb.get_element_force([1,2,3],stage_id=1)
             odb.get_element_force(1,stage_id=-1,case_name="工况名")
-        Returns: list[ElementForce] or ElementForce
+        Returns: list[str] or str
         """
         if type(element_id) != int and type(element_id) != list:
             raise TypeError("类型错误,element_id仅支持 int和 list[int]")
@@ -93,17 +93,17 @@ class Odb:
             if item.ElementType == "BEAM":
                 force_i = [item.ForceI.Fx, item.ForceI.Fy, item.ForceI.Fz, item.ForceI.Mx, item.ForceI.My, item.ForceI.Mz]
                 force_j = [item.ForceJ.Fx, item.ForceJ.Fy, item.ForceJ.Fz, item.ForceJ.Mx, item.ForceJ.My, item.ForceJ.Mz]
-                list_res.append(BeamElementForce(item.ElementId, force_i, force_j))
+                list_res.append(str(BeamElementForce(item.ElementId, force_i, force_j)))
             elif item.ElementType == "SHELL" or item.ElementType == "PLATE":
                 force_i = [item.ForceI.Fx, item.ForceI.Fy, item.ForceI.Fz, item.ForceI.Mx, item.ForceI.My, item.ForceI.Mz]
                 force_j = [item.ForceJ.Fx, item.ForceJ.Fy, item.ForceJ.Fz, item.ForceJ.Mx, item.ForceJ.My, item.ForceJ.Mz]
                 force_k = [item.ForceK.Fx, item.ForceK.Fy, item.ForceK.Fz, item.ForceK.Mx, item.ForceK.My, item.ForceK.Mz]
                 force_l = [item.ForceL.Fx, item.ForceL.Fy, item.ForceL.Fz, item.ForceL.Mx, item.ForceL.My, item.ForceL.Mz]
-                list_res.append(ShellElementForce(item.ElementId, force_i, force_j, force_k, force_l))
+                list_res.append(str(ShellElementForce(item.ElementId, force_i, force_j, force_k, force_l)))
             elif item.ElementType == "CABLE" or item.ElementType == "LINK" or item.ElementType == "TRUSS":
                 force_i = [item.ForceI.Fx, item.ForceI.Fy, item.ForceI.Fz, item.ForceI.Mx, item.ForceI.My, item.ForceI.Mz]
                 force_j = [item.ForceJ.Fx, item.ForceJ.Fy, item.ForceJ.Fz, item.ForceJ.Mx, item.ForceJ.My, item.ForceJ.Mz]
-                list_res.append(TrussElementForce(item.ElementId, force_i, force_j))
+                list_res.append(str(TrussElementForce(item.ElementId, force_i, force_j)))
             elif item.ElementType == "COM-BEAM":
                 all_force_i = [item.ForceI.Fx, item.ForceI.Fy, item.ForceI.Fz, item.ForceI.Mx, item.ForceI.My, item.ForceI.Mz]
                 all_force_j = [item.ForceJ.Fx, item.ForceJ.Fy, item.ForceJ.Fz, item.ForceJ.Mx, item.ForceJ.My, item.ForceJ.Mz]
@@ -115,8 +115,8 @@ class Odb:
                 sub_force_j = [item.SubForceJ.Fx, item.SubForceJ.Fy, item.SubForceJ.Fz, item.SubForceJ.Mx, item.SubForceJ.My, item.SubForceJ.Mz]
                 is_composite = item.IsComposite
                 shear_force = item.ShearForce
-                list_res.append(CompositeElementForce(item.ElementId, all_force_i, all_force_j, shear_force,
-                                                      main_force_i, main_force_j, sub_force_i, sub_force_j, is_composite))
+                list_res.append(str(CompositeElementForce(item.ElementId, all_force_i, all_force_j, shear_force,
+                                                          main_force_i, main_force_j, sub_force_i, sub_force_j, is_composite)))
 
             else:
                 raise TypeError(f"操作错误，不存在{item.ElementType}类型")
@@ -138,7 +138,7 @@ class Odb:
             odb.get_reaction(1,stage_id=1)
             odb.get_reaction([1,2,3],stage_id=1)
             odb.get_reaction(1,stage_id=-1,case_name="工况名")
-        Returns: list[SupportReaction] or SupportReaction
+        Returns: list[str] or str
         """
         if type(node_id) != int and type(node_id) != list:
             raise TypeError("类型错误,beam_id int和 list[int]")
@@ -146,7 +146,7 @@ class Odb:
         list_res = []
         for item in bs_list:
             force = [item.Force.Fx, item.Force.Fy, item.Force.Fz, item.Force.Mx, item.Force.My, item.Force.Mz]
-            list_res.append(SupportReaction(item.NodeId, force))
+            list_res.append(str(SupportReaction(item.NodeId, force)))
         if len(list_res) == 1:
             return list_res[0]
         return list_res
@@ -165,7 +165,7 @@ class Odb:
             odb.get_node_displacement(1,stage_id=1)
             odb.get_node_displacement([1,2,3],stage_id=1)
             odb.get_node_displacement(1,stage_id=-1,case_name="工况名")
-        Returns: list[NodeDisplacement] or NodeDisplacement
+        Returns: list[str] or str
         """
         if type(node_id) != int and type(node_id) != list:
             raise TypeError("类型错误,node_id仅支持 int和 list[int]")
@@ -174,7 +174,7 @@ class Odb:
         for item in bf_list:
             displacements = [item.Displacement.Dx, item.Displacement.Dy, item.Displacement.Dz,
                              item.Displacement.Rx, item.Displacement.Ry, item.Displacement.Rz]
-            list_res.append(NodeDisplacement(item.NodeId, displacements))
+            list_res.append(str(NodeDisplacement(item.NodeId, displacements)))
         if len(list_res) == 1:
             return list_res[0]
         return list_res
@@ -394,7 +394,7 @@ class Odb:
             sec_id: 目标截面编号
         Example:
             odb.get_section_shape(1)
-        Returns: list[dict]
+        Returns: str
         """
         try:
             return qt_model.GetSectionShape(sec_id)
@@ -409,7 +409,7 @@ class Odb:
             sec_id: 目标截面编号
         Example:
             odb.get_section_data(1)
-        Returns: dict
+        Returns: str
         """
         try:
             return qt_model.GetSectionInfo(sec_id)
@@ -487,7 +487,7 @@ class Odb:
             odb.get_node_data()     # 获取所有节点信息
             odb.get_node_data(1)    # 获取单个节点信息
             odb.get_node_data([1,2])    # 获取多个节点信息
-        Returns: list[Node] 或 Node
+        Returns: list[str] 或 str
         """
         try:
             if ids is None:
@@ -496,7 +496,7 @@ class Odb:
                 node_list = qt_model.GetNodeData(ids)
             res_list = []
             for item in node_list:
-                res_list.append(Node(item.Id, item.XCoor, item.YCoor, item.ZCoor))
+                res_list.append(str(Node(item.Id, item.XCoor, item.YCoor, item.ZCoor)))
             if len(res_list) == 1:
                 return res_list[0]
             return res_list
@@ -511,7 +511,7 @@ class Odb:
         Example:
             odb.get_element_data() # 获取所有单元结果
             odb.get_element_data(1) # 获取指定编号单元信息
-        Returns: list[Element]
+        Returns: list[str]
         """
         try:
             item_list = []
@@ -559,14 +559,14 @@ class Odb:
             raise Exception(ex)
 
     @staticmethod
-    def get_beam_element(ids=None) -> list[Element]:
+    def get_beam_element(ids=None) -> list[str]:
         """
         获取梁单元信息
         Args:
             ids: 梁单元号，默认时获取所有梁单元
         Example:
             odb.get_beam_element() # 获取所有单元信息
-        Returns: list[Element]
+        Returns: list[str]
         """
         try:
             res_list = []
@@ -575,7 +575,7 @@ class Odb:
             else:
                 item_list = qt_model.GetBeamElementData(ids)
             for item in item_list:
-                res_list.append(Element(item.Id, "BEAM", [item.StartNode.Id, item.EndNode.Id], item.MaterialId, item.SectionId, item.BetaAngle))
+                res_list.append(str(Element(item.Id, "BEAM", [item.StartNode.Id, item.EndNode.Id], item.MaterialId, item.SectionId, item.BetaAngle)))
             return res_list
         except Exception as ex:
             raise Exception(ex)
@@ -604,7 +604,7 @@ class Odb:
             raise Exception(ex)
 
     @staticmethod
-    def get_cable_element(ids=None) -> list[Element]:
+    def get_cable_element(ids=None) -> list[str]:
         """
         获取索单元信息
         Args:
@@ -620,21 +620,21 @@ class Odb:
             else:
                 item_list = qt_model.GetCableElementData(ids)
             for item in item_list:
-                res_list.append(Element(item.Id, "CABLE", [item.StartNode.Id, item.EndNode.Id], item.MaterialId, item.SectionId, item.BetaAngle,
-                                        int(item.InitialParameterType), item.InitialParameter))
+                res_list.append(str(Element(item.Id, "CABLE", [item.StartNode.Id, item.EndNode.Id], item.MaterialId, item.SectionId, item.BetaAngle,
+                                            int(item.InitialParameterType), item.InitialParameter)))
             return res_list
         except Exception as ex:
             raise Exception(ex)
 
     @staticmethod
-    def get_link_element(ids=None) -> list[Element]:
+    def get_link_element(ids=None) -> list[str]:
         """
         获取杆单元信息
         Args:
             ids: 杆单元号，默认时输出全部杆单元
         Example:
             odb.get_link_element() # 获取所有单元信息
-        Returns: list[Element]
+        Returns: list[str]
         """
         try:
             res_list = []
@@ -643,7 +643,7 @@ class Odb:
             else:
                 item_list = qt_model.GetLinkElementData(ids)
             for item in item_list:
-                res_list.append(Element(item.Id, "LINK", [item.StartNode.Id, item.EndNode.Id], item.MaterialId, item.SectionId, item.BetaAngle))
+                res_list.append(str(Element(item.Id, "LINK", [item.StartNode.Id, item.EndNode.Id], item.MaterialId, item.SectionId, item.BetaAngle)))
             return res_list
         except Exception as ex:
             raise Exception(ex)
@@ -656,7 +656,7 @@ class Odb:
             ids: 材料号，默认时输出全部材料
         Example:
             odb.get_material_data() # 获取所有材料信息
-        Returns: list[Material]
+        Returns: list[str]
         """
         mat_list = []
         if ids is None:
@@ -667,7 +667,7 @@ class Odb:
             mat_list.extend(Odb.get_user_define_material())
 
     @staticmethod
-    def get_concrete_material(ids=None) -> list[Material]:
+    def get_concrete_material(ids=None) -> list[str]:
         """
         获取混凝土材料信息
         Args:
@@ -680,10 +680,10 @@ class Odb:
         item_list = qt_model.GetConcreteMaterialData(ids)
         for item in item_list:
             creep_id = -1 if item.IsCalShrinkCreep is False else item.ConcreteTimeDependency.Id
-            res_list.append(Material(mat_id=item.Id, name=item.Name, mat_type="混凝土", standard=item.Standard, database=item.Database,
-                                     data_info=[item.ElasticModulus, item.UnitWeight, item.PosiRatio, item.TemperatureCoefficient],
-                                     modified=item.IsModifiedByUser, construct_factor=item.ConstructionCoefficient,
-                                     creep_id=creep_id, f_cuk=item.StrengthCheck.Fcuk))
+            res_list.append(str(Material(mat_id=item.Id, name=item.Name, mat_type="混凝土", standard=item.Standard, database=item.Database,
+                                         data_info=[item.ElasticModulus, item.UnitWeight, item.PosiRatio, item.TemperatureCoefficient],
+                                         modified=item.IsModifiedByUser, construct_factor=item.ConstructionCoefficient,
+                                         creep_id=creep_id, f_cuk=item.StrengthCheck.Fcuk)))
         return res_list
 
     @staticmethod
@@ -694,7 +694,7 @@ class Odb:
             ids: 材料号，默认时输出全部材料
         Example:
             odb.get_steel_plate_material() # 获取所有钢材材料信息
-        Returns: list[Material]
+        Returns: list[str]
         """
         steel_plate_dictionary = {
             "Q235(≤16)": "Q235(0_16)", "Q235(16~40)": "Q235(16_40)", "Q235(40~100)": "Q235(40_100)", "Q345(≤16)": "Q345(0_16)",
@@ -708,11 +708,11 @@ class Odb:
         res_list = []
         item_list = qt_model.GetSteelPlateMaterialData(ids)
         for item in item_list:
-            res_list.append(Material(mat_id=item.Id, name=item.Name, mat_type="钢材", standard=item.Standard,
-                                     database=steel_plate_dictionary[item.StrengthCheck.Database],
-                                     data_info=[item.ElasticModulus, item.UnitWeight, item.PosiRatio, item.TemperatureCoefficient],
-                                     modified=item.IsModifiedByUser, construct_factor=item.ConstructionCoefficient,
-                                     creep_id=-1, f_cuk=0))
+            res_list.append(str(Material(mat_id=item.Id, name=item.Name, mat_type="钢材", standard=item.Standard,
+                                         database=steel_plate_dictionary[item.StrengthCheck.Database],
+                                         data_info=[item.ElasticModulus, item.UnitWeight, item.PosiRatio, item.TemperatureCoefficient],
+                                         modified=item.IsModifiedByUser, construct_factor=item.ConstructionCoefficient,
+                                         creep_id=-1, f_cuk=0)))
         return res_list
 
     @staticmethod
@@ -723,16 +723,16 @@ class Odb:
             ids: 材料号，默认时输出全部材料
         Example:
             odb.get_pre_stress_bar_material() # 获取所有预应力材料信息
-        Returns: list[Material]
+        Returns: list[str]
         """
 
         res_list = []
         item_list = qt_model.GetPreStressedBarMaterialData(ids)
         for item in item_list:
-            res_list.append(Material(mat_id=item.Id, name=item.Name, mat_type="预应力", standard=item.Standard, database=item.Database,
-                                     data_info=[item.ElasticModulus, item.UnitWeight, item.PosiRatio, item.TemperatureCoefficient],
-                                     modified=item.IsModifiedByUser, construct_factor=item.ConstructionCoefficient,
-                                     creep_id=-1, f_cuk=0))
+            res_list.append(str(Material(mat_id=item.Id, name=item.Name, mat_type="预应力", standard=item.Standard, database=item.Database,
+                                         data_info=[item.ElasticModulus, item.UnitWeight, item.PosiRatio, item.TemperatureCoefficient],
+                                         modified=item.IsModifiedByUser, construct_factor=item.ConstructionCoefficient,
+                                         creep_id=-1, f_cuk=0)))
         return res_list
 
     @staticmethod
@@ -748,10 +748,10 @@ class Odb:
         res_list = []
         item_list = qt_model.GetSteelBarMaterialData(ids)
         for item in item_list:
-            res_list.append(Material(mat_id=item.Id, name=item.Name, mat_type="钢筋", standard=item.Standard, database=item.Database,
-                                     data_info=[item.ElasticModulus, item.UnitWeight, item.PosiRatio, item.TemperatureCoefficient],
-                                     modified=item.IsModifiedByUser, construct_factor=item.ConstructionCoefficient,
-                                     creep_id=-1, f_cuk=0))
+            res_list.append(str(Material(mat_id=item.Id, name=item.Name, mat_type="钢筋", standard=item.Standard, database=item.Database,
+                                         data_info=[item.ElasticModulus, item.UnitWeight, item.PosiRatio, item.TemperatureCoefficient],
+                                         modified=item.IsModifiedByUser, construct_factor=item.ConstructionCoefficient,
+                                         creep_id=-1, f_cuk=0)))
         return res_list
 
     @staticmethod
@@ -796,7 +796,7 @@ class Odb:
              group_name:默认输出所有边界组信息
         Example:
             odb.get_general_support_data()
-        Returns: list[GeneralSupport]
+        Returns: list[str]
         """
         res_list = []
         if group_name is None:
@@ -806,10 +806,10 @@ class Odb:
         for group in group_names:
             item_list = qt_model.GetGeneralSupportData(group)
             for data in item_list:
-                res_list.append(GeneralSupport(data.Id, node_id=data.Node.Id,
-                                               boundary_info=(data.IsFixedX, data.IsFixedY, data.IsFixedZ,
-                                                              data.IsFixedRx, data.IsFixedRy, data.IsFixedRZ),
-                                               group_name=group, node_system=int(data.NodalCoordinateSystem)))
+                res_list.append(str(GeneralSupport(data.Id, node_id=data.Node.Id,
+                                                   boundary_info=(data.IsFixedX, data.IsFixedY, data.IsFixedZ,
+                                                                  data.IsFixedRx, data.IsFixedRy, data.IsFixedRZ),
+                                                   group_name=group, node_system=int(data.NodalCoordinateSystem))))
         return res_list
 
     @staticmethod
@@ -820,7 +820,7 @@ class Odb:
             group_name:默认输出所有边界组信息
         Example:
             odb.get_elastic_link_data()
-        Returns: list[ElasticLink]
+        Returns: list[str]
         """
         res_list = []
         if group_name is None:
@@ -830,10 +830,10 @@ class Odb:
         for group in group_names:
             item_list = qt_model.GetElasticLinkData(group)
             for data in item_list:
-                res_list.append(ElasticLink(link_id=data.Id, link_type=int(data.Type) + 1,
-                                            start_id=data.StartNode.Id, end_id=data.EndNode.Id, beta_angle=data.Beta,
-                                            boundary_info=(data.Kx, data.Ky, data.Kz, data.Krx, data.Kry, data.Krz),
-                                            group_name=group, dis_ratio=data.DistanceRatio, kx=data.Kx))
+                res_list.append(str(ElasticLink(link_id=data.Id, link_type=int(data.Type) + 1,
+                                                start_id=data.StartNode.Id, end_id=data.EndNode.Id, beta_angle=data.Beta,
+                                                boundary_info=(data.Kx, data.Ky, data.Kz, data.Krx, data.Kry, data.Krz),
+                                                group_name=group, dis_ratio=data.DistanceRatio, kx=data.Kx)))
         return res_list
 
     @staticmethod
@@ -844,7 +844,7 @@ class Odb:
             group_name:默认输出所有边界组信息
         Example:
             odb.get_elastic_support_data()
-        Returns: list[ElasticSupport]
+        Returns: list[str]
         """
         res_list = []
         if group_name is None:
@@ -854,9 +854,9 @@ class Odb:
         for group in group_names:
             item_list = qt_model.GetElasticSupportData(group)
             for data in item_list:
-                res_list.append(ElasticSupport(support_id=data.Id, node_id=data.Node.Id, support_type=int(data.Type) + 1,
-                                               boundary_info=(data.Kx, data.Ky, data.Kz, data.Krx, data.Kry, data.Krz),
-                                               group_name=group, node_system=int(data.NodalCoordinateSystem)))
+                res_list.append(str(ElasticSupport(support_id=data.Id, node_id=data.Node.Id, support_type=int(data.Type) + 1,
+                                                   boundary_info=(data.Kx, data.Ky, data.Kz, data.Krx, data.Kry, data.Krz),
+                                                   group_name=group, node_system=int(data.NodalCoordinateSystem))))
         return res_list
 
     @staticmethod
@@ -867,7 +867,7 @@ class Odb:
             group_name:默认输出所有边界组信息
         Example:
             odb.get_master_slave_link_data()
-        Returns: list[MasterSlaveLink]
+        Returns: list[str]
         """
         res_list = []
         if group_name is None:
@@ -877,10 +877,10 @@ class Odb:
         for group in group_names:
             item_list = qt_model.GetMasterSlaveLinkData(group)
             for data in item_list:
-                res_list.append(MasterSlaveLink(link_id=data.Id, master_id=data.MasterNode.Id, slave_id=data.SlaveNode.Id,
-                                                boundary_info=(data.IsFixedX, data.IsFixedY, data.IsFixedZ,
-                                                               data.IsFixedRx, data.IsFixedRy, data.IsFixedRZ),
-                                                group_name=group))
+                res_list.append(str(MasterSlaveLink(link_id=data.Id, master_id=data.MasterNode.Id, slave_id=data.SlaveNode.Id,
+                                                    boundary_info=(data.IsFixedX, data.IsFixedY, data.IsFixedZ,
+                                                                   data.IsFixedRx, data.IsFixedRy, data.IsFixedRZ),
+                                                    group_name=group)))
         return res_list
 
     @staticmethod
@@ -890,25 +890,25 @@ class Odb:
         Args:无
         Example:
             odb.get_node_local_axis_data()
-        Returns: list[NodalLocalAxis]
+        Returns: list[str]
         """
         res_list = []
         for group in Odb.get_boundary_group_names():
             item_list = qt_model.GetNodalLocalAxisData(group)
             for data in item_list:
-                res_list.append(NodalLocalAxis(data.Node.Id, (data.VectorX.X, data.VectorX.Y, data.VectorX.Z),
-                                               (data.VectorY.X, data.VectorY.Y, data.VectorY.Z)))
+                res_list.append(str(NodalLocalAxis(data.Node.Id, (data.VectorX.X, data.VectorX.Y, data.VectorX.Z),
+                                                   (data.VectorY.X, data.VectorY.Y, data.VectorY.Z))))
         return res_list
 
     @staticmethod
-    def get_beam_constraint_data(group_name: str = None) -> list[BeamConstraint]:
+    def get_beam_constraint_data(group_name: str = None):
         """
            获取节点坐标信息
            Args:
                group_name:默认输出所有边界组信息
            Example:
                odb.get_beam_constraint_data()
-           Returns: list[BeamConstraint]
+           Returns: list[str]
         """
         res_list = []
         if group_name is None:
@@ -924,14 +924,14 @@ class Odb:
         return res_list
 
     @staticmethod
-    def get_constraint_equation_data(group_name: str = None) -> list[ConstraintEquation]:
+    def get_constraint_equation_data(group_name: str = None):
         """
          获取约束方程信息
          Args:
              group_name:默认输出所有边界组信息
          Example:
              odb.get_constraint_equation_data()
-         Returns: list[ConstraintEquation]
+         Returns: list[str]
          """
         res_list = []
         if group_name is None:
@@ -944,8 +944,8 @@ class Odb:
                 master_info = []
                 for info in data.ConstraintEquationMasterDofDatas:
                     master_info.append((info.MasterNode.Id, int(info.MasterDof) + 1, info.Factor))
-                res_list.append(ConstraintEquation(data.Id, name=data.Name, sec_node=data.SecondaryNode.Id, sec_dof=int(data.SecondaryDof) + 1,
-                                                   master_info=master_info, group_name=group))
+                res_list.append(str(ConstraintEquation(data.Id, name=data.Name, sec_node=data.SecondaryNode.Id, sec_dof=int(data.SecondaryDof) + 1,
+                                                       master_info=master_info, group_name=group)))
         return res_list
 
     # endregion
@@ -1005,61 +1005,61 @@ class Odb:
         return qt_model.GetLoadCaseNames()
 
     @staticmethod
-    def get_pre_stress_load(case_name: str) -> list[PreStressLoad]:
+    def get_pre_stress_load(case_name: str):
         """
         获取预应力荷载
         Args:
             case_name: 荷载工况名
         Example:
             odb.get_pre_stress_load("荷载工况1")
-        Returns: list[PreStressLoad]
+        Returns: list[str]
         """
         res_list = []
         item_list = qt_model.GetPrestressLoadData(case_name)
         for data in item_list:
-            res_list.append(PreStressLoad(case_name=case_name, tendon_name=data.Tendon.Name,
-                                          tension_type=int(data.TendonTensionType), force=data.TensionForce, group_name=data.LoadGroup.Name))
+            res_list.append(str(PreStressLoad(case_name=case_name, tendon_name=data.Tendon.Name,
+                                              tension_type=int(data.TendonTensionType), force=data.TensionForce, group_name=data.LoadGroup.Name)))
         return res_list
 
     @staticmethod
-    def get_node_mass_data() -> list[NodalMass]:
+    def get_node_mass_data():
         """
         获取节点质量
         Args: 无
         Example:
             odb.get_node_mass_data()
-        Returns: list[NodalMass]
+        Returns: list[str]
         """
         res_list = []
         item_list = qt_model.GetNodalMassLoadData()
         for data in item_list:
-            res_list.append(NodalMass(data.Node.Id, mass_info=(data.MassAlongZ,
-                                                               data.InertialMassMomentAlongX,
-                                                               data.InertialMassMomentAlongY,
-                                                               data.InertialMassMomentAlongZ)))
+            res_list.append(str(NodalMass(data.Node.Id, mass_info=(data.MassAlongZ,
+                                                                   data.InertialMassMomentAlongX,
+                                                                   data.InertialMassMomentAlongY,
+                                                                   data.InertialMassMomentAlongZ))))
         return res_list
 
     @staticmethod
-    def get_nodal_force_load(case_name: str) -> list[NodalForce]:
+    def get_nodal_force_load(case_name: str):
         """
         获取节点力荷载
         Args:
             case_name: 荷载工况名
         Example:
             odb.get_nodal_force_load("荷载工况1")
-        Returns: list[NodalForce]
+        Returns: list[str]
         """
         res_list = []
         item_list = qt_model.GetNodeForceLoadData(case_name)
         for data in item_list:
             load = data.Force
-            res_list.append(NodalForce(node_id=data.Node.Id, case_name=case_name,
-                                       load_info=(load.ForceX, load.ForceY, load.ForceZ,
-                                                  load.MomentX, load.MomentY, load.MomentZ), group_name=data.LoadGroup.Name))
+            res_list.append(str(NodalForce(node_id=data.Node.Id, case_name=case_name,
+                                           load_info=(load.ForceX, load.ForceY, load.ForceZ,
+                                                      load.MomentX, load.MomentY, load.MomentZ), group_name=data.LoadGroup.Name)))
         return res_list
 
     @staticmethod
-    def get_nodal_displacement_load(case_name: str) -> list[NodalForceDisplacement]:
+    def get_nodal_displacement_load(case_name: str):
         """
         获取节点位移荷载
         Args:
@@ -1072,13 +1072,13 @@ class Odb:
         item_list = qt_model.GetNodeForceLoadData(case_name)
         for data in item_list:
             load = data.NodalForceDisplacement
-            res_list.append(NodalForceDisplacement(node_id=data.Node.Id, case_name=case_name,
-                                                   load_info=(load.DispX, load.DispY, load.DispZ,
-                                                              load.DispRx, load.DispRy, load.DispRz), group_name=data.LoadGroup.Name))
+            res_list.append(str(NodalForceDisplacement(node_id=data.Node.Id, case_name=case_name,
+                                                       load_info=(load.DispX, load.DispY, load.DispZ,
+                                                                  load.DispRx, load.DispRy, load.DispRz), group_name=data.LoadGroup.Name)))
         return res_list
 
     @staticmethod
-    def get_beam_element_load(case_name: str) -> list[BeamElementLoad]:
+    def get_beam_element_load(case_name: str):
         """
         获取梁单元荷载
         Args:
@@ -1092,65 +1092,65 @@ class Odb:
         for item in item_list_concentrated_load:
             load_bias = (item.FrameLoadBias.IsBias, item.FrameLoadBias.LoadBiasPosition,
                          int(item.FrameLoadBias.CoordinateSystem) + 1, item.FrameLoadBias.Distance)
-            res_list.append(BeamElementLoad(item.ElementId, case_name, int(item.ElementLoadType) + 1, int(item.LoadCoordinateSystem),
-                                            list_x=[item.Distance], list_load=[item.Force], group_name=item.LoadGroup.Name,
-                                            load_bias=load_bias, projected=False))
+            res_list.append(str(BeamElementLoad(item.ElementId, case_name, int(item.ElementLoadType) + 1, int(item.LoadCoordinateSystem),
+                                                list_x=[item.Distance], list_load=[item.Force], group_name=item.LoadGroup.Name,
+                                                load_bias=load_bias, projected=False)))
         item_list_distribute_load = qt_model.GetBeamDistributeLoadData(case_name)
         for item in item_list_distribute_load:
             load_bias = (item.FrameLoadBias.IsBias, item.FrameLoadBias.LoadBiasPosition,
                          int(item.FrameLoadBias.CoordinateSystem) + 1, item.FrameLoadBias.Distance)
-            res_list.append(BeamElementLoad(item.ElementId, case_name, int(item.ElementLoadType) + 1, int(item.LoadCoordinateSystem),
-                                            list_x=[item.StartDistance, item.EndDistance], list_load=[item.StartForce, item.EndForce],
-                                            group_name=item.LoadGroup.Name, load_bias=load_bias, projected=item.IsProjection))
+            res_list.append(str(BeamElementLoad(item.ElementId, case_name, int(item.ElementLoadType) + 1, int(item.LoadCoordinateSystem),
+                                                list_x=[item.StartDistance, item.EndDistance], list_load=[item.StartForce, item.EndForce],
+                                                group_name=item.LoadGroup.Name, load_bias=load_bias, projected=item.IsProjection)))
         return res_list
 
     @staticmethod
-    def get_plate_element_load(case_name: str) -> list[PlateElementLoad]:
+    def get_plate_element_load(case_name: str):
         """
         获取梁单元荷载
         Args:
             case_name: 荷载工况名
         Example:
             odb.get_beam_element_load("荷载工况1")
-        Returns: list[BeamElementLoad]
+        Returns: list[str]
         """
         res_list = []
         item_list_concentrated_load = qt_model.GetPlateConcentratedLoadData(case_name)
         for item in item_list_concentrated_load:
-            res_list.append(PlateElementLoad(element_id=item.ElementId, case_name=case_name, load_type=int(item.ElementLoadType) + 1,
-                                             load_place=0, coord_system=int(item.LoadCoordinateSystem) + 1,
-                                             group_name=item.LoadGroup.Name, load_list=[item.P], xy_list=(item.Dx, item.Dy)))
+            res_list.append(str(PlateElementLoad(element_id=item.ElementId, case_name=case_name, load_type=int(item.ElementLoadType) + 1,
+                                                 load_place=0, coord_system=int(item.LoadCoordinateSystem) + 1,
+                                                 group_name=item.LoadGroup.Name, load_list=[item.P], xy_list=(item.Dx, item.Dy))))
         line_load_list = qt_model.GetPlateDistributeLineLoadData(case_name)
         for item in line_load_list:
-            res_list.append(PlateElementLoad(element_id=item.ElementId, case_name=case_name, load_type=int(item.ElementLoadType) + 1,
-                                             load_place=int(item.PlateLoadPosition) - 1, coord_system=int(item.LoadCoordinateSystem) + 1,
-                                             group_name=item.LoadGroup.Name, load_list=[item.P1, item.P2], xy_list=None))
+            res_list.append(str(PlateElementLoad(element_id=item.ElementId, case_name=case_name, load_type=int(item.ElementLoadType) + 1,
+                                                 load_place=int(item.PlateLoadPosition) - 1, coord_system=int(item.LoadCoordinateSystem) + 1,
+                                                 group_name=item.LoadGroup.Name, load_list=[item.P1, item.P2], xy_list=None)))
         line_load_list = qt_model.GetPlateDistributeAreaLoadData(case_name)
         for item in line_load_list:
-            res_list.append(PlateElementLoad(element_id=item.ElementId, case_name=case_name, load_type=int(item.ElementLoadType) + 1,
-                                             load_place=0, coord_system=int(item.LoadCoordinateSystem) + 1,
-                                             group_name=item.LoadGroup.Name, load_list=[item.P1, item.P2, item.P3, item.P4], xy_list=None))
+            res_list.append(str(PlateElementLoad(element_id=item.ElementId, case_name=case_name, load_type=int(item.ElementLoadType) + 1,
+                                                 load_place=0, coord_system=int(item.LoadCoordinateSystem) + 1,
+                                                 group_name=item.LoadGroup.Name, load_list=[item.P1, item.P2, item.P3, item.P4], xy_list=None)))
         return res_list
 
     @staticmethod
-    def get_initial_tension_load(case_name: str) -> list[InitialTension]:
+    def get_initial_tension_load(case_name: str):
         """
             获取初拉力荷载数据
             Args:
                 case_name: 荷载工况名
             Example:
                 odb.get_initial_tension_load("荷载工况1")
-            Returns: list[InitialTension]
+            Returns: list[str]
         """
         res_list = []
         item_list_load = qt_model.GetInitialTensionLoadData(case_name)
         for item in item_list_load:
-            res_list.append(InitialTension(element_id=item.ElementId, case_name=case_name, group_name=item.LoadGroup.Name,
-                                           tension_type=int(item.CableTensionType), tension=item.Tension))
+            res_list.append(str(InitialTension(element_id=item.ElementId, case_name=case_name, group_name=item.LoadGroup.Name,
+                                               tension_type=int(item.CableTensionType), tension=item.Tension)))
         return res_list
 
     @staticmethod
-    def get_cable_length_load(case_name: str) -> list[CableLengthLoad]:
+    def get_cable_length_load(case_name: str):
         """
         获取初拉力荷载数据
         Args:
@@ -1162,12 +1162,12 @@ class Odb:
         res_list = []
         item_list_load = qt_model.GetCableLengthLoadData(case_name)
         for item in item_list_load:
-            res_list.append(CableLengthLoad(element_id=item.ElementId, case_name=case_name, group_name=item.LoadGroup.Name,
-                                            tension_type=int(item.CableTensionType), length=item.UnstressedLength))
+            res_list.append(str(CableLengthLoad(element_id=item.ElementId, case_name=case_name, group_name=item.LoadGroup.Name,
+                                                tension_type=int(item.CableTensionType), length=item.UnstressedLength)))
         return res_list
 
     @staticmethod
-    def get_deviation_parameter() -> list[DeviationParameter]:
+    def get_deviation_parameter():
         """
         获取制造偏差参数
         Args: 无
@@ -1178,16 +1178,16 @@ class Odb:
         res_list = []
         beam_list_parameter = qt_model.GetBeamDeviationParameterData()
         for item in beam_list_parameter:
-            res_list.append(DeviationParameter(item.Name, element_type=1,
-                                               parameters=[item.AxialDeviation, item.StartAngleDeviationDirectX,
-                                                           item.StartAngleDeviationDirectY, item.StartAngleDeviationDirectZ,
-                                                           item.EndAngleDeviationDirectX, item.EndAngleDeviationDirectY,
-                                                           item.EndAngleDeviationDirectZ]))
+            res_list.append(str(DeviationParameter(item.Name, element_type=1,
+                                                   parameters=[item.AxialDeviation, item.StartAngleDeviationDirectX,
+                                                               item.StartAngleDeviationDirectY, item.StartAngleDeviationDirectZ,
+                                                               item.EndAngleDeviationDirectX, item.EndAngleDeviationDirectY,
+                                                               item.EndAngleDeviationDirectZ])))
         plate_list_parameter = qt_model.GetPlateDeviationParameterData()
         for item in plate_list_parameter:
-            res_list.append(DeviationParameter(item.Name, element_type=2,
-                                               parameters=[item.DisplacementDirectX, item.DisplacementDirectY, item.DisplacementDirectZ,
-                                                           item.RotationDirectX, item.RotationDirectY]))
+            res_list.append(str(DeviationParameter(item.Name, element_type=2,
+                                                   parameters=[item.DisplacementDirectX, item.DisplacementDirectY, item.DisplacementDirectZ,
+                                                               item.RotationDirectX, item.RotationDirectY])))
         return res_list
 
     @staticmethod
@@ -1203,13 +1203,13 @@ class Odb:
         res_list = []
         beam_list_load = qt_model.GetBeamDeviationLoadData(case_name)
         for item in beam_list_load:
-            res_list.append(DeviationLoad(item.Element.Id, case_name=case_name,
-                                          parameters=[item.BeamDeviationParameter.Name],
-                                          group_name=item.LoadGroup.Name))
+            res_list.append(str(DeviationLoad(item.Element.Id, case_name=case_name,
+                                              parameters=[item.BeamDeviationParameter.Name],
+                                              group_name=item.LoadGroup.Name)))
         plate_list_load = qt_model.GetPlateDeviationLoadData(case_name)
         for item in plate_list_load:
-            res_list.append(DeviationLoad(item.Element.Id, case_name=case_name,
-                                          parameters=[item.PlateDeviation[0].Name, item.PlateDeviation[0].Name,
-                                                      item.PlateDeviation[2].Name, item.PlateDeviation[3].Name]))
+            res_list.append(str(DeviationLoad(item.Element.Id, case_name=case_name,
+                                              parameters=[item.PlateDeviation[0].Name, item.PlateDeviation[0].Name,
+                                                          item.PlateDeviation[2].Name, item.PlateDeviation[3].Name])))
         return res_list
     # endregion
