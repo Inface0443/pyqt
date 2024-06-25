@@ -638,10 +638,7 @@ class Mdb:
         Returns: 无
         """
         try:
-            list_material = ["混凝土", "钢材", "预应力", "钢丝", "钢筋", "自定义"]
-            if mat_type not in list_material:
-                raise Exception(f"操作错误,material_type不在指定列表:{list_material}中")
-            if mat_type == "自定义":
+            if mat_type == 5:
                 modified = True
             if modified and len(data_info) != 4:
                 raise Exception("操作错误,modify_info数据无效!")
