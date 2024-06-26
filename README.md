@@ -2135,7 +2135,7 @@ odb.get_element_stress([1, 2, 3], stage_id=1)
 odb.get_element_stress(1, stage_id=-1, case_name="工况名")
 ```  
 
-Returns: str json字符串
+Returns: json字符串，包含信息为list[dict]
 
 ### get_element_force
 
@@ -2156,7 +2156,7 @@ odb.get_element_force([1, 2, 3], stage_id=1)
 odb.get_element_force(1, stage_id=-1, case_name="工况名")
 ```  
 
-Returns:  str json字符串
+Returns: json字符串，包含信息为list[dict]
 
 ### get_reaction
 
@@ -2177,7 +2177,7 @@ odb.get_reaction([1, 2, 3], stage_id=1)
 odb.get_reaction(1, stage_id=-1, case_name="工况名")
 ```  
 
-Returns:  str json字符串
+Returns: json字符串，包含信息为list[dict]
 
 ### get_node_displacement
 
@@ -2198,7 +2198,7 @@ odb.get_node_displacement([1, 2, 3], stage_id=1)
 odb.get_node_displacement(1, stage_id=-1, case_name="工况名")
 ```  
 
-Returns:  str json字符串
+Returns: json字符串，包含信息为list[dict]
 
 ## 绘制模型结果
 
@@ -2478,7 +2478,7 @@ odb.get_node_data(1)  # 获取单个节点信息
 odb.get_node_data([1, 2])  # 获取多个节点信息
 ```  
 
-Returns:  json字符串，包含信息为list[dict] 或 dict
+Returns:  json字符串，包含信息为list[dict]
 
 ### get_element_data
 
@@ -2493,7 +2493,7 @@ odb.get_element_data()  # 获取所有单元结果
 odb.get_element_data(1)  # 获取指定编号单元信息
 ```  
 
-Returns:  json字符串，包含信息为list[dict] 或 dict
+Returns:  json字符串，包含信息为list[dict]
 
 ### get_element_type
 

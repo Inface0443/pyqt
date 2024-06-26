@@ -23,7 +23,7 @@ class Odb:
             odb.get_element_stress(1,stage_id=1)
             odb.get_element_stress([1,2,3],stage_id=1)
             odb.get_element_stress(1,stage_id=-1,case_name="工况名")
-        Returns: str   json字符串
+        Returns: json字符串，包含信息为list[dict]
         """
         if type(element_id) != int and type(element_id) != list:
             raise TypeError("类型错误,element_id仅支持 int和 list[int]")
@@ -65,9 +65,7 @@ class Odb:
                 list_res.append(str(CompositeBeamStress(element_id, stress_i, stress_j, stress_i2, stress_j2)))
             else:
                 raise TypeError(f"操作错误，不存在{item.ElementType}类型")
-        if len(list_res) == 1:
-            return list_res[0]
-        return list_res
+        return json.dumps(list_res)
 
     @staticmethod
     def get_element_force(element_id, stage_id: int = 1, result_kind: int = 1, increment_type: int = 1, case_name=""):
@@ -83,7 +81,7 @@ class Odb:
             odb.get_element_force(1,stage_id=1)
             odb.get_element_force([1,2,3],stage_id=1)
             odb.get_element_force(1,stage_id=-1,case_name="工况名")
-        Returns:  str   json字符串
+        Returns: json字符串，包含信息为list[dict]
         """
         if type(element_id) != int and type(element_id) != list:
             raise TypeError("类型错误,element_id仅支持 int和 list[int]")
@@ -120,9 +118,7 @@ class Odb:
 
             else:
                 raise TypeError(f"操作错误，不存在{item.ElementType}类型")
-        if len(list_res) == 1:
-            return list_res[0]
-        return list_res
+        return json.dumps(list_res)
 
     @staticmethod
     def get_reaction(node_id, stage_id: int = 1, result_kind: int = 1, increment_type: int = 1, case_name=""):
@@ -138,7 +134,7 @@ class Odb:
             odb.get_reaction(1,stage_id=1)
             odb.get_reaction([1,2,3],stage_id=1)
             odb.get_reaction(1,stage_id=-1,case_name="工况名")
-        Returns:  str   json字符串
+        Returns: json字符串，包含信息为list[dict]
         """
         if type(node_id) != int and type(node_id) != list:
             raise TypeError("类型错误,beam_id int和 list[int]")
@@ -147,9 +143,7 @@ class Odb:
         for item in bs_list:
             force = [item.Force.Fx, item.Force.Fy, item.Force.Fz, item.Force.Mx, item.Force.My, item.Force.Mz]
             list_res.append(str(SupportReaction(item.NodeId, force)))
-        if len(list_res) == 1:
-            return list_res[0]
-        return list_res
+        return json.dumps(list_res)
 
     @staticmethod
     def get_node_displacement(node_id, stage_id: int = 1, result_kind: int = 1, increment_type: int = 1, case_name=""):
@@ -165,7 +159,7 @@ class Odb:
             odb.get_node_displacement(1,stage_id=1)
             odb.get_node_displacement([1,2,3],stage_id=1)
             odb.get_node_displacement(1,stage_id=-1,case_name="工况名")
-        Returns:  str   json字符串
+        Returns: json字符串，包含信息为list[dict]
         """
         if type(node_id) != int and type(node_id) != list:
             raise TypeError("类型错误,node_id仅支持 int和 list[int]")
@@ -175,9 +169,7 @@ class Odb:
             displacements = [item.Displacement.Dx, item.Displacement.Dy, item.Displacement.Dz,
                              item.Displacement.Rx, item.Displacement.Ry, item.Displacement.Rz]
             list_res.append(str(NodeDisplacement(item.NodeId, displacements)))
-        if len(list_res) == 1:
-            return list_res[0]
-        return list_res
+        return json.dumps(list_res)
 
     # endregion
 
@@ -504,7 +496,7 @@ class Odb:
             odb.get_node_data()     # 获取所有节点信息
             odb.get_node_data(1)    # 获取单个节点信息
             odb.get_node_data([1,2])    # 获取多个节点信息
-        Returns:  json字符串，包含信息为list[dict] 或 dict
+        Returns:  json字符串，包含信息为list[dict]
         """
         try:
             if ids is None:
@@ -514,8 +506,6 @@ class Odb:
             res_list = []
             for item in node_list:
                 res_list.append(str(Node(item.Id, item.XCoor, item.YCoor, item.ZCoor)))
-            if len(res_list) == 1:
-                return res_list[0]
             return json.dumps(res_list)
         except Exception as ex:
             raise Exception(ex)
@@ -528,7 +518,7 @@ class Odb:
         Example:
             odb.get_element_data() # 获取所有单元结果
             odb.get_element_data(1) # 获取指定编号单元信息
-        Returns:  json字符串，包含信息为list[dict] 或 dict
+        Returns:  json字符串，包含信息为list[dict]
         """
         try:
             item_list = []
@@ -538,10 +528,7 @@ class Odb:
                 item_list.extend(Odb.get_plate_element())
                 item_list.extend(Odb.get_cable_element())
                 item_list.extend(Odb.get_link_element())
-                if len(item_list) == 1:
-                    return item_list[0]
-                else:
-                    return item_list
+                return json.dumps(item_list)
             if isinstance(ids, int):
                 target_ids.append(ids)
             else:
