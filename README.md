@@ -2135,7 +2135,7 @@ odb.get_element_stress([1, 2, 3], stage_id=1)
 odb.get_element_stress(1, stage_id=-1, case_name="工况名")
 ```  
 
-Returns: list[json_str] or json_str
+Returns: str json字符串
 
 ### get_element_force
 
@@ -2156,7 +2156,7 @@ odb.get_element_force([1, 2, 3], stage_id=1)
 odb.get_element_force(1, stage_id=-1, case_name="工况名")
 ```  
 
-Returns: list[json_str] or json_str
+Returns:  str json字符串
 
 ### get_reaction
 
@@ -2177,7 +2177,7 @@ odb.get_reaction([1, 2, 3], stage_id=1)
 odb.get_reaction(1, stage_id=-1, case_name="工况名")
 ```  
 
-Returns: list[json_str] or json_str
+Returns:  str json字符串
 
 ### get_node_displacement
 
@@ -2198,7 +2198,7 @@ odb.get_node_displacement([1, 2, 3], stage_id=1)
 odb.get_node_displacement(1, stage_id=-1, case_name="工况名")
 ```  
 
-Returns: list[json_str] or json_str
+Returns:  str json字符串
 
 ## 绘制模型结果
 
@@ -2358,6 +2358,20 @@ Returns: 无
 
 ## 获取模型信息
 
+### get_all_section_shape
+
+获取所有截面形状信息
+> 参数:
+
+```Python
+# 示例代码
+from qtmodel import *
+
+odb.get_all_section_shape()
+```  
+
+Returns: json字符串，包含信息为list[dict]
+
 ### get_section_shape
 
 获取截面形状信息
@@ -2371,7 +2385,7 @@ from qtmodel import *
 odb.get_section_shape(1)
 ```  
 
-Returns: str
+Returns: json字符串，包含信息为dict
 
 ### get_section_data
 
@@ -2386,7 +2400,7 @@ from qtmodel import *
 odb.get_section_data(1)
 ```  
 
-Returns: str
+Returns: json字符串，包含信息为dict
 
 ### get_section_ids
 
@@ -2400,7 +2414,7 @@ from qtmodel import *
 odb.get_section_ids()
 ```  
 
-Returns: list[int]
+Returns: json字符串，包含信息为list[int]
 
 ### get_node_id
 
@@ -2418,7 +2432,7 @@ from qtmodel import *
 odb.get_node_id(1, 1, 1)
 ```  
 
-Returns: int
+Returns: json字符串，包含信息为int
 
 ### get_group_elements
 
@@ -2433,7 +2447,7 @@ from qtmodel import *
 odb.get_group_elements("默认结构组")
 ```  
 
-Returns: list[int]
+Returns: json字符串，包含信息为list[int]
 
 ### get_group_nodes
 
@@ -2448,7 +2462,7 @@ from qtmodel import *
 odb.get_group_nodes("默认结构组")
 ```  
 
-Returns: list[int]
+Returns: json字符串，包含信息为list[int]
 
 ### get_node_data
 
@@ -2464,7 +2478,7 @@ odb.get_node_data(1)  # 获取单个节点信息
 odb.get_node_data([1, 2])  # 获取多个节点信息
 ```  
 
-Returns: list[json_str] 或 json_str
+Returns:  json字符串，包含信息为list[dict] 或 dict
 
 ### get_element_data
 
@@ -2479,7 +2493,7 @@ odb.get_element_data()  # 获取所有单元结果
 odb.get_element_data(1)  # 获取指定编号单元信息
 ```  
 
-Returns: list[json_str]
+Returns:  json字符串，包含信息为list[dict] 或 dict
 
 ### get_element_type
 
@@ -2494,7 +2508,7 @@ from qtmodel import *
 odb.get_element_type(1)  # 获取所有单元信息
 ```  
 
-Returns: str类型 返回 BEAM PLATE CABLE LINK
+Returns: str
 
 ### get_beam_element
 
@@ -2509,7 +2523,7 @@ from qtmodel import *
 odb.get_beam_element()  # 获取所有单元信息
 ```  
 
-Returns: list[json_str]
+Returns:  list[str] 其中str为json格式
 
 ### get_plate_element
 
@@ -2524,7 +2538,7 @@ from qtmodel import *
 odb.get_plate_element()  # 获取所有单元信息
 ```  
 
-Returns: list[json_str]
+Returns:  list[str] 其中str为json格式
 
 ### get_cable_element
 
@@ -2539,7 +2553,7 @@ from qtmodel import *
 odb.get_cable_element()  # 获取所有单元信息
 ```  
 
-Returns: list[json_str]
+Returns:  list[str] 其中str为json格式
 
 ### get_link_element
 
@@ -2554,13 +2568,12 @@ from qtmodel import *
 odb.get_link_element()  # 获取所有单元信息
 ```  
 
-Returns: list[json_str]
+Returns:  list[str] 其中str为json格式
 
 ### get_material_data
 
 获取材料信息
-> 参数:  
-> ids: 材料号，默认时输出全部材料
+> 参数:
 
 ```Python
 # 示例代码
@@ -2569,7 +2582,7 @@ from qtmodel import *
 odb.get_material_data()  # 获取所有材料信息
 ```  
 
-Returns: list[json_str]
+Returns: json字符串，包含信息为list[dict]
 
 ### get_concrete_material
 
@@ -2584,7 +2597,7 @@ from qtmodel import *
 odb.get_concrete_material()  # 获取所有材料信息
 ```  
 
-Returns: list[json_str]
+Returns:  list[str] 其中str为json格式
 
 ### get_steel_plate_material
 
@@ -2599,7 +2612,7 @@ from qtmodel import *
 odb.get_steel_plate_material()  # 获取所有钢材材料信息
 ```  
 
-Returns: list[json_str]
+Returns:  list[str] 其中str为json格式
 
 ### get_pre_stress_bar_material
 
@@ -2614,7 +2627,7 @@ from qtmodel import *
 odb.get_pre_stress_bar_material()  # 获取所有预应力材料信息
 ```  
 
-Returns: list[json_str]
+Returns:  list[str] 其中str为json格式
 
 ### get_steel_bar_material
 
@@ -2629,7 +2642,7 @@ from qtmodel import *
 odb.get_steel_bar_material()  # 获取所有钢筋材料信息
 ```  
 
-Returns: list[json_str]
+Returns:  list[str] 其中str为json格式
 
 ### get_user_###ine_material
 
@@ -2644,7 +2657,7 @@ from qtmodel import *
 odb.get_user_define_material()  # 获取所有自定义材料信息
 ```  
 
-Returns: list[json_str]
+Returns:  list[str] 其中str为json格式
 
 ## 获取模型边界信息
 
@@ -2660,7 +2673,7 @@ from qtmodel import *
 odb.get_boundary_group_names()
 ```  
 
-Returns: list[str]
+Returns: json字符串，包含信息为list[str]
 
 ### get_general_support_data
 
@@ -2675,7 +2688,7 @@ from qtmodel import *
 odb.get_general_support_data()
 ```  
 
-Returns: list[json_str]
+Returns: json字符串，包含信息为list[dict]
 
 ### get_elastic_link_data
 
@@ -2690,7 +2703,7 @@ from qtmodel import *
 odb.get_elastic_link_data()
 ```  
 
-Returns: list[json_str]
+Returns: json字符串，包含信息为list[dict]
 
 ### get_elastic_support_data
 
@@ -2705,7 +2718,7 @@ from qtmodel import *
 odb.get_elastic_support_data()
 ```  
 
-Returns: list[json_str]
+Returns: json字符串，包含信息为list[dict]
 
 ### get_master_slave_link_data
 
@@ -2720,7 +2733,7 @@ from qtmodel import *
 odb.get_master_slave_link_data()
 ```  
 
-Returns: list[json_str]
+Returns: json字符串，包含信息为list[dict]
 
 ### get_node_local_axis_data
 
@@ -2734,7 +2747,7 @@ from qtmodel import *
 odb.get_node_local_axis_data()
 ```  
 
-Returns: list[json_str]
+Returns: json字符串，包含信息为list[dict]
 
 ### get_beam_constraint_data
 
@@ -2749,7 +2762,7 @@ from qtmodel import *
 odb.get_beam_constraint_data()
 ```  
 
-Returns: list[json_str]
+Returns: json字符串，包含信息为list[dict]
 
 ### get_constraint_equation_data
 
@@ -2764,7 +2777,7 @@ from qtmodel import *
 odb.get_constraint_equation_data()
 ```  
 
-Returns: list[json_str]
+Returns: json字符串，包含信息为list[dict]
 
 ## 获取施工阶段信息
 
@@ -2781,7 +2794,7 @@ from qtmodel import *
 odb.get_elements_of_stage(1)
 ```  
 
-Returns: list[int]
+Returns: json字符串，包含信息为list[int]
 
 ### get_nodes_of_stage
 
@@ -2796,7 +2809,7 @@ from qtmodel import *
 odb.get_nodes_of_stage(1)
 ```  
 
-Returns: list[int]
+Returns: json字符串，包含信息为list[int]
 
 ### get_groups_of_stage
 
@@ -2811,7 +2824,7 @@ from qtmodel import *
 odb.get_groups_of_stage(1)
 ```  
 
-Returns: dict
+Returns: json字符串，包含信息为dict
 
 ## 荷载信息
 
@@ -2827,7 +2840,7 @@ from qtmodel import *
 odb.get_load_case_names()
 ```  
 
-Returns: list[str]
+Returns: json字符串，包含信息为list[str]
 
 ### get_pre_stress_load
 
@@ -2842,7 +2855,7 @@ from qtmodel import *
 odb.get_pre_stress_load("荷载工况1")
 ```  
 
-Returns: list[json_str]
+Returns: json字符串，包含信息为list[dict]
 
 ### get_node_mass_data
 
@@ -2856,7 +2869,7 @@ from qtmodel import *
 odb.get_node_mass_data()
 ```  
 
-Returns: list[json_str]
+Returns: json字符串，包含信息为list[dict]
 
 ### get_nodal_force_load
 
@@ -2871,7 +2884,7 @@ from qtmodel import *
 odb.get_nodal_force_load("荷载工况1")
 ```  
 
-Returns: list[json_str]
+Returns: json字符串，包含信息为list[dict]
 
 ### get_nodal_displacement_load
 
@@ -2886,7 +2899,7 @@ from qtmodel import *
 odb.get_nodal_displacement_load("荷载工况1")
 ```  
 
-Returns: list[json_str]
+Returns: json字符串，包含信息为list[dict]
 
 ### get_beam_element_load
 
@@ -2901,7 +2914,7 @@ from qtmodel import *
 odb.get_beam_element_load("荷载工况1")
 ```  
 
-Returns: list[json_str]
+Returns: json字符串，包含信息为list[dict]
 
 ### get_plate_element_load
 
@@ -2916,7 +2929,7 @@ from qtmodel import *
 odb.get_beam_element_load("荷载工况1")
 ```  
 
-Returns: list[json_str]
+Returns: json字符串，包含信息为list[dict]
 
 ### get_initial_tension_load
 
@@ -2931,7 +2944,7 @@ from qtmodel import *
 odb.get_initial_tension_load("荷载工况1")
 ```  
 
-Returns: list[json_str]
+Returns: json字符串，包含信息为list[dict]
 
 ### get_cable_length_load
 
@@ -2946,7 +2959,7 @@ from qtmodel import *
 odb.get_cable_length_load("荷载工况1")
 ```  
 
-Returns: list[json_str]
+Returns: json字符串，包含信息为list[dict]
 
 ### get_deviation_parameter
 
@@ -2960,7 +2973,7 @@ from qtmodel import *
 odb.get_deviation_parameter()
 ```  
 
-Returns: list[json_str]
+Returns: json字符串，包含信息为list[dict]
 
 ### get_deviation_load
 
@@ -2975,5 +2988,5 @@ from qtmodel import *
 odb.get_deviation_load("荷载工况1")
 ```  
 
-Returns: list[json_str]
+Returns: json字符串，包含信息为list[dict]
 
