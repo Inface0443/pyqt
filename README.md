@@ -1,8 +1,8 @@
-# 最新版本 V0.4.16 - 2024.06.25
+# 最新版本 V0.4.18 - 2024.06.26
 
 > pip install --upgrade qtmodel -i https://pypi.org/simple
 
-- 调整所有获取函数返回值
+- 规范输出结果为json字符串或list[json]
 
 ## 视图控制
 
