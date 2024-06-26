@@ -392,6 +392,7 @@ class Odb:
             res_list = []
             for item in sec_ids:
                 res_list.append(qt_model.GetSectionShape(item))
+            return json.dumps(res_list)
         except Exception as ex:
             raise Exception(ex)
 
