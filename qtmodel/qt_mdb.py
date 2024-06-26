@@ -301,7 +301,7 @@ class Mdb:
             relativeAccuracyOfInternalForce=relative_accuracy_of_force)
 
     @staticmethod
-    def update_operation_stage_setting(do_analysis: bool, final_stage: str, do_static_load_analysis: bool = True,
+    def update_operation_stage_setting(do_analysis: bool, final_stage: str = "", do_static_load_analysis: bool = True,
                                        static_load_cases: list[str] = None, do_sink_analysis: bool = False,
                                        sink_cases: list[str] = None, do_live_load_analysis: bool = False, live_load_cases: list[str] = None,
                                        live_load_analytical_type: int = 0):
