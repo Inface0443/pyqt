@@ -200,7 +200,7 @@ class Mdb:
         Returns: 无
         """
         try:
-            qt_model.ImportQtCommand(command)
+            qt_model.ImportQtCommand(command, command_type)
         except Exception as ex:
             raise Exception(ex)
 
@@ -347,7 +347,7 @@ class Mdb:
 
     # endregion
 
-    # region 节点单元操作
+    # region 节点操作
     @staticmethod
     def add_node(node_data: list[float], intersected: bool = True,
                  is_merged: bool = False, merge_error: float = 1e-4):
@@ -463,7 +463,7 @@ class Mdb:
         """
         移动节点坐标
         Args:
-            node_id：节点号
+            node_id:节点号
             offset_x:X轴偏移量
             offset_y:Y轴偏移量
             offset_z:Z轴偏移量
@@ -561,6 +561,9 @@ class Mdb:
         except Exception as ex:
             raise Exception(ex)
 
+    # endregion
+
+    # region 单元操作
     @staticmethod
     def add_element(index: int = 1, ele_type: int = 1, node_ids: list[int] = None, beta_angle: float = 0, mat_id: int = -1, sec_id: int = -1):
         """
@@ -591,6 +594,74 @@ class Mdb:
                 qt_model.AddPlate(id=index, idI=node_ids[0], idJ=node_ids[1], idK=node_ids[2], idL=node_ids[3], betaAngle=beta_angle,
                                   materialId=mat_id,
                                   sectionId=sec_id)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def update_element_material(index: int, mat_id: int):
+        """
+        更新指定单元的材料号
+        Args:
+            index: 单元编号
+            mat_id: 材料编号
+        Example:
+            mdb.update_element_material(1,2)
+        Returns: 无
+        """
+        try:
+            qt_model.UpdateElementMaterial(elementId=index, materialId=mat_id)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def update_element_beta_angle(index: int, beta_angle: float):
+        """
+        更新指定单元的贝塔角
+        Args:
+            index: 单元编号
+            beta_angle: 贝塔角度数
+        Example:
+            mdb.update_element_beta_angle(1,90)
+        Returns: 无
+        """
+        try:
+            qt_model.UpdateElementBetaAngle(elementId=index, betaAngle=beta_angle)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def update_element_section(index: int, sec_id: int):
+        """
+        更新杆系单元截面或板单元板厚
+        Args:
+            index: 单元编号
+            sec_id: 截面号
+        Example:
+            mdb.update_element_section(1,2)
+        Returns: 无
+        """
+        try:
+            if qt_model.GetSectionType(index) == "PLATE":
+                qt_model.UpdatePlateThickness(elementId=index, thicknessId=sec_id)
+            else:
+                qt_model.UpdateFrameSection(elementId=index, sectionId=sec_id)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def update_element_node(index: int, nodes: list[float]):
+        """
+        更新单元节点
+        Args:
+            index: 单元编号
+            nodes: 杆系单元时为[node_i,node_j] 板单元[i,j,k,l]
+        Example:
+            mdb.update_element_node(1,[1,2])
+            mdb.update_element_node(2,[1,2,3,4])
+        Returns: 无
+        """
+        try:
+            qt_model.UpdateElementNodes(elementId=index, nodeIds=nodes)
         except Exception as ex:
             raise Exception(ex)
 

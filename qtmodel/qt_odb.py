@@ -379,6 +379,38 @@ class Odb:
 
     # region 获取模型信息
     @staticmethod
+    def get_thickness_data(thick_id: int):
+        """
+        获取所有板厚信息
+        Args:
+        Example:
+            odb.get_thickness_data(1)
+        Returns: json字符串，包含信息为dict
+        """
+        try:
+            return qt_model.GetThicknessData(thick_id)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def get_all_thickness_data():
+        """
+        获取所有板厚信息
+        Args:
+        Example:
+            odb.get_all_thickness_data()
+        Returns: json字符串，包含信息为list[dict]
+        """
+        try:
+            sec_ids = qt_model.GetAllThicknessIds()
+            res_list = []
+            for item in sec_ids:
+                res_list.append(qt_model.GetThicknessData(item))
+            return json.dumps(res_list)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
     def get_all_section_shape():
         """
         获取所有截面形状信息
