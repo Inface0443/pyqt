@@ -1007,7 +1007,8 @@ class Mdb:
                                       verticalDis=dist_v, lateralDis=dist_l, verticalRib=rib_v, lateralRib=rib_l)
             else:
                 qt_model.AddThickness(id=index, name=name, t=t, type=thick_type, isBiased=False, ribPos=rib_pos,
-                                      offSetType=bias_info[0], offSetValue=bias_info[1])
+                                      offSetType=bias_info[0], offSetValue=bias_info[1],
+                                      verticalDis=dist_v, lateralDis=dist_l, verticalRib=rib_v, lateralRib=rib_l)
             qt_model.UpdateModel()
         except Exception as ex:
             raise Exception(ex)
