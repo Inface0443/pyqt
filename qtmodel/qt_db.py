@@ -61,9 +61,27 @@ class Element:
             'mat_id': self.mat_id,
             'sec_id': self.sec_id,
             'beta': self.beta,
-            'initial_type': self.initial_type,
-            'initial_value': self.initial_value,
         }
+        if self.ele_type == "CABLE":
+            obj_dict = {
+                'index': self.index,
+                'ele_type': self.ele_type,
+                'node_list': self.node_list,
+                'mat_id': self.mat_id,
+                'sec_id': self.sec_id,
+                'beta': self.beta,
+                'initial_type': self.initial_type,
+                'initial_value': self.initial_value,
+            }
+        elif self.ele_type == "PLATE":
+            obj_dict = {
+                'index': self.index,
+                'ele_type': self.ele_type,
+                'node_list': self.node_list,
+                'mat_id': self.mat_id,
+                'thick_id': self.sec_id,
+                'beta': self.beta,
+            }
         return json.dumps(obj_dict, ensure_ascii=False)
 
     def __repr__(self):
