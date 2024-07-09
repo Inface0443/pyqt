@@ -1513,7 +1513,7 @@ class Mdb:
         Returns: 无
         """
         try:
-            qt_model.AddCarRelativeFactor(name=name, codeIndex=code_index, crossFactors=cross_factors, subCase=cross_factors,
+            qt_model.AddCarRelativeFactor(name=name, codeIndex=code_index, crossFactors=cross_factors,
                                           longitudeCoefficient=longitude_factor,
                                           impactCoefficient=impact_factor, frequency=frequency)
             qt_model.UpdateModel()
