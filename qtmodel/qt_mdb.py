@@ -1476,19 +1476,13 @@ class Mdb:
 
     @staticmethod
     def add_live_load_case(name: str, influence_plane: str, span: float,
-                           car_detail: tuple[list[float], float, float] = None,
-                           train_detail: tuple[list[float], float, float, float] = None,
-                           metro_detail: tuple[list[float], float, float] = None,
                            sub_case: list[tuple[str, float, list[str]]] = None):
         """
         添加移动荷载工况
         Args:
-             name:荷载工况名
+             name:活载工况名
              influence_plane:影响线名
              span:跨度
-             car_detail: 汽车相关系数 (横向折减列表float[8],纵向折减系数,冲击强度)
-             train_detail: 火车相关系数 (横向折减列表float[8],纵向折减系数,强度冲击,疲劳冲击)
-             metro_detail: 轻轨相关系数 (横向折减列表float[8],纵向折减系数,冲击强度)
              sub_case:子工况信息 [(车辆名称,系数,["车道1","车道2"])...]
         Example:
             mdb.add_live_load_case("活载工况1","影响面1",100,sub_case=[("车辆名称",1.0,["车道1","车道2"]),])
@@ -1498,6 +1492,29 @@ class Mdb:
             if sub_case is None:
                 raise Exception("操作错误，子工况信息列表不能为空")
             qt_model.AddLiveLoadCase(name=name, influencePlane=influence_plane, span=span, subCase=sub_case)
+            qt_model.UpdateModel()
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def add_car_relative_factor(name: str, code_index: int, cross_factors: list[float], longitude_factor: float = -1, impact_factor: float = -1,
+                                frequency: float = 14):
+        """
+        添加移动荷载工况汽车折减
+        Args:
+             name:活载工况名
+             code_index: 汽车折减规范编号  1-公规2015 2-公规2004 3-无
+             cross_factors:横向折减系数列表，要求长度为8
+             longitude_factor:纵向折减系数，大于0时为自定义，否则为规范自动选取
+             impact_factor:子工况信息 [(车辆名称,系数,["车道1","车道2"])...]
+             frequency:桥梁基频
+        Example:
+            mdb.add_car_relative_factor("活载工况1",1,[1.2,1,0.78,0.67,0.6,0.55,0.52,0.5])
+        Returns: 无
+        """
+        try:
+            qt_model.AddLiveLoadCase(name=name, codeIndex=code_index, crossFactors=cross_factors, subCase=cross_factors, longitudeCoefficient=longitude_factor,
+                                     impactCoefficient=impact_factor, frequency=frequency)
             qt_model.UpdateModel()
         except Exception as ex:
             raise Exception(ex)
@@ -2195,17 +2212,21 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def add_beam_section_temperature(element_id: int = 1, case_name: str = "", paving_thick: float = 0, temperature_type: int = 1,
-                                     paving_type: int = 1, group_name: str = "默认荷载组", modify: bool = False, temp_list: tuple[float, float] = None):
+    def add_beam_section_temperature(element_id: int = 1, case_name: str = "", code_index: int = 1,
+                                     paving_thick: float = 0, temperature_type: int = 1,
+                                     paving_type: int = 1, zone_index: str = 1, group_name: str = "默认荷载组",
+                                     modify: bool = False, temp_list: tuple[float, float] = None):
         """
         添加梁截面温度
         Args:
             element_id:单元编号
             case_name:荷载工况名
+            code_index:规范编号  1-公路规范2015  2-AASHTO2017
             paving_thick:铺设厚度(m)
             temperature_type:温度类型  1-升温(默认) 2-降温
             paving_type:铺设类型
                 _1-沥青混凝土(默认)  2-水泥混凝土_
+            zone_index: 区域号 (仅规范二需要)
             group_name:荷载组名
             modify:是否修改规范温度
             temp_list:温度列表[T1,T2]  (仅修改时需要)
@@ -2215,7 +2236,7 @@ class Mdb:
         """
         try:
             qt_model.AddBeamSectionTemperature(elementId=element_id, caseName=case_name, pavingThickness=paving_thick,
-                                               temperatureType=temperature_type,
+                                               temperatureType=temperature_type, codeIndex=code_index, zoneIndex=zone_index,
                                                pavingType=paving_type, groupName=group_name, isModify=modify, temperatures=temp_list)
         except Exception as ex:
             raise Exception(ex)
