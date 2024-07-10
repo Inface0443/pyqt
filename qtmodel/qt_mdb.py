@@ -2230,7 +2230,7 @@ class Mdb:
             zone_index: 区域号 (仅规范二需要)
             group_name:荷载组名
             modify:是否修改规范温度
-            temp_list:温度列表[T1,T2,T3,t][T1,T2]  (仅修改时需要)
+            temp_list:温度列表[T1,T2,T3,t]or[T1,T2]  (仅修改时需要)
         Example:
             mdb.add_beam_section_temperature(element_id=1,case_name="工况1",paving_thick=0.1)
         Returns: 无
