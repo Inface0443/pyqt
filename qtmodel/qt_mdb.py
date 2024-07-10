@@ -1497,16 +1497,16 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def add_car_relative_factor(name: str, code_index: int, cross_factors: list[float], longitude_factor: float = -1, impact_factor: float = -1,
+    def add_car_relative_factor(name: str, code_index: int, cross_factors: list[float] = None, longitude_factor: float = -1, impact_factor: float = -1,
                                 frequency: float = 14):
         """
         添加移动荷载工况汽车折减
         Args:
              name:活载工况名
              code_index: 汽车折减规范编号  1-公规2015 2-公规2004 3-无
-             cross_factors:横向折减系数列表，要求长度为8
+             cross_factors:横向折减系数列表,自定义时要求长度为8,否则按照规范选取
              longitude_factor:纵向折减系数，大于0时为自定义，否则为规范自动选取
-             impact_factor:子工况信息 [(车辆名称,系数,["车道1","车道2"])...]
+             impact_factor:冲击系数大于1时为自定义，否则按照规范自动选取
              frequency:桥梁基频
         Example:
             mdb.add_car_relative_factor("活载工况1",1,[1.2,1,0.78,0.67,0.6,0.55,0.52,0.5])
