@@ -1497,7 +1497,8 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def add_car_relative_factor(name: str, code_index: int, cross_factors: list[float] = None, longitude_factor: float = -1, impact_factor: float = -1,
+    def add_car_relative_factor(name: str, code_index: int, cross_factors: list[float] = None, longitude_factor: float = -1,
+                                impact_factor: float = -1,
                                 frequency: float = 14):
         """
         添加移动荷载工况汽车折减
@@ -1814,7 +1815,7 @@ class Mdb:
 
     # endregion
 
-    # region 荷载操作
+    # region 静力荷载操作
     @staticmethod
     def add_load_group(name: str = ""):
         """
@@ -1879,13 +1880,16 @@ class Mdb:
         """
         删除节点质量
         Args:
-             node_id:节点号
+             node_id:节点号，默认删除所有节点质量
         Example:
             mdb.remove_nodal_mass(node_id=1)
         Returns: 无
         """
         try:
-            qt_model.RemoveNodalMass(nodeId=node_id)
+            if node_id == -1:
+                qt_model.RemoveAllNodalMass()
+            else:
+                qt_model.RemoveNodalMass(nodeId=node_id)
         except Exception as ex:
             raise Exception(ex)
 
@@ -1910,19 +1914,18 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def remove_pre_stress(case_name: str = "", tendon_name: str = "", group_name: str = "默认荷载组"):
+    def remove_pre_stress(case_name: str = "", tendon_name: str = ""):
         """
         删除预应力
         Args:
              case_name:荷载工况
              tendon_name:钢束组
-             group_name:边界组名
         Example:
-            mdb.remove_pre_stress(case_name="工况1",tendon_name="钢束1",group_name="默认荷载组")
+            mdb.remove_pre_stress(case_name="工况1",tendon_name="钢束1")
         Returns: 无
         """
         try:
-            qt_model.RemovePreStress(caseName=case_name, tendonName=tendon_name, groupName=group_name)
+            qt_model.RemovePreStress(caseName=case_name, tendonName=tendon_name)
         except Exception as ex:
             raise Exception(ex)
 
@@ -2001,10 +2004,10 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def add_beam_load(beam_id: int = 1, case_name: str = "", load_type: int = 1, coord_system: int = 3,
-                      is_abs=False, list_x: list[float, float] = None,
-                      list_load: list[float, float] = None, group_name="默认荷载组", load_bias: tuple[bool, int, int, float] = None,
-                      projected: bool = False):
+    def add_beam_element_load(beam_id: int = 1, case_name: str = "", load_type: int = 1, coord_system: int = 3,
+                              is_abs=False, list_x: list[float, float] = None,
+                              list_load: list[float, float] = None, group_name="默认荷载组", load_bias: tuple[bool, int, int, float] = None,
+                              projected: bool = False):
         """
         添加梁单元荷载
         Args:
@@ -2021,19 +2024,19 @@ class Mdb:
             load_bias:偏心荷载 (是否偏心,0-中心 1-偏心,偏心坐标系-int,偏心距离)
             projected:荷载是否投影
         Example:
-            mdb.add_beam_load(case_name="荷载工况1",beam_id=1,load_type=1,list_x=[0.1,0.5,0.8],list_load=[100,100,100])
-            mdb.add_beam_load(case_name="荷载工况1",beam_id=1,load_type=3,list_x=[0.4,0.8],list_load=[100,200])
+            mdb.add_beam_element_load(case_name="荷载工况1",beam_id=1,load_type=1,list_x=[0.1,0.5,0.8],list_load=[100,100,100])
+            mdb.add_beam_element_load(case_name="荷载工况1",beam_id=1,load_type=3,list_x=[0.4,0.8],list_load=[100,200])
         Returns: 无
         """
         try:
-            qt_model.AddBeamLoad(caseName=case_name, beamId=beam_id, loadType=load_type, isAbs=is_abs,
-                                 coordinateSystem=coord_system, listX=list_x, listLoad=list_load, groupName=group_name,
-                                 biasInfo=load_bias, isProject=projected)
+            qt_model.AddBeamElementLoad(caseName=case_name, beamId=beam_id, loadType=load_type, isAbs=is_abs,
+                                        coordinateSystem=coord_system, listX=list_x, listLoad=list_load, groupName=group_name,
+                                        biasInfo=load_bias, isProject=projected)
         except Exception as ex:
             raise Exception(ex)
 
     @staticmethod
-    def remove_beam_load(element_id: int = 1, case_name: str = "", load_type: int = 1, group_name: str = "默认荷载组"):
+    def remove_beam_element_load(element_id: int = 1, case_name: str = "", load_type: int = 1):
         """
         删除梁单元荷载
         Args:
@@ -2041,18 +2044,17 @@ class Mdb:
             case_name:荷载工况名
             load_type:荷载类型
                 _1-集中力   2-集中弯矩  3-分布力   4-分布弯矩_
-            group_name:边界组名
         Example:
-            mdb.remove_beam_load(case_name="工况1",element_id=1,load_type=1,group_name="默认荷载组")
+            mdb.remove_beam_element_load(case_name="工况1",element_id=1,load_type=1)
         Returns: 无
         """
         try:
-            qt_model.RemoveBeamLoad(caseName=case_name, elementId=element_id, loadType=load_type, groupName=group_name)
+            qt_model.RemoveBeamElementLoad(caseName=case_name, elementId=element_id, loadType=load_type)
         except Exception as ex:
             raise Exception(ex)
 
     @staticmethod
-    def add_initial_tension(element_id: int = 1, case_name: str = "", group_name: str = "默认荷载组", tension: float = 0, tension_type: int = 1):
+    def add_initial_tension_load(element_id: int = 1, case_name: str = "", group_name: str = "默认荷载组", tension: float = 0, tension_type: int = 1):
         """
         添加初始拉力
         Args:
@@ -2062,11 +2064,27 @@ class Mdb:
              tension_type:张拉类型  0-增量 1-全量
              group_name:荷载组名
         Example:
-            mdb.add_initial_tension(element_id=1,case_name="工况1",tension=100,tension_type=1)
+            mdb.add_initial_tension_load(element_id=1,case_name="工况1",tension=100,tension_type=1)
         Returns: 无
         """
         try:
-            qt_model.AddInitialTension(elementId=element_id, caseName=case_name, tension=tension, tensionType=tension_type, groupName=group_name)
+            qt_model.AddInitialTensionLoad(elementId=element_id, caseName=case_name, tension=tension, tensionType=tension_type, groupName=group_name)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def remove_initial_tension_load(case_name: str, element_id: int):
+        """
+        删除初始拉力
+        Args:
+            element_id:单元号
+            case_name:荷载工况名
+        Example:
+            mdb.remove_initial_tension_load(case_name="工况1",element_id=1)
+        Returns: 无
+        """
+        try:
+            qt_model.RemoveInitialTensionLoad(elementId=element_id, caseName=case_name)
         except Exception as ex:
             raise Exception(ex)
 
@@ -2086,6 +2104,22 @@ class Mdb:
         """
         try:
             qt_model.AddCableLenghtLoad(elementId=element_id, caseName=case_name, groupName=group_name, length=length, tensionType=tension_type)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def remove_cable_length_load(case_name: str, element_id: int):
+        """
+        删除索长张拉
+        Args:
+            element_id:单元号
+            case_name:荷载工况名
+        Example:
+            mdb.remove_cable_length_load(case_name="工况1",element_id=1)
+        Returns: 无
+        """
+        try:
+            qt_model.RemoveCableLengthLoad(elementId=element_id, caseName=case_name)
         except Exception as ex:
             raise Exception(ex)
 
@@ -2123,6 +2157,23 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
+    def remove_plate_element_load(case_name: str, element_id: int, load_type: int):
+        """
+        删除指定荷载工况下指定单元的板单元荷载
+        Args:
+            element_id:单元号
+            case_name:荷载工况名
+            load_type: 板单元类型 1集中力   2-集中弯矩  3-分布线力  4-分布线弯矩  5-分布面力  6-分布面弯矩
+        Example:
+            mdb.remove_plate_element_load(case_name="工况1",element_id=1,load_type=1)
+        Returns: 无
+        """
+        try:
+            qt_model.RemovePlateElementLoad(elementId=element_id, caseName=case_name, loadType=load_type)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
     def add_deviation_parameter(name: str = "", element_type: int = 1, parameters: list[float] = None):
         """
         添加制造误差
@@ -2144,6 +2195,22 @@ class Mdb:
                 raise Exception("操作错误，误差列表有误")
             qt_model.AddDeviationParameter(name=name, elementType=element_type, parameterInfo=parameters)
             qt_model.UpdateModel()
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def remove_deviation_parameter(name: str, para_type: int = 1):
+        """
+        删除指定制造偏差参数
+        Args:
+            name:制造偏差参数名
+            para_type:制造偏差类型 1-梁单元  2-板单元
+        Example:
+            mdb.remove_deviation_parameter(name="参数1",para_type=1)
+        Returns: 无
+        """
+        try:
+            qt_model.RemoveDeviationParameter(name=name, paraType=para_type)
         except Exception as ex:
             raise Exception(ex)
 
@@ -2171,6 +2238,22 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
+    def remove_deviation_load(case_name: str, element_id: int):
+        """
+        删除指定制造偏差荷载
+        Args:
+            case_name:荷载工况名
+            element_id:单元编号
+        Example:
+            mdb.remove_deviation_load(case_name="工况1",element_id=1)
+        Returns: 无
+        """
+        try:
+            qt_model.RemoveDeviationLoad(caseName=case_name, elementId=element_id)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
     def add_element_temperature(element_id: int = 1, case_name: str = "", temperature: float = 1, group_name: str = "默认荷载组"):
         """
         添加单元温度
@@ -2185,6 +2268,22 @@ class Mdb:
         """
         try:
             qt_model.AddElementTemperature(elementId=element_id, caseName=case_name, temperature=temperature, groupName=group_name)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def remove_element_temperature(case_name: str, element_id: int):
+        """
+        删除指定单元温度
+        Args:
+            case_name:荷载工况名
+            element_id:单元编号
+        Example:
+            mdb.remove_element_temperature(case_name="荷载工况1",element_id=1)
+        Returns: 无
+        """
+        try:
+            qt_model.RemoveElementTemperature(caseName=case_name, elementId=element_id)
         except Exception as ex:
             raise Exception(ex)
 
@@ -2209,6 +2308,23 @@ class Mdb:
         try:
             qt_model.AddGradientTemperature(elementId=element_id, caseName=case_name, temperature=temperature,
                                             sectionOriental=section_oriental, elementType=element_type, groupNmae=group_name)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def remove_gradient_temperature(case_name: str, element_id: int, direct: int=1):
+        """
+        删除梁或板单元梯度温度
+        Args:
+            case_name:荷载工况名
+            element_id:单元编号
+            direct:梁单元梯度温度方向  1-Y向 2-Z向 (仅梁单元需要)
+        Example:
+            mdb.remove_gradient_temperature(case_name="工况1",element_id=1)
+        Returns: 无
+        """
+        try:
+            qt_model.RemoveGradientTemperature(caseName=case_name, elementId=element_id, direct=direct)
         except Exception as ex:
             raise Exception(ex)
 
@@ -2243,6 +2359,22 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
+    def remove_beam_section_temperature(case_name: str, element_id: int):
+        """
+        删除指定梁或板单元梁截面温度
+        Args:
+            case_name:荷载工况名
+            element_id:单元编号
+        Example:
+            mdb.remove_beam_section_temperature(case_name="工况1",element_id=1)
+        Returns: 无
+        """
+        try:
+            qt_model.RemoveBeamSectionTemperature(caseName=case_name, elementId=element_id)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
     def add_index_temperature(element_id: int = 1, case_name: str = "", temperature: float = 0, index: float = 1, group_name: str = "默认荷载组"):
         """
         添加指数温度
@@ -2262,6 +2394,22 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
+    def remove_index_temperature(case_name: str, element_id: int):
+        """
+        删除梁单元指数温度
+        Args:
+            case_name:荷载工况名
+            element_id:单元编号
+        Example:
+            mdb.remove_index_temperature(case_name="工况1",element_id=1)
+        Returns: 无
+        """
+        try:
+            qt_model.RemoveIndexTemperature(caseName=case_name, elementId=element_id)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
     def add_top_plate_temperature(element_id: int = 1, case_name: str = "", temperature: float = 0, group_name: str = "默认荷载组"):
         """
         添加顶板温度
@@ -2276,6 +2424,22 @@ class Mdb:
         """
         try:
             qt_model.AddTopPlateTemperature(elementId=element_id, caseName=case_name, temperature=temperature, groupName=group_name)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def remove_top_plate_temperature(case_name: str, element_id: int):
+        """
+        删除梁单元顶板温度
+        Args:
+            case_name:荷载工况名
+            element_id:单元编号
+        Example:
+            mdb.remove_top_plate_temperature(case_name="荷载工况1",element_id=1)
+        Returns: 无
+        """
+        try:
+            qt_model.RemoveTopPlateTemperature(caseName=case_name, elementId=element_id)
         except Exception as ex:
             raise Exception(ex)
 
