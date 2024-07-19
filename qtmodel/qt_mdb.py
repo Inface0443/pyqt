@@ -967,15 +967,15 @@ class Mdb:
             section_type = "工字钢梁" if sec_type == 1 else "箱型钢梁"
             rib_names = list(rib_info.keys())
             rib_data = list(rib_info.values())
-            qt_model.AddSteelSection(id=index, name=name, sectionType=section_type, sectionInfoList=sec_info,
-                                     ribNameList=rib_names, ribInfoList=rib_data,
-                                     ribPlaceList=rib_place, baisType=bias_type, centerType=center_type,
-                                     shearConsider=shear_consider, horizontalPos=bias_x, verticalPos=bias_y)
+            qt_model.AddSteelGirderSection(id=index, name=name, sectionType=section_type, secInfo=sec_info,
+                                           ribNameList=rib_names, ribInfoList=rib_data,
+                                           ribPlaceList=rib_place, baisType=bias_type, centerType=center_type,
+                                           shearConsider=shear_consider, horizontalPos=bias_x, verticalPos=bias_y)
         except Exception as ex:
             raise Exception(ex)
 
     @staticmethod
-    def add_user_section(index: int = -1, name: str = "", sec_type: str = "特性截面", property_info: list[float] = None,
+    def add_user_section(index: int = -1, name: str = "", sec_type: str = "特性截面", sec_info: list[float] = None,
                          main_loop: list[tuple[float, float]] = None, sub_loops: list[list[tuple[float, float]]] = None,
                          sec_lines: list[tuple[float, float, float, float, float]] = None):
         """
@@ -984,7 +984,7 @@ class Mdb:
              index:截面编号
              name:截面名称
              sec_type:截面类型
-             property_info:截面特性列表，共计26个参数
+             sec_info:截面特性列表，共计26个参数
                 - [Area, AreaY, AreaZ, InertialX, InertialY, InertialZ, InertialYz,
                     Cyp, Cym, Czp, Czm, Peri0, PeriI, CentY, CentZ,
                     Y1, Z1, Y2, Z2, Y3, Z3, Y4, Z4, ShearCenterY, ShearCenterZ,Thw]
@@ -992,15 +992,15 @@ class Mdb:
              sub_loops:次线圈坐标集合 [[(0,0),(0,1),(1,1,)], [(2,2),(3,2),(3,3)]]
              sec_lines:线宽集合[(x1,y1,x2,y3,thick),]
         Example:
-            mdb.add_user_section(name="自定义特性截面",property_info=[i for i in range(25)])
+            mdb.add_user_section(name="自定义特性截面",sec_info=[i for i in range(25)])
         Returns: 无
         """
         try:
-            if sec_type == "特性截面" and len(property_info) < 27:
+            if sec_type == "特性截面" and len(sec_info) < 27:
                 raise Exception(f"操作错误，自定义特性截面列表property_info需要26个参数")
-            if property_info is None:
+            if sec_info is None:
                 raise Exception("操作错误,请输入此截面的截面特性，特性列表可参考截面定义窗口")
-            qt_model.AddUserSection(id=index, name=name, type=sec_type, propertyInfo=property_info,
+            qt_model.AddUserSection(id=index, name=name, type=sec_type, secInfo=sec_info,
                                     mainLoop=main_loop, subLoops=sub_loops, secLines=sec_lines)
         except Exception as ex:
             raise Exception(ex)
@@ -2312,7 +2312,7 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def remove_gradient_temperature(case_name: str, element_id: int, direct: int=1):
+    def remove_gradient_temperature(case_name: str, element_id: int, direct: int = 1):
         """
         删除梁或板单元梯度温度
         Args:
