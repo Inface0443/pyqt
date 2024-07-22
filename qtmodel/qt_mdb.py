@@ -916,7 +916,7 @@ class Mdb:
         """
         添加截面信息,如截面存在则为更新截面
         Args:
-            index: 截面编号,默认自动识别
+            index: 更改截面号
             name:截面名称
             sec_type:参数截面类型名称
             sec_info:截面信息 (必要参数)
