@@ -828,7 +828,7 @@ class Mdb:
                     sec_lines: list[tuple[float, float, float, float, float]] = None,
                     bias_type: str = "中心", center_type: str = "质心", shear_consider: bool = True, bias_x: float = 0, bias_y: float = 0):
         """
-        添加截面信息,如截面存在则为更新截面
+        添加截面信息,如果截面存在则自动覆盖
         Args:
             index: 截面编号,默认自动识别
             name:截面名称
@@ -959,7 +959,7 @@ class Mdb:
     @staticmethod
     def add_tapper_section(index: int = -1, name: str = "", sec_type: str = "矩形", sec_begin: dict = None, sec_end: dict = None):
         """
-        添加变截面,字典参数参考单一截面
+        添加变截面,字典参数参考单一截面,如果截面存在则自动覆盖
         Args:
             index:截面编号
             name:截面名称
