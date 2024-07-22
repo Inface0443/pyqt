@@ -952,6 +952,7 @@ class Mdb:
                 rib_place = [(0, 0, 0, [(0.1, "板肋1", 2, "默认名称1"), (0.2, "板肋1", 2, "默认名称2")]), (0, 0, 1, [(0.1, "T形肋1", 0, "默认名称3")])])
         Returns: 无
         """
+        qt_model.GetSectionType(index)
         Mdb.add_section(index, name, sec_type, sec_info, symmetry, charm_info, sec_right, charm_right, box_number,
                         box_height, mat_combine, rib_info, rib_place, main_loop, sub_loops, sec_lines, bias_type,
                         center_type, shear_consider, bias_x, bias_y)
