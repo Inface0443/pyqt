@@ -501,7 +501,7 @@ Returns: 无
 > charm_info:混凝土截面倒角信息 (仅混凝土箱梁截面需要)  
 > sec_right:混凝土截面右半信息 (对称时可忽略，仅混凝土箱梁截面需要)  
 > charm_right:混凝土截面右半倒角信息 (对称时可忽略，仅混凝土箱梁截面需要)  
-> box_number: 混凝土箱室数 (仅混凝土箱梁截面需要)  
+> box_num: 混凝土箱室数 (仅混凝土箱梁截面需要)  
 > box_height: 混凝土箱梁梁高 (仅混凝土箱梁截面需要)  
 > mat_combine: 组合截面材料信息 (仅组合材料需要) [弹性模量比s/c、密度比s/c、钢材泊松比、混凝土泊松比、热膨胀系数比s/c]  
 > rib_info:肋板信息  
@@ -522,7 +522,7 @@ Returns: 无
 # 示例代码
 from qtmodel import *
 mdb.add_section(name="截面1",sec_type="矩形",sec_info=[2,4],bias_type="中心")
-mdb.add_section(name="截面2",sec_type="混凝土箱梁",box_height=2,box_number=3,
+mdb.add_section(name="截面2",sec_type="混凝土箱梁",box_height=2,box_num=3,
 sec_info=[0.02,0,12,3,1,2,1,5,6,0.2,0.4,0.1,0.13,0.28,0.3,0.5,0.5,0.5,0.2],
 charm_info=["1*0.2,0.1*0.2","0.5*0.15,0.3*0.2","0.4*0.2","0.5*0.2"])
 mdb.add_section(name="钢梁截面1",sec_type="工字钢梁",sec_info=[0,0,0.5,0.5,0.5,0.5,0.7,0.02,0.02,0.02])
@@ -542,7 +542,7 @@ Returns: 无
 > charm_info:混凝土截面倒角信息 (仅混凝土箱梁截面需要)  
 > sec_right:混凝土截面右半信息 (对称时可忽略，仅混凝土箱梁截面需要)  
 > charm_right:混凝土截面右半倒角信息 (对称时可忽略，仅混凝土箱梁截面需要)  
-> box_number: 混凝土箱室数 (仅混凝土箱梁截面需要)  
+> box_num: 混凝土箱室数 (仅混凝土箱梁截面需要)  
 > box_height: 混凝土箱梁梁高 (仅混凝土箱梁截面需要)  
 > mat_combine: 组合截面材料信息 (仅组合材料需要) [弹性模量比s/c、密度比s/c、钢材泊松比、混凝土泊松比、热膨胀系数比s/c]  
 > rib_info:肋板信息  
@@ -563,7 +563,7 @@ Returns: 无
 # 示例代码
 from qtmodel import *
 mdb.update_section(1,name="截面1",sec_type="矩形",sec_info=[2,4],bias_type="中心")
-mdb.update_section(2,name="截面2",sec_type="混凝土箱梁",box_height=2,box_number=3,
+mdb.update_section(2,name="截面2",sec_type="混凝土箱梁",box_height=2,box_num=3,
 sec_info=[0.02,0,12,3,1,2,1,5,6,0.2,0.4,0.1,0.13,0.28,0.3,0.5,0.5,0.5,0.2],
 charm_info=["1*0.2,0.1*0.2","0.5*0.15,0.3*0.2","0.4*0.2","0.5*0.2"])
 mdb.update_section(3,name="钢梁截面1",sec_type="工字钢梁",sec_info=[0,0,0.5,0.5,0.5,0.5,0.7,0.02,0.02,0.02])

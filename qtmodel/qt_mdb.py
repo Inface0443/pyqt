@@ -821,7 +821,7 @@ class Mdb:
     @staticmethod
     def add_section(index: int = -1, name: str = "", sec_type: str = "矩形", sec_info: list[float] = None,
                     symmetry: bool = True, charm_info: list[str] = None, sec_right: list[float] = None,
-                    charm_right: list[str] = None, box_number: int = 3, box_height: float = 2,
+                    charm_right: list[str] = None, box_num: int = 3, box_height: float = 2,
                     mat_combine: list[float] = None, rib_info: dict[str, list[float]] = None,
                     rib_place: list[tuple[int, int, int, list[tuple[float, str, int, str]]]] = None,
                     main_loop: list[tuple[float, float]] = None, sub_loops: list[list[tuple[float, float]]] = None,
@@ -838,7 +838,7 @@ class Mdb:
             charm_info:混凝土截面倒角信息 (仅混凝土箱梁截面需要)
             sec_right:混凝土截面右半信息 (对称时可忽略，仅混凝土箱梁截面需要)
             charm_right:混凝土截面右半倒角信息 (对称时可忽略，仅混凝土箱梁截面需要)
-            box_number: 混凝土箱室数 (仅混凝土箱梁截面需要)
+            box_num: 混凝土箱室数 (仅混凝土箱梁截面需要)
             box_height: 混凝土箱梁梁高 (仅混凝土箱梁截面需要)
             mat_combine: 组合截面材料信息 (仅组合材料需要) [弹性模量比s/c、密度比s/c、钢材泊松比、混凝土泊松比、热膨胀系数比s/c]
             rib_info:肋板信息
@@ -878,7 +878,7 @@ class Mdb:
                 raise Exception(f"操作失败，参数截面仅支持以下截面类型{sec_type_list}")
             if sec_type == "混凝土箱梁":
                 qt_model.AddSection(id=index, name=name, secType=sec_type, secInfo=sec_info, charmInfo=charm_info,
-                                    symmetry=symmetry, boxNum=box_number, H=box_height, charmInfoR=charm_right, secInfoR=sec_right,
+                                    symmetry=symmetry, boxNum=box_num, H=box_height, charmInfoR=charm_right, secInfoR=sec_right,
                                     biasType=bias_type, centerType=center_type, shearConsider=shear_consider,
                                     horizontalPos=bias_x, verticalPos=bias_y)
             elif sec_type == "钢管砼" or sec_type == "钢箱砼" or sec_type == "工字组合梁" or sec_type == "钢箱组合梁":
@@ -907,7 +907,7 @@ class Mdb:
     @staticmethod
     def update_section(index: int, name: str = "", sec_type: str = "矩形", sec_info: list[float] = None,
                        symmetry: bool = True, charm_info: list[str] = None, sec_right: list[float] = None,
-                       charm_right: list[str] = None, box_number: int = 3, box_height: float = 2,
+                       charm_right: list[str] = None, box_num: int = 3, box_height: float = 2,
                        mat_combine: list[float] = None, rib_info: dict[str, list[float]] = None,
                        rib_place: list[tuple[int, int, int, list[tuple[float, str, int, str]]]] = None,
                        main_loop: list[tuple[float, float]] = None, sub_loops: list[list[tuple[float, float]]] = None,
@@ -924,7 +924,7 @@ class Mdb:
             charm_info:混凝土截面倒角信息 (仅混凝土箱梁截面需要)
             sec_right:混凝土截面右半信息 (对称时可忽略，仅混凝土箱梁截面需要)
             charm_right:混凝土截面右半倒角信息 (对称时可忽略，仅混凝土箱梁截面需要)
-            box_number: 混凝土箱室数 (仅混凝土箱梁截面需要)
+            box_num: 混凝土箱室数 (仅混凝土箱梁截面需要)
             box_height: 混凝土箱梁梁高 (仅混凝土箱梁截面需要)
             mat_combine: 组合截面材料信息 (仅组合材料需要) [弹性模量比s/c、密度比s/c、钢材泊松比、混凝土泊松比、热膨胀系数比s/c]
             rib_info:肋板信息
@@ -953,7 +953,7 @@ class Mdb:
         Returns: 无
         """
         qt_model.GetSectionType(index)
-        Mdb.add_section(index, name, sec_type, sec_info, symmetry, charm_info, sec_right, charm_right, box_number,
+        Mdb.add_section(index, name, sec_type, sec_info, symmetry, charm_info, sec_right, charm_right, box_num,
                         box_height, mat_combine, rib_info, rib_place, main_loop, sub_loops, sec_lines, bias_type,
                         center_type, shear_consider, bias_x, bias_y)
 
