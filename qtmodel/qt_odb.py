@@ -483,7 +483,7 @@ class Odb:
         Args: 无
         Example:
             odb.get_section_ids()
-        Returns: json字符串，包含信息为list[int]
+        Returns: list[int]
         """
         try:
             return list(qt_model.GetAllSectionIds())
@@ -501,7 +501,7 @@ class Odb:
             tolerance: 距离容许误差
         Example:
             odb.get_node_id(1,1,1)
-        Returns: json字符串，包含信息为int
+        Returns: int
         """
         try:
             return qt_model.GetNodeId(x=x, y=y, z=z, tolerance=tolerance)
@@ -516,10 +516,10 @@ class Odb:
             group_name: 结构组名
         Example:
             odb.get_group_elements("默认结构组")
-        Returns: json字符串，包含信息为list[int]
+        Returns: list[int]
         """
         try:
-            return json.dumps(list(qt_model.GetStructureGroupElements(group_name)))
+            return list(qt_model.GetStructureGroupElements(group_name))
         except Exception as ex:
             raise Exception(ex)
 
@@ -531,10 +531,10 @@ class Odb:
             group_name: 结构组名
         Example:
             odb.get_group_nodes("默认结构组")
-        Returns: json字符串，包含信息为list[int]
+        Returns: list[int]
         """
         try:
-            return json.dumps(list(qt_model.GetStructureGroupNodes(group_name)))
+            return list(qt_model.GetStructureGroupNodes(group_name))
         except Exception as ex:
             raise Exception(ex)
 

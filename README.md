@@ -1,4 +1,4 @@
-# 最新版本 V0.5.1 - 2024.07.19 
+# 最新版本 V0.5.2 - 2024.07.22 
 > pip install --upgrade qtmodel -i https://pypi.org/simple
 - 更改截面调用 
 ##  视图控制
@@ -490,17 +490,12 @@ mdb.remove_material(index=1)
 ```  
 Returns: 无
 ##  截面操作
-### add_parameter_section
+### add_section
 添加截面信息
 > 参数:  
 > index: 截面编号,默认自动识别  
 > name:截面名称  
-> sec_type:参数截面类型名称,支持以下类型  
-> _"矩形", "圆形", "圆管", "箱型", "实腹八边形",_  
-> _"空腹八边形", "内八角形", "实腹圆端型", "T形", "倒T形",_  
-> _"I字形", "马蹄T形", "I字形混凝土", "混凝土箱梁", "带肋钢箱",_  
-> _"带肋H截面", "钢桁箱梁1", "钢桁箱梁2", "钢桁箱梁3",_  
-> _"钢工字型带肋", "钢管砼", "钢箱砼"_  
+> sec_type:参数截面类型名称  
 > sec_info:截面信息 (必要参数)  
 > symmetry:混凝土截面是否对称 (仅混凝土箱梁截面需要)  
 > charm_info:混凝土截面倒角信息 (仅混凝土箱梁截面需要)  
@@ -508,8 +503,16 @@ Returns: 无
 > charm_right:混凝土截面右半倒角信息 (对称时可忽略，仅混凝土箱梁截面需要)  
 > box_number: 混凝土箱室数 (仅混凝土箱梁截面需要)  
 > box_height: 混凝土箱梁梁高 (仅混凝土箱梁截面需要)  
-> mat_combine: 组合截面材料信息 (仅组合材料需要)  
-> _[弹性模量比s/c、密度比s/c、钢材泊松比、混凝土泊松比、热膨胀系数比s/c]_  
+> mat_combine: 组合截面材料信息 (仅组合材料需要) [弹性模量比s/c、密度比s/c、钢材泊松比、混凝土泊松比、热膨胀系数比s/c]  
+> rib_info:肋板信息  
+> rib_place:肋板位置 list[tuple[布置位置,具体位置,参考点位置,肋板间隔列表]]  
+> _肋板间隔列表: list[tuple[间隔,肋板名，加劲肋位置,加劲肋名]]_  
+> _布置位置: 0-上...  具体位置 0-桥面1..._  
+> _参考点位置:0-左  加劲肋位置 0-上/左 1-下/右 2-两侧_  
+> sec_info:截面特性列表，共计26个参数参考UI截面  
+> main_loop:主线圈坐标集合 [(-1,-1),(5,0),(5,5),(-1,5)] 目前只支持单一线圈，多主线圈可在此基础上调用AddLoopSegment函数  
+> sub_loops:次线圈坐标集合 [[(0,0),(0,1),(1,1,)], [(2,2),(3,2),(3,3)]]  
+> sec_lines:线宽集合[(x1,y1,x2,y3,thick),]  
 > bias_type:偏心类型 默认中心  
 > center_type:中心类型 默认质心  
 > shear_consider:考虑剪切 bool 默认考虑剪切变形  
@@ -518,61 +521,45 @@ Returns: 无
 ```Python
 # 示例代码
 from qtmodel import *
-mdb.add_parameter_section(name="截面1",sec_type="矩形",sec_info=[2,4],bias_type="中心")
-mdb.add_parameter_section(name="截面2",sec_type="混凝土箱梁",box_height=2,box_number=3,
+mdb.add_section(name="截面1",sec_type="矩形",sec_info=[2,4],bias_type="中心")
+mdb.add_section(name="截面2",sec_type="混凝土箱梁",box_height=2,box_number=3,
 sec_info=[0.02,0,12,3,1,2,1,5,6,0.2,0.4,0.1,0.13,0.28,0.3,0.5,0.5,0.5,0.2],
 charm_info=["1*0.2,0.1*0.2","0.5*0.15,0.3*0.2","0.4*0.2","0.5*0.2"])
-```  
-Returns: 无
-### add_steel_section
-添加钢梁截面,包括参数型钢梁截面和自定义带肋钢梁截面
-> 参数:  
-> index:  
-> name:  
-> sec_type:截面类型 1-工字钢梁  2-箱型钢梁  
-> sec_info:截面信息  
-> _工字钢梁[topDis,botDis,b1,b2,b3,b4,h,t1,t2,tw]_  
-> _箱型钢梁[topDis,botDis,b1,b2,b3,b4,b5,b6,h,t1,t2,tw1,tw2]_  
-> rib_info:肋板信息  
-> rib_place:肋板位置 list[tuple[布置位置,具体位置,参考点位置,肋板间隔列表]]  
-> _肋板间隔列表: list[tuple[间隔,肋板名，加劲肋位置,加劲肋名]]_  
-> _布置位置: 0-上...  具体位置 0-桥面1..._  
-> _参考点位置:0-左  加劲肋位置 0-上/左 1-下/右 2-两侧_  
-> bias_type:偏心类型  
-> center_type:中心类型  
-> shear_consider:考虑剪切  
-> bias_x:自定义偏心点x坐标 (仅自定义类型偏心需要,相对形心)  
-> bias_y:自定义偏心点y坐标 (仅自定义类型偏心需要)  
-```Python
-# 示例代码
-from qtmodel import *
-mdb.add_steel_section(name="钢梁截面1",sec_type=1,sec_info=[0,0,0.5,0.5,0.5,0.5,0.7,0.02,0.02,0.02])
-mdb.add_steel_section(name="钢梁截面2",sec_type=2,sec_info=[0,0.15,0.25,0.5,0.25,0.15,0.4,0.15,0.7,0.02,0.02,0.02,0.02],
+mdb.add_section(name="钢梁截面1",sec_type="工字钢梁",sec_info=[0,0,0.5,0.5,0.5,0.5,0.7,0.02,0.02,0.02])
+mdb.add_section(name="钢梁截面2",sec_type="箱型钢梁",sec_info=[0,0.15,0.25,0.5,0.25,0.15,0.4,0.15,0.7,0.02,0.02,0.02,0.02],
 rib_info = {"板肋1": [0.1,0.02],"T形肋1":[0.1,0.02,0.02,0.02]},
-rib_place = [(0, 0, 0, [(0.1, "板肋1", 2, "默认名称1"), (0.2, "板肋1", 2, "默认名称2")]), (0, 0, 1, [(0.1, "T形肋1", 0, "默认名称3")])],
-bias_type="中上")
+rib_place = [(0, 0, 0, [(0.1, "板肋1", 2, "默认名称1"), (0.2, "板肋1", 2, "默认名称2")]), (0, 0, 1, [(0.1, "T形肋1", 0, "默认名称3")])])
 ```  
 Returns: 无
-### add_user_section
-添加自定义截面,目前仅支持特性截面
+### add_tapper_section
+添加变截面,字典参数参考单一截面
 > 参数:  
 > index:截面编号  
 > name:截面名称  
 > sec_type:截面类型  
-> sec_info:截面特性列表，共计26个参数  
-> - [Area, AreaY, AreaZ, InertialX, InertialY, InertialZ, InertialYz,  
-> Cyp, Cym, Czp, Czm, Peri0, PeriI, CentY, CentZ,  
-> Y1, Z1, Y2, Z2, Y3, Z3, Y4, Z4, ShearCenterY, ShearCenterZ,Thw]  
-> main_loop:主线圈坐标集合 [(-1,-1),(5,0),(5,5),(-1,5)] 目前只支持单一线圈  
-> sub_loops:次线圈坐标集合 [[(0,0),(0,1),(1,1,)], [(2,2),(3,2),(3,3)]]  
-> sec_lines:线宽集合[(x1,y1,x2,y3,thick),]  
+> sec_begin:截面始端编号  
+> sec_end:截面末端编号  
 ```Python
 # 示例代码
 from qtmodel import *
-mdb.add_user_section(name="自定义特性截面",sec_info=[i for i in range(25)])
+mdb.add_tapper_section(index=1,name="变截面1",sec_type="矩形",
+sec_begin={"sec_info":[1,2],"bias_type":"中心"},
+sec_end={"sec_info":[2,2],"bias_type":"中心"})
 ```  
 Returns: 无
-### add_tapper_section
+### add_loop_segment
+为自定义线圈截面添加额外主线圈信息
+> 参数:  
+> index:截面号  
+> main_loop:主线圈坐标集合 [(-1,-1),(5,0),(5,5),(-1,5)] 多次调用即可实现多主线圈截面  
+> sub_loops:次线圈坐标集合 [[(0,0),(0,1),(1,1,)], [(2,2),(3,2),(3,3)]]  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.add_loop_segment(1,[(-1,-1),(5,0),(5,5),(-1,5)] ,[[(0,0),(0,1),(1,1,)], [(2,2),(3,2),(3,3)]])
+```  
+Returns: 无
+### add_tapper_section_by_id
 添加变截面,需先建立单一截面
 > 参数:  
 > index:截面编号  
@@ -582,7 +569,7 @@ Returns: 无
 ```Python
 # 示例代码
 from qtmodel import *
-mdb.add_tapper_section(name="变截面1",begin_id=1,end_id=2)
+mdb.add_tapper_section_by_id(name="变截面1",begin_id=1,end_id=2)
 ```  
 Returns: 无
 ### remove_section
@@ -1962,7 +1949,7 @@ Returns: json字符串，包含信息为dict
 from qtmodel import *
 odb.get_section_ids()
 ```  
-Returns: json字符串，包含信息为list[int]
+Returns: list[int]
 ### get_node_id
 获取节点编号，为-1时则表示未找到该坐标节点
 > 参数:  
@@ -1975,7 +1962,7 @@ Returns: json字符串，包含信息为list[int]
 from qtmodel import *
 odb.get_node_id(1,1,1)
 ```  
-Returns: json字符串，包含信息为int
+Returns: int
 ### get_group_elements
 获取结构组单元编号
 > 参数:  
@@ -1985,7 +1972,7 @@ Returns: json字符串，包含信息为int
 from qtmodel import *
 odb.get_group_elements("默认结构组")
 ```  
-Returns: json字符串，包含信息为list[int]
+Returns: list[int]
 ### get_group_nodes
 获取结构组节点编号
 > 参数:  
@@ -1995,7 +1982,7 @@ Returns: json字符串，包含信息为list[int]
 from qtmodel import *
 odb.get_group_nodes("默认结构组")
 ```  
-Returns: json字符串，包含信息为list[int]
+Returns: list[int]
 ### get_node_data
 获取节点信息 默认获取所有节点信息
 > 参数:  

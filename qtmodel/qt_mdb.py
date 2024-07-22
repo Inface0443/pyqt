@@ -819,194 +819,131 @@ class Mdb:
 
     # region 截面操作
     @staticmethod
-    def add_parameter_section(index: int = -1, name: str = "", sec_type: str = "矩形", sec_info: list[float] = None,
-                              symmetry: bool = True, charm_info: list[str] = None, sec_right: list[float] = None,
-                              charm_right: list[str] = None, box_number: int = 3, box_height: float = 2,
-                              mat_combine: list[float] = None,
-                              bias_type: str = "中心", center_type: str = "质心", shear_consider: bool = True, bias_x: float = 0, bias_y: float = 0):
+    def add_section(index: int = -1, name: str = "", sec_type: str = "矩形", sec_info: list[float] = None,
+                    symmetry: bool = True, charm_info: list[str] = None, sec_right: list[float] = None,
+                    charm_right: list[str] = None, box_number: int = 3, box_height: float = 2,
+                    mat_combine: list[float] = None, rib_info: dict[str, list[float]] = None,
+                    rib_place: list[tuple[int, int, int, list[tuple[float, str, int, str]]]] = None,
+                    main_loop: list[tuple[float, float]] = None, sub_loops: list[list[tuple[float, float]]] = None,
+                    sec_lines: list[tuple[float, float, float, float, float]] = None,
+                    bias_type: str = "中心", center_type: str = "质心", shear_consider: bool = True, bias_x: float = 0, bias_y: float = 0):
         """
         添加截面信息
         Args:
-            index: 截面编号,默认自动识别
-            name:截面名称
-            sec_type:参数截面类型名称,支持以下类型
-                _"矩形", "圆形", "圆管", "箱型", "实腹八边形",_
-                _"空腹八边形", "内八角形", "实腹圆端型", "T形", "倒T形",_
-                _"I字形", "马蹄T形", "I字形混凝土", "混凝土箱梁", "带肋钢箱",_
-                _"带肋H截面", "钢桁箱梁1", "钢桁箱梁2", "钢桁箱梁3",_
-                _"钢工字型带肋", "钢管砼", "钢箱砼"_
-            sec_info:截面信息 (必要参数)
-            symmetry:混凝土截面是否对称 (仅混凝土箱梁截面需要)
-            charm_info:混凝土截面倒角信息 (仅混凝土箱梁截面需要)
-            sec_right:混凝土截面右半信息 (对称时可忽略，仅混凝土箱梁截面需要)
-            charm_right:混凝土截面右半倒角信息 (对称时可忽略，仅混凝土箱梁截面需要)
-            box_number: 混凝土箱室数 (仅混凝土箱梁截面需要)
-            box_height: 混凝土箱梁梁高 (仅混凝土箱梁截面需要)
-            mat_combine: 组合截面材料信息 (仅组合材料需要)
-                _[弹性模量比s/c、密度比s/c、钢材泊松比、混凝土泊松比、热膨胀系数比s/c]_
-            bias_type:偏心类型 默认中心
-            center_type:中心类型 默认质心
-            shear_consider:考虑剪切 bool 默认考虑剪切变形
-            bias_x:自定义偏心点x坐标 (仅自定义类型偏心需要)
-            bias_y:自定义偏心点y坐标 (仅自定义类型偏心需要)
+        index: 截面编号,默认自动识别
+        name:截面名称
+        sec_type:参数截面类型名称
+        sec_info:截面信息 (必要参数)
+        symmetry:混凝土截面是否对称 (仅混凝土箱梁截面需要)
+        charm_info:混凝土截面倒角信息 (仅混凝土箱梁截面需要)
+        sec_right:混凝土截面右半信息 (对称时可忽略，仅混凝土箱梁截面需要)
+        charm_right:混凝土截面右半倒角信息 (对称时可忽略，仅混凝土箱梁截面需要)
+        box_number: 混凝土箱室数 (仅混凝土箱梁截面需要)
+        box_height: 混凝土箱梁梁高 (仅混凝土箱梁截面需要)
+        mat_combine: 组合截面材料信息 (仅组合材料需要) [弹性模量比s/c、密度比s/c、钢材泊松比、混凝土泊松比、热膨胀系数比s/c]
+        rib_info:肋板信息
+        rib_place:肋板位置 list[tuple[布置位置,具体位置,参考点位置,肋板间隔列表]]
+            _肋板间隔列表: list[tuple[间隔,肋板名，加劲肋位置,加劲肋名]]_
+            _布置位置: 0-上...  具体位置 0-桥面1..._
+            _参考点位置:0-左  加劲肋位置 0-上/左 1-下/右 2-两侧_
+        sec_info:截面特性列表，共计26个参数参考UI截面
+        main_loop:主线圈坐标集合 [(-1,-1),(5,0),(5,5),(-1,5)] 目前只支持单一线圈，多主线圈可在此基础上调用AddLoopSegment函数
+        sub_loops:次线圈坐标集合 [[(0,0),(0,1),(1,1,)], [(2,2),(3,2),(3,3)]]
+        sec_lines:线宽集合[(x1,y1,x2,y3,thick),]
+        bias_type:偏心类型 默认中心
+        center_type:中心类型 默认质心
+        shear_consider:考虑剪切 bool 默认考虑剪切变形
+        bias_x:自定义偏心点x坐标 (仅自定义类型偏心需要)
+        bias_y:自定义偏心点y坐标 (仅自定义类型偏心需要)
         Example:
-            mdb.add_parameter_section(name="截面1",sec_type="矩形",sec_info=[2,4],bias_type="中心")
-            mdb.add_parameter_section(name="截面2",sec_type="混凝土箱梁",box_height=2,box_number=3,
+            mdb.add_section(name="截面1",sec_type="矩形",sec_info=[2,4],bias_type="中心")
+            mdb.add_section(name="截面2",sec_type="混凝土箱梁",box_height=2,box_number=3,
                 sec_info=[0.02,0,12,3,1,2,1,5,6,0.2,0.4,0.1,0.13,0.28,0.3,0.5,0.5,0.5,0.2],
                 charm_info=["1*0.2,0.1*0.2","0.5*0.15,0.3*0.2","0.4*0.2","0.5*0.2"])
-        Returns: 无
-        """
-        try:
-            sec_type_list = ["矩形", "圆形", "圆管", "箱型", "实腹八边形",
-                             "空腹八边形", "内八角形", "实腹圆端型", "T形", "倒T形",
-                             "I字形", "马蹄T形", "I字形混凝土", "混凝土箱梁", "带肋钢箱",
-                             "带肋H截面", "钢桁箱梁1", "钢桁箱梁2", "钢桁箱梁3", "钢工字型带肋",
-                             "钢管砼", "钢箱砼"]
-            if sec_type not in sec_type_list:
-                raise Exception(f"操作失败，参数截面仅支持以下截面类型{sec_type_list}")
-            if sec_info is None:
-                raise Exception("操作错误,请输入此截面的截面信息，参数列表可参考截面定义窗口!")
-            elif sec_type == "混凝土箱梁":
-                if len(sec_info) != 19 or len(charm_info) != 4:
-                    raise Exception("操作错误，混凝土箱梁参数错误，参数列表可参考截面定义窗口！")
-                qt_model.AddParameterSection(id=index, name=name, secType=sec_type, secInfo=sec_info, charmInfo=charm_info,
-                                             symmetry=symmetry, N=box_number, H=box_height, charmInfoR=charm_right, secInfoR=sec_right,
-                                             biasType=bias_type, centerType=center_type, shearConsider=shear_consider,
-                                             horizontalPos=bias_x, verticalPos=bias_y)
-            elif sec_type == "钢管砼" or sec_type == "钢箱砼":
-                if len(mat_combine) != 5:
-                    raise Exception("操作错误，材料比错误，参数列表：[弹性模量比s/c、密度比s/c、钢材泊松比、混凝土泊松比、热膨胀系数比s/c] ！")
-                if len(sec_info) != 2 or len(sec_info) != 6:
-                    raise Exception("操作错误，截面参数列表：[D,t]-钢管砼  [W,H,dw,tw,tt,tb]-钢箱砼")
-                qt_model.AddParameterSection(id=index, name=name, secType=sec_type, secInfo=sec_info,
-                                             elasticModulusRatio=mat_combine[0], densityRatio=mat_combine[1], steelPoisson=mat_combine[2],
-                                             concretePoisson=mat_combine[3], temperatureRatio=mat_combine[4],
-                                             biasType=bias_type, centerType=center_type, shearConsider=shear_consider,
-                                             horizontalPos=bias_x, verticalPos=bias_y)
-            else:
-                qt_model.AddParameterSection(id=index, name=name, secType=sec_type, secInfo=sec_info,
-                                             biasType=bias_type, centerType=center_type, shearConsider=shear_consider,
-                                             horizontalPos=bias_x, verticalPos=bias_y)
-        except Exception as ex:
-            raise Exception(ex)
-
-    @staticmethod
-    def update_parameter_section(index: int = -1, name: str = "", sec_type: str = "矩形", sec_info: list[float] = None,
-                                 symmetry: bool = True, charm_info: list[str] = None, sec_right: list[float] = None,
-                                 charm_right: list[str] = None, box_number: int = 3, box_height: float = 2,
-                                 mat_combine: list[float] = None,
-                                 bias_type: str = "中心", center_type: str = "质心", shear_consider: bool = True, bias_x: float = 0, bias_y: float = 0):
-        try:
-            sec_type_list = ["矩形", "圆形", "圆管", "箱型", "实腹八边形",
-                             "空腹八边形", "内八角形", "实腹圆端型", "T形", "倒T形",
-                             "I字形", "马蹄T形", "I字形混凝土", "混凝土箱梁", "带肋钢箱",
-                             "带肋H截面", "钢桁箱梁1", "钢桁箱梁2", "钢桁箱梁3", "钢工字型带肋",
-                             "钢管砼", "钢箱砼"]
-            if sec_type not in sec_type_list:
-                raise Exception(f"操作失败，参数截面仅支持以下截面类型{sec_type_list}")
-            if sec_info is None:
-                raise Exception("操作错误,请输入此截面的截面信息，参数列表可参考截面定义窗口!")
-            elif sec_type == "混凝土箱梁":
-                if len(sec_info) != 19 or len(charm_info) != 4:
-                    raise Exception("操作错误，混凝土箱梁参数错误，参数列表可参考截面定义窗口！")
-                qt_model.UpdateParameterSection(id=index, name=name, secType=sec_type, secInfo=sec_info, charmInfo=charm_info,
-                                                symmetry=symmetry, N=box_number, H=box_height, charmInfoR=charm_right, secInfoR=sec_right,
-                                                biasType=bias_type, centerType=center_type, shearConsider=shear_consider,
-                                                horizontalPos=bias_x, verticalPos=bias_y)
-            elif sec_type == "钢管砼" or sec_type == "钢箱砼":
-                if len(mat_combine) != 5:
-                    raise Exception("操作错误，材料比错误，参数列表：[弹性模量比s/c、密度比s/c、钢材泊松比、混凝土泊松比、热膨胀系数比s/c] ！")
-                if len(sec_info) != 2 or len(sec_info) != 6:
-                    raise Exception("操作错误，截面参数列表：[D,t]-钢管砼  [W,H,dw,tw,tt,tb]-钢箱砼")
-                qt_model.UpdateParameterSection(id=index, name=name, secType=sec_type, secInfo=sec_info,
-                                                elasticModulusRatio=mat_combine[0], densityRatio=mat_combine[1], steelPoisson=mat_combine[2],
-                                                concretePoisson=mat_combine[3], temperatureRatio=mat_combine[4],
-                                                biasType=bias_type, centerType=center_type, shearConsider=shear_consider,
-                                                horizontalPos=bias_x, verticalPos=bias_y)
-            else:
-                qt_model.UpdateParameterSection(id=index, name=name, secType=sec_type, secInfo=sec_info,
-                                                biasType=bias_type, centerType=center_type, shearConsider=shear_consider,
-                                                horizontalPos=bias_x, verticalPos=bias_y)
-        except Exception as ex:
-            raise Exception(ex)
-
-    @staticmethod
-    def add_steel_section(index: int = -1, name: str = "", sec_type: int = 1, sec_info: list[float] = None,
-                          rib_info: dict[str, list[float]] = None, rib_place: list[tuple[int, int, int, list[tuple[float, str, int, str]]]] = None,
-                          bias_type: str = "中心", center_type: str = "质心", shear_consider: bool = True, bias_x: float = 0, bias_y: float = 0):
-        """
-        添加钢梁截面,包括参数型钢梁截面和自定义带肋钢梁截面
-        Args:
-             index:
-             name:
-             sec_type:截面类型 1-工字钢梁  2-箱型钢梁
-             sec_info:截面信息
-                _工字钢梁[topDis,botDis,b1,b2,b3,b4,h,t1,t2,tw]_
-                _箱型钢梁[topDis,botDis,b1,b2,b3,b4,b5,b6,h,t1,t2,tw1,tw2]_
-             rib_info:肋板信息
-             rib_place:肋板位置 list[tuple[布置位置,具体位置,参考点位置,肋板间隔列表]]
-                _肋板间隔列表: list[tuple[间隔,肋板名，加劲肋位置,加劲肋名]]_
-                _布置位置: 0-上...  具体位置 0-桥面1..._
-                _参考点位置:0-左  加劲肋位置 0-上/左 1-下/右 2-两侧_
-             bias_type:偏心类型
-             center_type:中心类型
-             shear_consider:考虑剪切
-             bias_x:自定义偏心点x坐标 (仅自定义类型偏心需要,相对形心)
-             bias_y:自定义偏心点y坐标 (仅自定义类型偏心需要)
-        Example:
-            mdb.add_steel_section(name="钢梁截面1",sec_type=1,sec_info=[0,0,0.5,0.5,0.5,0.5,0.7,0.02,0.02,0.02])
-            mdb.add_steel_section(name="钢梁截面2",sec_type=2,sec_info=[0,0.15,0.25,0.5,0.25,0.15,0.4,0.15,0.7,0.02,0.02,0.02,0.02],
+            mdb.add_section(name="钢梁截面1",sec_type="工字钢梁",sec_info=[0,0,0.5,0.5,0.5,0.5,0.7,0.02,0.02,0.02])
+            mdb.add_section(name="钢梁截面2",sec_type="箱型钢梁",sec_info=[0,0.15,0.25,0.5,0.25,0.15,0.4,0.15,0.7,0.02,0.02,0.02,0.02],
                 rib_info = {"板肋1": [0.1,0.02],"T形肋1":[0.1,0.02,0.02,0.02]},
-                rib_place = [(0, 0, 0, [(0.1, "板肋1", 2, "默认名称1"), (0.2, "板肋1", 2, "默认名称2")]), (0, 0, 1, [(0.1, "T形肋1", 0, "默认名称3")])],
-                bias_type="中上")
+                rib_place = [(0, 0, 0, [(0.1, "板肋1", 2, "默认名称1"), (0.2, "板肋1", 2, "默认名称2")]), (0, 0, 1, [(0.1, "T形肋1", 0, "默认名称3")])])
         Returns: 无
-        """
+            """
         try:
-            if sec_info is None:
-                raise Exception("操作错误,请输入此截面的截面信息，参数列表可参考截面定义窗口")
-            section_type = "工字钢梁" if sec_type == 1 else "箱型钢梁"
-            rib_names = list(rib_info.keys())
-            rib_data = list(rib_info.values())
-            qt_model.AddSteelGirderSection(id=index, name=name, sectionType=section_type, secInfo=sec_info,
-                                           ribNameList=rib_names, ribInfoList=rib_data,
-                                           ribPlaceList=rib_place, baisType=bias_type, centerType=center_type,
-                                           shearConsider=shear_consider, horizontalPos=bias_x, verticalPos=bias_y)
+            sec_type_list = ["矩形", "圆形", "圆管", "箱型", "实腹八边形",
+                             "空腹八边形", "内八角形", "实腹圆端型", "T形", "倒T形",
+                             "I字形", "马蹄T形", "I字形混凝土", "混凝土箱梁", "带肋钢箱",
+                             "带肋H截面", "钢桁箱梁1", "钢桁箱梁2", "钢桁箱梁3", "钢工字型带肋",
+                             "槽钢", "H型钢", "工字型", "双拼槽钢", "双拼H型钢", "双拼工字钢",
+                             "钢管砼", "钢箱砼", "工字组合梁", "钢箱组合梁", "工字钢梁", "箱型钢梁",
+                             "自定义线圈截面", "自定义线宽截面", "特性截面", "自定义特性截面"]
+            if sec_type not in sec_type_list:
+                raise Exception(f"操作失败，参数截面仅支持以下截面类型{sec_type_list}")
+            if sec_type == "混凝土箱梁":
+                qt_model.AddSection(id=index, name=name, secType=sec_type, secInfo=sec_info, charmInfo=charm_info,
+                                    symmetry=symmetry, boxNum=box_number, H=box_height, charmInfoR=charm_right, secInfoR=sec_right,
+                                    biasType=bias_type, centerType=center_type, shearConsider=shear_consider,
+                                    horizontalPos=bias_x, verticalPos=bias_y)
+            elif sec_type == "钢管砼" or sec_type == "钢箱砼" or sec_type == "工字组合梁" or sec_type == "钢箱组合梁":
+                if len(mat_combine) != 5:
+                    raise Exception("操作错误，材料比错误，参数列表：[弹性模量比s/c、密度比s/c、钢材泊松比、混凝土泊松比、热膨胀系数比s/c] ！")
+                qt_model.AddSection(id=index, name=name, secType=sec_type, secInfo=sec_info,
+                                    matCombine=mat_combine, biasType=bias_type, centerType=center_type, shearConsider=shear_consider,
+                                    horizontalPos=bias_x, verticalPos=bias_y)
+            elif sec_type == "工字钢梁" or sec_type == "箱型钢梁":
+                rib_names = list(rib_info.keys())
+                rib_data = list(rib_info.values())
+                qt_model.AddSection(id=index, name=name, secType=sec_type, secInfo=sec_info,
+                                    ribNameList=rib_names, ribInfoList=rib_data,
+                                    ribPlaceList=rib_place, baisType=bias_type, centerType=center_type,
+                                    shearConsider=shear_consider, horizontalPos=bias_x, verticalPos=bias_y)
+            elif sec_type == "特性截面" or sec_type.startswith("自定义"):
+                qt_model.AddSection(id=index, name=name, type=sec_type, secInfo=sec_info,
+                                    mainLoop=main_loop, subLoops=sub_loops, secLines=sec_lines)
+            else:
+                qt_model.AddSection(id=index, name=name, secType=sec_type, secInfo=sec_info,
+                                    biasType=bias_type, centerType=center_type, shearConsider=shear_consider,
+                                    horizontalPos=bias_x, verticalPos=bias_y)
         except Exception as ex:
             raise Exception(ex)
 
     @staticmethod
-    def add_user_section(index: int = -1, name: str = "", sec_type: str = "特性截面", sec_info: list[float] = None,
-                         main_loop: list[tuple[float, float]] = None, sub_loops: list[list[tuple[float, float]]] = None,
-                         sec_lines: list[tuple[float, float, float, float, float]] = None):
+    def add_tapper_section(index: int = -1, name: str = "", sec_type: str = "矩形", sec_begin: dict = None, sec_end: dict = None):
         """
-        添加自定义截面,目前仅支持特性截面
+        添加变截面,字典参数参考单一截面
         Args:
              index:截面编号
              name:截面名称
              sec_type:截面类型
-             sec_info:截面特性列表，共计26个参数
-                - [Area, AreaY, AreaZ, InertialX, InertialY, InertialZ, InertialYz,
-                    Cyp, Cym, Czp, Czm, Peri0, PeriI, CentY, CentZ,
-                    Y1, Z1, Y2, Z2, Y3, Z3, Y4, Z4, ShearCenterY, ShearCenterZ,Thw]
-             main_loop:主线圈坐标集合 [(-1,-1),(5,0),(5,5),(-1,5)] 目前只支持单一线圈
-             sub_loops:次线圈坐标集合 [[(0,0),(0,1),(1,1,)], [(2,2),(3,2),(3,3)]]
-             sec_lines:线宽集合[(x1,y1,x2,y3,thick),]
+             sec_begin:截面始端编号
+             sec_end:截面末端编号
         Example:
-            mdb.add_user_section(name="自定义特性截面",sec_info=[i for i in range(25)])
+            mdb.add_tapper_section(index=1,name="变截面1",sec_type="矩形",
+                sec_begin={"sec_info":[1,2],"bias_type":"中心"},
+                sec_end={"sec_info":[2,2],"bias_type":"中心"})
         Returns: 无
         """
         try:
-            if sec_type == "特性截面" and len(sec_info) < 27:
-                raise Exception(f"操作错误，自定义特性截面列表property_info需要26个参数")
-            if sec_info is None:
-                raise Exception("操作错误,请输入此截面的截面特性，特性列表可参考截面定义窗口")
-            qt_model.AddUserSection(id=index, name=name, type=sec_type, secInfo=sec_info,
-                                    mainLoop=main_loop, subLoops=sub_loops, secLines=sec_lines)
+            qt_model.AddTapperSection(id=index, name=name, secType=sec_type, secBegin=sec_begin, secEnd=sec_end)
         except Exception as ex:
             raise Exception(ex)
 
     @staticmethod
-    def add_tapper_section(index: int = -1, name: str = "", begin_id: int = 1, end_id: int = 1):
+    def add_loop_segment(index: int, main_loop: list[tuple[float, float]] = None, sub_loops: list[list[tuple[float, float]]] = None):
+        """
+        为自定义线圈截面添加额外主线圈信息
+        Args:
+            index:截面号
+            main_loop:主线圈坐标集合 [(-1,-1),(5,0),(5,5),(-1,5)] 多次调用即可实现多主线圈截面
+            sub_loops:次线圈坐标集合 [[(0,0),(0,1),(1,1,)], [(2,2),(3,2),(3,3)]]
+        Example:
+            mdb.add_loop_segment(1,[(-1,-1),(5,0),(5,5),(-1,5)] ,[[(0,0),(0,1),(1,1,)], [(2,2),(3,2),(3,3)]])
+        Returns: 无
+        """
+        try:
+            qt_model.AddLoopSegment(id=index, mainLoop=main_loop, subLoops=sub_loops)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def add_tapper_section_by_id(index: int = -1, name: str = "", begin_id: int = 1, end_id: int = 1):
         """
         添加变截面,需先建立单一截面
         Args:
@@ -1015,7 +952,7 @@ class Mdb:
              begin_id:截面始端编号
              end_id:截面末端编号
         Example:
-            mdb.add_tapper_section(name="变截面1",begin_id=1,end_id=2)
+            mdb.add_tapper_section_by_id(name="变截面1",begin_id=1,end_id=2)
         Returns: 无
         """
         try:
