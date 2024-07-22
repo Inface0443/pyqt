@@ -828,33 +828,33 @@ class Mdb:
                     sec_lines: list[tuple[float, float, float, float, float]] = None,
                     bias_type: str = "中心", center_type: str = "质心", shear_consider: bool = True, bias_x: float = 0, bias_y: float = 0):
         """
-        添加截面信息
+        添加截面信息,如截面存在则为更新截面
         Args:
-        index: 截面编号,默认自动识别
-        name:截面名称
-        sec_type:参数截面类型名称
-        sec_info:截面信息 (必要参数)
-        symmetry:混凝土截面是否对称 (仅混凝土箱梁截面需要)
-        charm_info:混凝土截面倒角信息 (仅混凝土箱梁截面需要)
-        sec_right:混凝土截面右半信息 (对称时可忽略，仅混凝土箱梁截面需要)
-        charm_right:混凝土截面右半倒角信息 (对称时可忽略，仅混凝土箱梁截面需要)
-        box_number: 混凝土箱室数 (仅混凝土箱梁截面需要)
-        box_height: 混凝土箱梁梁高 (仅混凝土箱梁截面需要)
-        mat_combine: 组合截面材料信息 (仅组合材料需要) [弹性模量比s/c、密度比s/c、钢材泊松比、混凝土泊松比、热膨胀系数比s/c]
-        rib_info:肋板信息
-        rib_place:肋板位置 list[tuple[布置位置,具体位置,参考点位置,肋板间隔列表]]
-            _肋板间隔列表: list[tuple[间隔,肋板名，加劲肋位置,加劲肋名]]_
-            _布置位置: 0-上...  具体位置 0-桥面1..._
-            _参考点位置:0-左  加劲肋位置 0-上/左 1-下/右 2-两侧_
-        sec_info:截面特性列表，共计26个参数参考UI截面
-        main_loop:主线圈坐标集合 [(-1,-1),(5,0),(5,5),(-1,5)] 目前只支持单一线圈，多主线圈可在此基础上调用AddLoopSegment函数
-        sub_loops:次线圈坐标集合 [[(0,0),(0,1),(1,1,)], [(2,2),(3,2),(3,3)]]
-        sec_lines:线宽集合[(x1,y1,x2,y3,thick),]
-        bias_type:偏心类型 默认中心
-        center_type:中心类型 默认质心
-        shear_consider:考虑剪切 bool 默认考虑剪切变形
-        bias_x:自定义偏心点x坐标 (仅自定义类型偏心需要)
-        bias_y:自定义偏心点y坐标 (仅自定义类型偏心需要)
+            index: 截面编号,默认自动识别
+            name:截面名称
+            sec_type:参数截面类型名称
+            sec_info:截面信息 (必要参数)
+            symmetry:混凝土截面是否对称 (仅混凝土箱梁截面需要)
+            charm_info:混凝土截面倒角信息 (仅混凝土箱梁截面需要)
+            sec_right:混凝土截面右半信息 (对称时可忽略，仅混凝土箱梁截面需要)
+            charm_right:混凝土截面右半倒角信息 (对称时可忽略，仅混凝土箱梁截面需要)
+            box_number: 混凝土箱室数 (仅混凝土箱梁截面需要)
+            box_height: 混凝土箱梁梁高 (仅混凝土箱梁截面需要)
+            mat_combine: 组合截面材料信息 (仅组合材料需要) [弹性模量比s/c、密度比s/c、钢材泊松比、混凝土泊松比、热膨胀系数比s/c]
+            rib_info:肋板信息
+            rib_place:肋板位置 list[tuple[布置位置,具体位置,参考点位置,肋板间隔列表]]
+                _肋板间隔列表: list[tuple[间隔,肋板名，加劲肋位置,加劲肋名]]_
+                _布置位置: 0-上...  具体位置 0-桥面1..._
+                _参考点位置:0-左  加劲肋位置 0-上/左 1-下/右 2-两侧_
+            sec_info:截面特性列表，共计26个参数参考UI截面
+            main_loop:主线圈坐标集合 [(-1,-1),(5,0),(5,5),(-1,5)] 目前只支持单一线圈，多主线圈可在此基础上调用AddLoopSegment函数
+            sub_loops:次线圈坐标集合 [[(0,0),(0,1),(1,1,)], [(2,2),(3,2),(3,3)]]
+            sec_lines:线宽集合[(x1,y1,x2,y3,thick),]
+            bias_type:偏心类型 默认中心
+            center_type:中心类型 默认质心
+            shear_consider:考虑剪切 bool 默认考虑剪切变形
+            bias_x:自定义偏心点x坐标 (仅自定义类型偏心需要)
+            bias_y:自定义偏心点y坐标 (仅自定义类型偏心需要)
         Example:
             mdb.add_section(name="截面1",sec_type="矩形",sec_info=[2,4],bias_type="中心")
             mdb.add_section(name="截面2",sec_type="混凝土箱梁",box_height=2,box_number=3,
@@ -905,15 +905,67 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
+    def update_section(index: int, name: str = "", sec_type: str = "矩形", sec_info: list[float] = None,
+                       symmetry: bool = True, charm_info: list[str] = None, sec_right: list[float] = None,
+                       charm_right: list[str] = None, box_number: int = 3, box_height: float = 2,
+                       mat_combine: list[float] = None, rib_info: dict[str, list[float]] = None,
+                       rib_place: list[tuple[int, int, int, list[tuple[float, str, int, str]]]] = None,
+                       main_loop: list[tuple[float, float]] = None, sub_loops: list[list[tuple[float, float]]] = None,
+                       sec_lines: list[tuple[float, float, float, float, float]] = None,
+                       bias_type: str = "中心", center_type: str = "质心", shear_consider: bool = True, bias_x: float = 0, bias_y: float = 0):
+        """
+        添加截面信息,如截面存在则为更新截面
+        Args:
+            index: 截面编号,默认自动识别
+            name:截面名称
+            sec_type:参数截面类型名称
+            sec_info:截面信息 (必要参数)
+            symmetry:混凝土截面是否对称 (仅混凝土箱梁截面需要)
+            charm_info:混凝土截面倒角信息 (仅混凝土箱梁截面需要)
+            sec_right:混凝土截面右半信息 (对称时可忽略，仅混凝土箱梁截面需要)
+            charm_right:混凝土截面右半倒角信息 (对称时可忽略，仅混凝土箱梁截面需要)
+            box_number: 混凝土箱室数 (仅混凝土箱梁截面需要)
+            box_height: 混凝土箱梁梁高 (仅混凝土箱梁截面需要)
+            mat_combine: 组合截面材料信息 (仅组合材料需要) [弹性模量比s/c、密度比s/c、钢材泊松比、混凝土泊松比、热膨胀系数比s/c]
+            rib_info:肋板信息
+            rib_place:肋板位置 list[tuple[布置位置,具体位置,参考点位置,肋板间隔列表]]
+                _肋板间隔列表: list[tuple[间隔,肋板名，加劲肋位置,加劲肋名]]_
+                _布置位置: 0-上...  具体位置 0-桥面1..._
+                _参考点位置:0-左  加劲肋位置 0-上/左 1-下/右 2-两侧_
+            sec_info:截面特性列表，共计26个参数参考UI截面
+            main_loop:主线圈坐标集合 [(-1,-1),(5,0),(5,5),(-1,5)] 目前只支持单一线圈，多主线圈可在此基础上调用AddLoopSegment函数
+            sub_loops:次线圈坐标集合 [[(0,0),(0,1),(1,1,)], [(2,2),(3,2),(3,3)]]
+            sec_lines:线宽集合[(x1,y1,x2,y3,thick),]
+            bias_type:偏心类型 默认中心
+            center_type:中心类型 默认质心
+            shear_consider:考虑剪切 bool 默认考虑剪切变形
+            bias_x:自定义偏心点x坐标 (仅自定义类型偏心需要)
+            bias_y:自定义偏心点y坐标 (仅自定义类型偏心需要)
+        Example:
+            mdb.update_section(1,name="截面1",sec_type="矩形",sec_info=[2,4],bias_type="中心")
+            mdb.update_section(2,name="截面2",sec_type="混凝土箱梁",box_height=2,box_number=3,
+                sec_info=[0.02,0,12,3,1,2,1,5,6,0.2,0.4,0.1,0.13,0.28,0.3,0.5,0.5,0.5,0.2],
+                charm_info=["1*0.2,0.1*0.2","0.5*0.15,0.3*0.2","0.4*0.2","0.5*0.2"])
+            mdb.update_section(3,name="钢梁截面1",sec_type="工字钢梁",sec_info=[0,0,0.5,0.5,0.5,0.5,0.7,0.02,0.02,0.02])
+            mdb.update_section(4,name="钢梁截面2",sec_type="箱型钢梁",sec_info=[0,0.15,0.25,0.5,0.25,0.15,0.4,0.15,0.7,0.02,0.02,0.02,0.02],
+                rib_info = {"板肋1": [0.1,0.02],"T形肋1":[0.1,0.02,0.02,0.02]},
+                rib_place = [(0, 0, 0, [(0.1, "板肋1", 2, "默认名称1"), (0.2, "板肋1", 2, "默认名称2")]), (0, 0, 1, [(0.1, "T形肋1", 0, "默认名称3")])])
+        Returns: 无
+        """
+        Mdb.add_section(index, name, sec_type, sec_info, symmetry, charm_info, sec_right, charm_right, box_number,
+                        box_height, mat_combine, rib_info, rib_place, main_loop, sub_loops, sec_lines, bias_type,
+                        center_type, shear_consider, bias_x, bias_y)
+
+    @staticmethod
     def add_tapper_section(index: int = -1, name: str = "", sec_type: str = "矩形", sec_begin: dict = None, sec_end: dict = None):
         """
         添加变截面,字典参数参考单一截面
         Args:
-             index:截面编号
-             name:截面名称
-             sec_type:截面类型
-             sec_begin:截面始端编号
-             sec_end:截面末端编号
+            index:截面编号
+            name:截面名称
+            sec_type:截面类型
+            sec_begin:截面始端编号
+            sec_end:截面末端编号
         Example:
             mdb.add_tapper_section(index=1,name="变截面1",sec_type="矩形",
                 sec_begin={"sec_info":[1,2],"bias_type":"中心"},
@@ -947,10 +999,10 @@ class Mdb:
         """
         添加变截面,需先建立单一截面
         Args:
-             index:截面编号
-             name:截面名称
-             begin_id:截面始端编号
-             end_id:截面末端编号
+            index:截面编号
+            name:截面名称
+            begin_id:截面始端编号
+            end_id:截面末端编号
         Example:
             mdb.add_tapper_section_by_id(name="变截面1",begin_id=1,end_id=2)
         Returns: 无
@@ -965,7 +1017,7 @@ class Mdb:
         """
         删除截面信息
         Args:
-             index: 截面编号,参数为默认时删除全部截面
+            index: 截面编号,参数为默认时删除全部截面
         Example:
             mdb.remove_section()
             mdb.remove_section(1)
@@ -1101,8 +1153,8 @@ class Mdb:
         """
         新建边界组
         Args:
-             name:边界组名
-             index:边界组编号，默认自动识别当前编号 (可选参数)
+            name:边界组名
+            index:边界组编号，默认自动识别当前编号 (可选参数)
         Example:
             mdb.add_boundary_group(name="边界组1")
         Returns: 无
