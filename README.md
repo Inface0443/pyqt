@@ -1,4 +1,4 @@
-# 最新版本 V0.5.2 - 2024.07.22 
+# 最新版本 V0.5.4 - 2024.07.22 
 > pip install --upgrade qtmodel -i https://pypi.org/simple
 - 更改截面调用 
 ##  视图控制

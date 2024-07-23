@@ -895,7 +895,7 @@ class Mdb:
                                     ribPlaceList=rib_place, baisType=bias_type, centerType=center_type,
                                     shearConsider=shear_consider, horizontalPos=bias_x, verticalPos=bias_y)
             elif sec_type == "特性截面" or sec_type.startswith("自定义"):
-                qt_model.AddSection(id=index, name=name, type=sec_type, secInfo=sec_info,
+                qt_model.AddSection(id=index, name=name, secType=sec_type, secInfo=sec_info,
                                     mainLoop=main_loop, subLoops=sub_loops, secLines=sec_lines)
             else:
                 qt_model.AddSection(id=index, name=name, secType=sec_type, secInfo=sec_info,
