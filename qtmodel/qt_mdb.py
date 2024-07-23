@@ -824,7 +824,7 @@ class Mdb:
                     charm_right: list[str] = None, box_num: int = 3, box_height: float = 2,
                     mat_combine: list[float] = None, rib_info: dict[str, list[float]] = None,
                     rib_place: list[tuple[int, int, int, list[tuple[float, str, int, str]]]] = None,
-                    loop_segment: list[dict] = None,  sec_lines: list[tuple[float, float, float, float, float]] = None,
+                    loop_segments: list[dict] = None,  sec_lines: list[tuple[float, float, float, float, float]] = None,
                     bias_type: str = "中心", center_type: str = "质心", shear_consider: bool = True, bias_x: float = 0, bias_y: float = 0):
         """
         添加截面信息,如果截面存在则自动覆盖
@@ -846,7 +846,7 @@ class Mdb:
                 _布置位置: 0-上...  具体位置 0-桥面1..._
                 _参考点位置:0-左  加劲肋位置 0-上/左 1-下/右 2-两侧_
             sec_info:截面特性列表，共计26个参数参考UI截面
-            loop_segment:线圈坐标集合 list[dict] dict示例:{"main":[(x1,y1),(x2,y2)...],"sub1":[(x1,y1),(x2,y2)...],"sub2":[(x1,y1),(x2,y2)...]}
+            loop_segments:线圈坐标集合 list[dict] dict示例:{"main":[(x1,y1),(x2,y2)...],"sub1":[(x1,y1),(x2,y2)...],"sub2":[(x1,y1),(x2,y2)...]}
             sec_lines:线宽集合[(x1,y1,x2,y3,thick),]
             bias_type:偏心类型 默认中心
             center_type:中心类型 默认质心
@@ -894,7 +894,7 @@ class Mdb:
                                     shearConsider=shear_consider, horizontalPos=bias_x, verticalPos=bias_y)
             elif sec_type == "特性截面" or sec_type.startswith("自定义"):
                 qt_model.AddSection(id=index, name=name, secType=sec_type, secInfo=sec_info,
-                                    loopSegment=loop_segment, secLines=sec_lines)
+                                    loopSegment=loop_segments, secLines=sec_lines)
             else:
                 qt_model.AddSection(id=index, name=name, secType=sec_type, secInfo=sec_info,
                                     biasType=bias_type, centerType=center_type, shearConsider=shear_consider,
@@ -908,7 +908,7 @@ class Mdb:
                        charm_right: list[str] = None, box_num: int = 3, box_height: float = 2,
                        mat_combine: list[float] = None, rib_info: dict[str, list[float]] = None,
                        rib_place: list[tuple[int, int, int, list[tuple[float, str, int, str]]]] = None,
-                       loop_segment: list[dict] = None, sec_lines: list[tuple[float, float, float, float, float]] = None,
+                       loop_segments: list[dict] = None, sec_lines: list[tuple[float, float, float, float, float]] = None,
                        bias_type: str = "中心", center_type: str = "质心", shear_consider: bool = True, bias_x: float = 0, bias_y: float = 0):
         """
         添加截面信息,如截面存在则为更新截面
@@ -930,7 +930,7 @@ class Mdb:
                 _布置位置: 0-上...  具体位置 0-桥面1..._
                 _参考点位置:0-左  加劲肋位置 0-上/左 1-下/右 2-两侧_
             sec_info:截面特性列表，共计26个参数参考UI截面
-            loop_segment:线圈坐标集合 list[dict] dict示例:{"main":[(x1,y1),(x2,y2)...],"sub1":[(x1,y1),(x2,y2)...],"sub2":[(x1,y1),(x2,y2)...]}
+            loop_segments:线圈坐标集合 list[dict] dict示例:{"main":[(x1,y1),(x2,y2)...],"sub1":[(x1,y1),(x2,y2)...],"sub2":[(x1,y1),(x2,y2)...]}
             sec_lines:线宽集合[(x1,y1,x2,y3,thick),]
             bias_type:偏心类型 默认中心
             center_type:中心类型 默认质心
@@ -950,7 +950,7 @@ class Mdb:
         """
         qt_model.GetSectionType(index)
         Mdb.add_section(index, name, sec_type, sec_info, symmetry, charm_info, sec_right, charm_right, box_num,
-                        box_height, mat_combine, rib_info, rib_place, loop_segment, sec_lines, bias_type,
+                        box_height, mat_combine, rib_info, rib_place, loop_segments, sec_lines, bias_type,
                         center_type, shear_consider, bias_x, bias_y)
 
     @staticmethod

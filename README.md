@@ -510,7 +510,7 @@ Returns: 无
 > _布置位置: 0-上...  具体位置 0-桥面1..._  
 > _参考点位置:0-左  加劲肋位置 0-上/左 1-下/右 2-两侧_  
 > sec_info:截面特性列表，共计26个参数参考UI截面  
-> loop_segment:线圈坐标集合 list[dict] dict示例:{"main":[(x1,y1),(x2,y2)...],"sub1":[(x1,y1),(x2,y2)...],"sub2":[(x1,y1),(x2,y2)...]}  
+> loop_segments:线圈坐标集合 list[dict] dict示例:{"main":[(x1,y1),(x2,y2)...],"sub1":[(x1,y1),(x2,y2)...],"sub2":[(x1,y1),(x2,y2)...]}  
 > sec_lines:线宽集合[(x1,y1,x2,y3,thick),]  
 > bias_type:偏心类型 默认中心  
 > center_type:中心类型 默认质心  
@@ -550,7 +550,7 @@ Returns: 无
 > _布置位置: 0-上...  具体位置 0-桥面1..._  
 > _参考点位置:0-左  加劲肋位置 0-上/左 1-下/右 2-两侧_  
 > sec_info:截面特性列表，共计26个参数参考UI截面  
-> loop_segment:线圈坐标集合 list[dict] dict示例:{"main":[(x1,y1),(x2,y2)...],"sub1":[(x1,y1),(x2,y2)...],"sub2":[(x1,y1),(x2,y2)...]}  
+> loop_segments:线圈坐标集合 list[dict] dict示例:{"main":[(x1,y1),(x2,y2)...],"sub1":[(x1,y1),(x2,y2)...],"sub2":[(x1,y1),(x2,y2)...]}  
 > sec_lines:线宽集合[(x1,y1,x2,y3,thick),]  
 > bias_type:偏心类型 默认中心  
 > center_type:中心类型 默认质心  
