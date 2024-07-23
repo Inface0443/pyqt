@@ -824,8 +824,7 @@ class Mdb:
                     charm_right: list[str] = None, box_num: int = 3, box_height: float = 2,
                     mat_combine: list[float] = None, rib_info: dict[str, list[float]] = None,
                     rib_place: list[tuple[int, int, int, list[tuple[float, str, int, str]]]] = None,
-                    main_loop: list[tuple[float, float]] = None, sub_loops: list[list[tuple[float, float]]] = None,
-                    sec_lines: list[tuple[float, float, float, float, float]] = None,
+                    loop_segment: list[dict] = None,  sec_lines: list[tuple[float, float, float, float, float]] = None,
                     bias_type: str = "中心", center_type: str = "质心", shear_consider: bool = True, bias_x: float = 0, bias_y: float = 0):
         """
         添加截面信息,如果截面存在则自动覆盖
@@ -847,8 +846,7 @@ class Mdb:
                 _布置位置: 0-上...  具体位置 0-桥面1..._
                 _参考点位置:0-左  加劲肋位置 0-上/左 1-下/右 2-两侧_
             sec_info:截面特性列表，共计26个参数参考UI截面
-            main_loop:主线圈坐标集合 [(-1,-1),(5,0),(5,5),(-1,5)] 目前只支持单一线圈，多主线圈可在此基础上调用AddLoopSegment函数
-            sub_loops:次线圈坐标集合 [[(0,0),(0,1),(1,1,)], [(2,2),(3,2),(3,3)]]
+            loop_segment:线圈坐标集合 list[dict] dict示例:{"main":[(x1,y1),(x2,y2)...],"sub1":[(x1,y1),(x2,y2)...],"sub2":[(x1,y1),(x2,y2)...]}
             sec_lines:线宽集合[(x1,y1,x2,y3,thick),]
             bias_type:偏心类型 默认中心
             center_type:中心类型 默认质心
@@ -857,7 +855,7 @@ class Mdb:
             bias_y:自定义偏心点y坐标 (仅自定义类型偏心需要)
         Example:
             mdb.add_section(name="截面1",sec_type="矩形",sec_info=[2,4],bias_type="中心")
-            mdb.add_section(name="截面2",sec_type="混凝土箱梁",box_height=2,box_number=3,
+            mdb.add_section(name="截面2",sec_type="混凝土箱梁",box_height=2,box_num=3,
                 sec_info=[0.02,0,12,3,1,2,1,5,6,0.2,0.4,0.1,0.13,0.28,0.3,0.5,0.5,0.5,0.2],
                 charm_info=["1*0.2,0.1*0.2","0.5*0.15,0.3*0.2","0.4*0.2","0.5*0.2"])
             mdb.add_section(name="钢梁截面1",sec_type="工字钢梁",sec_info=[0,0,0.5,0.5,0.5,0.5,0.7,0.02,0.02,0.02])
@@ -896,7 +894,7 @@ class Mdb:
                                     shearConsider=shear_consider, horizontalPos=bias_x, verticalPos=bias_y)
             elif sec_type == "特性截面" or sec_type.startswith("自定义"):
                 qt_model.AddSection(id=index, name=name, secType=sec_type, secInfo=sec_info,
-                                    mainLoop=main_loop, subLoops=sub_loops, secLines=sec_lines)
+                                    loopSegment=loop_segment, secLines=sec_lines)
             else:
                 qt_model.AddSection(id=index, name=name, secType=sec_type, secInfo=sec_info,
                                     biasType=bias_type, centerType=center_type, shearConsider=shear_consider,
@@ -910,13 +908,12 @@ class Mdb:
                        charm_right: list[str] = None, box_num: int = 3, box_height: float = 2,
                        mat_combine: list[float] = None, rib_info: dict[str, list[float]] = None,
                        rib_place: list[tuple[int, int, int, list[tuple[float, str, int, str]]]] = None,
-                       main_loop: list[tuple[float, float]] = None, sub_loops: list[list[tuple[float, float]]] = None,
-                       sec_lines: list[tuple[float, float, float, float, float]] = None,
+                       loop_segment: list[dict] = None, sec_lines: list[tuple[float, float, float, float, float]] = None,
                        bias_type: str = "中心", center_type: str = "质心", shear_consider: bool = True, bias_x: float = 0, bias_y: float = 0):
         """
         添加截面信息,如截面存在则为更新截面
         Args:
-            index: 更改截面号
+            index: 截面编号,默认自动识别
             name:截面名称
             sec_type:参数截面类型名称
             sec_info:截面信息 (必要参数)
@@ -933,8 +930,7 @@ class Mdb:
                 _布置位置: 0-上...  具体位置 0-桥面1..._
                 _参考点位置:0-左  加劲肋位置 0-上/左 1-下/右 2-两侧_
             sec_info:截面特性列表，共计26个参数参考UI截面
-            main_loop:主线圈坐标集合 [(-1,-1),(5,0),(5,5),(-1,5)] 目前只支持单一线圈，多主线圈可在此基础上调用AddLoopSegment函数
-            sub_loops:次线圈坐标集合 [[(0,0),(0,1),(1,1,)], [(2,2),(3,2),(3,3)]]
+            loop_segment:线圈坐标集合 list[dict] dict示例:{"main":[(x1,y1),(x2,y2)...],"sub1":[(x1,y1),(x2,y2)...],"sub2":[(x1,y1),(x2,y2)...]}
             sec_lines:线宽集合[(x1,y1,x2,y3,thick),]
             bias_type:偏心类型 默认中心
             center_type:中心类型 默认质心
@@ -943,7 +939,7 @@ class Mdb:
             bias_y:自定义偏心点y坐标 (仅自定义类型偏心需要)
         Example:
             mdb.update_section(1,name="截面1",sec_type="矩形",sec_info=[2,4],bias_type="中心")
-            mdb.update_section(2,name="截面2",sec_type="混凝土箱梁",box_height=2,box_number=3,
+            mdb.update_section(2,name="截面2",sec_type="混凝土箱梁",box_height=2,box_num=3,
                 sec_info=[0.02,0,12,3,1,2,1,5,6,0.2,0.4,0.1,0.13,0.28,0.3,0.5,0.5,0.5,0.2],
                 charm_info=["1*0.2,0.1*0.2","0.5*0.15,0.3*0.2","0.4*0.2","0.5*0.2"])
             mdb.update_section(3,name="钢梁截面1",sec_type="工字钢梁",sec_info=[0,0,0.5,0.5,0.5,0.5,0.7,0.02,0.02,0.02])
@@ -954,7 +950,7 @@ class Mdb:
         """
         qt_model.GetSectionType(index)
         Mdb.add_section(index, name, sec_type, sec_info, symmetry, charm_info, sec_right, charm_right, box_num,
-                        box_height, mat_combine, rib_info, rib_place, main_loop, sub_loops, sec_lines, bias_type,
+                        box_height, mat_combine, rib_info, rib_place, loop_segment, sec_lines, bias_type,
                         center_type, shear_consider, bias_x, bias_y)
 
     @staticmethod
@@ -978,22 +974,6 @@ class Mdb:
         except Exception as ex:
             raise Exception(ex)
 
-    @staticmethod
-    def add_loop_segment(index: int, main_loop: list[tuple[float, float]] = None, sub_loops: list[list[tuple[float, float]]] = None):
-        """
-        为自定义线圈截面添加额外主线圈信息
-        Args:
-            index:截面号
-            main_loop:主线圈坐标集合 [(-1,-1),(5,0),(5,5),(-1,5)] 多次调用即可实现多主线圈截面
-            sub_loops:次线圈坐标集合 [[(0,0),(0,1),(1,1,)], [(2,2),(3,2),(3,3)]]
-        Example:
-            mdb.add_loop_segment(1,[(-1,-1),(5,0),(5,5),(-1,5)] ,[[(0,0),(0,1),(1,1,)], [(2,2),(3,2),(3,3)]])
-        Returns: 无
-        """
-        try:
-            qt_model.AddLoopSegment(id=index, mainLoop=main_loop, subLoops=sub_loops)
-        except Exception as ex:
-            raise Exception(ex)
 
     @staticmethod
     def add_tapper_section_by_id(index: int = -1, name: str = "", begin_id: int = 1, end_id: int = 1):
