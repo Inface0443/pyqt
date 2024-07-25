@@ -937,7 +937,7 @@ class Mdb:
         Returns: 无
         """
         try:
-            qt_model.AddTapperSection(id=index, name=name, beginId=begin_id, endId=end_id)
+            qt_model.AddTapperSectionById(id=index, name=name, beginId=begin_id, endId=end_id)
         except Exception as ex:
             raise Exception(ex)
 
