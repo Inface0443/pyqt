@@ -477,6 +477,21 @@ class Odb:
             raise Exception(ex)
 
     @staticmethod
+    def get_section_property(index: int):
+        """
+        获取指定截面特性
+        Args:
+            index:截面号
+        Example:
+            odb.get_section_property(1)
+        Returns: dict
+        """
+        try:
+            return list(qt_model.GetSectionProperty(index))
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
     def get_section_ids():
         """
         获取模型所有截面号

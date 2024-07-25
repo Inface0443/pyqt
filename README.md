@@ -1,5 +1,4 @@
-C:\Users\Robert\.conda\envs\py39\python.exe C:/Users/Robert/Desktop/MyWork/Python建模/test.py
-# 最新版本 V0.5.6 - 2024.07.24 
+# 最新版本 V0.5.7 - 2024.07.24 
 > pip install --upgrade qtmodel -i https://pypi.org/simple
 - 更改截面调用 
 ##  视图控制
@@ -527,7 +526,7 @@ charm_info=["1*0.2,0.1*0.2","0.5*0.15,0.3*0.2","0.4*0.2","0.5*0.2"])
 mdb.add_section(name="钢梁截面1",sec_type="工字钢梁",sec_info=[0,0,0.5,0.5,0.5,0.5,0.7,0.02,0.02,0.02])
 mdb.add_section(name="钢梁截面2",sec_type="箱型钢梁",sec_info=[0,0.15,0.25,0.5,0.25,0.15,0.4,0.15,0.7,0.02,0.02,0.02,0.02],
 rib_info = {"板肋1": [0.1,0.02],"T形肋1":[0.1,0.02,0.02,0.02]},
-rib_place = [(1 ,0, 0.1, "板肋1", 2, "默认名称1"),
+rib_place = [(1, 0, 0.1, "板肋1", 2, "默认名称1"),
 (1, 0, 0.2, "板肋1", 2, "默认名称1")])
 ```  
 Returns: 无
@@ -1929,6 +1928,16 @@ from qtmodel import *
 odb.get_section_data(1)
 ```  
 Returns: json字符串，包含信息为dict
+### get_section_property
+获取指定截面特性
+> 参数:  
+> index:截面号  
+```Python
+# 示例代码
+from qtmodel import *
+odb.get_section_property(1)
+```  
+Returns: dict
 ### get_section_ids
 获取模型所有截面号
 > 参数:  
