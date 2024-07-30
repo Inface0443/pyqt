@@ -823,11 +823,11 @@ class Mdb:
                     symmetry: bool = True, charm_info: list[str] = None, sec_right: list[float] = None,
                     charm_right: list[str] = None, box_num: int = 3, box_height: float = 2,
                     mat_combine: list[float] = None, rib_info: dict[str, list[float]] = None,
-                    rib_place: list[tuple[int,int, float, str, int, str]] = None,
-                    loop_segments: list[dict] = None,  sec_lines: list[tuple[float, float, float, float, float]] = None,
+                    rib_place: list[tuple[int, int, float, str, int, str]] = None,
+                    loop_segments: list[dict] = None, sec_lines: list[tuple[float, float, float, float, float]] = None,
                     bias_type: str = "中心", center_type: str = "质心", shear_consider: bool = True, bias_x: float = 0, bias_y: float = 0):
         """
-        添加截面信息,如果截面存在则自动覆盖
+        添加单一截面信息,如果截面存在则自动覆盖
         Args:
             index: 截面编号,默认自动识别
             name:截面名称
@@ -899,6 +899,25 @@ class Mdb:
                 qt_model.AddSection(id=index, name=name, secType=sec_type, secInfo=sec_info,
                                     biasType=bias_type, centerType=center_type, shearConsider=shear_consider,
                                     horizontalPos=bias_x, verticalPos=bias_y)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def add_single_section(index: int = -1, name: str = "", sec_type: str = "矩形", sec_dict: dict = None):
+        """
+        以字典形式添加单一截面
+        Args:
+            index:截面编号
+            name:截面名称
+            sec_type:截面类型
+            sec_dict:截面始端编号
+        Example:
+            mdb.add_single_section(index=1,name="变截面1",sec_type="矩形",
+                sec_dict={"sec_info":[1,2],"bias_type":"中心"})
+        Returns: 无
+        """
+        try:
+            qt_model.AddSingleSection(id=index, name=name, secType=sec_type, secDict=sec_dict)
         except Exception as ex:
             raise Exception(ex)
 

@@ -1,4 +1,4 @@
-# 最新版本 V0.5.7 - 2024.07.24 
+# 最新版本 V0.5.8 - 2024.07.30 
 > pip install --upgrade qtmodel -i https://pypi.org/simple
 - 更改截面调用 
 ##  视图控制
@@ -491,7 +491,7 @@ mdb.remove_material(index=1)
 Returns: 无
 ##  截面操作
 ### add_section
-添加截面信息,如果截面存在则自动覆盖
+添加单一截面信息,如果截面存在则自动覆盖
 > 参数:  
 > index: 截面编号,默认自动识别  
 > name:截面名称  
@@ -528,6 +528,20 @@ mdb.add_section(name="钢梁截面2",sec_type="箱型钢梁",sec_info=[0,0.15,0.
 rib_info = {"板肋1": [0.1,0.02],"T形肋1":[0.1,0.02,0.02,0.02]},
 rib_place = [(1, 0, 0.1, "板肋1", 2, "默认名称1"),
 (1, 0, 0.2, "板肋1", 2, "默认名称1")])
+```  
+Returns: 无
+### add_single_section
+以字典形式添加单一截面
+> 参数:  
+> index:截面编号  
+> name:截面名称  
+> sec_type:截面类型  
+> sec_dict:截面始端编号  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.add_single_section(index=1,name="变截面1",sec_type="矩形",
+sec_dict={"sec_info":[1,2],"bias_type":"中心"})
 ```  
 Returns: 无
 ### add_tapper_section
@@ -2329,4 +2343,3 @@ odb.get_deviation_load("荷载工况1")
 ```  
 Returns: json字符串，包含信息为list[dict]
 
-Process finished with exit code 0
