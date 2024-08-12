@@ -1,6 +1,6 @@
-# 最新版本 V0.5.8 - 2024.07.30 
+# 最新版本 V0.5.9 - 2024.08.12 
 > pip install --upgrade qtmodel -i https://pypi.org/simple
-- 更改截面调用 
+- 支持部分荷载边界集合操作 
 ##  视图控制
 ### remove_display
 删除当前所有显示，包括边界荷载钢束等全部显示
@@ -697,7 +697,7 @@ Returns: 无
 ### add_general_support
 添加一般支承
 > 参数:  
-> node_id:节点编号  
+> node_id(Union[int,List[int]]):节点编号,支持数或列表  
 > boundary_info:边界信息  [X,Y,Z,Rx,Ry,Rz]  ture-固定 false-自由  
 > group_name:边界组名,默认为默认边界组  
 ```Python
@@ -709,7 +709,7 @@ Returns: 无
 ### add_elastic_support
 添加弹性支承
 > 参数:  
-> node_id:节点编号  
+> node_id(Union[int,List[int]]):节点编号,支持数或列表  
 > support_type:支承类型 1-线性  2-受拉  3-受压  
 > boundary_info:边界信息 受拉和受压时列表长度为2-[direct(1-X 2-Y 3-Z),stiffness]  线性时列表长度为6-[kx,ky,kz,krx,kry,krz]  
 > group_name:边界组  
@@ -1176,7 +1176,7 @@ Returns: 无
 ### add_beam_element_load
 添加梁单元荷载
 > 参数:  
-> beam_id:单元编号  
+> beam_id(Union[int,List[int]]):单元编号,支持数或列表  
 > case_name:荷载工况名  
 > load_type:荷载类型  
 > _ 1-集中力 2-集中弯矩 3-分布力 4-分布弯矩  
@@ -1211,7 +1211,7 @@ Returns: 无
 ### add_initial_tension_load
 添加初始拉力
 > 参数:  
-> element_id:单元编号  
+> element_id(Union[int,List[int]]):单元编号支持数或列表  
 > case_name:荷载工况名  
 > tension:初始拉力  
 > tension_type:张拉类型  0-增量 1-全量  
@@ -1225,7 +1225,7 @@ Returns: 无
 ### remove_initial_tension_load
 删除初始拉力
 > 参数:  
-> element_id:单元号  
+> element_id(Union[int,List[int]]):单元编号支持数或列表  
 > case_name:荷载工况名  
 ```Python
 # 示例代码
@@ -1361,6 +1361,7 @@ Returns: 无
 > 参数:  
 > case_name:荷载工况名  
 > element_id:单元编号  
+> group_name:指定荷载组,后续升级开放指定荷载组删除功能  
 ```Python
 # 示例代码
 from qtmodel import *
@@ -1381,7 +1382,7 @@ Returns: 无
 > 参数:  
 > case_name:荷载工况名  
 > element_id:单元编号  
-> direct:梁单元梯度温度方向  1-Y向 2-Z向 (仅梁单元需要)  
+> group_name:指定荷载组,后续升级开放指定荷载组删除功能  
 ```Python
 # 示例代码
 from qtmodel import *
@@ -1413,6 +1414,7 @@ Returns: 无
 > 参数:  
 > case_name:荷载工况名  
 > element_id:单元编号  
+> group_name:指定荷载组,后续升级开放指定荷载组删除功能  
 ```Python
 # 示例代码
 from qtmodel import *
@@ -1438,6 +1440,7 @@ Returns: 无
 > 参数:  
 > case_name:荷载工况名  
 > element_id:单元编号  
+> group_name:指定荷载组,后续升级开放指定荷载组删除功能  
 ```Python
 # 示例代码
 from qtmodel import *
@@ -1462,6 +1465,7 @@ Returns: 无
 > 参数:  
 > case_name:荷载工况名  
 > element_id:单元编号  
+> group_name:指定荷载组,后续升级开放指定荷载组删除功能  
 ```Python
 # 示例代码
 from qtmodel import *

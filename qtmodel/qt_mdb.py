@@ -1169,11 +1169,11 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def add_general_support(node_id: int = 1, boundary_info: list[bool] = None, group_name: str = "默认边界组"):
+    def add_general_support(node_id=1, boundary_info: list[bool] = None, group_name: str = "默认边界组"):
         """
         添加一般支承
         Args:
-             node_id:节点编号
+             node_id(Union[int,List[int]]):节点编号,支持数或列表
              boundary_info:边界信息  [X,Y,Z,Rx,Ry,Rz]  ture-固定 false-自由
              group_name:边界组名,默认为默认边界组
         Example:
@@ -1188,11 +1188,11 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def add_elastic_support(node_id: int = 1, support_type: int = 1, boundary_info: list[float] = None, group_name: str = "默认边界组"):
+    def add_elastic_support(node_id=1, support_type: int = 1, boundary_info: list[float] = None, group_name: str = "默认边界组"):
         """
         添加弹性支承
         Args:
-             node_id:节点编号
+             node_id(Union[int,List[int]]):节点编号,支持数或列表
              support_type:支承类型 1-线性  2-受拉  3-受压
              boundary_info:边界信息 受拉和受压时列表长度为2-[direct(1-X 2-Y 3-Z),stiffness]  线性时列表长度为6-[kx,ky,kz,krx,kry,krz]
              group_name:边界组
@@ -1941,14 +1941,14 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def add_beam_element_load(beam_id: int = 1, case_name: str = "", load_type: int = 1, coord_system: int = 3,
+    def add_beam_element_load(beam_id=1, case_name: str = "", load_type: int = 1, coord_system: int = 3,
                               is_abs=False, list_x: list[float, float] = None,
                               list_load: list[float, float] = None, group_name="默认荷载组", load_bias: tuple[bool, int, int, float] = None,
                               projected: bool = False):
         """
         添加梁单元荷载
         Args:
-            beam_id:单元编号
+            beam_id(Union[int,List[int]]):单元编号,支持数或列表
             case_name:荷载工况名
             load_type:荷载类型
                _ 1-集中力 2-集中弯矩 3-分布力 4-分布弯矩
@@ -1991,11 +1991,11 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def add_initial_tension_load(element_id: int = 1, case_name: str = "", group_name: str = "默认荷载组", tension: float = 0, tension_type: int = 1):
+    def add_initial_tension_load(element_id=1, case_name: str = "", group_name: str = "默认荷载组", tension: float = 0, tension_type: int = 1):
         """
         添加初始拉力
         Args:
-             element_id:单元编号
+             element_id(Union[int,List[int]]):单元编号支持数或列表
              case_name:荷载工况名
              tension:初始拉力
              tension_type:张拉类型  0-增量 1-全量
@@ -2010,11 +2010,11 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def remove_initial_tension_load(case_name: str, element_id: int):
+    def remove_initial_tension_load(case_name: str, element_id=1):
         """
         删除初始拉力
         Args:
-            element_id:单元号
+            element_id(Union[int,List[int]]):单元编号支持数或列表
             case_name:荷载工况名
         Example:
             mdb.remove_initial_tension_load(case_name="工况1",element_id=1)
@@ -2209,12 +2209,13 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def remove_element_temperature(case_name: str, element_id: int):
+    def remove_element_temperature(case_name: str, element_id: int, group_name: str = "默认荷载组"):
         """
         删除指定单元温度
         Args:
             case_name:荷载工况名
             element_id:单元编号
+            group_name:指定荷载组,后续升级开放指定荷载组删除功能
         Example:
             mdb.remove_element_temperature(case_name="荷载工况1",element_id=1)
         Returns: 无
@@ -2249,19 +2250,19 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def remove_gradient_temperature(case_name: str, element_id: int, direct: int = 1):
+    def remove_gradient_temperature(case_name: str, element_id: int, group_name: str = "默认荷载组"):
         """
         删除梁或板单元梯度温度
         Args:
             case_name:荷载工况名
             element_id:单元编号
-            direct:梁单元梯度温度方向  1-Y向 2-Z向 (仅梁单元需要)
+            group_name:指定荷载组,后续升级开放指定荷载组删除功能
         Example:
             mdb.remove_gradient_temperature(case_name="工况1",element_id=1)
         Returns: 无
         """
         try:
-            qt_model.RemoveGradientTemperature(caseName=case_name, elementId=element_id, direct=direct)
+            qt_model.RemoveGradientTemperature(caseName=case_name, elementId=element_id)
         except Exception as ex:
             raise Exception(ex)
 
@@ -2296,12 +2297,13 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def remove_beam_section_temperature(case_name: str, element_id: int):
+    def remove_beam_section_temperature(case_name: str, element_id: int, group_name: str = "默认荷载组"):
         """
         删除指定梁或板单元梁截面温度
         Args:
             case_name:荷载工况名
             element_id:单元编号
+            group_name:指定荷载组,后续升级开放指定荷载组删除功能
         Example:
             mdb.remove_beam_section_temperature(case_name="工况1",element_id=1)
         Returns: 无
@@ -2331,12 +2333,13 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def remove_index_temperature(case_name: str, element_id: int):
+    def remove_index_temperature(case_name: str, element_id: int, group_name: str = "默认荷载组"):
         """
         删除梁单元指数温度
         Args:
             case_name:荷载工况名
             element_id:单元编号
+            group_name:指定荷载组,后续升级开放指定荷载组删除功能
         Example:
             mdb.remove_index_temperature(case_name="工况1",element_id=1)
         Returns: 无
@@ -2365,12 +2368,13 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def remove_top_plate_temperature(case_name: str, element_id: int):
+    def remove_top_plate_temperature(case_name: str, element_id: int, group_name: str = "默认荷载组"):
         """
         删除梁单元顶板温度
         Args:
             case_name:荷载工况名
             element_id:单元编号
+            group_name:指定荷载组,后续升级开放指定荷载组删除功能
         Example:
             mdb.remove_top_plate_temperature(case_name="荷载工况1",element_id=1)
         Returns: 无
