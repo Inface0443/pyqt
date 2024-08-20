@@ -1013,6 +1013,18 @@ class Odb:
 
     # region 获取施工阶段信息
     @staticmethod
+    def get_stage_name():
+        """
+        获取所有施工阶段名称
+        Args: 无
+        Example:
+            odb.get_stage_name()
+        Returns: json字符串，包含信息为list[int]
+        """
+        res_list = list(qt_model.GetStageNames())
+        return json.dumps(res_list)
+
+    @staticmethod
     def get_elements_of_stage(stage_id: int):
         """
         获取指定施工阶段单元编号信息
