@@ -1,6 +1,6 @@
-# 最新版本 V0.5.9 - 2024.08.12 
+# 最新版本 V0.5.11 - 2024.08.20 
 > pip install --upgrade qtmodel -i https://pypi.org/simple
-- 支持部分荷载边界集合操作 
+- 支持施工阶段名称查询 
 ##  视图控制
 ### remove_display
 删除当前所有显示，包括边界荷载钢束等全部显示
@@ -2208,6 +2208,15 @@ odb.get_constraint_equation_data()
 ```  
 Returns: json字符串，包含信息为list[dict]
 ##  获取施工阶段信息
+### get_stage_name
+获取所有施工阶段名称
+> 参数:  
+```Python
+# 示例代码
+from qtmodel import *
+odb.get_stage_name()
+```  
+Returns: json字符串，包含信息为list[int]
 ### get_elements_of_stage
 获取指定施工阶段单元编号信息
 > 参数:  
