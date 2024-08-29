@@ -487,7 +487,7 @@ class Odb:
         Returns: dict
         """
         try:
-            return list(qt_model.GetSectionProperty(index))
+            return qt_model.GetSectionProperty(index)
         except Exception as ex:
             raise Exception(ex)
 
