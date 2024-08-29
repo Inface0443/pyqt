@@ -374,6 +374,32 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
+    def add_nodes(node_data: list[list[float]], intersected: bool = True,
+                  is_merged: bool = False, merge_error: float = 1e-4):
+        """
+        根据坐标信息和节点编号添加一组节点，默认自动识别编号
+        Args:
+             node_data: [[id,x,y,z]...]  或 [[x,y,z]...]
+             intersected: 是否交叉分割
+             is_merged: 是否忽略位置重复节点
+             merge_error: 合并容许误差
+        Example:
+            mdb.add_nodes([[1,2,3],[2,2,2,4]])
+            mdb.add_nodes([[1,1,2,3],[1,1,2,3]])
+        Returns: 无
+        """
+        try:
+            for item in node_data:
+                if len(item) == 4:
+                    qt_model.AddNode(id=item[0], x=item[1], y=item[2], z=item[3],
+                                     intersected=intersected, isMerged=is_merged, merge_error=merge_error)
+                elif len(item) == 3:
+                    qt_model.AddNode(x=item[0], y=item[1], z=item[2],
+                                     intersected=intersected, isMerged=is_merged, merge_error=merge_error)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
     def update_node(node_id: int, x: float = 1, y: float = 1, z: float = 1):
         """
         根据节点号修改节点坐标
@@ -893,7 +919,7 @@ class Mdb:
                                     ribPlaceList=rib_place, biasType=bias_type, centerType=center_type,
                                     shearConsider=shear_consider, horizontalPos=bias_x, verticalPos=bias_y)
             elif sec_type == "特性截面" or sec_type.startswith("自定义"):
-                qt_model.AddSection(id=index, name=name, secType=sec_type, secInfo=sec_info,biasType=bias_type,
+                qt_model.AddSection(id=index, name=name, secType=sec_type, secInfo=sec_info, biasType=bias_type,
                                     loopSegments=loop_segments, secLines=sec_lines,
                                     shearConsider=shear_consider, centerType=center_type,
                                     horizontalPos=bias_x, verticalPos=bias_y)
@@ -2614,8 +2640,8 @@ class Mdb:
         Returns: 无
         """
         try:
-            qt_model.AddConstructionStage(name=name, duration=duration, activeStructures=active_structures, inActiveStructures=delete_structures
-                                          , activeBoundaries=active_boundaries, inActiveBoundaries=delete_boundaries, activeLoads=active_loads,
+            qt_model.AddConstructionStage(name=name, duration=duration, activeStructures=active_structures, inActiveStructures=delete_structures,
+                                          activeBoundaries=active_boundaries, inActiveBoundaries=delete_boundaries, activeLoads=active_loads,
                                           inActiveLoads=delete_loads, tempLoads=temp_loads, id=index)
             qt_model.UpdateModel()
         except Exception as ex:
@@ -2653,8 +2679,8 @@ class Mdb:
         Returns: 无
         """
         try:
-            qt_model.UpdateConstructionStage(name=name, duration=duration, activeStructures=active_structures, inActiveStructures=delete_structures
-                                             , activeBoundaries=active_boundaries, inActiveBoundaries=delete_boundaries, activeLoads=active_loads,
+            qt_model.UpdateConstructionStage(name=name, duration=duration, activeStructures=active_structures, inActiveStructures=delete_structures,
+                                             activeBoundaries=active_boundaries, inActiveBoundaries=delete_boundaries, activeLoads=active_loads,
                                              inActiveLoads=delete_loads, tempLoads=temp_loads)
             qt_model.UpdateModel()
         except Exception as ex:
