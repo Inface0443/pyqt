@@ -377,25 +377,18 @@ class Mdb:
     def add_nodes(node_data: list[list[float]], intersected: bool = True,
                   is_merged: bool = False, merge_error: float = 1e-4):
         """
-        根据坐标信息和节点编号添加一组节点，默认自动识别编号
+        根据坐标信息和节点编号添加一组节点，需要指定节点号
         Args:
-             node_data: [[id,x,y,z]...]  或 [[x,y,z]...]
+             node_data: [[id,x,y,z]...]
              intersected: 是否交叉分割
              is_merged: 是否忽略位置重复节点
              merge_error: 合并容许误差
         Example:
-            mdb.add_nodes([[1,2,3],[2,2,2,4]])
             mdb.add_nodes([[1,1,2,3],[1,1,2,3]])
         Returns: 无
         """
         try:
-            for item in node_data:
-                if len(item) == 4:
-                    qt_model.AddNode(id=item[0], x=item[1], y=item[2], z=item[3],
-                                     intersected=intersected, isMerged=is_merged, merge_error=merge_error)
-                elif len(item) == 3:
-                    qt_model.AddNode(x=item[0], y=item[1], z=item[2],
-                                     intersected=intersected, isMerged=is_merged, merge_error=merge_error)
+            qt_model.AddNodes(nodeData=node_data, intersected=intersected, isMerged=is_merged, merge_error=merge_error)
         except Exception as ex:
             raise Exception(ex)
 
