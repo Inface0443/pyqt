@@ -851,7 +851,7 @@ class Mdb:
         Args:
             index: 截面编号,默认自动识别
             name:截面名称
-            sec_type:参数截面类型名称
+            sec_type:参数截面类型名称(详见UI界面)
             sec_info:截面信息 (必要参数)
             symmetry:混凝土截面是否对称 (仅混凝土箱梁截面需要)
             charm_info:混凝土截面倒角信息 (仅混凝土箱梁截面需要)
@@ -886,15 +886,6 @@ class Mdb:
         Returns: 无
             """
         try:
-            sec_type_list = ["矩形", "圆形", "圆管", "箱型", "实腹八边形",
-                             "空腹八边形", "内八角形", "实腹圆端型", "T形", "倒T形",
-                             "I字形", "马蹄T形", "I字形混凝土", "混凝土箱梁", "带肋钢箱",
-                             "带肋H截面", "钢桁箱梁1", "钢桁箱梁2", "钢桁箱梁3", "钢工字型带肋",
-                             "槽钢", "H型钢", "工字型", "双拼槽钢", "双拼H型钢", "双拼工字钢",
-                             "钢管砼", "钢箱砼", "工字组合梁", "钢箱组合梁", "工字钢梁", "箱型钢梁",
-                             "自定义线圈截面", "自定义线宽截面", "特性截面", "自定义特性截面"]
-            if sec_type not in sec_type_list:
-                raise Exception(f"操作失败，参数截面仅支持以下截面类型{sec_type_list}")
             if sec_type == "混凝土箱梁":
                 qt_model.AddSection(id=index, name=name, secType=sec_type, secInfo=sec_info, charmInfo=charm_info,
                                     symmetry=symmetry, boxNum=box_num, H=box_height, charmInfoR=charm_right, secInfoR=sec_right,
