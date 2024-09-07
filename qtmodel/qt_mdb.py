@@ -901,7 +901,7 @@ class Mdb:
             elif sec_type == "特性截面" or sec_type.startswith("自定义"):
                 qt_model.AddSection(id=index, name=name, secType=sec_type, secInfo=sec_info, biasType=bias_type,
                                     loopSegments=loop_segments, secLines=sec_lines,
-                                    secondaryLoopSegments=secondary_loop_segments,
+                                    secondaryLoopSegments=secondary_loop_segments,matCombine=mat_combine,
                                     shearConsider=shear_consider, centerType=center_type,
                                     horizontalPos=bias_x, verticalPos=bias_y)
             else:
