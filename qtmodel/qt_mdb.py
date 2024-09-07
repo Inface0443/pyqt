@@ -891,12 +891,6 @@ class Mdb:
                                     symmetry=symmetry, boxNum=box_num, H=box_height, charmInfoR=charm_right, secInfoR=sec_right,
                                     biasType=bias_type, centerType=center_type, shearConsider=shear_consider,
                                     horizontalPos=bias_x, verticalPos=bias_y)
-            elif sec_type == "钢管砼" or sec_type == "钢箱砼" or sec_type == "工字组合梁" or sec_type == "钢箱组合梁":
-                if len(mat_combine) != 5:
-                    raise Exception("操作错误，材料比错误，参数列表：[弹性模量比s/c、密度比s/c、钢材泊松比、混凝土泊松比、热膨胀系数比s/c] ！")
-                qt_model.AddSection(id=index, name=name, secType=sec_type, secInfo=sec_info,
-                                    matCombine=mat_combine, biasType=bias_type, centerType=center_type, shearConsider=shear_consider,
-                                    horizontalPos=bias_x, verticalPos=bias_y)
             elif sec_type == "工字钢梁" or sec_type == "箱型钢梁":
                 rib_names = list(rib_info.keys())
                 rib_data = list(rib_info.values())
@@ -906,11 +900,12 @@ class Mdb:
                                     shearConsider=shear_consider, horizontalPos=bias_x, verticalPos=bias_y)
             elif sec_type == "特性截面" or sec_type.startswith("自定义"):
                 qt_model.AddSection(id=index, name=name, secType=sec_type, secInfo=sec_info, biasType=bias_type,
-                                    loopSegments=loop_segments, secLines=sec_lines,secondaryLoopSegments=secondary_loop_segments,
+                                    loopSegments=loop_segments, secLines=sec_lines,
+                                    secondaryLoopSegments=secondary_loop_segments,
                                     shearConsider=shear_consider, centerType=center_type,
                                     horizontalPos=bias_x, verticalPos=bias_y)
             else:
-                qt_model.AddSection(id=index, name=name, secType=sec_type, secInfo=sec_info,
+                qt_model.AddSection(id=index, name=name, secType=sec_type, secInfo=sec_info, matCombine=mat_combine,
                                     biasType=bias_type, centerType=center_type, shearConsider=shear_consider,
                                     horizontalPos=bias_x, verticalPos=bias_y)
         except Exception as ex:
