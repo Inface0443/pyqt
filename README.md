@@ -1,6 +1,6 @@
-# 最新版本 V0.5.11 - 2024.08.20 
+# 最新版本 V0.5.13 - 2024.09.7 
 > pip install --upgrade qtmodel -i https://pypi.org/simple
-- 支持施工阶段名称查询 
+- 支持UI全截面调用和导出 
 ##  视图控制
 ### remove_display
 删除当前所有显示，包括边界荷载钢束等全部显示
@@ -241,6 +241,19 @@ Returns: 无
 from qtmodel import *
 mdb.add_node([1,2,3])
 mdb.add_node([1,1,2,3])
+```  
+Returns: 无
+### add_nodes
+根据坐标信息和节点编号添加一组节点，需要指定节点号
+> 参数:  
+> node_data: [[id,x,y,z]...]  
+> intersected: 是否交叉分割  
+> is_merged: 是否忽略位置重复节点  
+> merge_error: 合并容许误差  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.add_nodes([[1,1,2,3],[1,1,2,3]])
 ```  
 Returns: 无
 ### update_node
@@ -495,7 +508,7 @@ Returns: 无
 > 参数:  
 > index: 截面编号,默认自动识别  
 > name:截面名称  
-> sec_type:参数截面类型名称  
+> sec_type:参数截面类型名称(详见UI界面)  
 > sec_info:截面信息 (必要参数)  
 > symmetry:混凝土截面是否对称 (仅混凝土箱梁截面需要)  
 > charm_info:混凝土截面倒角信息 (仅混凝土箱梁截面需要)  
@@ -511,6 +524,7 @@ Returns: 无
 > sec_info:截面特性列表，共计26个参数参考UI截面  
 > loop_segments:线圈坐标集合 list[dict] dict示例:{"main":[(x1,y1),(x2,y2)...],"sub1":[(x1,y1),(x2,y2)...],"sub2":[(x1,y1),(x2,y2)...]}  
 > sec_lines:线宽集合[(x1,y1,x2,y3,thick),]  
+> secondary_loop_segments:辅材线圈坐标集合 list[dict] (同loop_segments)  
 > bias_type:偏心类型 默认中心  
 > center_type:中心类型 默认质心  
 > shear_consider:考虑剪切 bool 默认考虑剪切变形  
