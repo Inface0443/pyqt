@@ -194,13 +194,17 @@ class Mdb:
         导入命令
         Args:
             command:命令字符
-            command_type:命令类型 1-桥通命令 目前仅支持桥通命令
+            command_type:命令类型 1-桥通命令 2-mct命令
         Example:
             mdb.import_command("*SECTION")
+            mdb.import_command("*SECTION",2)
         Returns: 无
         """
         try:
-            qt_model.ImportQtCommand(command, command_type)
+            if command_type == 2:
+                qt_model.ImportMctCommand(command)
+            else:
+                qt_model.ImportQtCommand(command)
         except Exception as ex:
             raise Exception(ex)
 
