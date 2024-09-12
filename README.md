@@ -1,6 +1,6 @@
-# 最新版本 V0.5.13 - 2024.09.7 
+# 最新版本 V0.5.14 - 2024.09.12 
 > pip install --upgrade qtmodel -i https://pypi.org/simple
-- 支持UI全截面调用和导出 
+- 支持qdat和mct增量导入命令 
 ##  视图控制
 ### remove_display
 删除当前所有显示，包括边界荷载钢束等全部显示
@@ -123,11 +123,12 @@ Returns: 无
 导入命令
 > 参数:  
 > command:命令字符  
-> command_type:命令类型 1-桥通命令 目前仅支持桥通命令  
+> command_type:命令类型 1-桥通命令 2-mct命令  
 ```Python
 # 示例代码
 from qtmodel import *
 mdb.import_command("*SECTION")
+mdb.import_command("*SECTION",2)
 ```  
 Returns: 无
 ### import_file
