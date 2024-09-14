@@ -1,7 +1,6 @@
-C:\Users\Robert\.conda\envs\py39\python.exe C:/Users/Robert/Desktop/MyWork/Python建模/test.py
-# 最新版本 V0.5.15 - 2024.09.13 
+# 最新版本 V0.5.16 - 2024.09.14 
 > pip install --upgrade qtmodel -i https://pypi.org/simple
-- 修改删除温度荷载调用 
+- 删除不必要索引号 
 ##  视图控制
 ### remove_display
 删除当前所有显示，包括边界荷载钢束等全部显示
@@ -332,23 +331,24 @@ Returns: 无
 > 参数:  
 > name: 结构组名  
 > index: 结构组编号(非必须参数)，默认自动识别当前编号  
+> node_ids: 节点编号列表(可选参数)  
+> element_ids: 单元编号列表(可选参数)  
 ```Python
 # 示例代码
 from qtmodel import *
 mdb.add_structure_group(name="新建结构组1")
-mdb.add_structure_group(name="新建结构组2",index=2)
+mdb.add_structure_group(name="新建结构组2",node_ids=[1,2,3,4],element_ids=[1,2])
 ```  
 Returns: 无
 ### remove_structure_group
-可根据结构与组名或结构组编号删除结构组，当组名和组编号均为默认则删除所有结构组
+可根据结构与组名删除结构组，当组名为默认则删除所有结构组
 > 参数:  
 > name:结构组名称  
-> index:结构组编号  
 ```Python
 # 示例代码
 from qtmodel import *
 mdb.remove_structure_group(name="新建结构组1")
-mdb.remove_structure_group(index = 2)
+mdb.remove_structure_group()
 ```  
 Returns: 无
 ### add_structure_to_group
@@ -401,10 +401,11 @@ Returns: 无
 ```Python
 # 示例代码
 from qtmodel import *
-mdb.add_elements([[1,1,1,1,0,1,2],
-                  [2,2,1,1,0,1,2],
-                  [3,3,1,1,0,1,2,1,100],
-                  [4,4,1,1,0,1,2,3,4]])
+mdb.add_elements([
+[1,1,1,1,0,1,2],
+[2,2,1,1,0,1,2],
+[3,3,1,1,0,1,2,1,100],
+[4,4,1,1,0,1,2,3,4]])
 ```  
 Returns: 无
 ### update_element_material
@@ -686,7 +687,6 @@ Returns: 无
 新建边界组
 > 参数:  
 > name:边界组名  
-> index:边界组编号，默认自动识别当前编号 (可选参数)  
 ```Python
 # 示例代码
 from qtmodel import *
@@ -1922,6 +1922,15 @@ odb.plot_plate_element_force(r"aaa.png",component=0,load_case_name="CQ:成桥(�
 ```  
 Returns: 无
 ##  获取模型信息
+### get_structure_group_names
+获取结构组名称
+> 参数:  
+```Python
+# 示例代码
+from qtmodel import *
+odb.get_structure_group_names()
+```  
+Returns: json字符串，包含信息为list[str]
 ### get_thickness_data
 获取所有板厚信息
 > 参数:  

@@ -500,39 +500,38 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def add_structure_group(name: str = "", index: int = -1):
+    def add_structure_group(name: str = "", index: int = -1, node_ids: list[int] = None, element_ids: list[int] = None):
         """
         添加结构组
         Args:
             name: 结构组名
             index: 结构组编号(非必须参数)，默认自动识别当前编号
+            node_ids: 节点编号列表(可选参数)
+            element_ids: 单元编号列表(可选参数)
         Example:
             mdb.add_structure_group(name="新建结构组1")
-            mdb.add_structure_group(name="新建结构组2",index=2)
+            mdb.add_structure_group(name="新建结构组2",node_ids=[1,2,3,4],element_ids=[1,2])
         Returns: 无
         """
         try:
-            qt_model.AddStructureGroup(name=name, id=index)
+            qt_model.AddStructureGroup(name=name, id=index, nodeIds=node_ids, elementIds=element_ids)
             qt_model.UpdateModel()
         except Exception as ex:
             raise Exception(ex)
 
     @staticmethod
-    def remove_structure_group(name: str = "", index: int = -1):
+    def remove_structure_group(name: str = ""):
         """
-        可根据结构与组名或结构组编号删除结构组，当组名和组编号均为默认则删除所有结构组
+        可根据结构与组名删除结构组，当组名为默认则删除所有结构组
         Args:
             name:结构组名称
-            index:结构组编号
         Example:
             mdb.remove_structure_group(name="新建结构组1")
-            mdb.remove_structure_group(index = 2)
+            mdb.remove_structure_group()
         Returns: 无
         """
         try:
-            if index != -1:
-                qt_model.RemoveStructureGroup(id=index)
-            elif name != "":
+            if name != "":
                 qt_model.RemoveStructureGroup(name=name)
             else:
                 qt_model.RemoveAllStructureGroup()
@@ -1132,18 +1131,17 @@ class Mdb:
 
     # region 边界操作
     @staticmethod
-    def add_boundary_group(name: str = "", index: int = -1):
+    def add_boundary_group(name: str = ""):
         """
         新建边界组
         Args:
             name:边界组名
-            index:边界组编号，默认自动识别当前编号 (可选参数)
         Example:
             mdb.add_boundary_group(name="边界组1")
         Returns: 无
         """
         try:
-            qt_model.AddBoundaryGroup(name=name, id=index)
+            qt_model.AddBoundaryGroup(name=name)
             qt_model.UpdateModel()
         except Exception as ex:
             raise Exception(ex)

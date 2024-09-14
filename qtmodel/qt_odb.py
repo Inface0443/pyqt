@@ -379,6 +379,18 @@ class Odb:
 
     # region 获取模型信息
     @staticmethod
+    def get_structure_group_names():
+        """
+        获取结构组名称
+        Args:无
+        Example:
+            odb.get_structure_group_names()
+        Returns: json字符串，包含信息为list[str]
+        """
+        res_list = list(qt_model.GetStructureGroupNames())
+        return json.dumps(res_list)
+
+    @staticmethod
     def get_thickness_data(thick_id: int):
         """
         获取所有板厚信息
