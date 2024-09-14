@@ -1,6 +1,7 @@
-# 最新版本 V0.5.14 - 2024.09.12 
+C:\Users\Robert\.conda\envs\py39\python.exe C:/Users/Robert/Desktop/MyWork/Python建模/test.py
+# 最新版本 V0.5.15 - 2024.09.13 
 > pip install --upgrade qtmodel -i https://pypi.org/simple
-- 支持qdat和mct增量导入命令 
+- 修改删除温度荷载调用 
 ##  视图控制
 ### remove_display
 删除当前所有显示，包括边界荷载钢束等全部显示
@@ -388,6 +389,22 @@ Returns: 无
 # 示例代码
 from qtmodel import *
 mdb.add_element(index=1,ele_type=1,node_ids=[1,2],beta_angle=1,mat_id=1,sec_id=1)
+```  
+Returns: 无
+### add_elements
+根据单元编号和单元类型添加单元
+> 参数:  
+> ele_data:单元信息  
+> [编号,类型(1-梁 2-杆),materialId,sectionId,betaAngle,nodeI,nodeJ]  
+> [编号,类型(3-索),materialId,sectionId,betaAngle,nodeI,nodeJ,张拉类型(1-初拉力 2-初始水平力 3-无应力长度),张拉值]  
+> [编号,类型(4-板),materialId,thicknessId,betaAngle,nodeI,nodeJ,nodeK,nodeL]  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.add_elements([[1,1,1,1,0,1,2],
+                  [2,2,1,1,0,1,2],
+                  [3,3,1,1,0,1,2,1,100],
+                  [4,4,1,1,0,1,2,3,4]])
 ```  
 Returns: 无
 ### update_element_material

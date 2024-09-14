@@ -621,6 +621,28 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
+    def add_elements(ele_data: list = None):
+        """
+        根据单元编号和单元类型添加单元
+        Args:
+            ele_data:单元信息
+                [编号,类型(1-梁 2-杆),materialId,sectionId,betaAngle,nodeI,nodeJ]
+                [编号,类型(3-索),materialId,sectionId,betaAngle,nodeI,nodeJ,张拉类型(1-初拉力 2-初始水平力 3-无应力长度),张拉值]
+                [编号,类型(4-板),materialId,thicknessId,betaAngle,nodeI,nodeJ,nodeK,nodeL]
+        Example:
+            mdb.add_elements([
+                [1,1,1,1,0,1,2],
+                [2,2,1,1,0,1,2],
+                [3,3,1,1,0,1,2,1,100],
+                [4,4,1,1,0,1,2,3,4]])
+        Returns: 无
+        """
+        try:
+            qt_model.AddElements(eleData=ele_data)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
     def update_element_material(index: int, mat_id: int):
         """
         更新指定单元的材料号
@@ -2234,7 +2256,7 @@ class Mdb:
         Returns: 无
         """
         try:
-            qt_model.RemoveElementTemperature(caseName=case_name, elementId=element_id)
+            qt_model.RemoveElementTemperature(caseName=case_name, elementId=element_id, groupName=group_name)
         except Exception as ex:
             raise Exception(ex)
 
@@ -2275,7 +2297,7 @@ class Mdb:
         Returns: 无
         """
         try:
-            qt_model.RemoveGradientTemperature(caseName=case_name, elementId=element_id)
+            qt_model.RemoveGradientTemperature(caseName=case_name, elementId=element_id, groupName=group_name)
         except Exception as ex:
             raise Exception(ex)
 
@@ -2322,7 +2344,7 @@ class Mdb:
         Returns: 无
         """
         try:
-            qt_model.RemoveBeamSectionTemperature(caseName=case_name, elementId=element_id)
+            qt_model.RemoveBeamSectionTemperature(caseName=case_name, elementId=element_id, groupName=group_name)
         except Exception as ex:
             raise Exception(ex)
 
@@ -2358,7 +2380,7 @@ class Mdb:
         Returns: 无
         """
         try:
-            qt_model.RemoveIndexTemperature(caseName=case_name, elementId=element_id)
+            qt_model.RemoveIndexTemperature(caseName=case_name, elementId=element_id, groupName=group_name)
         except Exception as ex:
             raise Exception(ex)
 
@@ -2393,7 +2415,7 @@ class Mdb:
         Returns: 无
         """
         try:
-            qt_model.RemoveTopPlateTemperature(caseName=case_name, elementId=element_id)
+            qt_model.RemoveTopPlateTemperature(caseName=case_name, elementId=element_id, groupName=group_name)
         except Exception as ex:
             raise Exception(ex)
 
