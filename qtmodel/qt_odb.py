@@ -842,8 +842,7 @@ class Odb:
             creep_id = -1 if item.IsCalShrinkCreep is False else item.ConcreteTimeDependency.Id
             res_list.append(str(Material(mat_id=item.Id, name=item.Name, mat_type="自定义", standard="null", database="null",
                                          data_info=[item.ElasticModulus, item.UnitWeight, item.PosiRatio, item.TemperatureCoefficient],
-                                         modified=item.IsModifiedByUser, construct_factor=item.ConstructionCoefficient,
-                                         creep_id=creep_id, f_cuk=item.Fcuk)))
+                                         construct_factor=item.ConstructionCoefficient,creep_id=creep_id, f_cuk=item.Fcuk)))
         return res_list
 
     # endregion
