@@ -1269,16 +1269,16 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def add_master_slave_link(master_id: int = 1, slave_id: int = 2, boundary_info: list[bool] = None, group_name: str = "默认边界组"):
+    def add_master_slave_link(master_id: int = 1, slave_id: list[int] = None, boundary_info: list[bool] = None, group_name: str = "默认边界组"):
         """
         添加主从约束
         Args:
              master_id:主节点号
-             slave_id:从节点号
+             slave_id:从节点号列表
              boundary_info:边界信息 [X,Y,Z,Rx,Ry,Rz] ture-固定 false-自由
              group_name:边界组名
         Example:
-            mdb.add_master_slave_link(master_id=1,slave_id=2,boundary_info=[True,True,True,False,False,False])
+            mdb.add_master_slave_link(master_id=1,slave_id=[2,3],boundary_info=[True,True,True,False,False,False])
         Returns: 无
         """
         try:
@@ -1612,22 +1612,18 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def remove_tendon_group(name: str = "", index: int = -1):
+    def remove_tendon_group(name: str = ""):
         """
         按照钢束组名称或钢束组编号删除钢束组，两参数均为默认时删除所有钢束组
         Args:
              name:钢束组名称,默认自动识别 (可选参数)
-             index:钢束组编号,默认自动识别 (可选参数)
         Example:
             mdb.remove_tendon_group(name="钢束组1")
-            mdb.remove_tendon_group(index=1)
         Returns: 无
         """
         try:
             if name != "":
                 qt_model.RemoveTendonGroup(name=name)
-            elif index != -1:
-                qt_model.RemoveTendonGroup(id=index)
             else:
                 qt_model.RemoveAllStructureGroup()
             qt_model.UpdateModel()
@@ -1635,14 +1631,13 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def add_tendon_property(name: str = "", index: int = -1, tendon_type: int = 0, material_id: int = 1, duct_type: int = 1,
+    def add_tendon_property(name: str = "", tendon_type: int = 0, material_id: int = 1, duct_type: int = 1,
                             steel_type: int = 1, steel_detail: list[float] = None, loos_detail: tuple[int, int, int] = None,
                             slip_info: tuple[int, int] = None):
         """
         添加钢束特性
         Args:
              name:钢束特性名
-             index:钢束编号,默认自动识别 (可选参数)
              tendon_type: 0-PRE 1-POST
              material_id: 钢材材料编号
              duct_type: 1-金属波纹管  2-塑料波纹管  3-铁皮管  4-钢管  5-抽芯成型
@@ -1667,7 +1662,7 @@ class Mdb:
                 loos_detail = (1, 1, 1)
             if slip_info is None:
                 slip_info = (0.006, 0.006)
-            qt_model.AddTendonProperty(name=name, id=index, tendonType=tendon_type, materialId=material_id,
+            qt_model.AddTendonProperty(name=name, tendonType=tendon_type, materialId=material_id,
                                        ductType=duct_type, steelType=steel_type, steelDetail=steel_detail,
                                        loosDetail=loos_detail, slipInfo=slip_info)
             qt_model.UpdateModel()
@@ -1715,6 +1710,56 @@ class Mdb:
                 raise Exception("操作错误，钢束插入点信息不能为空且长度必须为3")
             qt_model.AddTendon3D(name=name, propertyName=property_name, groupName=group_name, num=num, lineType=line_type,
                                  positionType=position_type, controlPoints=control_points,
+                                 pointInsert=point_insert, tendonDirection=tendon_direction,
+                                 rotationAngle=rotation_angle, trackGroup=track_group, isProjection=projection)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def add_tendon_2d(name: str, property_name: str = "", group_name: str = "默认钢束组",
+                      num: int = 1, line_type: int = 1, position_type: int = 1, symmetry: int = 0,
+                      control_points: list[tuple[float, float, float, float]] = None,
+                      control_points_lateral: list[tuple[float, float, float, float]] = None,
+                      point_insert: tuple[float, float, float] = None,
+                      tendon_direction: tuple[float, float, float] = None,
+                      rotation_angle: float = 0, track_group: str = "默认结构组", projection: bool = True):
+        """
+        添加三维钢束
+        Args:
+             name:钢束名称
+             property_name:钢束特性名称
+             group_name:默认钢束组
+             num:根数
+             line_type:1-导线点  2-折线点
+             position_type: 定位方式 1-直线  2-轨迹线
+             symmetry: 对称点 0-左 1-右 2-无
+             control_points: 控制点信息[(x1,y1,z1,r1),(x2,y2,z2,r2)....]
+             control_points_lateral: 控制点横弯信息[(x1,y1,z1,r1),(x2,y2,z2,r2)....](默认无横弯)
+             point_insert: 定位方式
+                _直线: 插入点坐标[x,y,z]_
+                _轨迹线:  [插入端(1-I 2-J),插入方向(1-ij 2-ji),插入单元id]_
+             tendon_direction:直线钢束X方向向量  默认为[1,0,0] (轨迹线不用赋值)
+                _x轴-[1,0,0] y轴-[0,1,0] z轴-[0,0,1]_
+             rotation_angle:绕钢束旋转角度
+             track_group:轨迹线结构组名  (直线时不用赋值)
+             projection:直线钢束投影 (默认为true)
+        Example:
+            mdb.add_tendon_2d("BB1",property_name="22-15",num=2,position_type=1,
+                    control_points=[(0,0,-1,0),(10,0,-1,0)],point_insert=(0,0,0))
+            mdb.add_tendon_2d("BB1",property_name="22-15",num=2,position_type=2,
+                    control_points=[(0,0,-1,0),(10,0,-1,0)],point_insert=(1,1,1),track_group="轨迹线结构组1")
+        Returns: 无
+        """
+        try:
+            if tendon_direction is None:
+                tendon_direction = (1, 0, 0)
+            if control_points is None:
+                raise Exception("操作错误，钢束形状控制点不能为空")
+            if point_insert is None or len(point_insert) != 3:
+                raise Exception("操作错误，钢束插入点信息不能为空且长度必须为3")
+            qt_model.AddTendon2D(name=name, propertyName=property_name, groupName=group_name, num=num, lineType=line_type,
+                                 positionType=position_type,symmetry=symmetry, controlPoints=control_points,
+                                 controlPointsLateral=control_points_lateral,
                                  pointInsert=point_insert, tendonDirection=tendon_direction,
                                  rotationAngle=rotation_angle, trackGroup=track_group, isProjection=projection)
         except Exception as ex:
@@ -2564,23 +2609,20 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def add_load_case(name: str = "", case_type: int = 1):
+    def add_load_case(name: str = "", case_type: str = "施工阶段荷载"):
         """
         添加荷载工况
         Args:
             name:沉降名
             case_type:荷载工况类型
+            -"施工阶段荷载", "恒载", "活载", "制动力", "风荷载","体系温度荷载","梯度温度荷载",
+            -"长轨伸缩挠曲力荷载", "脱轨荷载", "船舶撞击荷载","汽车撞击荷载","长轨断轨力荷载", "用户定义荷载"
         Example:
-            mdb.add_load_case(name="工况1",case_type=1)
+            mdb.add_load_case(name="工况1",case_type="施工阶段荷载")
         Returns: 无
         """
         try:
-            case_type_list = ["施工阶段荷载", "恒载", "活载", "制动力", "风荷载",
-                              "体系温度荷载", "梯度温度荷载", "长轨伸缩挠曲力荷载", "脱轨荷载", "船舶撞击荷载",
-                              "汽车撞击荷载", "长轨断轨力荷载", "用户定义荷载"]
-            if case_type < 1 or case_type > 13:
-                raise TypeError("输入类型错误，荷载工况类型有误，仅支持int类型")
-            qt_model.AddLoadCase(name=name, loadCaseType=case_type_list[case_type - 1])
+            qt_model.AddLoadCase(name=name, loadCaseType=case_type)
             qt_model.UpdateModel()
         except Exception as ex:
             raise Exception(ex)
