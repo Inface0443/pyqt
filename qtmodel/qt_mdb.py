@@ -1010,6 +1010,7 @@ class Mdb:
                 qt_model.RemoveAllSection()
             else:
                 qt_model.RemoveSection(id=index)
+            qt_model.UpdateModel()
         except Exception as ex:
             raise Exception(ex)
 
@@ -1633,7 +1634,7 @@ class Mdb:
     @staticmethod
     def add_tendon_property(name: str = "", tendon_type: int = 0, material_id: int = 1, duct_type: int = 1,
                             steel_type: int = 1, steel_detail: list[float] = None, loos_detail: tuple[int, int, int] = None,
-                            slip_info: tuple[int, int] = None):
+                            slip_info: tuple[float, float] = None):
         """
         添加钢束特性
         Args:
@@ -1718,8 +1719,8 @@ class Mdb:
     @staticmethod
     def add_tendon_2d(name: str, property_name: str = "", group_name: str = "默认钢束组",
                       num: int = 1, line_type: int = 1, position_type: int = 1, symmetry: int = 0,
-                      control_points: list[tuple[float, float, float, float]] = None,
-                      control_points_lateral: list[tuple[float, float, float, float]] = None,
+                      control_points: list[tuple[float, float, float]] = None,
+                      control_points_lateral: list[tuple[float, float, float]] = None,
                       point_insert: tuple[float, float, float] = None,
                       tendon_direction: tuple[float, float, float] = None,
                       rotation_angle: float = 0, track_group: str = "默认结构组", projection: bool = True):
@@ -1733,8 +1734,8 @@ class Mdb:
              line_type:1-导线点  2-折线点
              position_type: 定位方式 1-直线  2-轨迹线
              symmetry: 对称点 0-左 1-右 2-无
-             control_points: 控制点信息[(x1,y1,z1,r1),(x2,y2,z2,r2)....]
-             control_points_lateral: 控制点横弯信息[(x1,y1,z1,r1),(x2,y2,z2,r2)....]，无横弯时不必输入
+             control_points: 控制点信息[(x1,z1,r1),(x2,z2,r2)....]
+             control_points_lateral: 控制点横弯信息[(x1,y1,r1),(x2,y2,r2)....]，无横弯时不必输入
              point_insert: 定位方式
                 _直线: 插入点坐标[x,y,z]_
                 _轨迹线:  [插入端(1-I 2-J),插入方向(1-ij 2-ji),插入单元id]_
@@ -1745,9 +1746,9 @@ class Mdb:
              projection:直线钢束投影 (默认为true)
         Example:
             mdb.add_tendon_2d("BB1",property_name="22-15",num=2,position_type=1,
-                    control_points=[(0,0,-1,0),(10,0,-1,0)],point_insert=(0,0,0))
+                    control_points=[(0,-1,0),(10,-1,0)],point_insert=(0,0,0))
             mdb.add_tendon_2d("BB1",property_name="22-15",num=2,position_type=2,
-                    control_points=[(0,0,-1,0),(10,0,-1,0)],point_insert=(1,1,1),track_group="轨迹线结构组1")
+                    control_points=[(0,-1,0),(10,-1,0)],point_insert=(1,1,1),track_group="轨迹线结构组1")
         Returns: 无
         """
         try:
@@ -1758,7 +1759,7 @@ class Mdb:
             if point_insert is None or len(point_insert) != 3:
                 raise Exception("操作错误，钢束插入点信息不能为空且长度必须为3")
             qt_model.AddTendon2D(name=name, propertyName=property_name, groupName=group_name, num=num, lineType=line_type,
-                                 positionType=position_type,symmetry=symmetry, controlPoints=control_points,
+                                 positionType=position_type, symmetry=symmetry, controlPoints=control_points,
                                  controlPointsLateral=control_points_lateral,
                                  pointInsert=point_insert, tendonDirection=tendon_direction,
                                  rotationAngle=rotation_angle, trackGroup=track_group, isProjection=projection)
