@@ -1713,6 +1713,7 @@ class Mdb:
                                  positionType=position_type, controlPoints=control_points,
                                  pointInsert=point_insert, tendonDirection=tendon_direction,
                                  rotationAngle=rotation_angle, trackGroup=track_group, isProjection=projection)
+            qt_model.UpdateModel()
         except Exception as ex:
             raise Exception(ex)
 
@@ -1763,6 +1764,7 @@ class Mdb:
                                  controlPointsLateral=control_points_lateral,
                                  pointInsert=point_insert, tendonDirection=tendon_direction,
                                  rotationAngle=rotation_angle, trackGroup=track_group, isProjection=projection)
+            qt_model.UpdateModel()
         except Exception as ex:
             raise Exception(ex)
 
