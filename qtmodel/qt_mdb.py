@@ -1734,7 +1734,7 @@ class Mdb:
              position_type: 定位方式 1-直线  2-轨迹线
              symmetry: 对称点 0-左 1-右 2-无
              control_points: 控制点信息[(x1,y1,z1,r1),(x2,y2,z2,r2)....]
-             control_points_lateral: 控制点横弯信息[(x1,y1,z1,r1),(x2,y2,z2,r2)....](默认无横弯)
+             control_points_lateral: 控制点横弯信息[(x1,y1,z1,r1),(x2,y2,z2,r2)....]，无横弯时不必输入
              point_insert: 定位方式
                 _直线: 插入点坐标[x,y,z]_
                 _轨迹线:  [插入端(1-I 2-J),插入方向(1-ij 2-ji),插入单元id]_

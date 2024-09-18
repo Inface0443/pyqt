@@ -1,6 +1,6 @@
-# 最新版本 V0.5.16 - 2024.09.14 
+# 最新版本 V0.5.17 - 2024.09.18 
 > pip install --upgrade qtmodel -i https://pypi.org/simple
-- 删除不必要索引号 
+- 修改创建荷载工况逻辑 
 ##  视图控制
 ### remove_display
 删除当前所有显示，包括边界荷载钢束等全部显示
@@ -776,13 +776,13 @@ Returns: 无
 添加主从约束
 > 参数:  
 > master_id:主节点号  
-> slave_id:从节点号  
+> slave_id:从节点号列表  
 > boundary_info:边界信息 [X,Y,Z,Rx,Ry,Rz] ture-固定 false-自由  
 > group_name:边界组名  
 ```Python
 # 示例代码
 from qtmodel import *
-mdb.add_master_slave_link(master_id=1,slave_id=2,boundary_info=[True,True,True,False,False,False])
+mdb.add_master_slave_link(master_id=1,slave_id=[2,3],boundary_info=[True,True,True,False,False,False])
 ```  
 Returns: 无
 ### add_node_axis
@@ -992,19 +992,16 @@ Returns: 无
 按照钢束组名称或钢束组编号删除钢束组，两参数均为默认时删除所有钢束组
 > 参数:  
 > name:钢束组名称,默认自动识别 (可选参数)  
-> index:钢束组编号,默认自动识别 (可选参数)  
 ```Python
 # 示例代码
 from qtmodel import *
 mdb.remove_tendon_group(name="钢束组1")
-mdb.remove_tendon_group(index=1)
 ```  
 Returns: 无
 ### add_tendon_property
 添加钢束特性
 > 参数:  
 > name:钢束特性名  
-> index:钢束编号,默认自动识别 (可选参数)  
 > tendon_type: 0-PRE 1-POST  
 > material_id: 钢材材料编号  
 > duct_type: 1-金属波纹管  2-塑料波纹管  3-铁皮管  4-钢管  5-抽芯成型  
@@ -1048,6 +1045,35 @@ from qtmodel import *
 mdb.add_tendon_3d("BB1",property_name="22-15",num=2,position_type=1,
 control_points=[(0,0,-1,0),(10,0,-1,0)],point_insert=(0,0,0))
 mdb.add_tendon_3d("BB1",property_name="22-15",num=2,position_type=2,
+control_points=[(0,0,-1,0),(10,0,-1,0)],point_insert=(1,1,1),track_group="轨迹线结构组1")
+```  
+Returns: 无
+### add_tendon_2d
+添加三维钢束
+> 参数:  
+> name:钢束名称  
+> property_name:钢束特性名称  
+> group_name:默认钢束组  
+> num:根数  
+> line_type:1-导线点  2-折线点  
+> position_type: 定位方式 1-直线  2-轨迹线  
+> symmetry: 对称点 0-左 1-右 2-无  
+> control_points: 控制点信息[(x1,y1,z1,r1),(x2,y2,z2,r2)....]  
+> control_points_lateral: 控制点横弯信息[(x1,y1,z1,r1),(x2,y2,z2,r2)....]，无横弯时不必输入
+> point_insert: 定位方式  
+> _直线: 插入点坐标[x,y,z]_  
+> _轨迹线:  [插入端(1-I 2-J),插入方向(1-ij 2-ji),插入单元id]_  
+> tendon_direction:直线钢束X方向向量  默认为[1,0,0] (轨迹线不用赋值)  
+> _x轴-[1,0,0] y轴-[0,1,0] z轴-[0,0,1]_  
+> rotation_angle:绕钢束旋转角度  
+> track_group:轨迹线结构组名  (直线时不用赋值)  
+> projection:直线钢束投影 (默认为true)  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.add_tendon_2d("BB1",property_name="22-15",num=2,position_type=1,
+control_points=[(0,0,-1,0),(10,0,-1,0)],point_insert=(0,0,0))
+mdb.add_tendon_2d("BB1",property_name="22-15",num=2,position_type=2,
 control_points=[(0,0,-1,0),(10,0,-1,0)],point_insert=(1,1,1),track_group="轨迹线结构组1")
 ```  
 Returns: 无
@@ -1593,10 +1619,12 @@ Returns: 无
 > 参数:  
 > name:沉降名  
 > case_type:荷载工况类型  
+> -"施工阶段荷载", "恒载", "活载", "制动力", "风荷载","体系温度荷载","梯度温度荷载",  
+> -"长轨伸缩挠曲力荷载", "脱轨荷载", "船舶撞击荷载","汽车撞击荷载","长轨断轨力荷载", "用户定义荷载"  
 ```Python
 # 示例代码
 from qtmodel import *
-mdb.add_load_case(name="工况1",case_type=1)
+mdb.add_load_case(name="工况1",case_type="施工阶段荷载")
 ```  
 Returns: 无
 ### remove_load_case
