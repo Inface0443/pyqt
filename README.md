@@ -1,6 +1,6 @@
 # 最新版本 V0.5.17 - 2024.09.18 
 > pip install --upgrade qtmodel -i https://pypi.org/simple
-- 修改创建荷载工况逻辑 
+- 修复钢束平面导入 
 ##  视图控制
 ### remove_display
 删除当前所有显示，包括边界荷载钢束等全部显示
@@ -1058,8 +1058,8 @@ Returns: 无
 > line_type:1-导线点  2-折线点  
 > position_type: 定位方式 1-直线  2-轨迹线  
 > symmetry: 对称点 0-左 1-右 2-无  
-> control_points: 控制点信息[(x1,y1,z1,r1),(x2,y2,z2,r2)....]  
-> control_points_lateral: 控制点横弯信息[(x1,y1,z1,r1),(x2,y2,z2,r2)....]，无横弯时不必输入
+> control_points: 控制点信息[(x1,z1,r1),(x2,z2,r2)....]  
+> control_points_lateral: 控制点横弯信息[(x1,y1,r1),(x2,y2,r2)....]，无横弯时不必输入  
 > point_insert: 定位方式  
 > _直线: 插入点坐标[x,y,z]_  
 > _轨迹线:  [插入端(1-I 2-J),插入方向(1-ij 2-ji),插入单元id]_  
@@ -1072,9 +1072,9 @@ Returns: 无
 # 示例代码
 from qtmodel import *
 mdb.add_tendon_2d("BB1",property_name="22-15",num=2,position_type=1,
-control_points=[(0,0,-1,0),(10,0,-1,0)],point_insert=(0,0,0))
+control_points=[(0,-1,0),(10,-1,0)],point_insert=(0,0,0))
 mdb.add_tendon_2d("BB1",property_name="22-15",num=2,position_type=2,
-control_points=[(0,0,-1,0),(10,0,-1,0)],point_insert=(1,1,1),track_group="轨迹线结构组1")
+control_points=[(0,-1,0),(10,-1,0)],point_insert=(1,1,1),track_group="轨迹线结构组1")
 ```  
 Returns: 无
 ### update_tendon_element
