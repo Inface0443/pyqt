@@ -1714,7 +1714,7 @@ class Mdb:
             qt_model.AddTendon3D(name=name, propertyName=property_name, groupName=group_name, num=num, lineType=line_type,
                                  positionType=position_type, controlPoints=control_points,
                                  pointInsert=point_insert, tendonDirection=tendon_direction,
-                                 rotationAngle=rotation_angle, trackGroup=track_group, isProjection=projection)
+                                 rotationAngle=rotation_angle, trackGroup=track_group, isProject=projection)
             qt_model.UpdateModel()
         except Exception as ex:
             raise Exception(ex)
@@ -1765,7 +1765,7 @@ class Mdb:
                                  positionType=position_type, symmetry=symmetry, controlPoints=control_points,
                                  controlPointsLateral=control_points_lateral,
                                  pointInsert=point_insert, tendonDirection=tendon_direction,
-                                 rotationAngle=rotation_angle, trackGroup=track_group, isProjection=projection)
+                                 rotationAngle=rotation_angle, trackGroup=track_group, isProject=projection)
             qt_model.UpdateModel()
         except Exception as ex:
             raise Exception(ex)
@@ -2021,8 +2021,8 @@ class Mdb:
 
     @staticmethod
     def add_beam_element_load(element_id: (Union[int, List[int]]) = 1, case_name: str = "", load_type: int = 1, coord_system: int = 3,
-                              is_abs=False, list_x: list[float, float] = None,
-                              list_load: list[float, float] = None, group_name="默认荷载组", load_bias: tuple[bool, int, int, float] = None,
+                              is_abs=False, list_x: (Union[float, List[float]]) = None, list_load: (Union[float, List[float]]) = None,
+                              group_name="默认荷载组", load_bias: tuple[bool, int, int, float] = None,
                               projected: bool = False):
         """
         添加梁单元荷载
@@ -2052,7 +2052,7 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def remove_beam_element_load(element_id:  (Union[int, List[int]]) = 1, case_name: str = "", load_type: int = 1):
+    def remove_beam_element_load(element_id: (Union[int, List[int]]) = 1, case_name: str = "", load_type: int = 1):
         """
         删除梁单元荷载
         Args:
@@ -2090,7 +2090,7 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def remove_initial_tension_load(case_name: str, element_id: (Union[int, List[int]])=1):
+    def remove_initial_tension_load(case_name: str, element_id: (Union[int, List[int]]) = 1):
         """
         删除初始拉力
         Args:
@@ -2144,7 +2144,7 @@ class Mdb:
     @staticmethod
     def add_plate_element_load(element_id: (Union[int, List[int]]) = 1, case_name: str = "", load_type: int = 1, load_place: int = 1,
                                coord_system: int = 3,
-                               group_name: str = "默认荷载组", load_list: list[float] = None, xy_list: tuple[float, float] = None):
+                               group_name: str = "默认荷载组", load_list: (Union[float, List[float]]) = None, xy_list: tuple[float, float] = None):
         """
         添加版单元荷载
         Args:
@@ -2164,10 +2164,12 @@ class Mdb:
         Returns: 无
         """
         try:
-            if load_type == 1 or load_type == 2:
+            if load_type == 2 or load_type == 4:
+                raise Exception("操作错误，板单元暂不支持弯矩荷载")
+            if load_type == 1:
                 qt_model.AddPlateElementLoad(elementId=element_id, caseName=case_name, loadType=load_type,
                                              coordSystem=coord_system, groupName=group_name, loads=load_list[0])
-            elif load_type == 3 or load_type == 4:
+            elif load_type == 3:
                 if load_place == 0:
                     load_type = load_type + 2
                 qt_model.AddPlateElementLoad(elementId=element_id, caseName=case_name, loadType=load_type, loadPosition=load_place,
@@ -2396,7 +2398,8 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def add_index_temperature(element_id: (Union[int, List[int]]) = 1, case_name: str = "", temperature: float = 0, index: float = 1, group_name: str = "默认荷载组"):
+    def add_index_temperature(element_id: (Union[int, List[int]]) = 1, case_name: str = "", temperature: float = 0, index: float = 1,
+                              group_name: str = "默认荷载组"):
         """
         添加指数温度
         Args:
