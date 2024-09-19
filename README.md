@@ -1,6 +1,6 @@
-# 最新版本 V0.5.17 - 2024.09.18 
+# 最新版本 V0.5.18 - 2024.09.20 
 > pip install --upgrade qtmodel -i https://pypi.org/simple
-- 修复钢束平面导入 
+- 扩展荷载接口参数 
 ##  视图控制
 ### remove_display
 删除当前所有显示，包括边界荷载钢束等全部显示
@@ -729,7 +729,7 @@ Returns: 无
 ### add_general_support
 添加一般支承
 > 参数:  
-> node_id(Union[int,List[int]]):节点编号,支持数或列表  
+> node_id:节点编号,支持数或列表  
 > boundary_info:边界信息  [X,Y,Z,Rx,Ry,Rz]  ture-固定 false-自由  
 > group_name:边界组名,默认为默认边界组  
 ```Python
@@ -741,7 +741,7 @@ Returns: 无
 ### add_elastic_support
 添加弹性支承
 > 参数:  
-> node_id(Union[int,List[int]]):节点编号,支持数或列表  
+> node_id:节点编号,支持数或列表  
 > support_type:支承类型 1-线性  2-受拉  3-受压  
 > boundary_info:边界信息 受拉和受压时列表长度为2-[direct(1-X 2-Y 3-Z),stiffness]  线性时列表长度为6-[kx,ky,kz,krx,kry,krz]  
 > group_name:边界组  
@@ -1125,21 +1125,19 @@ mdb.add_load_group(name="荷载组1")
 ```  
 Returns: 无
 ### remove_load_group
-根据荷载组名称或荷载组id删除荷载组,参数为默认时删除所有荷载组
+根据荷载组名称删除荷载组,参数为默认时删除所有荷载组
 > 参数:  
 > name: 荷载组名称  
-> index: 荷载组编号  
 ```Python
 # 示例代码
 from qtmodel import *
 mdb.remove_load_group(name="荷载组1")
-mdb.remove_load_group(index=1)
 ```  
 Returns: 无
 ### add_nodal_mass
 添加节点质量
 > 参数:  
-> node_id:节点编号  
+> node_id:节点编号，支持单个编号和编号列表  
 > mass_info:[m,rmX,rmY,rmZ]  
 ```Python
 # 示例代码
@@ -1223,7 +1221,7 @@ Returns: 无
 ### remove_nodal_displacement
 删除节点位移
 > 参数:  
-> node_id:节点编号  
+> node_id:节点编号,支持数或列表  
 > case_name:荷载工况名  
 ```Python
 # 示例代码
@@ -1234,7 +1232,7 @@ Returns: 无
 ### add_beam_element_load
 添加梁单元荷载
 > 参数:  
-> beam_id(Union[int,List[int]]):单元编号,支持数或列表  
+> element_id:单元编号,支持数或列表  
 > case_name:荷载工况名  
 > load_type:荷载类型  
 > _ 1-集中力 2-集中弯矩 3-分布力 4-分布弯矩  
@@ -1249,14 +1247,14 @@ Returns: 无
 ```Python
 # 示例代码
 from qtmodel import *
-mdb.add_beam_element_load(case_name="荷载工况1",beam_id=1,load_type=1,list_x=[0.1,0.5,0.8],list_load=[100,100,100])
-mdb.add_beam_element_load(case_name="荷载工况1",beam_id=1,load_type=3,list_x=[0.4,0.8],list_load=[100,200])
+mdb.add_beam_element_load(case_name="荷载工况1",element_id=1,load_type=1,list_x=[0.1,0.5,0.8],list_load=[100,100,100])
+mdb.add_beam_element_load(case_name="荷载工况1",element_id=1,load_type=3,list_x=[0.4,0.8],list_load=[100,200])
 ```  
 Returns: 无
 ### remove_beam_element_load
 删除梁单元荷载
 > 参数:  
-> element_id:单元号  
+> element_id:单元号支持数或列表  
 > case_name:荷载工况名  
 > load_type:荷载类型  
 > _1-集中力   2-集中弯矩  3-分布力   4-分布弯矩_  
@@ -1269,7 +1267,7 @@ Returns: 无
 ### add_initial_tension_load
 添加初始拉力
 > 参数:  
-> element_id(Union[int,List[int]]):单元编号支持数或列表  
+> element_id:单元编号支持数或列表  
 > case_name:荷载工况名  
 > tension:初始拉力  
 > tension_type:张拉类型  0-增量 1-全量  
@@ -1283,7 +1281,7 @@ Returns: 无
 ### remove_initial_tension_load
 删除初始拉力
 > 参数:  
-> element_id(Union[int,List[int]]):单元编号支持数或列表  
+> element_id:单元编号支持数或列表  
 > case_name:荷载工况名  
 ```Python
 # 示例代码
@@ -1294,7 +1292,7 @@ Returns: 无
 ### add_cable_length_load
 添加索长张拉
 > 参数:  
-> element_id:单元类型  
+> element_id:单元编号支持数或列表  
 > case_name:荷载工况名  
 > length:长度  
 > tension_type:张拉类型  0-增量 1-全量  
@@ -1308,7 +1306,7 @@ Returns: 无
 ### remove_cable_length_load
 删除索长张拉
 > 参数:  
-> element_id:单元号  
+> element_id:单元号支持数或列表  
 > case_name:荷载工况名  
 ```Python
 # 示例代码
@@ -1319,7 +1317,7 @@ Returns: 无
 ### add_plate_element_load
 添加版单元荷载
 > 参数:  
-> element_id:单元id  
+> element_id:单元编号支持数或列表  
 > case_name:荷载工况名  
 > load_type:荷载类型  
 > _1-集中力  2-集中弯矩  3-分布力  4-分布弯矩_  
@@ -1339,7 +1337,7 @@ Returns: 无
 ### remove_plate_element_load
 删除指定荷载工况下指定单元的板单元荷载
 > 参数:  
-> element_id:单元号  
+> element_id:单元编号支持数或列表  
 > case_name:荷载工况名  
 > load_type: 板单元类型 1集中力   2-集中弯矩  3-分布线力  4-分布线弯矩  5-分布面力  6-分布面弯矩  
 ```Python
@@ -1377,7 +1375,7 @@ Returns: 无
 ### add_deviation_load
 添加制造误差荷载
 > 参数:  
-> element_id:单元编号  
+> element_id:单元编号支持数或列表  
 > case_name:荷载工况名  
 > parameters:参数名列表  
 > _梁杆单元时-[制造误差参数名称]_  
@@ -1394,7 +1392,7 @@ Returns: 无
 删除指定制造偏差荷载
 > 参数:  
 > case_name:荷载工况名  
-> element_id:单元编号  
+> element_id:单元编号支持数或列表  
 ```Python
 # 示例代码
 from qtmodel import *
@@ -1404,7 +1402,7 @@ Returns: 无
 ### add_element_temperature
 添加单元温度
 > 参数:  
-> element_id:单元编号  
+> element_id:单元编号支持数或列表  
 > case_name:荷载工况名  
 > temperature:最终温度  
 > group_name:荷载组名  
@@ -1450,7 +1448,7 @@ Returns: 无
 ### add_beam_section_temperature
 添加梁截面温度
 > 参数:  
-> element_id:单元编号  
+> element_id:单元编号支持数或列表  
 > case_name:荷载工况名  
 > code_index:规范编号  1-公路规范2015  2-AASHTO2017  
 > paving_thick:铺设厚度(m)  
