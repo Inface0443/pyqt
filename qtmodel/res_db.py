@@ -268,8 +268,9 @@ class ShellElementStress:
     板架单元应力
     """
 
-    def __init__(self, frame_id: int, stress_i_top: list[float], stress_j_top: list[float], stress_k_top: list[float], stress_l_top: list[float]
-                 , stress_i_bot: list[float], stress_j_bot: list[float], stress_k_bot: list[float], stress_l_bot: list[float]):
+    def __init__(self, frame_id: int, stress_i_top: list[float], stress_j_top: list[float],
+                 stress_k_top: list[float], stress_l_top: list[float], stress_i_bot: list[float],
+                 stress_j_bot: list[float], stress_k_bot: list[float], stress_l_bot: list[float]):
         """
         单元内力构造器
         Args:
