@@ -1,47 +1,6 @@
-# 最新版本 V0.5.18 - 2024.09.20 
+# 最新版本 V0.5.19 - 2024.09.27 
 > pip install --upgrade qtmodel -i https://pypi.org/simple
-- 扩展荷载接口参数 
-##  视图控制
-### remove_display
-删除当前所有显示，包括边界荷载钢束等全部显示
-> 参数:  
-```Python
-# 示例代码
-from qtmodel import *
-mdb.remove_display()
-```  
-Returns: 无
-### save_png
-保存当前模型窗口图形信息
-> 参数:  
-> file_path: 文件全路径  
-```Python
-# 示例代码
-from qtmodel import *
-mdb.save_png(r"D:\\QT\\aa.png")
-```  
-Returns: 无
-### set_render
-消隐设置开关
-> 参数:  
-> flag: 默认设置打开消隐  
-```Python
-# 示例代码
-from qtmodel import *
-mdb.set_render(True)
-```  
-Returns: 无
-### change_construct_stage
-消隐设置开关
-> 参数:  
-> stage: 施工阶段名称或施工阶段号  0-基本  
-```Python
-# 示例代码
-from qtmodel import *
-mdb.change_construct_stage(0)
-mdb.change_construct_stage("基本")
-```  
-Returns: 无
+- 修改荷载部分调用 
 ##  项目管理
 ### update_bim
 刷新Bim模型信息
@@ -832,21 +791,17 @@ Returns: 无
 > 参数:  
 > name: 车辆荷载名称  
 > standard_code: 荷载规范  
-> _1-中国铁路桥涵规范(Q/CR 9300-2017)_  
+> _1-中国铁路桥涵规范(TB10002-2017)_  
 > _2-城市桥梁设计规范(CJJ11-2019)_  
 > _3-公路工程技术标准(JTJ 001-97)_  
 > _4-公路桥涵设计通规(JTG D60-2004)_  
 > _5-公路桥涵设计通规(JTG D60-2015)_  
-> _6-城市轨道交通桥梁规范(GB/T51234-2017)_  
-> load_type: 荷载类型,支持类型如下  
-> _"公路I级","公路II级","城A车道","城B车道"_  
-> _"地铁A型车","地铁B型车","地铁C型车","汽10"_  
-> _"汽15","汽20","汽超20","特载","挂80"_  
-> _"挂100","挂120","公路疲劳荷载1","公路疲劳荷载2"_  
-> _"公路疲劳荷载3","汽36轻", "汽38重","高速铁路"_  
-> _"城际铁路","客货共线铁路","重载铁路","中活载","长大货物车检算荷载"_  
+> _6-城市轨道交通桥梁设计规范(GB/T51234-2017)_  
+> _7-市域铁路设计规范2017(T/CRS C0101-2017)  
+> load_type: 荷载类型,支持类型参考软件内界面  
 > load_length: 默认为0即不限制荷载长度  (铁路桥涵规范2017 所需参数)  
 > n:车厢数: 默认6节车厢 (城市轨道交通桥梁规范2017 所需参数)  
+> calc_fatigue:计算公路疲劳 (公路桥涵设计通规2015 所需参数)  
 ```Python
 # 示例代码
 from qtmodel import *
@@ -921,12 +876,10 @@ Returns: 无
 ### remove_vehicle
 删除车辆信息
 > 参数:  
-> index:车辆荷载编号  
 > name:车辆名称  
 ```Python
 # 示例代码
 from qtmodel import *
-mdb.remove_vehicle(index=1)
 mdb.remove_vehicle(name="车辆名称")
 ```  
 Returns: 无
@@ -1134,6 +1087,17 @@ from qtmodel import *
 mdb.remove_load_group(name="荷载组1")
 ```  
 Returns: 无
+### add_load_to_mass
+添加荷载转为质量
+> 参数:  
+> name: 荷载工况名称  
+> factor: 系数  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.add_load_to_mass(name="荷载工况",factor=1)
+```  
+Returns: 无
 ### add_nodal_mass
 添加节点质量
 > 参数:  
@@ -1153,6 +1117,16 @@ Returns: 无
 # 示例代码
 from qtmodel import *
 mdb.remove_nodal_mass(node_id=1)
+```  
+Returns: 无
+### remove_load_to_mass
+删除荷载转为质量
+> 参数:  
+> name:荷载工况名  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.remove_load_to_mass(name="荷载工况")
 ```  
 Returns: 无
 ### add_pre_stress
@@ -1378,13 +1352,13 @@ Returns: 无
 > element_id:单元编号支持数或列表  
 > case_name:荷载工况名  
 > parameters:参数名列表  
-> _梁杆单元时-[制造误差参数名称]_  
+> _梁杆单元时-制造误差参数名称  
 > _板单元时-[I端误差名,J端误差名,K端误差名,L端误差名]_  
 > group_name:荷载组名  
 ```Python
 # 示例代码
 from qtmodel import *
-mdb.add_deviation_load(element_id=1,case_name="工况1",parameters=["梁端误差"])
+mdb.add_deviation_load(element_id=1,case_name="工况1",parameters="梁端误差")
 mdb.add_deviation_load(element_id=2,case_name="工况1",parameters=["板端误差1","板端误差2","板端误差3","板端误差4"])
 ```  
 Returns: 无
@@ -1508,7 +1482,7 @@ Returns: 无
 > 参数:  
 > element_id:单元编号  
 > case_name:荷载  
-> temperature:最终温度  
+> temperature:温差，最终温度于初始温度之差  
 > group_name:荷载组名  
 ```Python
 # 示例代码
@@ -1646,17 +1620,17 @@ Returns: 无
 > duration:时长  
 > active_structures:激活结构组信息 [(结构组名,龄期,安装方法,计自重施工阶段id),...]  
 > _计自重施工阶段id: 0-不计自重,1-本阶段 n-第n阶段)_  
-> _安装方法：1-变形法 2-接线法 3-无应力法_  
+> _安装方法：1-变形法 2-无应力法 3-接线法 4-切线法  
 > delete_structures:钝化结构组信息 [结构组1，结构组2,...]  
 > active_boundaries:激活边界组信息 [(边界组1，位置),...]  
 > _位置:  0-变形前 1-变形后_  
-> delete_boundaries:钝化边界组信息 [边界组1，结构组2,...]  
+> delete_boundaries:钝化边界组信息 [边界组1，边界组2,...]  
 > active_loads:激活荷载组信息 [(荷载组1,时间),...]  
 > _时间: 0-开始 1-结束_  
 > delete_loads:钝化荷载组信息 [(荷载组1,时间),...]  
 > _时间: 0-开始 1-结束_  
 > temp_loads:临时荷载信息 [荷载组1，荷载组2,..]  
-> index:施工阶段编号，默认自动添加  
+> index:施工阶段插入位置,从0开始,默认添加到最后  
 ```Python
 # 示例代码
 from qtmodel import *
@@ -1750,6 +1724,69 @@ Returns: 无
 # 示例代码
 from qtmodel import *
 mdb.remove_load_combine(name="荷载组合1")
+```  
+Returns: 无
+##  视图控制
+### activate_structure
+激活指定阶段和单元，默认激活所有
+> 参数:  
+> node_ids: 节点集合  
+> element_ids: 单元集合  
+```Python
+# 示例代码
+from qtmodel import *
+odb.activate_structure([1,2,3],[1,2,3])
+```  
+Returns: 无
+### set_unit
+修改视图显示时单位制，不影响建模
+> 参数:  
+> unit_force: 支持 N KN TONF KIPS LBF  
+> unit_length: 支持 M MM CM IN FT  
+```Python
+# 示例代码
+from qtmodel import *
+odb.set_unit("N","M")
+```  
+Returns: 无
+### remove_display
+删除当前所有显示，包括边界荷载钢束等全部显示
+> 参数:  
+```Python
+# 示例代码
+from qtmodel import *
+odb.remove_display()
+```  
+Returns: 无
+### save_png
+保存当前模型窗口图形信息
+> 参数:  
+> file_path: 文件全路径  
+```Python
+# 示例代码
+from qtmodel import *
+odb.save_png(r"D:\\QT\\aa.png")
+```  
+Returns: 无
+### set_render
+消隐设置开关
+> 参数:  
+> flag: 默认设置打开消隐  
+```Python
+# 示例代码
+from qtmodel import *
+odb.set_render(True)
+```  
+Returns: 无
+### change_construct_stage
+消隐设置开关
+> 参数:  
+> stage: 施工阶段名称或施工阶段号  0-基本  
+```Python
+# 示例代码
+from qtmodel import *
+odb.change_construct_stage(0)
+odb.change_construct_stage("基本")
 ```  
 Returns: 无
 ##  静力结果查看

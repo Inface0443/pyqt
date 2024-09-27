@@ -7,69 +7,6 @@ class Mdb:
     建模与模型修改计算，所有函数均无返回值
     """
 
-    # region 视图控制
-    @staticmethod
-    def remove_display():
-        """
-        删除当前所有显示，包括边界荷载钢束等全部显示
-        Args: 无
-        Example:
-           mdb.remove_display()
-        Returns: 无
-        """
-        try:
-            qt_model.DisplayReset()
-        except Exception as ex:
-            raise Exception(ex)
-
-    @staticmethod
-    def save_png(file_path: str):
-        """
-        保存当前模型窗口图形信息
-        Args:
-            file_path: 文件全路径
-        Example:
-           mdb.save_png(r"D:\\QT\\aa.png")
-        Returns: 无
-        """
-        try:
-            qt_model.SavePng(file_path)
-        except Exception as ex:
-            raise Exception(ex)
-
-    @staticmethod
-    def set_render(flag: bool = True):
-        """
-        消隐设置开关
-        Args:
-            flag: 默认设置打开消隐
-        Example:
-           mdb.set_render(True)
-        Returns: 无
-        """
-        try:
-            qt_model.SetRender(flag)
-        except Exception as ex:
-            raise Exception(ex)
-
-    @staticmethod
-    def change_construct_stage(stage):
-        """
-        消隐设置开关
-        Args:
-            stage: 施工阶段名称或施工阶段号  0-基本
-        Example:
-           mdb.change_construct_stage(0)
-           mdb.change_construct_stage("基本")
-        Returns: 无
-        """
-        try:
-            qt_model.ChangeConstructStage(stage)
-        except Exception as ex:
-            raise Exception(ex)
-
-    # endregion
-
     # region 项目管理
     @staticmethod
     def update_bim():
@@ -1359,33 +1296,43 @@ class Mdb:
 
     # region 移动荷载操作
     @staticmethod
-    def add_standard_vehicle(name: str, standard_code: int = 1, load_type: str = "高速铁路", load_length: float = 0, n: int = 6):
+    def add_standard_vehicle(name: str, standard_code: int = 1, load_type: str = "高速铁路",
+                             load_length: float = 0, n: int = 6, calc_fatigue: bool = False):
         """
         添加标准车辆
         Args:
              name: 车辆荷载名称
              standard_code: 荷载规范
-                _1-中国铁路桥涵规范(Q/CR 9300-2017)_
+                _1-中国铁路桥涵规范(TB10002-2017)_
                 _2-城市桥梁设计规范(CJJ11-2019)_
                 _3-公路工程技术标准(JTJ 001-97)_
                 _4-公路桥涵设计通规(JTG D60-2004)_
                 _5-公路桥涵设计通规(JTG D60-2015)_
-                _6-城市轨道交通桥梁规范(GB/T51234-2017)_
-             load_type: 荷载类型,支持类型如下
-                _"公路I级","公路II级","城A车道","城B车道"_
-                _"地铁A型车","地铁B型车","地铁C型车","汽10"_
-                _"汽15","汽20","汽超20","特载","挂80"_
-                _"挂100","挂120","公路疲劳荷载1","公路疲劳荷载2"_
-                _"公路疲劳荷载3","汽36轻", "汽38重","高速铁路"_
-                _"城际铁路","客货共线铁路","重载铁路","中活载","长大货物车检算荷载"_
+                _6-城市轨道交通桥梁设计规范(GB/T51234-2017)_
+                _7-市域铁路设计规范2017(T/CRS C0101-2017)
+             load_type: 荷载类型,支持类型参考软件内界面
              load_length: 默认为0即不限制荷载长度  (铁路桥涵规范2017 所需参数)
              n:车厢数: 默认6节车厢 (城市轨道交通桥梁规范2017 所需参数)
+             calc_fatigue:计算公路疲劳 (公路桥涵设计通规2015 所需参数)
         Example:
             mdb.add_standard_vehicle("高速铁路",standard_code=1,load_type="高速铁路")
         Returns: 无
         """
         try:
-            qt_model.AddStandardVehicle(name=name, standardIndex=standard_code, loadType=load_type, loadLength=load_length, N=n)
+            qt_model.AddStandardVehicle(name=name, standardIndex=standard_code, loadType=load_type,
+                                        loadLength=load_length, N=n, calcFatigue=calc_fatigue)
+            qt_model.UpdateModel()
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def add_user_vehicle(name: str, load_type: str = "车辆荷载", p: (Union[float, List[float]]) = 270000, q: float = 10500,
+                         dis: list[float] = None, load_length: float = 500, num: int = 6, empty_load: float = 90000,
+                         width: float = 1.5, wheelbase: float = 1.8, min_dis: float = 1.5, unit_force: str = "N", unit_length: str = "M"):
+        try:
+            qt_model.AddUserVehicle(name=name, loadType=load_type, p=p, q=q, dis=dis, loadLength=load_length,
+                                    num=num, emptyLoad=empty_load, width=width, wheelbase=wheelbase,
+                                    minDistance=min_dis, unitForce=unit_force, unitLength=unit_length)
             qt_model.UpdateModel()
         except Exception as ex:
             raise Exception(ex)
@@ -1495,22 +1442,17 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def remove_vehicle(index: int = -1, name: str = ""):
+    def remove_vehicle(name: str = ""):
         """
         删除车辆信息
         Args:
-             index:车辆荷载编号
              name:车辆名称
         Example:
-            mdb.remove_vehicle(index=1)
             mdb.remove_vehicle(name="车辆名称")
         Returns: 无
         """
         try:
-            if id != -1:
-                qt_model.RemoveVehicle(id=index)
-            elif name != "":
-                qt_model.RemoveVehicle(name=name)
+            qt_model.RemoveVehicle(name=name)
             qt_model.UpdateModel()
         except Exception as ex:
             raise Exception(ex)
@@ -1873,6 +1815,23 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
+    def add_load_to_mass(name: str, factor: float = 1):
+        """
+        添加荷载转为质量
+        Args:
+            name: 荷载工况名称
+            factor: 系数
+        Example:
+            mdb.add_load_to_mass(name="荷载工况",factor=1)
+        Returns: 无
+        """
+        try:
+            qt_model.AddLoadToMass(name=name, factor=factor)
+            qt_model.UpdateModel()
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
     def add_nodal_mass(node_id: (Union[int, List[int]]) = 1, mass_info: tuple[float, float, float, float] = None):
         """
         添加节点质量
@@ -1906,6 +1865,21 @@ class Mdb:
                 qt_model.RemoveAllNodalMass()
             else:
                 qt_model.RemoveNodalMass(nodeId=node_id)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def remove_load_to_mass(name: str):
+        """
+        删除荷载转为质量
+        Args:
+             name:荷载工况名
+        Example:
+            mdb.remove_load_to_mass(name="荷载工况")
+        Returns: 无
+        """
+        try:
+            qt_model.RemoveLoadToMass(name=name)
         except Exception as ex:
             raise Exception(ex)
 
@@ -2168,12 +2142,12 @@ class Mdb:
                 raise Exception("操作错误，板单元暂不支持弯矩荷载")
             if load_type == 1:
                 qt_model.AddPlateElementLoad(elementId=element_id, caseName=case_name, loadType=load_type,
-                                             coordSystem=coord_system, groupName=group_name, loads=load_list[0])
+                                             coordSystem=coord_system, groupName=group_name, loads=load_list)
             elif load_type == 3:
                 if load_place == 0:
                     load_type = load_type + 2
                 qt_model.AddPlateElementLoad(elementId=element_id, caseName=case_name, loadType=load_type, loadPosition=load_place,
-                                             distanceList=xy_list, coordSystem=coord_system, groupName=group_name, loads=load_list[0])
+                                             distanceList=xy_list, coordSystem=coord_system, groupName=group_name, loads=load)
         except Exception as ex:
             raise Exception(ex)
 
@@ -2236,18 +2210,19 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def add_deviation_load(element_id: (Union[int, List[int]]) = 1, case_name: str = "", parameters: list[str] = None, group_name: str = "默认荷载组"):
+    def add_deviation_load(element_id: (Union[int, List[int]]) = 1, case_name: str = "",
+                           parameters: (Union[str, List[str]]) = None, group_name: str = "默认荷载组"):
         """
         添加制造误差荷载
         Args:
             element_id:单元编号支持数或列表
             case_name:荷载工况名
             parameters:参数名列表
-                _梁杆单元时-[制造误差参数名称]_
+                _梁杆单元时-制造误差参数名称
                 _板单元时-[I端误差名,J端误差名,K端误差名,L端误差名]_
             group_name:荷载组名
         Example:
-            mdb.add_deviation_load(element_id=1,case_name="工况1",parameters=["梁端误差"])
+            mdb.add_deviation_load(element_id=1,case_name="工况1",parameters="梁端误差")
             mdb.add_deviation_load(element_id=2,case_name="工况1",parameters=["板端误差1","板端误差2","板端误差3","板端误差4"])
         Returns: 无
         """
@@ -2314,14 +2289,14 @@ class Mdb:
                                  element_type: int = 1, group_name: str = "默认荷载组"):
         """
         添加梯度温度
-             element_id:单元编号支持数或列表
-             case_name:荷载工况名
-             temperature:温差
-             section_oriental:截面方向 (仅梁单元需要)
-                _1-截面Y向(默认)  2-截面Z向_
-             element_type:单元类型
-                _1-梁单元(默认)  2-板单元_
-             group_name:荷载组名
+            element_id:单元编号支持数或列表
+            case_name:荷载工况名
+            temperature:温差
+            section_oriental:截面方向 (仅梁单元需要)
+            _1-截面Y向(默认)  2-截面Z向_
+            element_type:单元类型
+            _1-梁单元(默认)  2-板单元_
+            group_name:荷载组名
         Example:
             mdb.add_gradient_temperature(element_id=1,case_name="荷载工况1",group_name="荷载组名1",temperature=10)
             mdb.add_gradient_temperature(element_id=2,case_name="荷载工况2",group_name="荷载组名2",temperature=10,element_type=2)
@@ -2364,7 +2339,7 @@ class Mdb:
             paving_thick:铺设厚度(m)
             temperature_type:温度类型  1-升温(默认) 2-降温
             paving_type:铺设类型
-                _1-沥青混凝土(默认)  2-水泥混凝土_
+            _1-沥青混凝土(默认)  2-水泥混凝土_
             zone_index: 区域号 (仅规范二需要)
             group_name:荷载组名
             modify:是否修改规范温度
@@ -2441,7 +2416,7 @@ class Mdb:
         Args:
              element_id:单元编号
              case_name:荷载
-             temperature:最终温度
+             temperature:温差，最终温度于初始温度之差
              group_name:荷载组名
         Example:
             mdb.add_top_plate_temperature(element_id=1,case_name="工况1",temperature=40,group_name="默认荷载组")
@@ -2677,17 +2652,17 @@ class Mdb:
            duration:时长
            active_structures:激活结构组信息 [(结构组名,龄期,安装方法,计自重施工阶段id),...]
                                _计自重施工阶段id: 0-不计自重,1-本阶段 n-第n阶段)_
-                               _安装方法：1-变形法 2-接线法 3-无应力法_
+                               _安装方法：1-变形法 2-无应力法 3-接线法 4-切线法
            delete_structures:钝化结构组信息 [结构组1，结构组2,...]
            active_boundaries:激活边界组信息 [(边界组1，位置),...]
                                _位置:  0-变形前 1-变形后_
-           delete_boundaries:钝化边界组信息 [边界组1，结构组2,...]
+           delete_boundaries:钝化边界组信息 [边界组1，边界组2,...]
            active_loads:激活荷载组信息 [(荷载组1,时间),...]
                                _时间: 0-开始 1-结束_
            delete_loads:钝化荷载组信息 [(荷载组1,时间),...]
                                _时间: 0-开始 1-结束_
            temp_loads:临时荷载信息 [荷载组1，荷载组2,..]
-           index:施工阶段编号，默认自动添加
+           index:施工阶段插入位置,从0开始,默认添加到最后
         Example:
            mdb.add_construction_stage(name="施工阶段1",duration=5,active_structures=[("结构组1",5,1,1),("结构组2",5,1,1)],
                 active_boundaries=[("默认边界组",1)],active_loads=[("默认荷载组1",0)])

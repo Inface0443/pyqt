@@ -8,6 +8,103 @@ class Odb:
     获取模型计算结果和模型信息
     """
 
+    # region 视图控制
+    @staticmethod
+    def activate_structure(node_ids: list[int] = None, element_ids: list[int] = None):
+        """
+        激活指定阶段和单元，默认激活所有
+        Args:
+            node_ids: 节点集合
+            element_ids: 单元集合
+        Example:
+           odb.activate_structure([1,2,3],[1,2,3])
+        Returns: 无
+        """
+        try:
+            qt_model.activate_structure(nodeIds=node_ids, elementIds=element_ids)
+            qt_model.UpdateModel()
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def set_unit(unit_force: str = "KN", unit_length: str = "MM"):
+        """
+        修改视图显示时单位制，不影响建模
+        Args:
+            unit_force: 支持 N KN TONF KIPS LBF
+            unit_length: 支持 M MM CM IN FT
+        Example:
+           odb.set_unit("N","M")
+        Returns: 无
+        """
+        try:
+            qt_model.SetUnit(unitForce=unit_force, unit_length=unit_length)
+            qt_model.UpdateModel()
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def remove_display():
+        """
+        删除当前所有显示，包括边界荷载钢束等全部显示
+        Args: 无
+        Example:
+           odb.remove_display()
+        Returns: 无
+        """
+        try:
+            qt_model.DisplayReset()
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def save_png(file_path: str):
+        """
+        保存当前模型窗口图形信息
+        Args:
+            file_path: 文件全路径
+        Example:
+           odb.save_png(r"D:\\QT\\aa.png")
+        Returns: 无
+        """
+        try:
+            qt_model.SavePng(file_path)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def set_render(flag: bool = True):
+        """
+        消隐设置开关
+        Args:
+            flag: 默认设置打开消隐
+        Example:
+           odb.set_render(True)
+        Returns: 无
+        """
+        try:
+            qt_model.SetRender(flag)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def change_construct_stage(stage):
+        """
+        消隐设置开关
+        Args:
+            stage: 施工阶段名称或施工阶段号  0-基本
+        Example:
+           odb.change_construct_stage(0)
+           odb.change_construct_stage("基本")
+        Returns: 无
+        """
+        try:
+            qt_model.ChangeConstructStage(stage)
+        except Exception as ex:
+            raise Exception(ex)
+
+    # endregion
+
     # region 静力结果查看
     @staticmethod
     def get_element_stress(element_id, stage_id: int = 1, result_kind: int = 1, increment_type: int = 1, case_name=""):
@@ -842,7 +939,7 @@ class Odb:
             creep_id = -1 if item.IsCalShrinkCreep is False else item.ConcreteTimeDependency.Id
             res_list.append(str(Material(mat_id=item.Id, name=item.Name, mat_type="自定义", standard="null", database="null",
                                          data_info=[item.ElasticModulus, item.UnitWeight, item.PosiRatio, item.TemperatureCoefficient],
-                                         construct_factor=item.ConstructionCoefficient,creep_id=creep_id, f_cuk=item.Fcuk)))
+                                         construct_factor=item.ConstructionCoefficient, creep_id=creep_id, f_cuk=item.Fcuk)))
         return res_list
 
     # endregion
