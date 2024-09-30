@@ -1327,11 +1327,32 @@ class Mdb:
 
     @staticmethod
     def add_user_vehicle(name: str, load_type: str = "车辆荷载", p: (Union[float, List[float]]) = 270000, q: float = 10500,
-                         dis: list[float] = None, load_length: float = 500, num: int = 6, empty_load: float = 90000,
-                         width: float = 1.5, wheelbase: float = 1.8, min_dis: float = 1.5, unit_force: str = "N", unit_length: str = "M"):
+                         dis: list[float] = None, load_length: float = 500, n: int = 6, empty_load: float = 90000,
+                         width: float = 1.5, wheelbase: float = 1.8, min_dis: float = 1.5,
+                         unit_force: str = "N", unit_length: str = "M"):
+        """
+            添加标准车辆
+        Args:
+             name: 车辆荷载名称
+             load_type: 荷载类型,支持类型 -车辆/车道荷载 列车普通活载 城市轻轨活载 旧公路人群荷载 轮重集合
+             p: 荷载Pk或Pi列表
+             q: 均布荷载Qk或荷载集度dW
+             dis:荷载距离Li列表
+             load_length: 荷载长度  (列车普通活载 所需参数)
+             n:车厢数: 默认6节车厢 (列车普通活载 所需参数)
+             empty_load:空载 (列车普通活载、城市轻轨活载 所需参数)
+             width:宽度 (旧公路人群荷载 所需参数)
+             wheelbase:轮间距 (轮重集合 所需参数)
+             min_dis:车轮距影响面最小距离 (轮重集合 所需参数))
+             unit_force:荷载单位 默认为"N"
+             unit_length:长度单位 默认为"M"
+        Example:
+            mdb.add_user_vehicle("车道荷载",load_type=车道荷载,p=270000,q=10500)
+        Returns: 无
+        """
         try:
             qt_model.AddUserVehicle(name=name, loadType=load_type, p=p, q=q, dis=dis, loadLength=load_length,
-                                    num=num, emptyLoad=empty_load, width=width, wheelbase=wheelbase,
+                                    num=n, emptyLoad=empty_load, width=width, wheelbase=wheelbase,
                                     minDistance=min_dis, unitForce=unit_force, unitLength=unit_length)
             qt_model.UpdateModel()
         except Exception as ex:
@@ -1435,8 +1456,62 @@ class Mdb:
         """
         try:
             qt_model.AddCarRelativeFactor(name=name, codeIndex=code_index, crossFactors=cross_factors,
-                                          longitudeCoefficient=longitude_factor,
-                                          impactCoefficient=impact_factor, frequency=frequency)
+                                          longitudeFactor=longitude_factor,
+                                          impactFactor=impact_factor, frequency=frequency)
+            qt_model.UpdateModel()
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def add_train_relative_factor(name: str, code_index: int = 1, cross_factors: list[float] = None, calc_fatigue: bool = False,
+                                  line_count: int = 0, longitude_factor: int = -1, fatigue_factor: int = -1,
+                                  impact_factor: int = -1, bridge_kind: int = 0, fill_thick: float = 0.5,
+                                  rise: float = 1.5, calc_length: float = 50):
+        """
+        添加移动荷载工况汽车折减
+        Args:
+            name:活载工况名
+            code_index: 汽车折减规范编号  1-铁规2017_ZK_ZC 2-铁规2017_ZKH_ZH 3-无
+            cross_factors:横向折减系数列表,自定义时要求长度为8,否则按照规范选取
+            calc_fatigue:是否计算疲劳
+            line_count: 疲劳加载线路数
+            longitude_factor:纵向折减系数，大于0时为自定义，否则为规范自动选取
+            fatigue_factor:疲劳系数
+            impact_factor:强度冲击系数大于1时为自定义，否则按照规范自动选取
+            bridge_kind:桥梁类型 0-无 1-简支 2-结合 3-涵洞 4-空腹式
+            fill_thick:填土厚度 (规ZKH ZH钢筋/素混凝土、石砌桥跨结构以及涵洞所需参数)
+            rise:拱高 (规ZKH ZH活载-空腹式拱桥所需参数)
+            calc_length:计算跨度(铁规ZKH ZH活载-空腹式拱桥所需参数)或计算长度(铁规ZK ZC活载所需参数)
+        Example:
+            mdb.add_train_relative_factor("活载工况1",code_index=1,cross_factors=[1.2,1,0.78,0.67,0.6,0.55,0.52,0.5],calc_length=50)
+        Returns: 无
+        """
+        try:
+            qt_model.AddTrainRelativeFactor(name=name, codeIndex=code_index, crossFactors=cross_factors, calculateFatigue=calc_fatigue,
+                                            longitudeFactor=longitude_factor, fatigueLineCount=line_count, fatigueFactor=fatigue_factor,
+                                            impactFactor=impact_factor, bridgeKind=bridge_kind, fillThick=fill_thick, rise=rise, lambDa=calc_length)
+            qt_model.UpdateModel()
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def add_metro_relative_factor(name: str, cross_factors: list[float] = None, longitude_factor: int = -1, impact_factor: int = -1):
+        """
+        添加移动荷载工况汽车折减
+        Args:
+             name:活载工况名
+             cross_factors:横向折减系数列表,自定义时要求长度为8,否则按照规范选取
+             longitude_factor:纵向折减系数，大于0时为自定义，否则为规范自动选取
+             impact_factor:强度冲击系数大于1时为自定义，否则按照规范自动选取
+        Example:
+            mdb.add_metro_relative_factor("活载工况1",cross_factors=[1.2,1,0.78,0.67,0.6,0.55,0.52,0.5],
+                longitude_factor=1,impact_factor=1)
+        Returns: 无
+        """
+        try:
+            qt_model.AddMetroRelativeFactor(name=name, crossFactors=cross_factors,
+                                            longitudeFactor=longitude_factor,
+                                            impactFactor=impact_factor)
             qt_model.UpdateModel()
         except Exception as ex:
             raise Exception(ex)
@@ -2116,9 +2191,10 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def add_plate_element_load(element_id: (Union[int, List[int]]) = 1, case_name: str = "", load_type: int = 1, load_place: int = 1,
-                               coord_system: int = 3,
-                               group_name: str = "默认荷载组", load_list: (Union[float, List[float]]) = None, xy_list: tuple[float, float] = None):
+    def add_plate_element_load(element_id: (Union[int, List[int]]) = 1, case_name: str = "",
+                               load_type: int = 1, load_place: int = 1, coord_system: int = 3,
+                               group_name: str = "默认荷载组", load_list: (Union[float, List[float]]) = None,
+                               xy_list: tuple[float, float] = None):
         """
         添加版单元荷载
         Args:
@@ -2147,7 +2223,7 @@ class Mdb:
                 if load_place == 0:
                     load_type = load_type + 2
                 qt_model.AddPlateElementLoad(elementId=element_id, caseName=case_name, loadType=load_type, loadPosition=load_place,
-                                             distanceList=xy_list, coordSystem=coord_system, groupName=group_name, loads=load)
+                                             distanceList=xy_list, coordSystem=coord_system, groupName=group_name, loads=load_list)
         except Exception as ex:
             raise Exception(ex)
 
