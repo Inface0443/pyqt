@@ -1,4 +1,4 @@
-# 最新版本 V0.5.19 - 2024.09.27 
+# 最新版本 V0.5.19 - 2024.09.30 
 > pip install --upgrade qtmodel -i https://pypi.org/simple
 - 修改荷载部分调用 
 ##  项目管理
@@ -808,6 +808,28 @@ from qtmodel import *
 mdb.add_standard_vehicle("高速铁路",standard_code=1,load_type="高速铁路")
 ```  
 Returns: 无
+### add_user_vehicle
+添加标准车辆
+> 参数:  
+> name: 车辆荷载名称  
+> load_type: 荷载类型,支持类型 -车辆/车道荷载 列车普通活载 城市轻轨活载 旧公路人群荷载 轮重集合  
+> p: 荷载Pk或Pi列表  
+> q: 均布荷载Qk或荷载集度dW  
+> dis:荷载距离Li列表  
+> load_length: 荷载长度  (列车普通活载 所需参数)  
+> n:车厢数: 默认6节车厢 (列车普通活载 所需参数)  
+> empty_load:空载 (列车普通活载、城市轻轨活载 所需参数)  
+> width:宽度 (旧公路人群荷载 所需参数)  
+> wheelbase:轮间距 (轮重集合 所需参数)  
+> min_dis:车轮距影响面最小距离 (轮重集合 所需参数))  
+> unit_force:荷载单位 默认为"N"  
+> unit_length:长度单位 默认为"M"  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.add_user_vehicle(name="车道荷载",load_type="车道荷载",p=270000,q=10500)
+```  
+Returns: 无
 ### add_node_tandem
 添加节点纵列
 > 参数:  
@@ -817,7 +839,7 @@ Returns: 无
 ```Python
 # 示例代码
 from qtmodel import *
-mdb.add_node_tandem("节点纵列1",1,[i+1 for i in range(12)])
+mdb.add_node_tandem(name="节点纵列1",start_id=1,node_ids=[i+1 for i in range(12)])
 ```  
 Returns: 无
 ### add_influence_plane
@@ -852,6 +874,8 @@ Returns: 无
 > influence_plane:影响线名  
 > span:跨度  
 > sub_case:子工况信息 [(车辆名称,系数,["车道1","车道2"])...]  
+> trailer_code:考虑挂车时挂车车辆名  
+> special_code:考虑特载时特载车辆名  
 ```Python
 # 示例代码
 from qtmodel import *
@@ -871,6 +895,41 @@ Returns: 无
 # 示例代码
 from qtmodel import *
 mdb.add_car_relative_factor("活载工况1",1,[1.2,1,0.78,0.67,0.6,0.55,0.52,0.5])
+```  
+Returns: 无
+### add_train_relative_factor
+添加移动荷载工况汽车折减
+> 参数:  
+> name:活载工况名  
+> code_index: 汽车折减规范编号  1-铁规2017_ZK_ZC 2-铁规2017_ZKH_ZH 3-无  
+> cross_factors:横向折减系数列表,自定义时要求长度为8,否则按照规范选取  
+> calc_fatigue:是否计算疲劳  
+> line_count: 疲劳加载线路数  
+> longitude_factor:纵向折减系数，大于0时为自定义，否则为规范自动选取  
+> impact_factor:强度冲击系数大于1时为自定义，否则按照规范自动选取  
+> fatigue_factor:疲劳系数  
+> bridge_kind:桥梁类型 0-无 1-简支 2-结合 3-涵洞 4-空腹式  
+> fill_thick:填土厚度 (规ZKH ZH钢筋/素混凝土、石砌桥跨结构以及涵洞所需参数)  
+> rise:拱高 (规ZKH ZH活载-空腹式拱桥所需参数)  
+> calc_length:计算跨度(铁规ZKH ZH活载-空腹式拱桥所需参数)或计算长度(铁规ZK ZC活载所需参数)  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.add_train_relative_factor("活载工况1",code_index=1,cross_factors=[1.2,1,0.78,0.67,0.6,0.55,0.52,0.5],calc_length=50)
+```  
+Returns: 无
+### add_metro_relative_factor
+添加移动荷载工况汽车折减
+> 参数:  
+> name:活载工况名  
+> cross_factors:横向折减系数列表,自定义时要求长度为8,否则按照规范选取  
+> longitude_factor:纵向折减系数，大于0时为自定义，否则为规范自动选取  
+> impact_factor:强度冲击系数大于1时为自定义，否则按照规范自动选取  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.add_metro_relative_factor("活载工况1",cross_factors=[1.2,1,0.78,0.67,0.6,0.55,0.52,0.5],
+longitude_factor=1,impact_factor=1)
 ```  
 Returns: 无
 ### remove_vehicle

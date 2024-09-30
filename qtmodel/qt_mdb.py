@@ -1347,7 +1347,7 @@ class Mdb:
              unit_force:荷载单位 默认为"N"
              unit_length:长度单位 默认为"M"
         Example:
-            mdb.add_user_vehicle("车道荷载",load_type=车道荷载,p=270000,q=10500)
+            mdb.add_user_vehicle(name="车道荷载",load_type="车道荷载",p=270000,q=10500)
         Returns: 无
         """
         try:
@@ -1367,7 +1367,7 @@ class Mdb:
              start_id:起始节点号
              node_ids:节点列表
         Example:
-            mdb.add_node_tandem("节点纵列1",1,[i+1 for i in range(12)])
+            mdb.add_node_tandem(name="节点纵列1",start_id=1,node_ids=[i+1 for i in range(12)])
         Returns: 无
         """
         try:
@@ -1417,7 +1417,8 @@ class Mdb:
 
     @staticmethod
     def add_live_load_case(name: str, influence_plane: str, span: float,
-                           sub_case: list[tuple[str, float, list[str]]] = None):
+                           sub_case: list[tuple[str, float, list[str]]] = None,
+                           trailer_code: str = "", special_code: str = ""):
         """
         添加移动荷载工况
         Args:
@@ -1425,6 +1426,8 @@ class Mdb:
              influence_plane:影响线名
              span:跨度
              sub_case:子工况信息 [(车辆名称,系数,["车道1","车道2"])...]
+             trailer_code:考虑挂车时挂车车辆名
+             special_code:考虑特载时特载车辆名
         Example:
             mdb.add_live_load_case("活载工况1","影响面1",100,sub_case=[("车辆名称",1.0,["车道1","车道2"]),])
         Returns: 无
@@ -1432,15 +1435,15 @@ class Mdb:
         try:
             if sub_case is None:
                 raise Exception("操作错误，子工况信息列表不能为空")
-            qt_model.AddLiveLoadCase(name=name, influencePlane=influence_plane, span=span, subCase=sub_case)
+            qt_model.AddLiveLoadCase(name=name, influencePlane=influence_plane, span=span, subCase=sub_case,
+                                     trailerCode=trailer_code, specialCode=special_code)
             qt_model.UpdateModel()
         except Exception as ex:
             raise Exception(ex)
 
     @staticmethod
     def add_car_relative_factor(name: str, code_index: int, cross_factors: list[float] = None, longitude_factor: float = -1,
-                                impact_factor: float = -1,
-                                frequency: float = 14):
+                                impact_factor: float = -1, frequency: float = 14):
         """
         添加移动荷载工况汽车折减
         Args:
@@ -1464,8 +1467,8 @@ class Mdb:
 
     @staticmethod
     def add_train_relative_factor(name: str, code_index: int = 1, cross_factors: list[float] = None, calc_fatigue: bool = False,
-                                  line_count: int = 0, longitude_factor: int = -1, fatigue_factor: int = -1,
-                                  impact_factor: int = -1, bridge_kind: int = 0, fill_thick: float = 0.5,
+                                  line_count: int = 0, longitude_factor: int = -1, impact_factor: int = -1,
+                                  fatigue_factor: int = -1, bridge_kind: int = 0, fill_thick: float = 0.5,
                                   rise: float = 1.5, calc_length: float = 50):
         """
         添加移动荷载工况汽车折减
@@ -1476,8 +1479,8 @@ class Mdb:
             calc_fatigue:是否计算疲劳
             line_count: 疲劳加载线路数
             longitude_factor:纵向折减系数，大于0时为自定义，否则为规范自动选取
-            fatigue_factor:疲劳系数
             impact_factor:强度冲击系数大于1时为自定义，否则按照规范自动选取
+            fatigue_factor:疲劳系数
             bridge_kind:桥梁类型 0-无 1-简支 2-结合 3-涵洞 4-空腹式
             fill_thick:填土厚度 (规ZKH ZH钢筋/素混凝土、石砌桥跨结构以及涵洞所需参数)
             rise:拱高 (规ZKH ZH活载-空腹式拱桥所需参数)
