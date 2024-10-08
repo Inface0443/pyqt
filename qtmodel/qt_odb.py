@@ -272,172 +272,179 @@ class Odb:
 
     # region 绘制模型结果
     @staticmethod
-    def plot_reaction_result(file_path: str, component: int = 1, load_case_name: str = "", stage_id: int = 1,
-                             envelope_type: int = 1, show_number: bool = True, show_legend: bool = True,
-                             text_rotation=0, digital_count=0, show_exponential: bool = True, max_min_kind: int = -1,
-                             show_increment: bool = False):
+    def plot_reaction_result(file_path: str, stage_id: int = 1, load_case_name: str = "", show_increment: bool = False,
+                             envelope_type: int = 1, component: int = 1,
+                             show_number: bool = True, text_rotation=0, max_min_kind: int = -1,
+                             show_legend: bool = True, digital_count=0, show_exponential: bool = True, arrow_scale: float = 1):
         """
         保存结果图片到指定文件甲
         Args:
             file_path: 保存路径名
-            component: 分量编号 0-Fx 1-Fy 2-Fz 3-Fxyz 4-Mx 5-My 6-Mz 7-Mxyz
-            load_case_name: 详细荷载工况名，参考桥通结果输出，例如： CQ:成桥(合计)
             stage_id: -1-运营阶段  0-施工阶段包络 n-施工阶段号
+            load_case_name: 详细荷载工况名，参考桥通结果输出，例如： CQ:成桥(合计)
+            show_increment: 是否显示增量结果
             envelope_type: 施工阶段包络类型 1-最大 2-最小
+            component: 分量编号 0-Fx 1-Fy 2-Fz 3-Fxyz 4-Mx 5-My 6-Mz 7-Mxyz
             show_number: 数值选项卡开启
             show_legend: 图例选项卡开启
             text_rotation: 数值选项卡内文字旋转角度
             max_min_kind: 数值选项卡内最大最小值显示 -1-不显示最大最小值  0-显示最大值和最小值  1-最大绝对值 2-最大值 3-最小值
             digital_count: 小数点位数
             show_exponential: 指数显示开启
-            show_increment: 是否显示增量结果
+            arrow_scale:箭头大小
         Example:
             odb.plot_reaction_result(r"aaa.png",component=0,load_case_name="CQ:成桥(合计)",stage_id=-1)
         Returns: 无
         """
         try:
-            qt_model.PlotReactionResult(file_path, component=component, loadCaseName=load_case_name, stageId=stage_id, envelopeType=envelope_type,
-                                        showNumber=show_number, showLegend=show_legend, textRotationAngle=text_rotation, digitalCount=digital_count,
-                                        showAsExponential=show_exponential, maxMinValueKind=max_min_kind, showIncrementResult=show_increment)
+            qt_model.PlotReactionResult(file_path=file_path, stageId=stage_id, loadCaseName=load_case_name, showIncrementResult=show_increment,
+                                        envelopeType=envelope_type, component=component,
+                                        showNumber=show_number, textRotationAngle=text_rotation, maxMinValueKind=max_min_kind,
+                                        showLegend=show_legend, digitalCount=digital_count,
+                                        showAsExponential=show_exponential, arrowScale=arrow_scale)
         except Exception as ex:
             raise Exception(ex)
 
     @staticmethod
-    def plot_displacement_result(file_path: str, component: int = 1, load_case_name: str = "", stage_id: int = 1,
-                                 envelope_type: int = 1, show_deformed: bool = True, show_pre_deformed: bool = True,
-                                 deformed_scale: float = 1.0, actual_deformed: bool = False,
-                                 show_number: bool = True, show_legend: bool = True,
-                                 text_rotation=0, digital_count=0, show_exponential: bool = True, max_min_kind: int = 1,
-                                 show_increment: bool = False):
+    def plot_displacement_result(file_path: str, stage_id: int = 1, load_case_name: str = "", show_increment: bool = False,
+                                 envelope_type: int = 1, component: int = 1,
+                                 show_deformed: bool = True, deformed_scale: float = 1.0, deformed_actual: bool = False,
+                                 show_number: bool = True, text_rotation=0, max_min_kind: int = 1,
+                                 show_legend: bool = True, digital_count=0, show_exponential: bool = True, show_pre_deformed: bool = True):
         """
         保存结果图片到指定文件甲
         Args:
             file_path: 保存路径名
-            component: 分量编号 0-Dx 1-Dy 2-Dz 3-Rx 4-Ry 5-Rz 6-Dxy 7-Dyz 8-Dxz 9-Dxyz
-            load_case_name: 详细荷载工况名，参考桥通结果输出，例如： CQ:成桥(合计)
             stage_id: -1-运营阶段  0-施工阶段包络 n-施工阶段号
+            load_case_name: 详细荷载工况名，参考桥通结果输出，例如： CQ:成桥(合计)
+            show_increment: 是否显示增量结果
             envelope_type: 施工阶段包络类型 1-最大 2-最小
+            component: 分量编号 0-Dx 1-Dy 2-Dz 3-Rx 4-Ry 5-Rz 6-Dxy 7-Dyz 8-Dxz 9-Dxyz
             show_deformed: 变形选项卡开启
-            show_pre_deformed: 显示变形前
             deformed_scale:变形比例
-            actual_deformed:是否显示实际变形
+            deformed_actual:是否显示实际变形
             show_number: 数值选项卡开启
-            show_legend: 图例选项卡开启
             text_rotation: 数值选项卡内文字旋转角度
             max_min_kind: 数值选项卡内最大最小值显示 -1-不显示最大最小值  0-显示最大值和最小值  1-最大绝对值 2-最大值 3-最小值
+            show_legend: 图例选项卡开启
             digital_count: 小数点位数
             show_exponential: 指数显示开启
-            show_increment: 是否显示增量结果
+            show_pre_deformed: 显示变形前
         Example:
             odb.plot_displacement_result(r"aaa.png",component=0,load_case_name="CQ:成桥(合计)",stage_id=-1)
         Returns: 无
         """
         try:
-            qt_model.PlotDisplacementResult(file_path, component=component, loadCaseName=load_case_name, stageId=stage_id, envelopeType=envelope_type,
-                                            showAsDeformedShape=show_deformed, showUndeformedShape=show_pre_deformed,
-                                            deformedScale=deformed_scale, deformedActual=actual_deformed,
-                                            showNumber=show_number, showLegend=show_legend, textRotationAngle=text_rotation,
-                                            digitalCount=digital_count,
-                                            showAsExponential=show_exponential, maxMinValueKind=max_min_kind, showIncrementResult=show_increment)
+            qt_model.PlotDisplacementResult(file_path=file_path, stageId=stage_id, loadCaseName=load_case_name, showIncrementResult=show_increment,
+                                            envelopeType=envelope_type, component=component,
+                                            showAsDeformedShape=show_deformed, deformedScale=deformed_scale, deformedActual=deformed_actual,
+                                            showNumber=show_number, textRotationAngle=text_rotation, digitalCount=digital_count,
+                                            showAsExponential=show_exponential, maxMinValueKind=max_min_kind,
+                                            showLegend=show_legend, showUndeformedShape=show_pre_deformed)
         except Exception as ex:
             raise Exception(ex)
 
     @staticmethod
-    def plot_beam_element_force(file_path: str, component: int = 0, load_case_name: str = "合计", stage_id: int = 1,
-                                envelope_type: int = 1, show_line_chart: bool = True, show_number: bool = False,
-                                position: int = 0, flip_plot: bool = True, line_scale: float = 1.0,
-                                show_deformed: bool = True, show_pre_deformed: bool = False,
-                                deformed_actual: bool = False, deformed_scale: float = 1.0,
-                                show_legend: bool = True, text_rotation: int = 0, digital_count: int = 0,
-                                show_exponential: bool = True, max_min_kind: int = 0, show_increment: bool = False):
+    def plot_beam_element_force(file_path: str, stage_id: int = 1, load_case_name: str = "合计", show_increment: bool = False,
+                                envelope_type: int = 1, component: int = 0,
+                                show_line_chart: bool = True, line_scale: float = 1.0, flip_plot: bool = True,
+                                show_deformed: bool = True, deformed_actual: bool = False, deformed_scale: float = 1.0,
+                                show_number: bool = False, text_rotation: int = 0, max_min_kind: int = 0,
+                                show_legend: bool = True, digital_count: int = 0, show_exponential: bool = True,
+                                show_pre_deformed: bool = False, position: int = 0):
         """
         绘制梁单元结果图并保存到指定文件
         Args:
             file_path: 保存路径名
-            component: 分量编号 0-Fx 1-Fy 2-Fz 3-Mx 4-My 5-Mz
-            load_case_name: 详细荷载工况名
-            stage_id: 阶段编号
-            envelope_type: 包络类型
-            show_line_chart: 是否显示线图
-            show_number: 是否显示数值
-            position: 位置编号
-            flip_plot: 是否翻转绘图
-            line_scale: 线的比例
-            show_deformed: 是否显示变形形状
-            show_pre_deformed: 是否显示未变形形状
-            deformed_actual: 是否显示实际变形
-            deformed_scale: 变形比例
-            show_legend: 是否显示图例
+            stage_id: -1-运营阶段  0-施工阶段包络 n-施工阶段号
+            load_case_name: 详细荷载工况名，参考桥通结果输出，例如： CQ:成桥(合计)
+            show_increment: 是否显示增量结果
+            envelope_type: 施工阶段包络类型 1-最大 2-最小
+            component: 分量编号 0-Dx 1-Dy 2-Dz 3-Rx 4-Ry 5-Rz 6-Dxy 7-Dyz 8-Dxz 9-Dxyz
+            show_line_chart: 折线图选项卡开启
+            line_scale:折线图比例
+            flip_plot:反向绘制
+            show_deformed: 变形选项卡开启
+            deformed_scale:变形比例
+            deformed_actual:是否显示实际变形
+            show_number: 数值选项卡开启
             text_rotation: 数值选项卡内文字旋转角度
             digital_count: 小数点位数
-            show_exponential: 是否以指数形式显示
-            max_min_kind: 最大最小值显示类型
-            show_increment: 是否显示增量结果
+            show_exponential: 指数显示开启
+            max_min_kind: 数值选项卡内最大最小值显示 -1-不显示最大最小值  0-显示最大值和最小值  1-最大绝对值 2-最大值 3-最小值
+            show_legend: 图例选项卡开启
+            show_pre_deformed: 显示变形前
+            position: 位置编号 0-始端 1-末端 2-绝对最大 4-全部
         Example:
             odb.plot_beam_element_force(r"aaa.png",component=0,load_case_name="CQ:成桥(合计)",stage_id=-1)
         Returns: 无
         """
         try:
             qt_model.PlotBeamElementForce(
-                filePath=file_path, component=component, loadCaseName=load_case_name, stageId=stage_id, envelopeType=envelope_type,
-                showLineChart=show_line_chart, showNumber=show_number, position=position, flipPlot=flip_plot, lineScale=line_scale,
-                showAsDeformedShape=show_deformed, showUndeformedShape=show_pre_deformed, deformedActual=deformed_actual,
-                deformedScale=deformed_scale, showLegend=show_legend, textRotationAngle=text_rotation, digitalCount=digital_count,
-                showAsExponential=show_exponential, maxMinValueKind=max_min_kind, showIncrementResult=show_increment)
+                filePath=file_path, stageId=stage_id, loadCaseName=load_case_name, showIncrementResult=show_increment,
+                envelopeType=envelope_type, component=component,
+                showLineChart=show_line_chart, lineScale=line_scale, flipPlot=flip_plot,
+                showAsDeformedShape=show_deformed, deformedScale=deformed_scale, deformedActual=deformed_actual,
+                showNumber=show_number, textRotationAngle=text_rotation, maxMinValueKind=max_min_kind,
+                showLegend=show_legend, digitalCount=digital_count, showAsExponential=show_exponential,
+                showUndeformedShape=show_pre_deformed, position=position)
         except Exception as ex:
             raise Exception(ex)
 
     @staticmethod
-    def plot_truss_element_force(file_path: str, load_case_name: str = "合计", stage_id: int = 1,
-                                 envelope_type: int = 1, show_line_chart: bool = True, show_number: bool = False,
-                                 position: int = 0, flip_plot: bool = True, line_scale: float = 1.0,
-                                 show_deformed: bool = True, show_pre_deformed: bool = False,
-                                 deformed_actual: bool = False, deformed_scale: float = 1.0,
-                                 show_legend: bool = True, text_rotation_angle: int = 0, digital_count: int = 0,
-                                 show_as_exponential: bool = True, max_min_kind: int = 0, show_increment: bool = False):
+    def plot_truss_element_force(file_path: str, stage_id: int = 1, load_case_name: str = "合计", show_increment: bool = False,
+                                 envelope_type: int = 1, component: int = 0,
+                                 show_line_chart: bool = True, line_scale: float = 1.0, flip_plot: bool = True,
+                                 show_deformed: bool = True, deformed_actual: bool = False, deformed_scale: float = 1.0,
+                                 show_number: bool = False, text_rotation: int = 0, max_min_kind: int = 0,
+                                 show_legend: bool = True, digital_count: int = 0, show_exponential: bool = True,
+                                 show_pre_deformed: bool = False, position: int = 0):
         """
         绘制杆单元结果图并保存到指定文件
         Args:
             file_path: 保存路径名
-            load_case_name: 详细荷载工况名
-            stage_id: 阶段编号
-            envelope_type: 包络类型
-            show_line_chart: 是否显示线图
-            show_number: 是否显示数值
-            position: 位置编号
-            flip_plot: 是否翻转绘图
-            line_scale: 线的比例
-            show_deformed: 是否显示变形形状
-            show_pre_deformed: 是否显示未变形形状
-            deformed_actual: 是否显示实际变形
-            deformed_scale: 变形比例
-            show_legend: 是否显示图例
-            text_rotation_angle: 数值选项卡内文字旋转角度
+            stage_id: -1-运营阶段  0-施工阶段包络 n-施工阶段号
+            load_case_name: 详细荷载工况名，参考桥通结果输出，例如： CQ:成桥(合计)
+            show_increment: 是否显示增量结果
+            envelope_type: 施工阶段包络类型 1-最大 2-最小
+            component: 分量编号 0-N 1-Fx 2-Fy 3-Fz
+            show_line_chart: 折线图选项卡开启
+            line_scale:折线图比例
+            flip_plot:反向绘制
+            show_deformed: 变形选项卡开启
+            deformed_scale:变形比例
+            deformed_actual:是否显示实际变形
+            show_number: 数值选项卡开启
+            text_rotation: 数值选项卡内文字旋转角度
             digital_count: 小数点位数
-            show_as_exponential: 是否以指数形式显示
-            max_min_kind: 最大最小值显示类型
-            show_increment:是否显示增量结果
+            show_exponential: 指数显示开启
+            max_min_kind: 数值选项卡内最大最小值显示 -1-不显示最大最小值  0-显示最大值和最小值  1-最大绝对值 2-最大值 3-最小值
+            show_legend: 图例选项卡开启
+            show_pre_deformed: 显示变形前
+            position: 位置编号 0-始端 1-末端 2-绝对最大 4-全部
         Example:
             odb.plot_truss_element_force(r"aaa.png",load_case_name="CQ:成桥(合计)",stage_id=-1)
         Returns: 无
         """
         try:
             qt_model.PlotTrussElementForce(
-                filePath=file_path, loadCaseName=load_case_name, stageId=stage_id, envelopeType=envelope_type,
-                showLineChart=show_line_chart, showNumber=show_number, position=position, flipPlot=flip_plot, lineScale=line_scale,
-                showAsDeformedShape=show_deformed, showUndeformedShape=show_pre_deformed, deformedActual=deformed_actual,
-                deformedScale=deformed_scale, showLegend=show_legend, textRotationAngle=text_rotation_angle, digitalCount=digital_count,
-                showAsExponential=show_as_exponential, maxMinValueKind=max_min_kind, showIncrementResult=show_increment)
+                filePath=file_path, stageId=stage_id, loadCaseName=load_case_name, showIncrementResult=show_increment,
+                envelopeType=envelope_type, component=component,
+                showLineChart=show_line_chart, lineScale=line_scale, flipPlot=flip_plot,
+                showAsDeformedShape=show_deformed, deformedScale=deformed_scale, deformedActual=deformed_actual,
+                showNumber=show_number, textRotationAngle=text_rotation, maxMinValueKind=max_min_kind,
+                showLegend=show_legend, digitalCount=digital_count, showAsExponential=show_exponential,
+                showUndeformedShape=show_pre_deformed, position=position)
         except Exception as ex:
             raise Exception(ex)
 
     @staticmethod
-    def plot_plate_element_force(file_path: str, component: int = 0, force_kind: int = 0, load_case_name: str = "合计",
-                                 stage_id: int = 1, envelope_type: int = 1, show_number: bool = False,
-                                 show_deformed: bool = True, show_pre_deformed: bool = False,
-                                 deformed_actual: bool = False, deformed_scale: float = 1.0,
-                                 show_legend: bool = True, text_rotation_angle: int = 0, digital_count: int = 0,
-                                 show_as_exponential: bool = True, max_min_kind: int = 0, show_increment: bool = False):
+    def plot_plate_element_force(file_path: str, stage_id: int = 1, load_case_name: str = "合计", show_increment: bool = False,
+                                 envelope_type: int = 1, force_kind: int = 0, component: int = 0,
+                                 show_number: bool = False, text_rotation_angle: int = 0, max_min_kind: int = 0,
+                                 show_deformed: bool = True, deformed_scale: float = 1.0, deformed_actual: bool = False,
+                                 show_legend: bool = True, digital_count: int = 0, show_as_exponential: bool = True,
+                                 show_pre_deformed: bool = False, ):
         """
         绘制板单元结果图并保存到指定文件
         Args:
@@ -464,11 +471,242 @@ class Odb:
         """
         try:
             qt_model.PlotPlateElementForce(
-                filePath=file_path, component=component, forceKind=force_kind, loadCaseName=load_case_name, stageId=stage_id,
-                envelopeType=envelope_type, showNumber=show_number, showAsDeformedShape=show_deformed,
-                showUndeformedShape=show_pre_deformed, deformedActual=deformed_actual, deformedScale=deformed_scale,
-                showLegend=show_legend, textRotationAngle=text_rotation_angle, digitalCount=digital_count,
-                showAsExponential=show_as_exponential, maxMinValueKind=max_min_kind, showIncrementResult=show_increment)
+                filePath=file_path, stageId=stage_id, loadCaseName=load_case_name, showIncrementResult=show_increment,
+                envelopeType=envelope_type, forceKind=force_kind, component=component,
+                showAsDeformedShape=show_deformed, deformedScale=deformed_scale, deformedActual=deformed_actual,
+                showNumber=show_number, textRotationAngle=text_rotation_angle, maxMinValueKind=max_min_kind,
+                showLegend=show_legend, digitalCount=digital_count, showAsExponential=show_as_exponential,
+                showUndeformedShape=show_pre_deformed)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def plot_composite_beam_force(file_path: str, stage_id: int = 1, load_case_name: str = "合计", show_increment: bool = False,
+                                  envelope_type: int = 1, mat_type: int = 0, component: int = 0,
+                                  show_line_chart: bool = True, line_scale: float = 1.0, flip_plot: bool = True,
+                                  show_deformed: bool = True, deformed_actual: bool = False, deformed_scale: float = 1.0,
+                                  show_number: bool = False, text_rotation: int = 0, max_min_kind: int = 0,
+                                  show_legend: bool = True, digital_count: int = 0, show_exponential: bool = True,
+                                  show_pre_deformed: bool = False, position: int = 0):
+        """
+        绘制组合梁单元结果图并保存到指定文件
+        Args:
+            file_path: 保存路径名
+            stage_id: -1-运营阶段  0-施工阶段包络 n-施工阶段号
+            load_case_name: 详细荷载工况名，参考桥通结果输出，例如： CQ:成桥(合计)
+            show_increment: 是否显示增量结果
+            envelope_type: 施工阶段包络类型 1-最大 2-最小
+            mat_type: 材料类型 0-主材 1-辅材 2-主材+辅材
+            component: 分量编号 0-Fx 1-Fy 2-Fz 3-Mx 4-My 5-Mz
+            show_line_chart: 折线图选项卡开启
+            line_scale:折线图比例
+            flip_plot:反向绘制
+            show_deformed: 变形选项卡开启
+            deformed_scale:变形比例
+            deformed_actual:是否显示实际变形
+            show_number: 数值选项卡开启
+            text_rotation: 数值选项卡内文字旋转角度
+            digital_count: 小数点位数
+            show_exponential: 指数显示开启
+            max_min_kind: 数值选项卡内最大最小值显示 -1-不显示最大最小值  0-显示最大值和最小值  1-最大绝对值 2-最大值 3-最小值
+            show_legend: 图例选项卡开启
+            show_pre_deformed: 显示变形前
+            position: 位置编号 0-始端 1-末端 2-绝对最大 4-全部
+        Example:
+            odb.plot_composite_beam_force(r"aaa.png",mat_type=0,component=0,load_case_name="CQ:成桥(合计)",stage_id=-1)
+        Returns: 无
+        """
+        try:
+            qt_model.PlotCompositeBeamForce(
+                filePath=file_path, stageId=stage_id, loadCaseName=load_case_name, showIncrementResult=show_increment,
+                envelopeType=envelope_type, matType=mat_type, component=component,
+                showLineChart=show_line_chart, lineScale=line_scale, flipPlot=flip_plot,
+                showAsDeformedShape=show_deformed, deformedScale=deformed_scale, deformedActual=deformed_actual,
+                showNumber=show_number, textRotationAngle=text_rotation, maxMinValueKind=max_min_kind,
+                showLegend=show_legend, digitalCount=digital_count, showAsExponential=show_exponential,
+                showUndeformedShape=show_pre_deformed, position=position)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def plot_beam_element_stress(file_path: str, stage_id: int = 1, load_case_name: str = "合计", show_increment: bool = False,
+                                 envelope_type: int = 1, component: int = 0,
+                                 show_line_chart: bool = True, line_scale: float = 1.0, flip_plot: bool = True,
+                                 show_deformed: bool = True, deformed_actual: bool = False, deformed_scale: float = 1.0,
+                                 show_number: bool = False, text_rotation: int = 0, max_min_kind: int = 0,
+                                 show_legend: bool = True, digital_count: int = 0, show_exponential: bool = True,
+                                 show_pre_deformed: bool = False, position: int = 0):
+        """
+        绘制梁单元应力结果图并保存到指定文件
+        Args:
+            file_path: 保存路径名
+            stage_id: -1-运营阶段  0-施工阶段包络 n-施工阶段号
+            load_case_name: 详细荷载工况名，参考桥通结果输出，例如： CQ:成桥(合计)
+            show_increment: 是否显示增量结果
+            envelope_type: 施工阶段包络类型 1-最大 2-最小
+            component: 分量编号 0-Dx 1-Dy 2-Dz 3-Rx 4-Ry 5-Rz 6-Dxy 7-Dyz 8-Dxz 9-Dxyz
+            show_line_chart: 折线图选项卡开启
+            line_scale:折线图比例
+            flip_plot:反向绘制
+            show_deformed: 变形选项卡开启
+            deformed_scale:变形比例
+            deformed_actual:是否显示实际变形
+            show_number: 数值选项卡开启
+            text_rotation: 数值选项卡内文字旋转角度
+            digital_count: 小数点位数
+            show_exponential: 指数显示开启
+            max_min_kind: 数值选项卡内最大最小值显示 -1-不显示最大最小值  0-显示最大值和最小值  1-最大绝对值 2-最大值 3-最小值
+            show_legend: 图例选项卡开启
+            show_pre_deformed: 显示变形前
+            position: 位置编号 0-始端 1-末端 2-绝对最大 4-全部
+        Example:
+            odb.plot_beam_element_stress(r"aaa.png",component=0,load_case_name="CQ:成桥(合计)",stage_id=-1)
+        Returns: 无
+        """
+        try:
+            qt_model.PlotBeamElementStress(
+                filePath=file_path, stageId=stage_id, loadCaseName=load_case_name, showIncrementResult=show_increment,
+                envelopeType=envelope_type, component=component,
+                showLineChart=show_line_chart, lineScale=line_scale, flipPlot=flip_plot,
+                showAsDeformedShape=show_deformed, deformedScale=deformed_scale, deformedActual=deformed_actual,
+                showNumber=show_number, textRotationAngle=text_rotation, maxMinValueKind=max_min_kind,
+                showLegend=show_legend, digitalCount=digital_count, showAsExponential=show_exponential,
+                showUndeformedShape=show_pre_deformed, position=position)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def plot_truss_element_stress(file_path: str, stage_id: int = 1, load_case_name: str = "合计", show_increment: bool = False, envelope_type: int = 1,
+                                  show_line_chart: bool = True, line_scale: float = 1.0, flip_plot: bool = True,
+                                  show_deformed: bool = True, deformed_actual: bool = False, deformed_scale: float = 1.0,
+                                  show_number: bool = False, text_rotation: int = 0, max_min_kind: int = 0,
+                                  show_legend: bool = True, digital_count: int = 0, show_exponential: bool = True,
+                                  show_pre_deformed: bool = False, position: int = 0):
+        """
+        绘制杆单元结果图并保存到指定文件
+        Args:
+            file_path: 保存路径名
+            stage_id: -1-运营阶段  0-施工阶段包络 n-施工阶段号
+            load_case_name: 详细荷载工况名，参考桥通结果输出，例如： CQ:成桥(合计)
+            show_increment: 是否显示增量结果
+            envelope_type: 施工阶段包络类型 1-最大 2-最小
+            show_line_chart: 折线图选项卡开启
+            line_scale:折线图比例
+            flip_plot:反向绘制
+            show_deformed: 变形选项卡开启
+            deformed_scale:变形比例
+            deformed_actual:是否显示实际变形
+            show_number: 数值选项卡开启
+            text_rotation: 数值选项卡内文字旋转角度
+            digital_count: 小数点位数
+            show_exponential: 指数显示开启
+            max_min_kind: 数值选项卡内最大最小值显示 -1-不显示最大最小值  0-显示最大值和最小值  1-最大绝对值 2-最大值 3-最小值
+            show_legend: 图例选项卡开启
+            show_pre_deformed: 显示变形前
+            position: 位置编号 0-始端 1-末端 2-绝对最大 4-全部
+        Example:
+            odb.plot_truss_element_stress(r"aaa.png",load_case_name="CQ:成桥(合计)",stage_id=-1)
+        Returns: 无
+        """
+        try:
+            qt_model.PlotTrussElementStress(
+                filePath=file_path, stageId=stage_id, loadCaseName=load_case_name, showIncrementResult=show_increment, envelopeType=envelope_type,
+                showLineChart=show_line_chart, lineScale=line_scale, flipPlot=flip_plot,
+                showAsDeformedShape=show_deformed, deformedScale=deformed_scale, deformedActual=deformed_actual,
+                showNumber=show_number, textRotationAngle=text_rotation, maxMinValueKind=max_min_kind,
+                showLegend=show_legend, digitalCount=digital_count, showAsExponential=show_exponential,
+                showUndeformedShape=show_pre_deformed, position=position)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def plot_composite_beam_stress(file_path: str, stage_id: int = 1, load_case_name: str = "合计", show_increment: bool = False,
+                                   envelope_type: int = 1, mat_type: int = 0, component: int = 0,
+                                   show_line_chart: bool = True, line_scale: float = 1.0, flip_plot: bool = True,
+                                   show_deformed: bool = True, deformed_actual: bool = False, deformed_scale: float = 1.0,
+                                   show_number: bool = False, text_rotation: int = 0, max_min_kind: int = 0,
+                                   show_legend: bool = True, digital_count: int = 0, show_exponential: bool = True,
+                                   show_pre_deformed: bool = False, position: int = 0):
+        """
+        绘制组合梁单元结果图并保存到指定文件
+        Args:
+            file_path: 保存路径名
+            stage_id: -1-运营阶段  0-施工阶段包络 n-施工阶段号
+            load_case_name: 详细荷载工况名，参考桥通结果输出，例如： CQ:成桥(合计)
+            show_increment: 是否显示增量结果
+            envelope_type: 施工阶段包络类型 1-最大 2-最小
+            mat_type: 材料类型 0-主材 1-辅材
+            component: 分量编号 0-轴力分量 1-Mz分量 2-My分量 3-包络 4-左上 5-右上 6-左下 7-右下
+            show_line_chart: 折线图选项卡开启
+            line_scale:折线图比例
+            flip_plot:反向绘制
+            show_deformed: 变形选项卡开启
+            deformed_scale:变形比例
+            deformed_actual:是否显示实际变形
+            show_number: 数值选项卡开启
+            text_rotation: 数值选项卡内文字旋转角度
+            digital_count: 小数点位数
+            show_exponential: 指数显示开启
+            max_min_kind: 数值选项卡内最大最小值显示 -1-不显示最大最小值  0-显示最大值和最小值  1-最大绝对值 2-最大值 3-最小值
+            show_legend: 图例选项卡开启
+            show_pre_deformed: 显示变形前
+            position: 位置编号 0-始端 1-末端 2-绝对最大 4-全部
+        Example:
+            odb.plot_composite_beam_stress(r"aaa.png",component=0,load_case_name="CQ:成桥(合计)",stage_id=-1)
+        Returns: 无
+        """
+        try:
+            qt_model.PlotCompositeBeamStress(
+                filePath=file_path, stageId=stage_id, loadCaseName=load_case_name, showIncrementResult=show_increment,
+                envelopeType=envelope_type, matType=mat_type, component=component,
+                showLineChart=show_line_chart, lineScale=line_scale, flipPlot=flip_plot,
+                showAsDeformedShape=show_deformed, deformedScale=deformed_scale, deformedActual=deformed_actual,
+                showNumber=show_number, textRotationAngle=text_rotation, maxMinValueKind=max_min_kind,
+                showLegend=show_legend, digitalCount=digital_count, showAsExponential=show_exponential,
+                showUndeformedShape=show_pre_deformed, position=position)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def plot_plate_element_stress(file_path: str, stage_id: int = 1, load_case_name: str = "合计", show_increment: bool = False,
+                                  envelope_type: int = 1, stress_kind: int = 0, component: int = 0,
+                                  show_number: bool = False, text_rotation_angle: int = 0, max_min_kind: int = 0,
+                                  show_deformed: bool = True, deformed_scale: float = 1.0, deformed_actual: bool = False,
+                                  show_legend: bool = True, digital_count: int = 0, show_as_exponential: bool = True,
+                                  show_pre_deformed: bool = False, position: int = 0):
+        """
+        绘制板单元结果图并保存到指定文件
+        Args:
+            file_path: 保存路径名
+            component: 分量编号 0-Fxx 1-Fyy 2-Fxy 3-Mxx 4-Myy 5-Mxy
+            stress_kind: 力类型 0-单元 1-节点平均
+            load_case_name: 详细荷载工况名
+            stage_id: 阶段编号
+            envelope_type: 包络类型
+            show_number: 是否显示数值
+            show_deformed: 是否显示变形形状
+            show_pre_deformed: 是否显示未变形形状
+            deformed_actual: 是否显示实际变形
+            deformed_scale: 变形比例
+            show_legend: 是否显示图例
+            text_rotation_angle: 数值选项卡内文字旋转角度
+            digital_count: 小数点位数
+            show_as_exponential: 是否以指数形式显示
+            max_min_kind: 最大最小值显示类型
+            show_increment: 是否显示增量结果
+            position: 位置 0-板顶 1-板底 2-绝对值最大
+        Example:
+            odb.plot_plate_element_stress(r"aaa.png",component=0,load_case_name="CQ:成桥(合计)",stage_id=-1)
+        Returns: 无
+        """
+        try:
+            qt_model.PlotPlateElementStress(
+                filePath=file_path, stageId=stage_id, loadCaseName=load_case_name, showIncrementResult=show_increment,
+                envelopeType=envelope_type, stressKind=stress_kind, component=component,
+                showAsDeformedShape=show_deformed, deformedScale=deformed_scale, deformedActual=deformed_actual,
+                showNumber=show_number, textRotationAngle=text_rotation_angle, maxMinValueKind=max_min_kind,
+                showLegend=show_legend, digitalCount=digital_count, showAsExponential=show_as_exponential,
+                showUndeformedShape=show_pre_deformed, position=position)
         except Exception as ex:
             raise Exception(ex)
 

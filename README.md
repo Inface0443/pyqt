@@ -1,6 +1,6 @@
 # 最新版本 V0.5.19 - 2024.09.30 
 > pip install --upgrade qtmodel -i https://pypi.org/simple
-- 修改荷载部分调用 
+- 增加应力结果调用 
 ##  项目管理
 ### update_bim
 刷新Bim模型信息
@@ -1918,17 +1918,18 @@ Returns: json字符串，包含信息为list[dict] or dict
 保存结果图片到指定文件甲
 > 参数:  
 > file_path: 保存路径名  
-> component: 分量编号 0-Fx 1-Fy 2-Fz 3-Fxyz 4-Mx 5-My 6-Mz 7-Mxyz  
-> load_case_name: 详细荷载工况名，参考桥通结果输出，例如： CQ:成桥(合计)  
 > stage_id: -1-运营阶段  0-施工阶段包络 n-施工阶段号  
+> load_case_name: 详细荷载工况名，参考桥通结果输出，例如： CQ:成桥(合计)  
+> show_increment: 是否显示增量结果  
 > envelope_type: 施工阶段包络类型 1-最大 2-最小  
+> component: 分量编号 0-Fx 1-Fy 2-Fz 3-Fxyz 4-Mx 5-My 6-Mz 7-Mxyz  
 > show_number: 数值选项卡开启  
 > show_legend: 图例选项卡开启  
 > text_rotation: 数值选项卡内文字旋转角度  
 > max_min_kind: 数值选项卡内最大最小值显示 -1-不显示最大最小值  0-显示最大值和最小值  1-最大绝对值 2-最大值 3-最小值  
 > digital_count: 小数点位数  
 > show_exponential: 指数显示开启  
-> show_increment: 是否显示增量结果  
+> arrow_scale:箭头大小  
 ```Python
 # 示例代码
 from qtmodel import *
@@ -1939,21 +1940,21 @@ Returns: 无
 保存结果图片到指定文件甲
 > 参数:  
 > file_path: 保存路径名  
-> component: 分量编号 0-Dx 1-Dy 2-Dz 3-Rx 4-Ry 5-Rz 6-Dxy 7-Dyz 8-Dxz 9-Dxyz  
-> load_case_name: 详细荷载工况名，参考桥通结果输出，例如： CQ:成桥(合计)  
 > stage_id: -1-运营阶段  0-施工阶段包络 n-施工阶段号  
+> load_case_name: 详细荷载工况名，参考桥通结果输出，例如： CQ:成桥(合计)  
+> show_increment: 是否显示增量结果  
 > envelope_type: 施工阶段包络类型 1-最大 2-最小  
+> component: 分量编号 0-Dx 1-Dy 2-Dz 3-Rx 4-Ry 5-Rz 6-Dxy 7-Dyz 8-Dxz 9-Dxyz  
 > show_deformed: 变形选项卡开启  
-> show_pre_deformed: 显示变形前  
 > deformed_scale:变形比例  
-> actual_deformed:是否显示实际变形  
+> deformed_actual:是否显示实际变形  
 > show_number: 数值选项卡开启  
-> show_legend: 图例选项卡开启  
 > text_rotation: 数值选项卡内文字旋转角度  
 > max_min_kind: 数值选项卡内最大最小值显示 -1-不显示最大最小值  0-显示最大值和最小值  1-最大绝对值 2-最大值 3-最小值  
+> show_legend: 图例选项卡开启  
 > digital_count: 小数点位数  
 > show_exponential: 指数显示开启  
-> show_increment: 是否显示增量结果  
+> show_pre_deformed: 显示变形前  
 ```Python
 # 示例代码
 from qtmodel import *
@@ -1964,25 +1965,25 @@ Returns: 无
 绘制梁单元结果图并保存到指定文件
 > 参数:  
 > file_path: 保存路径名  
-> component: 分量编号 0-Fx 1-Fy 2-Fz 3-Mx 4-My 5-Mz  
-> load_case_name: 详细荷载工况名  
-> stage_id: 阶段编号  
-> envelope_type: 包络类型  
-> show_line_chart: 是否显示线图  
-> show_number: 是否显示数值  
-> position: 位置编号  
-> flip_plot: 是否翻转绘图  
-> line_scale: 线的比例  
-> show_deformed: 是否显示变形形状  
-> show_pre_deformed: 是否显示未变形形状  
-> deformed_actual: 是否显示实际变形  
-> deformed_scale: 变形比例  
-> show_legend: 是否显示图例  
+> stage_id: -1-运营阶段  0-施工阶段包络 n-施工阶段号  
+> load_case_name: 详细荷载工况名，参考桥通结果输出，例如： CQ:成桥(合计)  
+> show_increment: 是否显示增量结果  
+> envelope_type: 施工阶段包络类型 1-最大 2-最小  
+> component: 分量编号 0-Dx 1-Dy 2-Dz 3-Rx 4-Ry 5-Rz 6-Dxy 7-Dyz 8-Dxz 9-Dxyz  
+> show_line_chart: 折线图选项卡开启  
+> line_scale:折线图比例  
+> flip_plot:反向绘制  
+> show_deformed: 变形选项卡开启  
+> deformed_scale:变形比例  
+> deformed_actual:是否显示实际变形  
+> show_number: 数值选项卡开启  
 > text_rotation: 数值选项卡内文字旋转角度  
 > digital_count: 小数点位数  
-> show_exponential: 是否以指数形式显示  
-> max_min_kind: 最大最小值显示类型  
-> show_increment: 是否显示增量结果  
+> show_exponential: 指数显示开启  
+> max_min_kind: 数值选项卡内最大最小值显示 -1-不显示最大最小值  0-显示最大值和最小值  1-最大绝对值 2-最大值 3-最小值  
+> show_legend: 图例选项卡开启  
+> show_pre_deformed: 显示变形前  
+> position: 位置编号 0-始端 1-末端 2-绝对最大 4-全部  
 ```Python
 # 示例代码
 from qtmodel import *
@@ -1993,24 +1994,25 @@ Returns: 无
 绘制杆单元结果图并保存到指定文件
 > 参数:  
 > file_path: 保存路径名  
-> load_case_name: 详细荷载工况名  
-> stage_id: 阶段编号  
-> envelope_type: 包络类型  
-> show_line_chart: 是否显示线图  
-> show_number: 是否显示数值  
-> position: 位置编号  
-> flip_plot: 是否翻转绘图  
-> line_scale: 线的比例  
-> show_deformed: 是否显示变形形状  
-> show_pre_deformed: 是否显示未变形形状  
-> deformed_actual: 是否显示实际变形  
-> deformed_scale: 变形比例  
-> show_legend: 是否显示图例  
-> text_rotation_angle: 数值选项卡内文字旋转角度  
+> stage_id: -1-运营阶段  0-施工阶段包络 n-施工阶段号  
+> load_case_name: 详细荷载工况名，参考桥通结果输出，例如： CQ:成桥(合计)  
+> show_increment: 是否显示增量结果  
+> envelope_type: 施工阶段包络类型 1-最大 2-最小  
+> component: 分量编号 0-N 1-Fx 2-Fy 3-Fz  
+> show_line_chart: 折线图选项卡开启  
+> line_scale:折线图比例  
+> flip_plot:反向绘制  
+> show_deformed: 变形选项卡开启  
+> deformed_scale:变形比例  
+> deformed_actual:是否显示实际变形  
+> show_number: 数值选项卡开启  
+> text_rotation: 数值选项卡内文字旋转角度  
 > digital_count: 小数点位数  
-> show_as_exponential: 是否以指数形式显示  
-> max_min_kind: 最大最小值显示类型  
-> show_increment:是否显示增量结果  
+> show_exponential: 指数显示开启  
+> max_min_kind: 数值选项卡内最大最小值显示 -1-不显示最大最小值  0-显示最大值和最小值  1-最大绝对值 2-最大值 3-最小值  
+> show_legend: 图例选项卡开启  
+> show_pre_deformed: 显示变形前  
+> position: 位置编号 0-始端 1-末端 2-绝对最大 4-全部  
 ```Python
 # 示例代码
 from qtmodel import *
@@ -2041,6 +2043,150 @@ Returns: 无
 # 示例代码
 from qtmodel import *
 odb.plot_plate_element_force(r"aaa.png",component=0,load_case_name="CQ:成桥(合计)",stage_id=-1)
+```  
+Returns: 无
+### plot_composite_beam_force
+绘制组合梁单元结果图并保存到指定文件
+> 参数:  
+> file_path: 保存路径名  
+> stage_id: -1-运营阶段  0-施工阶段包络 n-施工阶段号  
+> load_case_name: 详细荷载工况名，参考桥通结果输出，例如： CQ:成桥(合计)  
+> show_increment: 是否显示增量结果  
+> envelope_type: 施工阶段包络类型 1-最大 2-最小  
+> mat_type: 材料类型 0-主材 1-辅材 2-主材+辅材  
+> component: 分量编号 0-Fx 1-Fy 2-Fz 3-Mx 4-My 5-Mz  
+> show_line_chart: 折线图选项卡开启  
+> line_scale:折线图比例  
+> flip_plot:反向绘制  
+> show_deformed: 变形选项卡开启  
+> deformed_scale:变形比例  
+> deformed_actual:是否显示实际变形  
+> show_number: 数值选项卡开启  
+> text_rotation: 数值选项卡内文字旋转角度  
+> digital_count: 小数点位数  
+> show_exponential: 指数显示开启  
+> max_min_kind: 数值选项卡内最大最小值显示 -1-不显示最大最小值  0-显示最大值和最小值  1-最大绝对值 2-最大值 3-最小值  
+> show_legend: 图例选项卡开启  
+> show_pre_deformed: 显示变形前  
+> position: 位置编号 0-始端 1-末端 2-绝对最大 4-全部  
+```Python
+# 示例代码
+from qtmodel import *
+odb.plot_composite_beam_force(r"aaa.png",mat_type=0,component=0,load_case_name="CQ:成桥(合计)",stage_id=-1)
+```  
+Returns: 无
+### plot_beam_element_stress
+绘制梁单元应力结果图并保存到指定文件
+> 参数:  
+> file_path: 保存路径名  
+> stage_id: -1-运营阶段  0-施工阶段包络 n-施工阶段号  
+> load_case_name: 详细荷载工况名，参考桥通结果输出，例如： CQ:成桥(合计)  
+> show_increment: 是否显示增量结果  
+> envelope_type: 施工阶段包络类型 1-最大 2-最小  
+> component: 分量编号 0-Dx 1-Dy 2-Dz 3-Rx 4-Ry 5-Rz 6-Dxy 7-Dyz 8-Dxz 9-Dxyz  
+> show_line_chart: 折线图选项卡开启  
+> line_scale:折线图比例  
+> flip_plot:反向绘制  
+> show_deformed: 变形选项卡开启  
+> deformed_scale:变形比例  
+> deformed_actual:是否显示实际变形  
+> show_number: 数值选项卡开启  
+> text_rotation: 数值选项卡内文字旋转角度  
+> digital_count: 小数点位数  
+> show_exponential: 指数显示开启  
+> max_min_kind: 数值选项卡内最大最小值显示 -1-不显示最大最小值  0-显示最大值和最小值  1-最大绝对值 2-最大值 3-最小值  
+> show_legend: 图例选项卡开启  
+> show_pre_deformed: 显示变形前  
+> position: 位置编号 0-始端 1-末端 2-绝对最大 4-全部  
+```Python
+# 示例代码
+from qtmodel import *
+odb.plot_beam_element_stress(r"aaa.png",component=0,load_case_name="CQ:成桥(合计)",stage_id=-1)
+```  
+Returns: 无
+### plot_truss_element_stress
+绘制杆单元结果图并保存到指定文件
+> 参数:  
+> file_path: 保存路径名  
+> stage_id: -1-运营阶段  0-施工阶段包络 n-施工阶段号  
+> load_case_name: 详细荷载工况名，参考桥通结果输出，例如： CQ:成桥(合计)  
+> show_increment: 是否显示增量结果  
+> envelope_type: 施工阶段包络类型 1-最大 2-最小  
+> show_line_chart: 折线图选项卡开启  
+> line_scale:折线图比例  
+> flip_plot:反向绘制  
+> show_deformed: 变形选项卡开启  
+> deformed_scale:变形比例  
+> deformed_actual:是否显示实际变形  
+> show_number: 数值选项卡开启  
+> text_rotation: 数值选项卡内文字旋转角度  
+> digital_count: 小数点位数  
+> show_exponential: 指数显示开启  
+> max_min_kind: 数值选项卡内最大最小值显示 -1-不显示最大最小值  0-显示最大值和最小值  1-最大绝对值 2-最大值 3-最小值  
+> show_legend: 图例选项卡开启  
+> show_pre_deformed: 显示变形前  
+> position: 位置编号 0-始端 1-末端 2-绝对最大 4-全部  
+```Python
+# 示例代码
+from qtmodel import *
+odb.plot_truss_element_stress(r"aaa.png",load_case_name="CQ:成桥(合计)",stage_id=-1)
+```  
+Returns: 无
+### plot_composite_beam_stress
+绘制组合梁单元结果图并保存到指定文件
+> 参数:  
+> file_path: 保存路径名  
+> stage_id: -1-运营阶段  0-施工阶段包络 n-施工阶段号  
+> load_case_name: 详细荷载工况名，参考桥通结果输出，例如： CQ:成桥(合计)  
+> show_increment: 是否显示增量结果  
+> envelope_type: 施工阶段包络类型 1-最大 2-最小  
+> mat_type: 材料类型 0-主材 1-辅材  
+> component: 分量编号 0-轴力分量 1-Mz分量 2-My分量 3-包络 4-左上 5-右上 6-左下 7-右下  
+> show_line_chart: 折线图选项卡开启  
+> line_scale:折线图比例  
+> flip_plot:反向绘制  
+> show_deformed: 变形选项卡开启  
+> deformed_scale:变形比例  
+> deformed_actual:是否显示实际变形  
+> show_number: 数值选项卡开启  
+> text_rotation: 数值选项卡内文字旋转角度  
+> digital_count: 小数点位数  
+> show_exponential: 指数显示开启  
+> max_min_kind: 数值选项卡内最大最小值显示 -1-不显示最大最小值  0-显示最大值和最小值  1-最大绝对值 2-最大值 3-最小值  
+> show_legend: 图例选项卡开启  
+> show_pre_deformed: 显示变形前  
+> position: 位置编号 0-始端 1-末端 2-绝对最大 4-全部  
+```Python
+# 示例代码
+from qtmodel import *
+odb.plot_composite_beam_stress(r"aaa.png",component=0,load_case_name="CQ:成桥(合计)",stage_id=-1)
+```  
+Returns: 无
+### plot_plate_element_stress
+绘制板单元结果图并保存到指定文件
+> 参数:  
+> file_path: 保存路径名  
+> component: 分量编号 0-Fxx 1-Fyy 2-Fxy 3-Mxx 4-Myy 5-Mxy  
+> stress_kind: 力类型 0-单元 1-节点平均  
+> load_case_name: 详细荷载工况名  
+> stage_id: 阶段编号  
+> envelope_type: 包络类型  
+> show_number: 是否显示数值  
+> show_deformed: 是否显示变形形状  
+> show_pre_deformed: 是否显示未变形形状  
+> deformed_actual: 是否显示实际变形  
+> deformed_scale: 变形比例  
+> show_legend: 是否显示图例  
+> text_rotation_angle: 数值选项卡内文字旋转角度  
+> digital_count: 小数点位数  
+> show_as_exponential: 是否以指数形式显示  
+> max_min_kind: 最大最小值显示类型  
+> show_increment: 是否显示增量结果  
+> position: 位置 0-板顶 1-板底 2-绝对值最大  
+```Python
+# 示例代码
+from qtmodel import *
+odb.plot_plate_element_stress(r"aaa.png",component=0,load_case_name="CQ:成桥(合计)",stage_id=-1)
 ```  
 Returns: 无
 ##  获取模型信息
