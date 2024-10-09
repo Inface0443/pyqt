@@ -1,5 +1,4 @@
 from __main__ import qt_model
-from .res_db import *
 from .qt_db import *
 
 
