@@ -1985,12 +1985,12 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def add_pre_stress(case_name: str = "", tendon_name: str = "", tension_type: int = 2, force: float = 1395000, group_name: str = "默认荷载组"):
+    def add_pre_stress(case_name: str = "", tendon_name: (Union[str, List[str]])= "", tension_type: int = 2, force: float = 1395000, group_name: str = "默认荷载组"):
         """
         添加预应力
         Args:
              case_name:荷载工况名
-             tendon_name:钢束名
+             tendon_name:钢束名,支持钢束名或钢束名列表
              tension_type:预应力类型
                 _0-始端 1-末端 2-两端_
              force:预应力

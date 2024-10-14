@@ -1195,7 +1195,7 @@ Returns: 无
 添加预应力
 > 参数:  
 > case_name:荷载工况名  
-> tendon_name:钢束名  
+> tendon_name:钢束名,支持钢束名或钢束名列表  
 > tension_type:预应力类型  
 > _0-始端 1-末端 2-两端_  
 > force:预应力  
