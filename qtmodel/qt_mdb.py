@@ -43,8 +43,8 @@ class Mdb:
         Args:
             num: 1-前处理  2-后处理
         Example:
-            mdb.update_app_stage(1)
-            mdb.update_app_stage(2)
+            mdb.update_app_stage(num=1)
+            mdb.update_app_stage(num=2)
         Returns: 无
         """
         try:
@@ -87,7 +87,7 @@ class Mdb:
         Args:
             file_path: 文件全路径
         Example:
-            mdb.open_file("a.bfmd")
+            mdb.open_file(file_path="a.bfmd")
         Returns: 无
         """
         try:
@@ -118,7 +118,7 @@ class Mdb:
         Args:
             file_path: 文件全路径
         Example:
-            mdb.save_file("a.bfmd")
+            mdb.save_file(file_path="a.bfmd")
         Returns: 无
         """
         try:
@@ -132,10 +132,10 @@ class Mdb:
         导入命令
         Args:
             command:命令字符
-            command_type:命令类型 1-桥通命令 2-mct命令
+            command_type:命令类型,默认桥通命令 1-桥通命令 2-mct命令
         Example:
-            mdb.import_command("*SECTION")
-            mdb.import_command("*SECTION",2)
+            mdb.import_command(command="*SECTION")
+            mdb.import_command(command="*SECTION",command_type=2)
         Returns: 无
         """
         try:
@@ -153,7 +153,7 @@ class Mdb:
         Args:
             file_path:导入文件(.mct/.qdat/.dxf/.3dx)
         Example:
-            mdb.import_file("a.mct")
+            mdb.import_file(file_path="a.mct")
         Returns: 无
         """
         try:
@@ -168,7 +168,7 @@ class Mdb:
         Args:
             file_path:导出文件全路径，支持格式(.mct/.qdat/.PGF/.3dx)
         Example:
-            mdb.export_file("a.mct")
+            mdb.export_file(file_path="a.mct")
         Returns: 无
         """
         try:
@@ -188,10 +188,13 @@ class Mdb:
             calculation_type: 计算设置 0-单线程 1-用户自定义  2-自动设置
             thread_count: 线程数
         Example:
-           mdb.update_global_setting(0,2,12)
+           mdb.update_global_setting(solver_type=0,calculation_type=2,thread_count=12)
         Returns: 无
         """
-        qt_model.UpdateGlobalSetting(solverType=solver_type, calculationType=calculation_type, threadCount=thread_count)
+        try:
+            qt_model.UpdateGlobalSetting(solverType=solver_type, calculationType=calculation_type, threadCount=thread_count)
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def update_construction_stage_setting(do_analysis: bool, to_end_stage: bool, other_stage_id: int = 1, analysis_type: int = 0,
@@ -212,14 +215,18 @@ class Mdb:
             creep_load_type: 徐变荷载类型  (1-开始  2-中间  3-结束)
             sub_step_info: 子步信息 [是否开启子部划分设置,10天步数,100天步数,1000天步数,5000天步数,10000天步数] None时为UI默认值
         Example:
-            mdb.update_construction_stage_setting(True, False, 1, 0, True, 0, True, 2, 1)
+            mdb.update_construction_stage_setting(do_analysis=True, to_end_stage=False, other_stage_id=1,analysis_type=0,
+                do_creep_analysis=True, cable_tension_position=0, consider_completion_stage=True,shrink_creep_type=2)
         Returns: 无
         """
-        qt_model.UpdateConstructionStageSetting(
-            doAnalysis=do_analysis, toEndStage=to_end_stage, otherStageId=other_stage_id, analysisType=analysis_type,
-            doCreepAnalysis=do_creep_analysis, cableTensionPosition=cable_tension_position, considerCompletionStage=consider_completion_stage,
-            shrinkCreepType=shrink_creep_type, creepLoadType=creep_load_type,
-            subStepInfo=sub_step_info)
+        try:
+            qt_model.UpdateConstructionStageSetting(
+                doAnalysis=do_analysis, toEndStage=to_end_stage, otherStageId=other_stage_id, analysisType=analysis_type,
+                doCreepAnalysis=do_creep_analysis, cableTensionPosition=cable_tension_position, considerCompletionStage=consider_completion_stage,
+                shrinkCreepType=shrink_creep_type, creepLoadType=creep_load_type,
+                subStepInfo=sub_step_info)
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def update_non_linear_setting(non_linear_type: int = 1, non_linear_method: int = 1, max_loading_steps: int = 1, max_iteration_times: int = 30,
@@ -234,13 +241,17 @@ class Mdb:
             relative_accuracy_of_displacement: 位移相对精度
             relative_accuracy_of_force: 内力相对精度
         Example:
-            mdb.update_non_linear_setting(-1, 1, -1, 30, 0.0001, 0.0001)
+            mdb.update_non_linear_setting(non_linear_type=-1, non_linear_method=1, max_loading_steps=-1, max_iteration_times=30,
+                relative_accuracy_of_displacement=0.0001, relative_accuracy_of_force=0.0001)
         Returns: 无
         """
-        qt_model.UpdateNonLinearSetting(
-            nonLinearType=non_linear_type, nonLinearMethod=non_linear_method, maxLoadingSteps=max_loading_steps,
-            maxIterationTimes=max_iteration_times, relativeAccuracyOfDisplacement=relative_accuracy_of_displacement,
-            relativeAccuracyOfInternalForce=relative_accuracy_of_force)
+        try:
+            qt_model.UpdateNonLinearSetting(
+                nonLinearType=non_linear_type, nonLinearMethod=non_linear_method, maxLoadingSteps=max_loading_steps,
+                maxIterationTimes=max_iteration_times, relativeAccuracyOfDisplacement=relative_accuracy_of_displacement,
+                relativeAccuracyOfInternalForce=relative_accuracy_of_force)
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def update_operation_stage_setting(do_analysis: bool, final_stage: str = "", do_static_load_analysis: bool = True,
@@ -258,19 +269,22 @@ class Mdb:
             sink_cases: 沉降工况名列表
             do_live_load_analysis: 是否进行活载工况分析
             live_load_cases: 活载工况名列表
-            live_load_analytical_type: 移动荷载分析类型
+            live_load_analytical_type: 移动荷载分析类型 0-线性 1-非线性 2-部分非线性
         Example:
-            mdb.update_operation_stage_setting(True, "final_stage", True, None, False, None, False, None, 0)
+            mdb.update_operation_stage_setting(do_analysis=True, final_stage="阶段名", do_static_load_analysis=True,
+                static_load_cases=None, do_sink_analysis=False, sink_cases=None, do_live_load_analysis=False)
         Returns: 无
         """
-        qt_model.UpdateOperationStageSetting(
-            doAnalysis=do_analysis, finalStage=final_stage,
-            doStaticLoadAnalysis=do_static_load_analysis,
-            staticLoadCases=static_load_cases,
-            doSinkAnalysis=do_sink_analysis, sinkCases=sink_cases,
-            doLiveLoadAnalysis=do_live_load_analysis, liveLoadCases=live_load_cases,
-            liveLoadAnalyticalType=live_load_analytical_type
-        )
+        try:
+            qt_model.UpdateOperationStageSetting(
+                doAnalysis=do_analysis, finalStage=final_stage,
+                doStaticLoadAnalysis=do_static_load_analysis,
+                staticLoadCases=static_load_cases,
+                doSinkAnalysis=do_sink_analysis, sinkCases=sink_cases,
+                doLiveLoadAnalysis=do_live_load_analysis, liveLoadCases=live_load_cases,
+                liveLoadAnalyticalType=live_load_analytical_type)
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def update_self_vibration_setting(do_analysis: bool = False, method: int = 1, matrix_type: int = 0, mode_num: int = 3):
@@ -282,10 +296,13 @@ class Mdb:
             matrix_type: 矩阵类型 0-集中质量矩阵  1-一致质量矩阵
             mode_num: 振型数量
         Example:
-            mdb.update_self_vibration_setting(False,1,0,3)
+            mdb.update_self_vibration_setting(do_analysis=False,method=1,matrix_type=0,mode_num=3)
         Returns: 无
         """
-        qt_model.UpdateSelfVibrationSetting(doAnalysis=do_analysis, method=method, matrixType=matrix_type, modeNumber=mode_num)
+        try:
+            qt_model.UpdateSelfVibrationSetting(doAnalysis=do_analysis, method=method, matrixType=matrix_type, modeNumber=mode_num)
+        except Exception as ex:
+            raise Exception(ex)
 
     # endregion
 
@@ -301,8 +318,8 @@ class Mdb:
              is_merged: 是否忽略位置重复节点
              merge_error: 合并容许误差
         Example:
-            mdb.add_node([1,2,3])
-            mdb.add_node([1,1,2,3])
+            mdb.add_node(node_data=[1,2,3])
+            mdb.add_node(node_data=[1,1,2,3])
         Returns: 无
         """
         try:
@@ -326,7 +343,7 @@ class Mdb:
              is_merged: 是否忽略位置重复节点
              merge_error: 合并容许误差
         Example:
-            mdb.add_nodes([[1,1,2,3],[1,1,2,3]])
+            mdb.add_nodes(node_data=[[1,1,2,3],[1,1,2,3]])
         Returns: 无
         """
         try:
@@ -344,10 +361,13 @@ class Mdb:
              y: 更新后y坐标
              z: 更新后z坐标
         Example:
-            mdb.update_node(1,2,2,2)
+            mdb.update_node(node_id=1,x=2,y=2,z=2)
         Returns: 无
         """
-        qt_model.UpdateNode(id=node_id, x=x, y=y, z=z)
+        try:
+            qt_model.UpdateNode(id=node_id, x=x, y=y, z=z)
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def update_node_id(node_id: int, new_id: int):
@@ -357,10 +377,13 @@ class Mdb:
              node_id: 节点编号
              new_id: 新节点编号
         Example:
-            mdb.update_node_id(1,2)
+            mdb.update_node_id(node_id=1,new_id=2)
         Returns: 无
         """
-        qt_model.UpdateNodeId(nodeId=node_id, newId=new_id)
+        try:
+            qt_model.UpdateNodeId(nodeId=node_id, newId=new_id)
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def merge_nodes(ids: list[int] = None, tolerance: float = 1e-4):
@@ -429,7 +452,7 @@ class Mdb:
             offset_y:Y轴偏移量
             offset_z:Z轴偏移量
         Example:
-            mdb.move_node(1,1.5,1.5,1.5)
+            mdb.move_node(node_id=1,offset_x=1.5,offset_y=1.5,offset_z=1.5)
         Returns: 无
         """
         try:
@@ -567,7 +590,7 @@ class Mdb:
                 [编号,类型(3-索),materialId,sectionId,betaAngle,nodeI,nodeJ,张拉类型(1-初拉力 2-初始水平力 3-无应力长度),张拉值]
                 [编号,类型(4-板),materialId,thicknessId,betaAngle,nodeI,nodeJ,nodeK,nodeL]
         Example:
-            mdb.add_elements([
+            mdb.add_elements(ele_data=[
                 [1,1,1,1,0,1,2],
                 [2,2,1,1,0,1,2],
                 [3,3,1,1,0,1,2,1,100],
@@ -587,7 +610,7 @@ class Mdb:
             index: 单元编号
             mat_id: 材料编号
         Example:
-            mdb.update_element_material(1,2)
+            mdb.update_element_material(index=1,mat_id=2)
         Returns: 无
         """
         try:
@@ -603,7 +626,7 @@ class Mdb:
             index: 单元编号
             beta_angle: 贝塔角度数
         Example:
-            mdb.update_element_beta_angle(1,90)
+            mdb.update_element_beta_angle(index=1,beta_angle=90)
         Returns: 无
         """
         try:
@@ -619,7 +642,7 @@ class Mdb:
             index: 单元编号
             sec_id: 截面号
         Example:
-            mdb.update_element_section(1,2)
+            mdb.update_element_section(index=1,sec_id=2)
         Returns: 无
         """
         try:
@@ -1145,7 +1168,7 @@ class Mdb:
         """
         添加一般支承
         Args:
-             node_id:节点编号,支持数或列表
+             node_id:节点编号,支持整数或整数型列表
              boundary_info:边界信息  [X,Y,Z,Rx,Ry,Rz]  ture-固定 false-自由
              group_name:边界组名,默认为默认边界组
         Example:
@@ -1386,7 +1409,7 @@ class Mdb:
              name:影响面名称
              tandem_names:节点纵列名称组
         Example:
-            mdb.add_influence_plane("影响面1",["节点纵列1","节点纵列2"])
+            mdb.add_influence_plane(name="影响面1",tandem_names=["节点纵列1","节点纵列2"])
         Returns: 无
         """
         try:
@@ -1406,7 +1429,7 @@ class Mdb:
              offset:偏移
              lane_width:车道宽度
         Example:
-            mdb.add_lane_line("车道1","影响面1","节点纵列1",offset=0,lane_width=3.1)
+            mdb.add_lane_line(name="车道1",influence_name="影响面1",tandem_name="节点纵列1",offset=0,lane_width=3.1)
         Returns: 无
         """
         try:
@@ -1429,7 +1452,7 @@ class Mdb:
              trailer_code:考虑挂车时挂车车辆名
              special_code:考虑特载时特载车辆名
         Example:
-            mdb.add_live_load_case("活载工况1","影响面1",100,sub_case=[("车辆名称",1.0,["车道1","车道2"]),])
+            mdb.add_live_load_case(name="活载工况1",influence_plane="影响面1",span=100,sub_case=[("车辆名称",1.0,["车道1","车道2"]),])
         Returns: 无
         """
         try:
@@ -1454,7 +1477,7 @@ class Mdb:
              impact_factor:冲击系数大于1时为自定义，否则按照规范自动选取
              frequency:桥梁基频
         Example:
-            mdb.add_car_relative_factor("活载工况1",1,[1.2,1,0.78,0.67,0.6,0.55,0.52,0.5])
+            mdb.add_car_relative_factor(name="活载工况1",code_index=1,cross_factors=[1.2,1,0.78,0.67,0.6,0.55,0.52,0.5])
         Returns: 无
         """
         try:
@@ -1486,7 +1509,7 @@ class Mdb:
             rise:拱高 (规ZKH ZH活载-空腹式拱桥所需参数)
             calc_length:计算跨度(铁规ZKH ZH活载-空腹式拱桥所需参数)或计算长度(铁规ZK ZC活载所需参数)
         Example:
-            mdb.add_train_relative_factor("活载工况1",code_index=1,cross_factors=[1.2,1,0.78,0.67,0.6,0.55,0.52,0.5],calc_length=50)
+            mdb.add_train_relative_factor(name="活载工况1",code_index=1,cross_factors=[1.2,1,0.78,0.67,0.6,0.55,0.52,0.5],calc_length=50)
         Returns: 无
         """
         try:
@@ -1507,7 +1530,7 @@ class Mdb:
              longitude_factor:纵向折减系数，大于0时为自定义，否则为规范自动选取
              impact_factor:强度冲击系数大于1时为自定义，否则按照规范自动选取
         Example:
-            mdb.add_metro_relative_factor("活载工况1",cross_factors=[1.2,1,0.78,0.67,0.6,0.55,0.52,0.5],
+            mdb.add_metro_relative_factor(name="活载工况1",cross_factors=[1.2,1,0.78,0.67,0.6,0.55,0.52,0.5],
                 longitude_factor=1,impact_factor=1)
         Returns: 无
         """
@@ -1768,9 +1791,9 @@ class Mdb:
              track_group:轨迹线结构组名  (直线时不用赋值)
              projection:直线钢束投影 (默认为true)
         Example:
-            mdb.add_tendon_2d("BB1",property_name="22-15",num=2,position_type=1,
+            mdb.add_tendon_2d(name="BB1",property_name="22-15",num=2,position_type=1,
                     control_points=[(0,-1,0),(10,-1,0)],point_insert=(0,0,0))
-            mdb.add_tendon_2d("BB1",property_name="22-15",num=2,position_type=2,
+            mdb.add_tendon_2d(name="BB1",property_name="22-15",num=2,position_type=2,
                     control_points=[(0,-1,0),(10,-1,0)],point_insert=(1,1,1),track_group="轨迹线结构组1")
         Returns: 无
         """
@@ -1797,7 +1820,7 @@ class Mdb:
         Args:
             ids: 钢束构件所在单元编号集合
         Example:
-           mdb.update_tendon_element([1,2,3,4])
+           mdb.update_tendon_element(ids=[1,2,3,4])
         Returns: 无
         """
         try:
@@ -1998,7 +2021,7 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def add_nodal_force(node_id: (Union[int, List[int]]) = 1, case_name: str = "", load_info: tuple[float, float, float, float, float, float] = None,
+    def add_nodal_force(node_id: (Union[int, List[int]]) = 1, case_name: str = "", load_info: list[float] = None,
                         group_name: str = "默认荷载组"):
         """
         添加节点荷载
@@ -2008,7 +2031,7 @@ class Mdb:
             load_info:荷载信息列表 [Fx,Fy,Fz,Mx,My,Mz]
             group_name:荷载组名
         Example:
-            mdb.add_nodal_force(case_name="荷载工况1",node_id=1,load_info=(1,1,1,1,1,1),group_name="默认结构组")
+            mdb.add_nodal_force(case_name="荷载工况1",node_id=1,load_info=[1,1,1,1,1,1],group_name="默认结构组")
         Returns: 无
         """
         try:
@@ -2235,7 +2258,7 @@ class Mdb:
         """
         删除指定荷载工况下指定单元的板单元荷载
         Args:
-            element_id:单元编号支持数或列表
+            element_id:单元编号，支持数或列表
             case_name:荷载工况名
             load_type: 板单元类型 1集中力   2-集中弯矩  3-分布线力  4-分布线弯矩  5-分布面力  6-分布面弯矩
         Example:
@@ -2294,11 +2317,11 @@ class Mdb:
         """
         添加制造误差荷载
         Args:
-            element_id:单元编号支持数或列表
+            element_id:单元编号，支持数或列表
             case_name:荷载工况名
             parameters:参数名列表
-                _梁杆单元时-制造误差参数名称
-                _板单元时-[I端误差名,J端误差名,K端误差名,L端误差名]_
+                _梁杆单元时:制造误差参数名称_
+                _板单元时: [I端误差名,J端误差名,K端误差名,L端误差名]_
             group_name:荷载组名
         Example:
             mdb.add_deviation_load(element_id=1,case_name="工况1",parameters="梁端误差")
@@ -2318,7 +2341,7 @@ class Mdb:
         删除指定制造偏差荷载
         Args:
             case_name:荷载工况名
-            element_id:单元编号支持数或列表
+            element_id:单元编号，支持数或列表
         Example:
             mdb.remove_deviation_load(case_name="工况1",element_id=1)
         Returns: 无
@@ -2333,7 +2356,7 @@ class Mdb:
         """
         添加单元温度
         Args:
-            element_id:单元编号支持数或列表
+            element_id:单元编号，支持数或列表
             case_name:荷载工况名
             temperature:最终温度
             group_name:荷载组名
@@ -2352,7 +2375,7 @@ class Mdb:
         删除指定单元温度
         Args:
             case_name:荷载工况名
-            element_id:单元编号
+            element_id:单元编号，支持数或列表
             group_name:指定荷载组,后续升级开放指定荷载组删除功能
         Example:
             mdb.remove_element_temperature(case_name="荷载工况1",element_id=1)
@@ -2368,13 +2391,11 @@ class Mdb:
                                  element_type: int = 1, group_name: str = "默认荷载组"):
         """
         添加梯度温度
-            element_id:单元编号支持数或列表
+            element_id:单元编号，支持数或列表
             case_name:荷载工况名
             temperature:温差
-            section_oriental:截面方向 (仅梁单元需要)
-            _1-截面Y向(默认)  2-截面Z向_
-            element_type:单元类型
-            _1-梁单元(默认)  2-板单元_
+            section_oriental:截面方向,默认截面Y向 (仅梁单元需要, 1-截面Y向  2-截面Z向)
+            element_type:单元类型,默认为梁单元 (1-梁单元  2-板单元)
             group_name:荷载组名
         Example:
             mdb.add_gradient_temperature(element_id=1,case_name="荷载工况1",group_name="荷载组名1",temperature=10)
@@ -2393,7 +2414,7 @@ class Mdb:
         删除梁或板单元梯度温度
         Args:
             case_name:荷载工况名
-            element_id:单元编号
+            element_id:单元编号，支持数或列表
             group_name:指定荷载组,后续升级开放指定荷载组删除功能
         Example:
             mdb.remove_gradient_temperature(case_name="工况1",element_id=1)
@@ -2412,13 +2433,12 @@ class Mdb:
         """
         添加梁截面温度
         Args:
-            element_id:单元编号支持数或列表
+            element_id:单元编号，支持整数或整数型列表
             case_name:荷载工况名
-            code_index:规范编号  1-公路规范2015  2-AASHTO2017
+            code_index:规范编号  (1-公路规范2015  2-AASHTO2017)
             paving_thick:铺设厚度(m)
-            temperature_type:温度类型  1-升温(默认) 2-降温
-            paving_type:铺设类型
-            _1-沥青混凝土(默认)  2-水泥混凝土_
+            temperature_type:温度类型,默认升温  (1-升温 2-降温)
+            paving_type:铺设类型，默认为1 (1-沥青混凝土(默认)  2-水泥混凝土)
             zone_index: 区域号 (仅规范二需要)
             group_name:荷载组名
             modify:是否修改规范温度
@@ -2440,7 +2460,7 @@ class Mdb:
         删除指定梁或板单元梁截面温度
         Args:
             case_name:荷载工况名
-            element_id:单元编号
+            element_id:单元编号，支持数或列表
             group_name:指定荷载组,后续升级开放指定荷载组删除功能
         Example:
             mdb.remove_beam_section_temperature(case_name="工况1",element_id=1)
@@ -2457,7 +2477,7 @@ class Mdb:
         """
         添加指数温度
         Args:
-            element_id:单元编号
+            element_id:单元编号，支持数或列表
             case_name:荷载工况名
             temperature:温差
             index:指数
@@ -2472,12 +2492,12 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def remove_index_temperature(case_name: str, element_id: int, group_name: str = "默认荷载组"):
+    def remove_index_temperature(case_name: str, element_id: (Union[int, List[int]]) = 1, group_name: str = "默认荷载组"):
         """
         删除梁单元指数温度
         Args:
             case_name:荷载工况名
-            element_id:单元编号
+            element_id:单元编号，支持数或列表
             group_name:指定荷载组,后续升级开放指定荷载组删除功能
         Example:
             mdb.remove_index_temperature(case_name="工况1",element_id=1)
@@ -2507,12 +2527,12 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def remove_top_plate_temperature(case_name: str, element_id: int, group_name: str = "默认荷载组"):
+    def remove_top_plate_temperature(case_name: str, element_id: (Union[int, List[int]]) = 1, group_name: str = "默认荷载组"):
         """
         删除梁单元顶板温度
         Args:
             case_name:荷载工况名
-            element_id:单元编号
+            element_id:单元编号，支持数或列表
             group_name:指定荷载组,后续升级开放指定荷载组删除功能
         Example:
             mdb.remove_top_plate_temperature(case_name="荷载工况1",element_id=1)
@@ -2533,7 +2553,7 @@ class Mdb:
         Args:
              name: 沉降组名
              sink: 沉降值
-             node_ids: 节点编号
+             node_ids: 节点编号，支持数或列表
         Example:
             mdb.add_sink_group(name="沉降1",sink=0.1,node_ids=[1,2,3])
         Returns: 无
@@ -2572,7 +2592,7 @@ class Mdb:
         添加沉降工况
         Args:
             name:荷载工况名
-            sink_groups:沉降组名
+            sink_groups:沉降组名，支持字符串或列表
         Example:
             mdb.add_sink_case(name="沉降工况1",sink_groups=["沉降1","沉降2"])
         Returns: 无
@@ -2612,7 +2632,7 @@ class Mdb:
         Args:
              names: 结构组名称集合
         Example:
-            mdb.add_concurrent_reaction(["默认结构组"])
+            mdb.add_concurrent_reaction(names=["默认结构组"])
         Returns: 无
         """
         try:
@@ -2645,7 +2665,7 @@ class Mdb:
         Args:
             names: 结构组名称集合
         Example:
-            mdb.add_concurrent_force(["默认结构组"])
+            mdb.add_concurrent_force(names=["默认结构组"])
         Returns: 无
         """
         try:
@@ -2801,8 +2821,7 @@ class Mdb:
         Args:
            stage_name:施工阶段信息
            structure_group_name:结构组名
-           weight_stage_id: 计自重阶段号
-            _0-不计自重,1-本阶段 n-第n阶段_
+           weight_stage_id: 计自重阶段号 (0-不计自重,1-本阶段 n-第n阶段)
         Example:
            mdb.update_weight_stage(stage_name="施工阶段1",structure_group_name="默认结构组",weight_stage_id=1)
         Returns: 无
@@ -2864,7 +2883,7 @@ class Mdb:
         更新荷载组合
         Args:
             name:荷载组合名
-            combine_type:荷载组合类型 1-叠加  2-判别  3-包络
+            combine_type:荷载组合类型 (1-叠加  2-判别  3-包络)
             describe:描述
             combine_info:荷载组合信息 [(荷载工况类型,工况名,系数)...] 工况类型如下
                 _"ST"-静力荷载工况  "CS"-施工阶段荷载工况  "CB"-荷载组合_

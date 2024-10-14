@@ -1,6 +1,6 @@
-# 最新版本 V0.5.19 - 2024.09.30 
+# 最新版本 V0.5.20 - 2024.10.14 
 > pip install --upgrade qtmodel -i https://pypi.org/simple
-- 增加应力结果调用 
+- 规范帮助文档 
 ##  项目管理
 ### update_bim
 刷新Bim模型信息
@@ -27,8 +27,8 @@ Returns: 无
 ```Python
 # 示例代码
 from qtmodel import *
-mdb.update_app_stage(1)
-mdb.update_app_stage(2)
+mdb.update_app_stage(num=1)
+mdb.update_app_stage(num=2)
 ```  
 Returns: 无
 ### do_solve
@@ -56,7 +56,7 @@ Returns: 无
 ```Python
 # 示例代码
 from qtmodel import *
-mdb.open_file("a.bfmd")
+mdb.open_file(file_path="a.bfmd")
 ```  
 Returns: 无
 ### close_project
@@ -75,19 +75,19 @@ Returns: 无
 ```Python
 # 示例代码
 from qtmodel import *
-mdb.save_file("a.bfmd")
+mdb.save_file(file_path="a.bfmd")
 ```  
 Returns: 无
 ### import_command
 导入命令
 > 参数:  
 > command:命令字符  
-> command_type:命令类型 1-桥通命令 2-mct命令  
+> command_type:命令类型,默认桥通命令 1-桥通命令 2-mct命令  
 ```Python
 # 示例代码
 from qtmodel import *
-mdb.import_command("*SECTION")
-mdb.import_command("*SECTION",2)
+mdb.import_command(command="*SECTION")
+mdb.import_command(command="*SECTION",command_type=2)
 ```  
 Returns: 无
 ### import_file
@@ -97,7 +97,7 @@ Returns: 无
 ```Python
 # 示例代码
 from qtmodel import *
-mdb.import_file("a.mct")
+mdb.import_file(file_path="a.mct")
 ```  
 Returns: 无
 ### export_file
@@ -107,7 +107,7 @@ Returns: 无
 ```Python
 # 示例代码
 from qtmodel import *
-mdb.export_file("a.mct")
+mdb.export_file(file_path="a.mct")
 ```  
 Returns: 无
 ##  分析设置
@@ -120,7 +120,7 @@ Returns: 无
 ```Python
 # 示例代码
 from qtmodel import *
-mdb.update_global_setting(0,2,12)
+mdb.update_global_setting(solver_type=0,calculation_type=2,thread_count=12)
 ```  
 Returns: 无
 ### update_construction_stage_setting
@@ -139,7 +139,8 @@ Returns: 无
 ```Python
 # 示例代码
 from qtmodel import *
-mdb.update_construction_stage_setting(True, False, 1, 0, True, 0, True, 2, 1)
+mdb.update_construction_stage_setting(do_analysis=True, to_end_stage=False, other_stage_id=1,analysis_type=0,
+do_creep_analysis=True, cable_tension_position=0, consider_completion_stage=True,shrink_creep_type=2)
 ```  
 Returns: 无
 ### update_non_linear_setting
@@ -154,7 +155,8 @@ Returns: 无
 ```Python
 # 示例代码
 from qtmodel import *
-mdb.update_non_linear_setting(-1, 1, -1, 30, 0.0001, 0.0001)
+mdb.update_non_linear_setting(non_linear_type=-1, non_linear_method=1, max_loading_steps=-1, max_iteration_times=30,
+relative_accuracy_of_displacement=0.0001, relative_accuracy_of_force=0.0001)
 ```  
 Returns: 无
 ### update_operation_stage_setting
@@ -168,11 +170,12 @@ Returns: 无
 > sink_cases: 沉降工况名列表  
 > do_live_load_analysis: 是否进行活载工况分析  
 > live_load_cases: 活载工况名列表  
-> live_load_analytical_type: 移动荷载分析类型  
+> live_load_analytical_type: 移动荷载分析类型 0-线性 1-非线性 2-部分非线性  
 ```Python
 # 示例代码
 from qtmodel import *
-mdb.update_operation_stage_setting(True, "final_stage", True, None, False, None, False, None, 0)
+mdb.update_operation_stage_setting(do_analysis=True, final_stage="阶段名", do_static_load_analysis=True,
+static_load_cases=None, do_sink_analysis=False, sink_cases=None, do_live_load_analysis=False)
 ```  
 Returns: 无
 ### update_self_vibration_setting
@@ -185,7 +188,7 @@ Returns: 无
 ```Python
 # 示例代码
 from qtmodel import *
-mdb.update_self_vibration_setting(False,1,0,3)
+mdb.update_self_vibration_setting(do_analysis=False,method=1,matrix_type=0,mode_num=3)
 ```  
 Returns: 无
 ##  节点操作
@@ -199,8 +202,8 @@ Returns: 无
 ```Python
 # 示例代码
 from qtmodel import *
-mdb.add_node([1,2,3])
-mdb.add_node([1,1,2,3])
+mdb.add_node(node_data=[1,2,3])
+mdb.add_node(node_data=[1,1,2,3])
 ```  
 Returns: 无
 ### add_nodes
@@ -213,7 +216,7 @@ Returns: 无
 ```Python
 # 示例代码
 from qtmodel import *
-mdb.add_nodes([[1,1,2,3],[1,1,2,3]])
+mdb.add_nodes(node_data=[[1,1,2,3],[1,1,2,3]])
 ```  
 Returns: 无
 ### update_node
@@ -226,7 +229,7 @@ Returns: 无
 ```Python
 # 示例代码
 from qtmodel import *
-mdb.update_node(1,2,2,2)
+mdb.update_node(node_id=1,x=2,y=2,z=2)
 ```  
 Returns: 无
 ### update_node_id
@@ -237,7 +240,7 @@ Returns: 无
 ```Python
 # 示例代码
 from qtmodel import *
-mdb.update_node_id(1,2)
+mdb.update_node_id(node_id=1,new_id=2)
 ```  
 Returns: 无
 ### merge_nodes
@@ -282,7 +285,7 @@ Returns: 无
 ```Python
 # 示例代码
 from qtmodel import *
-mdb.move_node(1,1.5,1.5,1.5)
+mdb.move_node(node_id=1,offset_x=1.5,offset_y=1.5,offset_z=1.5)
 ```  
 Returns: 无
 ### add_structure_group
@@ -360,7 +363,7 @@ Returns: 无
 ```Python
 # 示例代码
 from qtmodel import *
-mdb.add_elements([
+mdb.add_elements(ele_data=[
 [1,1,1,1,0,1,2],
 [2,2,1,1,0,1,2],
 [3,3,1,1,0,1,2,1,100],
@@ -375,7 +378,7 @@ Returns: 无
 ```Python
 # 示例代码
 from qtmodel import *
-mdb.update_element_material(1,2)
+mdb.update_element_material(index=1,mat_id=2)
 ```  
 Returns: 无
 ### update_element_beta_angle
@@ -386,7 +389,7 @@ Returns: 无
 ```Python
 # 示例代码
 from qtmodel import *
-mdb.update_element_beta_angle(1,90)
+mdb.update_element_beta_angle(index=1,beta_angle=90)
 ```  
 Returns: 无
 ### update_element_section
@@ -397,7 +400,7 @@ Returns: 无
 ```Python
 # 示例代码
 from qtmodel import *
-mdb.update_element_section(1,2)
+mdb.update_element_section(index=1,sec_id=2)
 ```  
 Returns: 无
 ### update_element_node
@@ -688,7 +691,7 @@ Returns: 无
 ### add_general_support
 添加一般支承
 > 参数:  
-> node_id:节点编号,支持数或列表  
+> node_id:节点编号,支持整数或整数型列表  
 > boundary_info:边界信息  [X,Y,Z,Rx,Ry,Rz]  ture-固定 false-自由  
 > group_name:边界组名,默认为默认边界组  
 ```Python
@@ -850,7 +853,7 @@ Returns: 无
 ```Python
 # 示例代码
 from qtmodel import *
-mdb.add_influence_plane("影响面1",["节点纵列1","节点纵列2"])
+mdb.add_influence_plane(name="影响面1",tandem_names=["节点纵列1","节点纵列2"])
 ```  
 Returns: 无
 ### add_lane_line
@@ -864,7 +867,7 @@ Returns: 无
 ```Python
 # 示例代码
 from qtmodel import *
-mdb.add_lane_line("车道1","影响面1","节点纵列1",offset=0,lane_width=3.1)
+mdb.add_lane_line(name="车道1",influence_name="影响面1",tandem_name="节点纵列1",offset=0,lane_width=3.1)
 ```  
 Returns: 无
 ### add_live_load_case
@@ -879,7 +882,7 @@ Returns: 无
 ```Python
 # 示例代码
 from qtmodel import *
-mdb.add_live_load_case("活载工况1","影响面1",100,sub_case=[("车辆名称",1.0,["车道1","车道2"]),])
+mdb.add_live_load_case(name="活载工况1",influence_plane="影响面1",span=100,sub_case=[("车辆名称",1.0,["车道1","车道2"]),])
 ```  
 Returns: 无
 ### add_car_relative_factor
@@ -894,7 +897,7 @@ Returns: 无
 ```Python
 # 示例代码
 from qtmodel import *
-mdb.add_car_relative_factor("活载工况1",1,[1.2,1,0.78,0.67,0.6,0.55,0.52,0.5])
+mdb.add_car_relative_factor(name="活载工况1",code_index=1,cross_factors=[1.2,1,0.78,0.67,0.6,0.55,0.52,0.5])
 ```  
 Returns: 无
 ### add_train_relative_factor
@@ -915,7 +918,7 @@ Returns: 无
 ```Python
 # 示例代码
 from qtmodel import *
-mdb.add_train_relative_factor("活载工况1",code_index=1,cross_factors=[1.2,1,0.78,0.67,0.6,0.55,0.52,0.5],calc_length=50)
+mdb.add_train_relative_factor(name="活载工况1",code_index=1,cross_factors=[1.2,1,0.78,0.67,0.6,0.55,0.52,0.5],calc_length=50)
 ```  
 Returns: 无
 ### add_metro_relative_factor
@@ -928,7 +931,7 @@ Returns: 无
 ```Python
 # 示例代码
 from qtmodel import *
-mdb.add_metro_relative_factor("活载工况1",cross_factors=[1.2,1,0.78,0.67,0.6,0.55,0.52,0.5],
+mdb.add_metro_relative_factor(name="活载工况1",cross_factors=[1.2,1,0.78,0.67,0.6,0.55,0.52,0.5],
 longitude_factor=1,impact_factor=1)
 ```  
 Returns: 无
@@ -1083,9 +1086,9 @@ Returns: 无
 ```Python
 # 示例代码
 from qtmodel import *
-mdb.add_tendon_2d("BB1",property_name="22-15",num=2,position_type=1,
+mdb.add_tendon_2d(name="BB1",property_name="22-15",num=2,position_type=1,
 control_points=[(0,-1,0),(10,-1,0)],point_insert=(0,0,0))
-mdb.add_tendon_2d("BB1",property_name="22-15",num=2,position_type=2,
+mdb.add_tendon_2d(name="BB1",property_name="22-15",num=2,position_type=2,
 control_points=[(0,-1,0),(10,-1,0)],point_insert=(1,1,1),track_group="轨迹线结构组1")
 ```  
 Returns: 无
@@ -1096,7 +1099,7 @@ Returns: 无
 ```Python
 # 示例代码
 from qtmodel import *
-mdb.update_tendon_element([1,2,3,4])
+mdb.update_tendon_element(ids=[1,2,3,4])
 ```  
 Returns: 无
 ### remove_tendon
@@ -1224,7 +1227,7 @@ Returns: 无
 ```Python
 # 示例代码
 from qtmodel import *
-mdb.add_nodal_force(case_name="荷载工况1",node_id=1,load_info=(1,1,1,1,1,1),group_name="默认结构组")
+mdb.add_nodal_force(case_name="荷载工况1",node_id=1,load_info=[1,1,1,1,1,1],group_name="默认结构组")
 ```  
 Returns: 无
 ### remove_nodal_force
@@ -1370,7 +1373,7 @@ Returns: 无
 ### remove_plate_element_load
 删除指定荷载工况下指定单元的板单元荷载
 > 参数:  
-> element_id:单元编号支持数或列表  
+> element_id:单元编号，支持数或列表  
 > case_name:荷载工况名  
 > load_type: 板单元类型 1集中力   2-集中弯矩  3-分布线力  4-分布线弯矩  5-分布面力  6-分布面弯矩  
 ```Python
@@ -1408,11 +1411,11 @@ Returns: 无
 ### add_deviation_load
 添加制造误差荷载
 > 参数:  
-> element_id:单元编号支持数或列表  
+> element_id:单元编号，支持数或列表  
 > case_name:荷载工况名  
 > parameters:参数名列表  
-> _梁杆单元时-制造误差参数名称  
-> _板单元时-[I端误差名,J端误差名,K端误差名,L端误差名]_  
+> _梁杆单元时:制造误差参数名称_  
+> _板单元时: [I端误差名,J端误差名,K端误差名,L端误差名]_  
 > group_name:荷载组名  
 ```Python
 # 示例代码
@@ -1425,7 +1428,7 @@ Returns: 无
 删除指定制造偏差荷载
 > 参数:  
 > case_name:荷载工况名  
-> element_id:单元编号支持数或列表  
+> element_id:单元编号，支持数或列表  
 ```Python
 # 示例代码
 from qtmodel import *
@@ -1435,7 +1438,7 @@ Returns: 无
 ### add_element_temperature
 添加单元温度
 > 参数:  
-> element_id:单元编号支持数或列表  
+> element_id:单元编号，支持数或列表  
 > case_name:荷载工况名  
 > temperature:最终温度  
 > group_name:荷载组名  
@@ -1449,7 +1452,7 @@ Returns: 无
 删除指定单元温度
 > 参数:  
 > case_name:荷载工况名  
-> element_id:单元编号  
+> element_id:单元编号，支持数或列表  
 > group_name:指定荷载组,后续升级开放指定荷载组删除功能  
 ```Python
 # 示例代码
@@ -1470,7 +1473,7 @@ Returns: 无
 删除梁或板单元梯度温度
 > 参数:  
 > case_name:荷载工况名  
-> element_id:单元编号  
+> element_id:单元编号，支持数或列表  
 > group_name:指定荷载组,后续升级开放指定荷载组删除功能  
 ```Python
 # 示例代码
@@ -1481,13 +1484,12 @@ Returns: 无
 ### add_beam_section_temperature
 添加梁截面温度
 > 参数:  
-> element_id:单元编号支持数或列表  
+> element_id:单元编号，支持整数或整数型列表  
 > case_name:荷载工况名  
-> code_index:规范编号  1-公路规范2015  2-AASHTO2017  
+> code_index:规范编号  (1-公路规范2015  2-AASHTO2017)  
 > paving_thick:铺设厚度(m)  
-> temperature_type:温度类型  1-升温(默认) 2-降温  
-> paving_type:铺设类型  
-> _1-沥青混凝土(默认)  2-水泥混凝土_  
+> temperature_type:温度类型,默认升温  (1-升温 2-降温)  
+> paving_type:铺设类型，默认为1 (1-沥青混凝土(默认)  2-水泥混凝土)  
 > zone_index: 区域号 (仅规范二需要)  
 > group_name:荷载组名  
 > modify:是否修改规范温度  
@@ -1502,7 +1504,7 @@ Returns: 无
 删除指定梁或板单元梁截面温度
 > 参数:  
 > case_name:荷载工况名  
-> element_id:单元编号  
+> element_id:单元编号，支持数或列表  
 > group_name:指定荷载组,后续升级开放指定荷载组删除功能  
 ```Python
 # 示例代码
@@ -1513,7 +1515,7 @@ Returns: 无
 ### add_index_temperature
 添加指数温度
 > 参数:  
-> element_id:单元编号  
+> element_id:单元编号，支持数或列表  
 > case_name:荷载工况名  
 > temperature:温差  
 > index:指数  
@@ -1528,7 +1530,7 @@ Returns: 无
 删除梁单元指数温度
 > 参数:  
 > case_name:荷载工况名  
-> element_id:单元编号  
+> element_id:单元编号，支持数或列表  
 > group_name:指定荷载组,后续升级开放指定荷载组删除功能  
 ```Python
 # 示例代码
@@ -1553,7 +1555,7 @@ Returns: 无
 删除梁单元顶板温度
 > 参数:  
 > case_name:荷载工况名  
-> element_id:单元编号  
+> element_id:单元编号，支持数或列表  
 > group_name:指定荷载组,后续升级开放指定荷载组删除功能  
 ```Python
 # 示例代码
@@ -1567,7 +1569,7 @@ Returns: 无
 > 参数:  
 > name: 沉降组名  
 > sink: 沉降值  
-> node_ids: 节点编号  
+> node_ids: 节点编号，支持数或列表  
 ```Python
 # 示例代码
 from qtmodel import *
@@ -1589,7 +1591,7 @@ Returns: 无
 添加沉降工况
 > 参数:  
 > name:荷载工况名  
-> sink_groups:沉降组名  
+> sink_groups:沉降组名，支持字符串或列表  
 ```Python
 # 示例代码
 from qtmodel import *
@@ -1614,7 +1616,7 @@ Returns: 无
 ```Python
 # 示例代码
 from qtmodel import *
-mdb.add_concurrent_reaction(["默认结构组"])
+mdb.add_concurrent_reaction(names=["默认结构组"])
 ```  
 Returns: 无
 ### remove_concurrent_reaction
@@ -1633,7 +1635,7 @@ Returns: 无
 ```Python
 # 示例代码
 from qtmodel import *
-mdb.add_concurrent_force(["默认结构组"])
+mdb.add_concurrent_force(names=["默认结构组"])
 ```  
 Returns: 无
 ### remove_concurrent_force
@@ -1726,8 +1728,7 @@ Returns: 无
 > 参数:  
 > stage_name:施工阶段信息  
 > structure_group_name:结构组名  
-> weight_stage_id: 计自重阶段号  
-> _0-不计自重,1-本阶段 n-第n阶段_  
+> weight_stage_id: 计自重阶段号 (0-不计自重,1-本阶段 n-第n阶段)  
 ```Python
 # 示例代码
 from qtmodel import *
@@ -1764,7 +1765,7 @@ Returns: 无
 更新荷载组合
 > 参数:  
 > name:荷载组合名  
-> combine_type:荷载组合类型 1-叠加  2-判别  3-包络  
+> combine_type:荷载组合类型 (1-叠加  2-判别  3-包络)  
 > describe:描述  
 > combine_info:荷载组合信息 [(荷载工况类型,工况名,系数)...] 工况类型如下  
 > _"ST"-静力荷载工况  "CS"-施工阶段荷载工况  "CB"-荷载组合_  
@@ -1787,29 +1788,29 @@ mdb.remove_load_combine(name="荷载组合1")
 Returns: 无
 ##  视图控制
 ### activate_structure
-激活指定阶段和单元，默认激活所有
+激活指定阶段和单元,默认激活所有
 > 参数:  
 > node_ids: 节点集合  
 > element_ids: 单元集合  
 ```Python
 # 示例代码
 from qtmodel import *
-odb.activate_structure([1,2,3],[1,2,3])
+odb.activate_structure(node_ids=[1,2,3],element_ids=[1,2,3])
 ```  
 Returns: 无
 ### set_unit
-修改视图显示时单位制，不影响建模
+修改视图显示时单位制,不影响建模
 > 参数:  
 > unit_force: 支持 N KN TONF KIPS LBF  
 > unit_length: 支持 M MM CM IN FT  
 ```Python
 # 示例代码
 from qtmodel import *
-odb.set_unit("N","M")
+odb.set_unit(unit_force="N",unit_length="M")
 ```  
 Returns: 无
 ### remove_display
-删除当前所有显示，包括边界荷载钢束等全部显示
+删除当前所有显示,包括边界荷载钢束等全部显示
 > 参数:  
 ```Python
 # 示例代码
@@ -1824,7 +1825,7 @@ Returns: 无
 ```Python
 # 示例代码
 from qtmodel import *
-odb.save_png(r"D:\\QT\\aa.png")
+odb.save_png(file_path=r"D:\\QT\\aa.png")
 ```  
 Returns: 无
 ### set_render
@@ -1834,7 +1835,7 @@ Returns: 无
 ```Python
 # 示例代码
 from qtmodel import *
-odb.set_render(True)
+odb.set_render(flag=True)
 ```  
 Returns: 无
 ### change_construct_stage
@@ -1845,14 +1846,14 @@ Returns: 无
 # 示例代码
 from qtmodel import *
 odb.change_construct_stage(0)
-odb.change_construct_stage("基本")
+odb.change_construct_stage(stage=1)
 ```  
 Returns: 无
 ##  静力结果查看
 ### get_element_stress
 获取单元应力,支持单个单元和单元列表
 > 参数:  
-> element_id: 单元编号  
+> element_id: 单元编号,支持整数或整数型列表  
 > stage_id: 施工阶段号 -1-运营阶段  0-施工阶段包络 n-施工阶段号  
 > result_kind: 施工阶段数据的类型 1-合计 2-收缩徐变效应 3-预应力效应 4-恒载  
 > increment_type: 1-全量    2-增量  
@@ -1860,11 +1861,11 @@ Returns: 无
 ```Python
 # 示例代码
 from qtmodel import *
-odb.get_element_stress(1,stage_id=1)
-odb.get_element_stress([1,2,3],stage_id=1)
-odb.get_element_stress(1,stage_id=-1,case_name="工况名")
+odb.get_element_stress(element_id=1,stage_id=1)
+odb.get_element_stress(element_id=[1,2,3],stage_id=1)
+odb.get_element_stress(element_id=1,stage_id=-1,case_name="工况名")
 ```  
-Returns: json字符串，包含信息为list[dict] or dict
+Returns: json字符串,包含信息为list[dict] or dict
 ### get_element_force
 获取单元内力,支持单个单元和单元列表
 > 参数:  
@@ -1876,15 +1877,15 @@ Returns: json字符串，包含信息为list[dict] or dict
 ```Python
 # 示例代码
 from qtmodel import *
-odb.get_element_force(1,stage_id=1)
-odb.get_element_force([1,2,3],stage_id=1)
-odb.get_element_force(1,stage_id=-1,case_name="工况名")
+odb.get_element_force(element_id=1,stage_id=1)
+odb.get_element_force(element_id=[1,2,3],stage_id=1)
+odb.get_element_force(element_id=1,stage_id=-1,case_name="工况名")
 ```  
-Returns: json字符串，包含信息为list[dict] or dict
+Returns: json字符串,包含信息为list[dict] or dict
 ### get_reaction
-获取节点,支持单个节点和节点列表
+获取节点反力
 > 参数:  
-> node_id: 节点编号  
+> node_id: 节点编号,支持整数或整数型列表  
 > stage_id: 施工阶段号 -1-运营阶段  0-施工阶段包络 n-施工阶段号  
 > result_kind: 施工阶段数据的类型 1-合计 2-收缩徐变效应 3-预应力效应 4-恒载  
 > increment_type: 1-全量    2-增量  
@@ -1892,11 +1893,11 @@ Returns: json字符串，包含信息为list[dict] or dict
 ```Python
 # 示例代码
 from qtmodel import *
-odb.get_reaction(1,stage_id=1)
-odb.get_reaction([1,2,3],stage_id=1)
-odb.get_reaction(1,stage_id=-1,case_name="工况名")
+odb.get_reaction(node_id=1,stage_id=1)
+odb.get_reaction(node_id=[1,2,3],stage_id=1)
+odb.get_reaction(node_id=1,stage_id=-1,case_name="工况名")
 ```  
-Returns: json字符串，包含信息为list[dict] or dict
+Returns: json字符串,包含信息为list[dict] or dict
 ### get_node_displacement
 获取节点,支持单个节点和节点列表
 > 参数:  
@@ -1908,18 +1909,18 @@ Returns: json字符串，包含信息为list[dict] or dict
 ```Python
 # 示例代码
 from qtmodel import *
-odb.get_node_displacement(1,stage_id=1)
-odb.get_node_displacement([1,2,3],stage_id=1)
-odb.get_node_displacement(1,stage_id=-1,case_name="工况名")
+odb.get_node_displacement(node_id=1,stage_id=1)
+odb.get_node_displacement(node_id=[1,2,3],stage_id=1)
+odb.get_node_displacement(node_id=1,stage_id=-1,case_name="工况名")
 ```  
-Returns: json字符串，包含信息为list[dict] or dict
+Returns: json字符串,包含信息为list[dict] or dict
 ##  绘制模型结果
 ### plot_reaction_result
 保存结果图片到指定文件甲
 > 参数:  
 > file_path: 保存路径名  
 > stage_id: -1-运营阶段  0-施工阶段包络 n-施工阶段号  
-> load_case_name: 详细荷载工况名，参考桥通结果输出，例如： CQ:成桥(合计)  
+> load_case_name: 详细荷载工况名,参考桥通结果输出,例如： CQ:成桥(合计)  
 > show_increment: 是否显示增量结果  
 > envelope_type: 施工阶段包络类型 1-最大 2-最小  
 > component: 分量编号 0-Fx 1-Fy 2-Fz 3-Fxyz 4-Mx 5-My 6-Mz 7-Mxyz  
@@ -1933,7 +1934,7 @@ Returns: json字符串，包含信息为list[dict] or dict
 ```Python
 # 示例代码
 from qtmodel import *
-odb.plot_reaction_result(r"aaa.png",component=0,load_case_name="CQ:成桥(合计)",stage_id=-1)
+odb.plot_reaction_result(file_path=r"aaa.png",component=0,load_case_name="CQ:成桥(合计)",stage_id=-1)
 ```  
 Returns: 无
 ### plot_displacement_result
@@ -1941,7 +1942,7 @@ Returns: 无
 > 参数:  
 > file_path: 保存路径名  
 > stage_id: -1-运营阶段  0-施工阶段包络 n-施工阶段号  
-> load_case_name: 详细荷载工况名，参考桥通结果输出，例如： CQ:成桥(合计)  
+> load_case_name: 详细荷载工况名,参考桥通结果输出,例如： CQ:成桥(合计)  
 > show_increment: 是否显示增量结果  
 > envelope_type: 施工阶段包络类型 1-最大 2-最小  
 > component: 分量编号 0-Dx 1-Dy 2-Dz 3-Rx 4-Ry 5-Rz 6-Dxy 7-Dyz 8-Dxz 9-Dxyz  
@@ -1958,7 +1959,7 @@ Returns: 无
 ```Python
 # 示例代码
 from qtmodel import *
-odb.plot_displacement_result(r"aaa.png",component=0,load_case_name="CQ:成桥(合计)",stage_id=-1)
+odb.plot_displacement_result(file_path=r"aaa.png",component=0,load_case_name="CQ:成桥(合计)",stage_id=-1)
 ```  
 Returns: 无
 ### plot_beam_element_force
@@ -1966,7 +1967,7 @@ Returns: 无
 > 参数:  
 > file_path: 保存路径名  
 > stage_id: -1-运营阶段  0-施工阶段包络 n-施工阶段号  
-> load_case_name: 详细荷载工况名，参考桥通结果输出，例如： CQ:成桥(合计)  
+> load_case_name: 详细荷载工况名,参考桥通结果输出,例如： CQ:成桥(合计)  
 > show_increment: 是否显示增量结果  
 > envelope_type: 施工阶段包络类型 1-最大 2-最小  
 > component: 分量编号 0-Dx 1-Dy 2-Dz 3-Rx 4-Ry 5-Rz 6-Dxy 7-Dyz 8-Dxz 9-Dxyz  
@@ -1987,7 +1988,7 @@ Returns: 无
 ```Python
 # 示例代码
 from qtmodel import *
-odb.plot_beam_element_force(r"aaa.png",component=0,load_case_name="CQ:成桥(合计)",stage_id=-1)
+odb.plot_beam_element_force(file_path=r"aaa.png",component=0,load_case_name="CQ:成桥(合计)",stage_id=-1)
 ```  
 Returns: 无
 ### plot_truss_element_force
@@ -1995,7 +1996,7 @@ Returns: 无
 > 参数:  
 > file_path: 保存路径名  
 > stage_id: -1-运营阶段  0-施工阶段包络 n-施工阶段号  
-> load_case_name: 详细荷载工况名，参考桥通结果输出，例如： CQ:成桥(合计)  
+> load_case_name: 详细荷载工况名,参考桥通结果输出,例如： CQ:成桥(合计)  
 > show_increment: 是否显示增量结果  
 > envelope_type: 施工阶段包络类型 1-最大 2-最小  
 > component: 分量编号 0-N 1-Fx 2-Fy 3-Fz  
@@ -2016,7 +2017,7 @@ Returns: 无
 ```Python
 # 示例代码
 from qtmodel import *
-odb.plot_truss_element_force(r"aaa.png",load_case_name="CQ:成桥(合计)",stage_id=-1)
+odb.plot_truss_element_force(file_path=r"aaa.png",load_case_name="CQ:成桥(合计)",stage_id=-1)
 ```  
 Returns: 无
 ### plot_plate_element_force
@@ -2042,7 +2043,7 @@ Returns: 无
 ```Python
 # 示例代码
 from qtmodel import *
-odb.plot_plate_element_force(r"aaa.png",component=0,load_case_name="CQ:成桥(合计)",stage_id=-1)
+odb.plot_plate_element_force(file_path=r"aaa.png",component=0,load_case_name="CQ:成桥(合计)",stage_id=-1)
 ```  
 Returns: 无
 ### plot_composite_beam_force
@@ -2050,7 +2051,7 @@ Returns: 无
 > 参数:  
 > file_path: 保存路径名  
 > stage_id: -1-运营阶段  0-施工阶段包络 n-施工阶段号  
-> load_case_name: 详细荷载工况名，参考桥通结果输出，例如： CQ:成桥(合计)  
+> load_case_name: 详细荷载工况名,参考桥通结果输出,例如： CQ:成桥(合计)  
 > show_increment: 是否显示增量结果  
 > envelope_type: 施工阶段包络类型 1-最大 2-最小  
 > mat_type: 材料类型 0-主材 1-辅材 2-主材+辅材  
@@ -2072,7 +2073,7 @@ Returns: 无
 ```Python
 # 示例代码
 from qtmodel import *
-odb.plot_composite_beam_force(r"aaa.png",mat_type=0,component=0,load_case_name="CQ:成桥(合计)",stage_id=-1)
+odb.plot_composite_beam_force(file_path=r"aaa.png",mat_type=0,component=0,load_case_name="CQ:成桥(合计)",stage_id=-1)
 ```  
 Returns: 无
 ### plot_beam_element_stress
@@ -2080,7 +2081,7 @@ Returns: 无
 > 参数:  
 > file_path: 保存路径名  
 > stage_id: -1-运营阶段  0-施工阶段包络 n-施工阶段号  
-> load_case_name: 详细荷载工况名，参考桥通结果输出，例如： CQ:成桥(合计)  
+> load_case_name: 详细荷载工况名,参考桥通结果输出,例如： CQ:成桥(合计)  
 > show_increment: 是否显示增量结果  
 > envelope_type: 施工阶段包络类型 1-最大 2-最小  
 > component: 分量编号 0-Dx 1-Dy 2-Dz 3-Rx 4-Ry 5-Rz 6-Dxy 7-Dyz 8-Dxz 9-Dxyz  
@@ -2101,7 +2102,7 @@ Returns: 无
 ```Python
 # 示例代码
 from qtmodel import *
-odb.plot_beam_element_stress(r"aaa.png",component=0,load_case_name="CQ:成桥(合计)",stage_id=-1)
+odb.plot_beam_element_stress(file_path=r"aaa.png",component=0,load_case_name="CQ:成桥(合计)",stage_id=-1)
 ```  
 Returns: 无
 ### plot_truss_element_stress
@@ -2109,7 +2110,7 @@ Returns: 无
 > 参数:  
 > file_path: 保存路径名  
 > stage_id: -1-运营阶段  0-施工阶段包络 n-施工阶段号  
-> load_case_name: 详细荷载工况名，参考桥通结果输出，例如： CQ:成桥(合计)  
+> load_case_name: 详细荷载工况名,参考桥通结果输出,例如： CQ:成桥(合计)  
 > show_increment: 是否显示增量结果  
 > envelope_type: 施工阶段包络类型 1-最大 2-最小  
 > show_line_chart: 折线图选项卡开启  
@@ -2129,7 +2130,7 @@ Returns: 无
 ```Python
 # 示例代码
 from qtmodel import *
-odb.plot_truss_element_stress(r"aaa.png",load_case_name="CQ:成桥(合计)",stage_id=-1)
+odb.plot_truss_element_stress(file_path=r"aaa.png",load_case_name="CQ:成桥(合计)",stage_id=-1)
 ```  
 Returns: 无
 ### plot_composite_beam_stress
@@ -2137,7 +2138,7 @@ Returns: 无
 > 参数:  
 > file_path: 保存路径名  
 > stage_id: -1-运营阶段  0-施工阶段包络 n-施工阶段号  
-> load_case_name: 详细荷载工况名，参考桥通结果输出，例如： CQ:成桥(合计)  
+> load_case_name: 详细荷载工况名,参考桥通结果输出,例如： CQ:成桥(合计)  
 > show_increment: 是否显示增量结果  
 > envelope_type: 施工阶段包络类型 1-最大 2-最小  
 > mat_type: 材料类型 0-主材 1-辅材  
@@ -2159,7 +2160,7 @@ Returns: 无
 ```Python
 # 示例代码
 from qtmodel import *
-odb.plot_composite_beam_stress(r"aaa.png",component=0,load_case_name="CQ:成桥(合计)",stage_id=-1)
+odb.plot_composite_beam_stress(file_path=r"aaa.png",component=0,load_case_name="CQ:成桥(合计)",stage_id=-1)
 ```  
 Returns: 无
 ### plot_plate_element_stress
@@ -2186,7 +2187,7 @@ Returns: 无
 ```Python
 # 示例代码
 from qtmodel import *
-odb.plot_plate_element_stress(r"aaa.png",component=0,load_case_name="CQ:成桥(合计)",stage_id=-1)
+odb.plot_plate_element_stress(file_path=r"aaa.png",component=0,load_case_name="CQ:成桥(合计)",stage_id=-1)
 ```  
 Returns: 无
 ##  获取模型信息
@@ -2198,7 +2199,7 @@ Returns: 无
 from qtmodel import *
 odb.get_structure_group_names()
 ```  
-Returns: json字符串，包含信息为list[str]
+Returns: json字符串,包含信息为list[str]
 ### get_thickness_data
 获取所有板厚信息
 > 参数:  
@@ -2207,7 +2208,7 @@ Returns: json字符串，包含信息为list[str]
 from qtmodel import *
 odb.get_thickness_data(1)
 ```  
-Returns: json字符串，包含信息为dict
+Returns: json字符串,包含信息为dict
 ### get_all_thickness_data
 获取所有板厚信息
 > 参数:  
@@ -2216,7 +2217,7 @@ Returns: json字符串，包含信息为dict
 from qtmodel import *
 odb.get_all_thickness_data()
 ```  
-Returns: json字符串，包含信息为list[dict]
+Returns: json字符串,包含信息为list[dict]
 ### get_all_section_shape
 获取所有截面形状信息
 > 参数:  
@@ -2225,7 +2226,7 @@ Returns: json字符串，包含信息为list[dict]
 from qtmodel import *
 odb.get_all_section_shape()
 ```  
-Returns: json字符串，包含信息为list[dict]
+Returns: json字符串,包含信息为list[dict]
 ### get_section_shape
 获取截面形状信息
 > 参数:  
@@ -2235,18 +2236,18 @@ Returns: json字符串，包含信息为list[dict]
 from qtmodel import *
 odb.get_section_shape(1)
 ```  
-Returns: json字符串，包含信息为dict
+Returns: json字符串,包含信息为dict
 ### get_all_section_data
-获取所有截面详细信息，截面特性详见UI自定义特性截面
+获取所有截面详细信息,截面特性详见UI自定义特性截面
 > 参数:  
 ```Python
 # 示例代码
 from qtmodel import *
 odb.get_all_section_data()
 ```  
-Returns: json字符串，包含信息为list[dict]
+Returns: json字符串,包含信息为list[dict]
 ### get_section_data
-获取截面详细信息，截面特性详见UI自定义特性截面
+获取截面详细信息,截面特性详见UI自定义特性截面
 > 参数:  
 > sec_id: 目标截面编号  
 ```Python
@@ -2254,7 +2255,7 @@ Returns: json字符串，包含信息为list[dict]
 from qtmodel import *
 odb.get_section_data(1)
 ```  
-Returns: json字符串，包含信息为dict
+Returns: json字符串,包含信息为dict
 ### get_section_property
 获取指定截面特性
 > 参数:  
@@ -2275,7 +2276,7 @@ odb.get_section_ids()
 ```  
 Returns: list[int]
 ### get_node_id
-获取节点编号，为-1时则表示未找到该坐标节点
+获取节点编号,结果为-1时则表示未找到该坐标节点
 > 参数:  
 > x: 目标点X轴坐标  
 > y: 目标点Y轴坐标  
@@ -2284,7 +2285,7 @@ Returns: list[int]
 ```Python
 # 示例代码
 from qtmodel import *
-odb.get_node_id(1,1,1)
+odb.get_node_id(x=1,y=1,z=1)
 ```  
 Returns: int
 ### get_group_elements
@@ -2294,7 +2295,7 @@ Returns: int
 ```Python
 # 示例代码
 from qtmodel import *
-odb.get_group_elements("默认结构组")
+odb.get_group_elements(group_name="默认结构组")
 ```  
 Returns: list[int]
 ### get_group_nodes
@@ -2304,7 +2305,7 @@ Returns: list[int]
 ```Python
 # 示例代码
 from qtmodel import *
-odb.get_group_nodes("默认结构组")
+odb.get_group_nodes(group_name="默认结构组")
 ```  
 Returns: list[int]
 ### get_node_data
@@ -2314,20 +2315,21 @@ Returns: list[int]
 # 示例代码
 from qtmodel import *
 odb.get_node_data()     # 获取所有节点信息
-odb.get_node_data(1)    # 获取单个节点信息
-odb.get_node_data([1,2])    # 获取多个节点信息
+odb.get_node_data(ids=1)    # 获取单个节点信息
+odb.get_node_data(ids=[1,2])    # 获取多个节点信息
 ```  
-Returns:  json字符串，包含信息为list[dict] or dict
+Returns:  json字符串,包含信息为list[dict] or dict
 ### get_element_data
 获取单元信息
 > 参数:  
+> ids:单元号,支持整数或整数型列表,默认为None时获取所有单元信息  
 ```Python
 # 示例代码
 from qtmodel import *
 odb.get_element_data() # 获取所有单元结果
-odb.get_element_data(1) # 获取指定编号单元信息
+odb.get_element_data(ids=1) # 获取指定编号单元信息
 ```  
-Returns:  json字符串，包含信息为list[dict] or dict
+Returns:  json字符串,包含信息为list[dict] or dict
 ### get_element_type
 获取单元类型
 > 参数:  
@@ -2335,13 +2337,13 @@ Returns:  json字符串，包含信息为list[dict] or dict
 ```Python
 # 示例代码
 from qtmodel import *
-odb.get_element_type(1) # 获取所有单元信息
+odb.get_element_type(ele_id=1) # 获取1号单元类型
 ```  
 Returns: str
 ### get_beam_element
 获取梁单元信息
 > 参数:  
-> ids: 梁单元号，默认时获取所有梁单元  
+> ids: 梁单元号,默认时获取所有梁单元  
 ```Python
 # 示例代码
 from qtmodel import *
@@ -2351,7 +2353,7 @@ Returns:  list[str] 其中str为json格式
 ### get_plate_element
 获取板单元信息
 > 参数:  
-> ids: 板单元号，默认时获取所有板单元  
+> ids: 板单元号,默认时获取所有板单元  
 ```Python
 # 示例代码
 from qtmodel import *
@@ -2361,7 +2363,7 @@ Returns:  list[str] 其中str为json格式
 ### get_cable_element
 获取索单元信息
 > 参数:  
-> ids: 索单元号，默认时获取所有索单元  
+> ids: 索单元号,默认时获取所有索单元  
 ```Python
 # 示例代码
 from qtmodel import *
@@ -2371,7 +2373,7 @@ Returns:  list[str] 其中str为json格式
 ### get_link_element
 获取杆单元信息
 > 参数:  
-> ids: 杆单元号，默认时输出全部杆单元  
+> ids: 杆单元号,默认时输出全部杆单元  
 ```Python
 # 示例代码
 from qtmodel import *
@@ -2386,11 +2388,11 @@ Returns:  list[str] 其中str为json格式
 from qtmodel import *
 odb.get_material_data() # 获取所有材料信息
 ```  
-Returns: json字符串，包含信息为list[dict]
+Returns: json字符串,包含信息为list[dict]
 ### get_concrete_material
 获取混凝土材料信息
 > 参数:  
-> ids: 材料号，默认时输出全部材料  
+> ids: 材料号,默认时输出全部材料  
 ```Python
 # 示例代码
 from qtmodel import *
@@ -2400,7 +2402,7 @@ Returns:  list[str] 其中str为json格式
 ### get_steel_plate_material
 获取钢材材料信息
 > 参数:  
-> ids: 材料号，默认时输出全部材料  
+> ids: 材料号,默认时输出全部材料  
 ```Python
 # 示例代码
 from qtmodel import *
@@ -2410,7 +2412,7 @@ Returns:  list[str] 其中str为json格式
 ### get_pre_stress_bar_material
 获取钢材材料信息
 > 参数:  
-> ids: 材料号，默认时输出全部材料  
+> ids: 材料号,默认时输出全部材料  
 ```Python
 # 示例代码
 from qtmodel import *
@@ -2420,7 +2422,7 @@ Returns:  list[str] 其中str为json格式
 ### get_steel_bar_material
 获取钢筋材料信息
 > 参数:  
-> ids: 材料号，默认时输出全部材料  
+> ids: 材料号,默认时输出全部材料  
 ```Python
 # 示例代码
 from qtmodel import *
@@ -2430,7 +2432,7 @@ Returns:  list[str] 其中str为json格式
 ### get_user_###ine_material
 获取自定义材料信息
 > 参数:  
-> ids: 材料号，默认时输出全部材料  
+> ids: 材料号,默认时输出全部材料  
 ```Python
 # 示例代码
 from qtmodel import *
@@ -2446,7 +2448,7 @@ Returns:  list[str] 其中str为json格式
 from qtmodel import *
 odb.get_boundary_group_names()
 ```  
-Returns: json字符串，包含信息为list[str]
+Returns: json字符串,包含信息为list[str]
 ### get_general_support_data
 获取一般支承信息
 > 参数:  
@@ -2456,7 +2458,7 @@ Returns: json字符串，包含信息为list[str]
 from qtmodel import *
 odb.get_general_support_data()
 ```  
-Returns: json字符串，包含信息为list[dict]
+Returns: json字符串,包含信息为list[dict]
 ### get_elastic_link_data
 获取弹性连接信息
 > 参数:  
@@ -2466,7 +2468,7 @@ Returns: json字符串，包含信息为list[dict]
 from qtmodel import *
 odb.get_elastic_link_data()
 ```  
-Returns: json字符串，包含信息为list[dict]
+Returns: json字符串,包含信息为list[dict]
 ### get_elastic_support_data
 获取弹性支承信息
 > 参数:  
@@ -2476,7 +2478,7 @@ Returns: json字符串，包含信息为list[dict]
 from qtmodel import *
 odb.get_elastic_support_data()
 ```  
-Returns: json字符串，包含信息为list[dict]
+Returns: json字符串,包含信息为list[dict]
 ### get_master_slave_link_data
 获取主从连接信息
 > 参数:  
@@ -2486,7 +2488,7 @@ Returns: json字符串，包含信息为list[dict]
 from qtmodel import *
 odb.get_master_slave_link_data()
 ```  
-Returns: json字符串，包含信息为list[dict]
+Returns: json字符串,包含信息为list[dict]
 ### get_node_local_axis_data
 获取节点坐标信息
 > 参数:  
@@ -2495,7 +2497,7 @@ Returns: json字符串，包含信息为list[dict]
 from qtmodel import *
 odb.get_node_local_axis_data()
 ```  
-Returns: json字符串，包含信息为list[dict]
+Returns: json字符串,包含信息为list[dict]
 ### get_beam_constraint_data
 获取节点坐标信息
 > 参数:  
@@ -2505,7 +2507,7 @@ Returns: json字符串，包含信息为list[dict]
 from qtmodel import *
 odb.get_beam_constraint_data()
 ```  
-Returns: json字符串，包含信息为list[dict]
+Returns: json字符串,包含信息为list[dict]
 ### get_constraint_equation_data
 获取约束方程信息
 > 参数:  
@@ -2515,7 +2517,7 @@ Returns: json字符串，包含信息为list[dict]
 from qtmodel import *
 odb.get_constraint_equation_data()
 ```  
-Returns: json字符串，包含信息为list[dict]
+Returns: json字符串,包含信息为list[dict]
 ##  获取施工阶段信息
 ### get_stage_name
 获取所有施工阶段名称
@@ -2525,7 +2527,7 @@ Returns: json字符串，包含信息为list[dict]
 from qtmodel import *
 odb.get_stage_name()
 ```  
-Returns: json字符串，包含信息为list[int]
+Returns: json字符串,包含信息为list[int]
 ### get_elements_of_stage
 获取指定施工阶段单元编号信息
 > 参数:  
@@ -2533,9 +2535,9 @@ Returns: json字符串，包含信息为list[int]
 ```Python
 # 示例代码
 from qtmodel import *
-odb.get_elements_of_stage(1)
+odb.get_elements_of_stage(stage_id=1)
 ```  
-Returns: json字符串，包含信息为list[int]
+Returns: json字符串,包含信息为list[int]
 ### get_nodes_of_stage
 获取指定施工阶段节点编号信息
 > 参数:  
@@ -2543,9 +2545,9 @@ Returns: json字符串，包含信息为list[int]
 ```Python
 # 示例代码
 from qtmodel import *
-odb.get_nodes_of_stage(1)
+odb.get_nodes_of_stage(stage_id=1)
 ```  
-Returns: json字符串，包含信息为list[int]
+Returns: json字符串,包含信息为list[int]
 ### get_groups_of_stage
 获取施工阶段结构组、边界组、荷载组名集合
 > 参数:  
@@ -2553,9 +2555,9 @@ Returns: json字符串，包含信息为list[int]
 ```Python
 # 示例代码
 from qtmodel import *
-odb.get_groups_of_stage(1)
+odb.get_groups_of_stage(stage_id=1)
 ```  
-Returns: json字符串，包含信息为dict
+Returns: json字符串,包含信息为dict
 ##  荷载信息
 ### get_load_case_names
 获取荷载工况名
@@ -2565,7 +2567,7 @@ Returns: json字符串，包含信息为dict
 from qtmodel import *
 odb.get_load_case_names()
 ```  
-Returns: json字符串，包含信息为list[str]
+Returns: json字符串,包含信息为list[str]
 ### get_pre_stress_load
 获取预应力荷载
 > 参数:  
@@ -2573,9 +2575,9 @@ Returns: json字符串，包含信息为list[str]
 ```Python
 # 示例代码
 from qtmodel import *
-odb.get_pre_stress_load("荷载工况1")
+odb.get_pre_stress_load(case_name="荷载工况1")
 ```  
-Returns: json字符串，包含信息为list[dict]
+Returns: json字符串,包含信息为list[dict]
 ### get_node_mass_data
 获取节点质量
 > 参数:  
@@ -2584,7 +2586,7 @@ Returns: json字符串，包含信息为list[dict]
 from qtmodel import *
 odb.get_node_mass_data()
 ```  
-Returns: json字符串，包含信息为list[dict]
+Returns: json字符串,包含信息为list[dict]
 ### get_nodal_force_load
 获取节点力荷载
 > 参数:  
@@ -2592,9 +2594,9 @@ Returns: json字符串，包含信息为list[dict]
 ```Python
 # 示例代码
 from qtmodel import *
-odb.get_nodal_force_load("荷载工况1")
+odb.get_nodal_force_load(case_name="荷载工况1")
 ```  
-Returns: json字符串，包含信息为list[dict]
+Returns: json字符串,包含信息为list[dict]
 ### get_nodal_displacement_load
 获取节点位移荷载
 > 参数:  
@@ -2602,9 +2604,9 @@ Returns: json字符串，包含信息为list[dict]
 ```Python
 # 示例代码
 from qtmodel import *
-odb.get_nodal_displacement_load("荷载工况1")
+odb.get_nodal_displacement_load(case_name="荷载工况1")
 ```  
-Returns: json字符串，包含信息为list[dict]
+Returns: json字符串,包含信息为list[dict]
 ### get_beam_element_load
 获取梁单元荷载
 > 参数:  
@@ -2612,9 +2614,9 @@ Returns: json字符串，包含信息为list[dict]
 ```Python
 # 示例代码
 from qtmodel import *
-odb.get_beam_element_load("荷载工况1")
+odb.get_beam_element_load(case_name="荷载工况1")
 ```  
-Returns: json字符串，包含信息为list[dict]
+Returns: json字符串,包含信息为list[dict]
 ### get_plate_element_load
 获取梁单元荷载
 > 参数:  
@@ -2622,9 +2624,9 @@ Returns: json字符串，包含信息为list[dict]
 ```Python
 # 示例代码
 from qtmodel import *
-odb.get_beam_element_load("荷载工况1")
+odb.get_beam_element_load(case_name="荷载工况1")
 ```  
-Returns: json字符串，包含信息为list[dict]
+Returns: json字符串,包含信息为list[dict]
 ### get_initial_tension_load
 获取初拉力荷载数据
 > 参数:  
@@ -2632,19 +2634,19 @@ Returns: json字符串，包含信息为list[dict]
 ```Python
 # 示例代码
 from qtmodel import *
-odb.get_initial_tension_load("荷载工况1")
+odb.get_initial_tension_load(case_name="荷载工况1")
 ```  
-Returns: json字符串，包含信息为list[dict]
+Returns: json字符串,包含信息为list[dict]
 ### get_cable_length_load
-获取初拉力荷载数据
+获取指定荷载工况的初拉力荷载数据
 > 参数:  
 > case_name: 荷载工况名  
 ```Python
 # 示例代码
 from qtmodel import *
-odb.get_cable_length_load("荷载工况1")
+odb.get_cable_length_load(case_name="荷载工况1")
 ```  
-Returns: json字符串，包含信息为list[dict]
+Returns: json字符串,包含信息为list[dict]
 ### get_deviation_parameter
 获取制造偏差参数
 > 参数:  
@@ -2653,15 +2655,15 @@ Returns: json字符串，包含信息为list[dict]
 from qtmodel import *
 odb.get_deviation_parameter()
 ```  
-Returns: json字符串，包含信息为list[dict]
+Returns: json字符串,包含信息为list[dict]
 ### get_deviation_load
-获取制造偏差荷载
+获取指定荷载工况的制造偏差荷载
 > 参数:  
 > case_name:荷载工况名  
 ```Python
 # 示例代码
 from qtmodel import *
-odb.get_deviation_load("荷载工况1")
+odb.get_deviation_load(case_name="荷载工况1")
 ```  
-Returns: json字符串，包含信息为list[dict]
+Returns: json字符串,包含信息为list[dict]
 
