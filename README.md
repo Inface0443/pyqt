@@ -1,4 +1,4 @@
-# 最新版本 V0.5.20 - 2024.10.14 
+# 最新版本 V0.5.23 - 2024.10.15 
 > pip install --upgrade qtmodel -i https://pypi.org/simple
 - 规范帮助文档 
 ##  项目管理
