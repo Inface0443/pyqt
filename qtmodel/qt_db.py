@@ -1,3 +1,40 @@
+class DataHelper:
+    @staticmethod
+    def parse_to_num(str_list: list[str]) -> list[int]:
+        """
+        将字符串转为列表
+        Args:
+            str_list:字符串列表，1to10by2形式
+        Return:
+            list[int]
+        """
+        res_list = []
+        for s in str_list:
+            if 'by' in s:
+                # 确保有 'to'
+                if 'to' not in s:
+                    raise ValueError("If 'by' is present, 'to' must also be present.")
+                # 解析 'to' 和 'by'
+                to_index = s.index('to')
+                by_index = s.index('by')
+
+                start = int(s[:to_index])
+                end = int(s[to_index + 2:by_index])
+                step = int(s[by_index + 2:])
+                res_list.extend(list(range(start, end + 1, step)))
+            # 检查是否有 'to'
+            elif 'to' in s:
+                to_index = s.index('to')
+                start = int(s[:to_index])
+                end = int(s[to_index + 2:])
+
+                res_list.extend(list(range(start, end + 1)))
+            # 如果只有数字
+            else:
+                res_list.extend([int(s)])
+        return res_list
+
+
 class Node:
     def __init__(self, node_id: int, x: float, y: float, z: float):
         """

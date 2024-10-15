@@ -1232,12 +1232,30 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def add_master_slave_link(master_id: int = 1, slave_id: list[int] = None, boundary_info: list[bool] = None, group_name: str = "默认边界组"):
+    def add_master_slave_links(node_ids: list[tuple[int, int]] = None, boundary_info: list[bool] = None, group_name: str = "默认边界组"):
+        """
+        添加主从约束
+        Args:
+             node_ids:主节点号和从节点号，主节点号位于首位
+             boundary_info:边界信息 [X,Y,Z,Rx,Ry,Rz] ture-固定 false-自由
+             group_name:边界组名
+        Example:
+            mdb.add_master_slave_links(node_ids=[(1,2),(1,3),(4,5),(4,6)],boundary_info=[True,True,True,False,False,False])
+        Returns: 无
+        """
+        try:
+            qt_model.AddMasterSlaveLinks(nodeIds=node_ids, boundaryInfo=boundary_info, groupName=group_name)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def add_master_slave_link(master_id: int = 1, slave_id: (Union[int, List[int]]) = None,
+                              boundary_info: list[bool] = None, group_name: str = "默认边界组"):
         """
         添加主从约束
         Args:
              master_id:主节点号
-             slave_id:从节点号列表
+             slave_id:从节点号，支持整数或整数型列表
              boundary_info:边界信息 [X,Y,Z,Rx,Ry,Rz] ture-固定 false-自由
              group_name:边界组名
         Example:

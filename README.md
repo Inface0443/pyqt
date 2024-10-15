@@ -1,4 +1,4 @@
-# 最新版本 V0.5.23 - 2024.10.15 
+# 最新版本 V0.5.24 - 2024.10.15 
 > pip install --upgrade qtmodel -i https://pypi.org/simple
 - 规范帮助文档 
 ##  项目管理
@@ -734,11 +734,23 @@ mdb.add_elastic_link(link_type=2,start_id=1,end_id=2)
 mdb.add_elastic_link(link_type=3,start_id=1,end_id=2,kx=1e6)
 ```  
 Returns: 无
+### add_master_slave_links
+添加主从约束
+> 参数:  
+> node_ids:主节点号和从节点号，主节点号位于首位  
+> boundary_info:边界信息 [X,Y,Z,Rx,Ry,Rz] ture-固定 false-自由  
+> group_name:边界组名  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.add_master_slave_links(node_ids=[(1,2),(1,3),(4,5),(4,6)],boundary_info=[True,True,True,False,False,False])
+```  
+Returns: 无
 ### add_master_slave_link
 添加主从约束
 > 参数:  
 > master_id:主节点号  
-> slave_id:从节点号列表  
+> slave_id:从节点号，支持整数或整数型列表  
 > boundary_info:边界信息 [X,Y,Z,Rx,Ry,Rz] ture-固定 false-自由  
 > group_name:边界组名  
 ```Python
