@@ -2003,7 +2003,8 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def add_pre_stress(case_name: str = "", tendon_name: (Union[str, List[str]])= "", tension_type: int = 2, force: float = 1395000, group_name: str = "默认荷载组"):
+    def add_pre_stress(case_name: str = "", tendon_name: (Union[str, List[str]]) = "", tension_type: int = 2,
+                       force: float = 1395000, group_name: str = "默认荷载组"):
         """
         添加预应力
         Args:
@@ -2237,8 +2238,8 @@ class Mdb:
     @staticmethod
     def add_plate_element_load(element_id: (Union[int, List[int]]) = 1, case_name: str = "",
                                load_type: int = 1, load_place: int = 1, coord_system: int = 3,
-                               group_name: str = "默认荷载组", load_list: (Union[float, List[float]]) = None,
-                               xy_list: tuple[float, float] = None):
+                               group_name: str = "默认荷载组", list_load: (Union[float, List[float]]) = None,
+                               list_xy: tuple[float, float] = None):
         """
         添加版单元荷载
         Args:
@@ -2251,10 +2252,10 @@ class Mdb:
              coord_system:坐标系  (默认3)
                 _1-整体坐标X  2-整体坐标Y 3-整体坐标Z  4-局部坐标X  5-局部坐标Y  6-局部坐标Z_
              group_name:荷载组名
-             load_list:荷载列表
-             xy_list:荷载位置信息 [IJ方向绝对距离x,IL方向绝对距离y]  (仅集中荷载需要)
+             list_load:荷载列表
+             list_xy:荷载位置信息 [IJ方向绝对距离x,IL方向绝对距离y]  (仅集中荷载需要)
         Example:
-            mdb.add_plate_element_load(element_id=1,case_name="工况1",load_type=1,group_name="默认荷载组",load_list=[1000],xy_list=(0.2,0.5))
+            mdb.add_plate_element_load(element_id=1,case_name="工况1",load_type=1,group_name="默认荷载组",list_load=[1000],list_xy=(0.2,0.5))
         Returns: 无
         """
         try:
@@ -2262,12 +2263,12 @@ class Mdb:
                 raise Exception("操作错误，板单元暂不支持弯矩荷载")
             if load_type == 1:
                 qt_model.AddPlateElementLoad(elementId=element_id, caseName=case_name, loadType=load_type,
-                                             coordSystem=coord_system, groupName=group_name, loads=load_list)
+                                             coordSystem=coord_system, groupName=group_name, loads=list_load)
             elif load_type == 3:
                 if load_place == 0:
                     load_type = load_type + 2
                 qt_model.AddPlateElementLoad(elementId=element_id, caseName=case_name, loadType=load_type, loadPosition=load_place,
-                                             distanceList=xy_list, coordSystem=coord_system, groupName=group_name, loads=load_list)
+                                             distanceList=list_xy, coordSystem=coord_system, groupName=group_name, loads=list_load)
         except Exception as ex:
             raise Exception(ex)
 

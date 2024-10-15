@@ -1374,12 +1374,12 @@ Returns: 无
 > coord_system:坐标系  (默认3)  
 > _1-整体坐标X  2-整体坐标Y 3-整体坐标Z  4-局部坐标X  5-局部坐标Y  6-局部坐标Z_  
 > group_name:荷载组名  
-> load_list:荷载列表  
-> xy_list:荷载位置信息 [IJ方向绝对距离x,IL方向绝对距离y]  (仅集中荷载需要)  
+> list_load:荷载列表  
+> list_xy:荷载位置信息 [IJ方向绝对距离x,IL方向绝对距离y]  (仅集中荷载需要)  
 ```Python
 # 示例代码
 from qtmodel import *
-mdb.add_plate_element_load(element_id=1,case_name="工况1",load_type=1,group_name="默认荷载组",load_list=[1000],xy_list=(0.2,0.5))
+mdb.add_plate_element_load(element_id=1,case_name="工况1",load_type=1,group_name="默认荷载组",list_load=[1000],list_xy=(0.2,0.5))
 ```  
 Returns: 无
 ### remove_plate_element_load
