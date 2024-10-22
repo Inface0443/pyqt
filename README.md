@@ -1,6 +1,6 @@
-# 最新版本 V0.5.24 - 2024.10.15 
+# 最新版本 V0.5.25 - 2024.10.22 
 > pip install --upgrade qtmodel -i https://pypi.org/simple
-- 规范帮助文档 
+- 扩展荷载参数 
 ##  项目管理
 ### update_bim
 刷新Bim模型信息
@@ -1256,7 +1256,7 @@ Returns: 无
 ### add_node_displacement
 添加节点位移
 > 参数:  
-> node_id:节点编号  
+> node_id:节点编号,支持整型或整数型列表  
 > case_name:荷载工况名  
 > load_info:节点位移列表 [Dx,Dy,Dz,Rx,Ry,Rz]  
 > group_name:荷载组名  
@@ -1264,6 +1264,7 @@ Returns: 无
 # 示例代码
 from qtmodel import *
 mdb.add_node_displacement(case_name="荷载工况1",node_id=1,load_info=(1,0,0,0,0,0),group_name="默认荷载组")
+mdb.add_node_displacement(case_name="荷载工况1",node_id=[1,2,3],load_info=(1,0,0,0,0,0),group_name="默认荷载组")
 ```  
 Returns: 无
 ### remove_nodal_displacement

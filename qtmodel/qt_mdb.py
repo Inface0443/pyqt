@@ -2077,17 +2077,18 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def add_node_displacement(node_id: int = 1, case_name: str = "", load_info: tuple[float, float, float, float, float, float] = None,
+    def add_node_displacement(node_id: (Union[int, List[int]]) = None, case_name: str = "", load_info: tuple[float, float, float, float, float, float] = None,
                               group_name: str = "默认荷载组"):
         """
         添加节点位移
         Args:
-            node_id:节点编号
+            node_id:节点编号,支持整型或整数型列表
             case_name:荷载工况名
             load_info:节点位移列表 [Dx,Dy,Dz,Rx,Ry,Rz]
             group_name:荷载组名
         Example:
             mdb.add_node_displacement(case_name="荷载工况1",node_id=1,load_info=(1,0,0,0,0,0),group_name="默认荷载组")
+            mdb.add_node_displacement(case_name="荷载工况1",node_id=[1,2,3],load_info=(1,0,0,0,0,0),group_name="默认荷载组")
         Returns: 无
         """
         try:
