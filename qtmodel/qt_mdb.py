@@ -857,8 +857,8 @@ class Mdb:
             bias_type:偏心类型 默认中心
             center_type:中心类型 默认质心
             shear_consider:考虑剪切 bool 默认考虑剪切变形
-            bias_x:自定义偏心点x坐标 (仅自定义类型偏心需要)
-            bias_y:自定义偏心点y坐标 (仅自定义类型偏心需要)
+            bias_x:自定义偏心点x坐标 (仅自定义类型偏心需要,相对于质心偏移)
+            bias_y:自定义偏心点y坐标 (仅自定义类型偏心需要,相对于质心偏移)
         Example:
             mdb.add_section(name="截面1",sec_type="矩形",sec_info=[2,4],bias_type="中心")
             mdb.add_section(name="截面2",sec_type="混凝土箱梁",box_height=2,box_num=3,
@@ -876,24 +876,24 @@ class Mdb:
                 qt_model.AddSection(id=index, name=name, secType=sec_type, secInfo=sec_info, charmInfo=charm_info,
                                     symmetry=symmetry, boxNum=box_num, H=box_height, charmInfoR=charm_right, secInfoR=sec_right,
                                     biasType=bias_type, centerType=center_type, shearConsider=shear_consider,
-                                    horizontalPos=bias_x, verticalPos=bias_y)
+                                    biasX=bias_x, biasY=bias_y)
             elif sec_type == "工字钢梁" or sec_type == "箱型钢梁":
                 rib_names = list(rib_info.keys())
                 rib_data = list(rib_info.values())
                 qt_model.AddSection(id=index, name=name, secType=sec_type, secInfo=sec_info,
                                     ribNameList=rib_names, ribInfoList=rib_data,
                                     ribPlaceList=rib_place, biasType=bias_type, centerType=center_type,
-                                    shearConsider=shear_consider, horizontalPos=bias_x, verticalPos=bias_y)
+                                    shearConsider=shear_consider, biasX=bias_x, biasY=bias_y)
             elif sec_type == "特性截面" or sec_type.startswith("自定义"):
                 qt_model.AddSection(id=index, name=name, secType=sec_type, secInfo=sec_info, biasType=bias_type,
                                     loopSegments=loop_segments, secLines=sec_lines,
                                     secondaryLoopSegments=secondary_loop_segments, matCombine=mat_combine,
                                     shearConsider=shear_consider, centerType=center_type,
-                                    horizontalPos=bias_x, verticalPos=bias_y)
+                                    biasX=bias_x, biasY=bias_y)
             else:
                 qt_model.AddSection(id=index, name=name, secType=sec_type, secInfo=sec_info, matCombine=mat_combine,
                                     biasType=bias_type, centerType=center_type, shearConsider=shear_consider,
-                                    horizontalPos=bias_x, verticalPos=bias_y)
+                                    biasX=bias_x, biasY=bias_y)
         except Exception as ex:
             raise Exception(ex)
 

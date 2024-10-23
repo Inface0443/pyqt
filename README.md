@@ -1,6 +1,6 @@
-# 最新版本 V0.5.25 - 2024.10.22 
+# 最新版本 V0.5.26 - 2024.10.23 
 > pip install --upgrade qtmodel -i https://pypi.org/simple
-- 扩展荷载参数 
+- 修复截面偏心 
 ##  项目管理
 ### update_bim
 刷新Bim模型信息
@@ -509,8 +509,8 @@ Returns: 无
 > bias_type:偏心类型 默认中心  
 > center_type:中心类型 默认质心  
 > shear_consider:考虑剪切 bool 默认考虑剪切变形  
-> bias_x:自定义偏心点x坐标 (仅自定义类型偏心需要)  
-> bias_y:自定义偏心点y坐标 (仅自定义类型偏心需要)  
+> bias_x:自定义偏心点x坐标 (仅自定义类型偏心需要,相对于质心偏移)  
+> bias_y:自定义偏心点y坐标 (仅自定义类型偏心需要,相对于质心偏移)  
 ```Python
 # 示例代码
 from qtmodel import *
