@@ -1275,9 +1275,9 @@ class Mdb:
             if coord_info is None:
                 raise Exception("操作错误，输入坐标系信息不能为空")
             if input_type == 1:
-                qt_model.AddNodalAxises(inputType=input_type, nodeId=node_id, angleInfo=coord_info)
+                qt_model.AddNodalAxis(inputType=input_type, nodeId=node_id, angleInfo=coord_info)
             else:
-                qt_model.AddNodalAxises(inputType=input_type, nodeId=node_id, nodeInfo=coord_info)
+                qt_model.AddNodalAxis(inputType=input_type, nodeId=node_id, nodeInfo=coord_info)
         except Exception as ex:
             raise Exception(ex)
 
