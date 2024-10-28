@@ -255,7 +255,7 @@ class Mdb:
 
     @staticmethod
     def update_operation_stage_setting(do_analysis: bool, final_stage: str = "", static_load_cases: list[str] = None,
-                                       sink_load_cases: list[str] = None, live_load_cases: list[str] = None,):
+                                       sink_load_cases: list[str] = None, live_load_cases: list[str] = None, ):
         """
         更新运营阶段分析设置
         Args:
@@ -271,7 +271,7 @@ class Mdb:
         try:
             qt_model.UpdateOperationStageSetting(
                 doAnalysis=do_analysis, finalStage=final_stage,
-                staticLoadCaseNames=static_load_cases,sinkLoadCaseNames=sink_load_cases,liveLoadCaseNames=live_load_cases)
+                staticLoadCaseNames=static_load_cases, sinkLoadCaseNames=sink_load_cases, liveLoadCaseNames=live_load_cases)
         except Exception as ex:
             raise Exception(ex)
 
@@ -819,7 +819,7 @@ class Mdb:
                     mat_combine: list[float] = None, rib_info: dict[str, list[float]] = None,
                     rib_place: list[tuple[int, int, float, str, int, str]] = None,
                     loop_segments: list[dict] = None, sec_lines: list[tuple[float, float, float, float, float]] = None,
-                    secondary_loop_segments: list[dict] = None,sec_property:list[float]=None,
+                    secondary_loop_segments: list[dict] = None, sec_property: list[float] = None,
                     bias_type: str = "中心", center_type: str = "质心", shear_consider: bool = True, bias_x: float = 0, bias_y: float = 0):
         """
         添加单一截面信息,如果截面存在则自动覆盖
@@ -866,24 +866,24 @@ class Mdb:
                 qt_model.AddSection(id=index, name=name, secType=sec_type, secInfo=sec_info, charmInfo=charm_info,
                                     symmetry=symmetry, boxNum=box_num, H=box_height, charmInfoR=charm_right, secInfoR=sec_right,
                                     biasType=bias_type, centerType=center_type, shearConsider=shear_consider,
-                                    biasX=bias_x, biasY=bias_y,secProperty=sec_property)
+                                    biasX=bias_x, biasY=bias_y, secProperty=sec_property)
             elif sec_type == "工字钢梁" or sec_type == "箱型钢梁":
                 rib_names = list(rib_info.keys())
                 rib_data = list(rib_info.values())
                 qt_model.AddSection(id=index, name=name, secType=sec_type, secInfo=sec_info,
                                     ribNameList=rib_names, ribInfoList=rib_data,
                                     ribPlaceList=rib_place, biasType=bias_type, centerType=center_type,
-                                    shearConsider=shear_consider, biasX=bias_x, biasY=bias_y,secProperty=sec_property)
+                                    shearConsider=shear_consider, biasX=bias_x, biasY=bias_y, secProperty=sec_property)
             elif sec_type == "特性截面" or sec_type.startswith("自定义"):
                 qt_model.AddSection(id=index, name=name, secType=sec_type, secInfo=sec_info, biasType=bias_type,
                                     loopSegments=loop_segments, secLines=sec_lines,
                                     secondaryLoopSegments=secondary_loop_segments, matCombine=mat_combine,
                                     shearConsider=shear_consider, centerType=center_type,
-                                    biasX=bias_x, biasY=bias_y,secProperty=sec_property)
+                                    biasX=bias_x, biasY=bias_y, secProperty=sec_property)
             else:
                 qt_model.AddSection(id=index, name=name, secType=sec_type, secInfo=sec_info, matCombine=mat_combine,
                                     biasType=bias_type, centerType=center_type, shearConsider=shear_consider,
-                                    biasX=bias_x, biasY=bias_y,secProperty=sec_property)
+                                    biasX=bias_x, biasY=bias_y, secProperty=sec_property)
         except Exception as ex:
             raise Exception(ex)
 
@@ -2067,7 +2067,8 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def add_node_displacement(node_id: (Union[int, List[int]]) = None, case_name: str = "", load_info: tuple[float, float, float, float, float, float] = None,
+    def add_node_displacement(node_id: (Union[int, List[int]]) = None, case_name: str = "",
+                              load_info: tuple[float, float, float, float, float, float] = None,
                               group_name: str = "默认荷载组"):
         """
         添加节点位移
