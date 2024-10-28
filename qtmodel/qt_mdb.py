@@ -1299,7 +1299,7 @@ class Mdb:
                 raise Exception("操作错误，要求输入I端约束列表长度为6")
             if info_j is None or len(info_j) != 6:
                 raise Exception("操作错误，要求输入J端约束列表长度为6")
-            qt_model.AddBeamConstraint(beamId=beam_id, nodeInfoI=info_i, nodeInfoJ=info_j, groupName=group_name)
+            qt_model.AddBeamConstraint(beamId=beam_id, infoI=info_i, infoJ=info_j, groupName=group_name)
         except Exception as ex:
             raise Exception(ex)
 
