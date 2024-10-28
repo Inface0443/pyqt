@@ -1,6 +1,6 @@
-# 最新版本 V0.5.27 - 2024.10.28 
+# 最新版本 V0.5.28 - 2024.10.28 
 > pip install --upgrade qtmodel -i https://pypi.org/simple
-- 添加指定截面特性参数 
+- 修复梁单元梯度温度横纵向异常 
 ##  项目管理
 ### update_bim
 刷新Bim模型信息

@@ -2404,7 +2404,7 @@ class Mdb:
             element_id:单元编号，支持数或列表
             case_name:荷载工况名
             temperature:温差
-            section_oriental:截面方向,默认截面Y向 (仅梁单元需要, 1-截面Y向  2-截面Z向)
+            section_oriental:截面方向,默认截面Y向 (仅梁单元需要, 0-截面Y向  1-截面Z向)
             element_type:单元类型,默认为梁单元 (1-梁单元  2-板单元)
             group_name:荷载组名
         Example:
