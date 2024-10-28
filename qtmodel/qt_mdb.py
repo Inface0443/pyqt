@@ -254,35 +254,24 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def update_operation_stage_setting(do_analysis: bool, final_stage: str = "", do_static_load_analysis: bool = True,
-                                       static_load_cases: list[str] = None, do_sink_analysis: bool = False,
-                                       sink_cases: list[str] = None, do_live_load_analysis: bool = False, live_load_cases: list[str] = None,
-                                       live_load_analytical_type: int = 0):
+    def update_operation_stage_setting(do_analysis: bool, final_stage: str = "", static_load_cases: list[str] = None,
+                                       sink_load_cases: list[str] = None, live_load_cases: list[str] = None,):
         """
         更新运营阶段分析设置
         Args:
             do_analysis: 是否进行运营阶段分析
             final_stage: 最终阶段名
-            do_static_load_analysis: 是否进行静力工况分析
             static_load_cases: 静力工况名列表
-            do_sink_analysis: 是否进行沉降工况分析
-            sink_cases: 沉降工况名列表
-            do_live_load_analysis: 是否进行活载工况分析
+            sink_load_cases: 沉降工况名列表
             live_load_cases: 活载工况名列表
-            live_load_analytical_type: 移动荷载分析类型 0-线性 1-非线性 2-部分非线性
         Example:
-            mdb.update_operation_stage_setting(do_analysis=True, final_stage="阶段名", do_static_load_analysis=True,
-                static_load_cases=None, do_sink_analysis=False, sink_cases=None, do_live_load_analysis=False)
+            mdb.update_operation_stage_setting(do_analysis=True, final_stage="阶段名",static_load_cases=["1","2"])
         Returns: 无
         """
         try:
             qt_model.UpdateOperationStageSetting(
                 doAnalysis=do_analysis, finalStage=final_stage,
-                doStaticLoadAnalysis=do_static_load_analysis,
-                staticLoadCases=static_load_cases,
-                doSinkAnalysis=do_sink_analysis, sinkCases=sink_cases,
-                doLiveLoadAnalysis=do_live_load_analysis, liveLoadCases=live_load_cases,
-                liveLoadAnalyticalType=live_load_analytical_type)
+                staticLoadCaseNames=static_load_cases,sinkLoadCaseNames=sink_load_cases,liveLoadCaseNames=live_load_cases)
         except Exception as ex:
             raise Exception(ex)
 
@@ -830,7 +819,7 @@ class Mdb:
                     mat_combine: list[float] = None, rib_info: dict[str, list[float]] = None,
                     rib_place: list[tuple[int, int, float, str, int, str]] = None,
                     loop_segments: list[dict] = None, sec_lines: list[tuple[float, float, float, float, float]] = None,
-                    secondary_loop_segments: list[dict] = None,
+                    secondary_loop_segments: list[dict] = None,sec_property:list[float]=None,
                     bias_type: str = "中心", center_type: str = "质心", shear_consider: bool = True, bias_x: float = 0, bias_y: float = 0):
         """
         添加单一截面信息,如果截面存在则自动覆盖
@@ -854,11 +843,12 @@ class Mdb:
             loop_segments:线圈坐标集合 list[dict] dict示例:{"main":[(x1,y1),(x2,y2)...],"sub1":[(x1,y1),(x2,y2)...],"sub2":[(x1,y1),(x2,y2)...]}
             sec_lines:线宽集合[(x1,y1,x2,y3,thick),]
             secondary_loop_segments:辅材线圈坐标集合 list[dict] (同loop_segments)
+            sec_property:截面特性(参考UI界面共计26个参数)，可选参数，指定截面特性时不进行截面计算
             bias_type:偏心类型 默认中心
             center_type:中心类型 默认质心
             shear_consider:考虑剪切 bool 默认考虑剪切变形
-            bias_x:自定义偏心点x坐标 (仅自定义类型偏心需要,相对于质心偏移)
-            bias_y:自定义偏心点y坐标 (仅自定义类型偏心需要,相对于质心偏移)
+            bias_x:自定义偏心点x坐标 (仅自定义类型偏心需要,相对于center_type偏移)
+            bias_y:自定义偏心点y坐标 (仅自定义类型偏心需要,相对于center_type偏移)
         Example:
             mdb.add_section(name="截面1",sec_type="矩形",sec_info=[2,4],bias_type="中心")
             mdb.add_section(name="截面2",sec_type="混凝土箱梁",box_height=2,box_num=3,
@@ -876,24 +866,24 @@ class Mdb:
                 qt_model.AddSection(id=index, name=name, secType=sec_type, secInfo=sec_info, charmInfo=charm_info,
                                     symmetry=symmetry, boxNum=box_num, H=box_height, charmInfoR=charm_right, secInfoR=sec_right,
                                     biasType=bias_type, centerType=center_type, shearConsider=shear_consider,
-                                    biasX=bias_x, biasY=bias_y)
+                                    biasX=bias_x, biasY=bias_y,secProperty=sec_property)
             elif sec_type == "工字钢梁" or sec_type == "箱型钢梁":
                 rib_names = list(rib_info.keys())
                 rib_data = list(rib_info.values())
                 qt_model.AddSection(id=index, name=name, secType=sec_type, secInfo=sec_info,
                                     ribNameList=rib_names, ribInfoList=rib_data,
                                     ribPlaceList=rib_place, biasType=bias_type, centerType=center_type,
-                                    shearConsider=shear_consider, biasX=bias_x, biasY=bias_y)
+                                    shearConsider=shear_consider, biasX=bias_x, biasY=bias_y,secProperty=sec_property)
             elif sec_type == "特性截面" or sec_type.startswith("自定义"):
                 qt_model.AddSection(id=index, name=name, secType=sec_type, secInfo=sec_info, biasType=bias_type,
                                     loopSegments=loop_segments, secLines=sec_lines,
                                     secondaryLoopSegments=secondary_loop_segments, matCombine=mat_combine,
                                     shearConsider=shear_consider, centerType=center_type,
-                                    biasX=bias_x, biasY=bias_y)
+                                    biasX=bias_x, biasY=bias_y,secProperty=sec_property)
             else:
                 qt_model.AddSection(id=index, name=name, secType=sec_type, secInfo=sec_info, matCombine=mat_combine,
                                     biasType=bias_type, centerType=center_type, shearConsider=shear_consider,
-                                    biasX=bias_x, biasY=bias_y)
+                                    biasX=bias_x, biasY=bias_y,secProperty=sec_property)
         except Exception as ex:
             raise Exception(ex)
 

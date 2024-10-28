@@ -1,6 +1,6 @@
-# 最新版本 V0.5.26 - 2024.10.23 
+# 最新版本 V0.5.27 - 2024.10.28 
 > pip install --upgrade qtmodel -i https://pypi.org/simple
-- 修复截面偏心 
+- 添加指定截面特性参数 
 ##  项目管理
 ### update_bim
 刷新Bim模型信息
@@ -164,18 +164,13 @@ Returns: 无
 > 参数:  
 > do_analysis: 是否进行运营阶段分析  
 > final_stage: 最终阶段名  
-> do_static_load_analysis: 是否进行静力工况分析  
 > static_load_cases: 静力工况名列表  
-> do_sink_analysis: 是否进行沉降工况分析  
-> sink_cases: 沉降工况名列表  
-> do_live_load_analysis: 是否进行活载工况分析  
+> sink_load_cases: 沉降工况名列表  
 > live_load_cases: 活载工况名列表  
-> live_load_analytical_type: 移动荷载分析类型 0-线性 1-非线性 2-部分非线性  
 ```Python
 # 示例代码
 from qtmodel import *
-mdb.update_operation_stage_setting(do_analysis=True, final_stage="阶段名", do_static_load_analysis=True,
-static_load_cases=None, do_sink_analysis=False, sink_cases=None, do_live_load_analysis=False)
+mdb.update_operation_stage_setting(do_analysis=True, final_stage="阶段名",static_load_cases=["1","2"])
 ```  
 Returns: 无
 ### update_self_vibration_setting
@@ -506,11 +501,12 @@ Returns: 无
 > loop_segments:线圈坐标集合 list[dict] dict示例:{"main":[(x1,y1),(x2,y2)...],"sub1":[(x1,y1),(x2,y2)...],"sub2":[(x1,y1),(x2,y2)...]}  
 > sec_lines:线宽集合[(x1,y1,x2,y3,thick),]  
 > secondary_loop_segments:辅材线圈坐标集合 list[dict] (同loop_segments)  
+> sec_property:截面特性(参考UI界面共计26个参数)，可选参数，指定截面特性时不进行截面计算  
 > bias_type:偏心类型 默认中心  
 > center_type:中心类型 默认质心  
 > shear_consider:考虑剪切 bool 默认考虑剪切变形  
-> bias_x:自定义偏心点x坐标 (仅自定义类型偏心需要,相对于质心偏移)  
-> bias_y:自定义偏心点y坐标 (仅自定义类型偏心需要,相对于质心偏移)  
+> bias_x:自定义偏心点x坐标 (仅自定义类型偏心需要,相对于center_type偏移)  
+> bias_y:自定义偏心点y坐标 (仅自定义类型偏心需要,相对于center_type偏移)  
 ```Python
 # 示例代码
 from qtmodel import *
