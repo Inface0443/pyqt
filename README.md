@@ -1,4 +1,4 @@
-# 最新版本 V0.5.30 - 2024.10.29 
+# 最新版本 V0.5.31 - 2024.10.29 
 > pip install --upgrade qtmodel -i https://pypi.org/simple
 - 修改帮助文档 
 ##  项目管理
@@ -103,7 +103,10 @@ Returns: 无
 ### export_file
 导入命令
 > 参数:  
-> file_path:导出文件全路径，支持格式(.mct/.qdat/.PGF/.3dx)  
+> file_path:导出文件全路径，支持格式(.mct/.qdat/.obj/.txt/.py)  
+> convert_sec_group:是否将变截面组转换为变截面  
+> type_kind:输出文件类型  1-详细文件  2-计算文件  
+> group_name:obj与 APDL导出时指定结构组导出  
 ```Python
 # 示例代码
 from qtmodel import *
@@ -543,6 +546,8 @@ Returns: 无
 > sec_type:截面类型  
 > sec_begin:截面始端编号  
 > sec_end:截面末端编号  
+> shear_consider:考虑剪切变形  
+> sec_normalize:变截面线段线圈重新排序  
 ```Python
 # 示例代码
 from qtmodel import *

@@ -162,17 +162,20 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def export_file(file_path: str):
+    def export_file(file_path: str, convert_sec_group: bool = False, type_kind: int = 1, group_name: (Union[str, List[str]]) = None):
         """
         导入命令
         Args:
-            file_path:导出文件全路径，支持格式(.mct/.qdat/.PGF/.3dx)
+            file_path:导出文件全路径，支持格式(.mct/.qdat/.obj/.txt/.py)
+            convert_sec_group:是否将变截面组转换为变截面
+            type_kind:输出文件类型  1-详细文件  2-计算文件
+            group_name:obj与 APDL导出时指定结构组导出
         Example:
             mdb.export_file(file_path="a.mct")
         Returns: 无
         """
         try:
-            qt_model.ExportFile(file_path)
+            qt_model.ExportFile(filePath=file_path, convertSectionGroup=convert_sec_group, typeKind=type_kind, groupName=group_name)
         except Exception as ex:
             raise Exception(ex)
 
@@ -907,7 +910,8 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def add_tapper_section(index: int = -1, name: str = "", sec_type: str = "矩形", sec_begin: dict = None, sec_end: dict = None):
+    def add_tapper_section(index: int = -1, name: str = "", sec_type: str = "矩形", sec_begin: dict = None, sec_end: dict = None,
+                           shear_consider: bool = True, sec_normalize: bool = False):
         """
         添加变截面,字典参数参考单一截面,如果截面存在则自动覆盖
         Args:
@@ -916,6 +920,8 @@ class Mdb:
             sec_type:截面类型
             sec_begin:截面始端编号
             sec_end:截面末端编号
+            shear_consider:考虑剪切变形
+            sec_normalize:变截面线段线圈重新排序
         Example:
             mdb.add_tapper_section(index=1,name="变截面1",sec_type="矩形",
                 sec_begin={"sec_info":[1,2],"bias_type":"中心"},
@@ -923,7 +929,8 @@ class Mdb:
         Returns: 无
         """
         try:
-            qt_model.AddTapperSection(id=index, name=name, secType=sec_type, secBegin=sec_begin, secEnd=sec_end)
+            qt_model.AddTapperSection(id=index, name=name, secType=sec_type, secBegin=sec_begin, secEnd=sec_end,
+                                      shearConsider=shear_consider,secNormalize=sec_normalize)
         except Exception as ex:
             raise Exception(ex)
 
