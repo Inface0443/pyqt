@@ -265,7 +265,7 @@ class Mdb:
             sink_load_cases: 沉降工况名列表
             live_load_cases: 活载工况名列表
         Example:
-            mdb.update_operation_stage_setting(do_analysis=True, final_stage="阶段名",static_load_cases=["1","2"])
+            mdb.update_operation_stage_setting(do_analysis=True, final_stage="上二恒",static_load_cases=None)
         Returns: 无
         """
         try:
@@ -285,7 +285,7 @@ class Mdb:
             matrix_type: 矩阵类型 0-集中质量矩阵  1-一致质量矩阵
             mode_num: 振型数量
         Example:
-            mdb.update_self_vibration_setting(do_analysis=False,method=1,matrix_type=0,mode_num=3)
+            mdb.update_self_vibration_setting(do_analysis=True,method=1,matrix_type=0,mode_num=3)
         Returns: 无
         """
         try:

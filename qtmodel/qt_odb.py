@@ -300,7 +300,7 @@ class Odb:
             show_exponential: 指数显示开启
             arrow_scale:箭头大小
         Example:
-            odb.plot_reaction_result(file_path=r"aaa.png",component=0,load_case_name="CQ:成桥(合计)",stage_id=-1)
+            odb.plot_reaction_result(file_path=r"D:\\图片\\反力图.png",component=0,load_case_name="CQ:成桥(合计)",stage_id=-1)
         Returns: 无
         """
         try:
@@ -338,7 +338,7 @@ class Odb:
             show_exponential: 指数显示开启
             show_pre_deformed: 显示变形前
         Example:
-            odb.plot_displacement_result(file_path=r"aaa.png",component=0,load_case_name="CQ:成桥(合计)",stage_id=-1)
+            odb.plot_displacement_result(file_path=r"D:\\图片\\变形图.png",component=0,load_case_name="CQ:成桥(合计)",stage_id=-1)
         Returns: 无
         """
         try:
@@ -383,7 +383,7 @@ class Odb:
             show_pre_deformed: 显示变形前
             position: 位置编号 0-始端 1-末端 2-绝对最大 4-全部
         Example:
-            odb.plot_beam_element_force(file_path=r"aaa.png",component=0,load_case_name="CQ:成桥(合计)",stage_id=-1)
+            odb.plot_beam_element_force(file_path=r"D:\\图片\\梁内力.png",component=0,load_case_name="CQ:成桥(合计)",stage_id=-1)
         Returns: 无
         """
         try:
@@ -430,7 +430,7 @@ class Odb:
             show_pre_deformed: 显示变形前
             position: 位置编号 0-始端 1-末端 2-绝对最大 4-全部
         Example:
-            odb.plot_truss_element_force(file_path=r"aaa.png",load_case_name="CQ:成桥(合计)",stage_id=-1)
+            odb.plot_truss_element_force(file_path=r"D:\\图片\\杆内力.png",load_case_name="CQ:成桥(合计)",stage_id=-1)
         Returns: 无
         """
         try:
@@ -473,7 +473,7 @@ class Odb:
             max_min_kind: 最大最小值显示类型
             show_increment: 是否显示增量结果
         Example:
-            odb.plot_plate_element_force(file_path=r"aaa.png",component=0,load_case_name="CQ:成桥(合计)",stage_id=-1)
+            odb.plot_plate_element_force(file_path=r"D:\\图片\\板内力.png",component=0,load_case_name="CQ:成桥(合计)",stage_id=-1)
         Returns: 无
         """
         try:
@@ -493,7 +493,7 @@ class Odb:
                                   show_line_chart: bool = True, line_scale: float = 1.0, flip_plot: bool = True,
                                   show_deformed: bool = True, deformed_actual: bool = False, deformed_scale: float = 1.0,
                                   show_number: bool = False, text_rotation: int = 0, max_min_kind: int = 0,
-                                  show_legend: bool = True, digital_count: int = 0, show_exponential: bool = True,
+                                  show_legend: bool = True, digital_count: int = 1, show_exponential: bool = True,
                                   show_pre_deformed: bool = False, position: int = 0):
         """
         绘制组合梁单元结果图并保存到指定文件
@@ -520,7 +520,7 @@ class Odb:
             show_pre_deformed: 显示变形前
             position: 位置编号 0-始端 1-末端 2-绝对最大 4-全部
         Example:
-            odb.plot_composite_beam_force(file_path=r"aaa.png",mat_type=0,component=0,load_case_name="CQ:成桥(合计)",stage_id=-1)
+            odb.plot_composite_beam_force(file_path=r"D:\\图片\\组合梁内力.png",mat_type=0,component=0,load_case_name="CQ:成桥(合计)",stage_id=-1)
         Returns: 无
         """
         try:
@@ -551,7 +551,7 @@ class Odb:
             load_case_name: 详细荷载工况名,参考桥通结果输出,例如： CQ:成桥(合计)
             show_increment: 是否显示增量结果
             envelope_type: 施工阶段包络类型 1-最大 2-最小
-            component: 分量编号 0-Dx 1-Dy 2-Dz 3-Rx 4-Ry 5-Rz 6-Dxy 7-Dyz 8-Dxz 9-Dxyz
+            component: 分量编号 0-轴力分量 1-Mz分量 2-My分量 3-组合包络 4-左上 5-右上 6-右下 7-左下
             show_line_chart: 折线图选项卡开启
             line_scale:折线图比例
             flip_plot:反向绘制
@@ -567,7 +567,7 @@ class Odb:
             show_pre_deformed: 显示变形前
             position: 位置编号 0-始端 1-末端 2-绝对最大 4-全部
         Example:
-            odb.plot_beam_element_stress(file_path=r"aaa.png",component=0,load_case_name="CQ:成桥(合计)",stage_id=-1)
+            odb.plot_beam_element_stress(file_path=r"D:\\图片\\梁应力.png",show_line_chart=False,component=0,load_case_name="CQ:成桥(合计)",stage_id=-1)
         Returns: 无
         """
         try:
@@ -612,7 +612,7 @@ class Odb:
             show_pre_deformed: 显示变形前
             position: 位置编号 0-始端 1-末端 2-绝对最大 4-全部
         Example:
-            odb.plot_truss_element_stress(file_path=r"aaa.png",load_case_name="CQ:成桥(合计)",stage_id=-1)
+            odb.plot_truss_element_stress(file_path=r"D:\\图片\\杆应力.png",load_case_name="CQ:成桥(合计)",stage_id=-1)
         Returns: 无
         """
         try:
@@ -659,7 +659,7 @@ class Odb:
             show_pre_deformed: 显示变形前
             position: 位置编号 0-始端 1-末端 2-绝对最大 4-全部
         Example:
-            odb.plot_composite_beam_stress(file_path=r"aaa.png",component=0,load_case_name="CQ:成桥(合计)",stage_id=-1)
+            odb.plot_composite_beam_stress(file_path=r"D:\\图片\\组合梁应力.png",component=0,load_case_name="CQ:成桥(合计)",stage_id=-1)
         Returns: 无
         """
         try:
@@ -679,7 +679,7 @@ class Odb:
                                   envelope_type: int = 1, stress_kind: int = 0, component: int = 0,
                                   show_number: bool = False, text_rotation_angle: int = 0, max_min_kind: int = 0,
                                   show_deformed: bool = True, deformed_scale: float = 1.0, deformed_actual: bool = False,
-                                  show_legend: bool = True, digital_count: int = 0, show_as_exponential: bool = True,
+                                  show_legend: bool = True, digital_count: int = 1, show_as_exponential: bool = True,
                                   show_pre_deformed: bool = False, position: int = 0):
         """
         绘制板单元结果图并保存到指定文件
@@ -703,7 +703,7 @@ class Odb:
             show_increment: 是否显示增量结果
             position: 位置 0-板顶 1-板底 2-绝对值最大
         Example:
-            odb.plot_plate_element_stress(file_path=r"aaa.png",component=0,load_case_name="CQ:成桥(合计)",stage_id=-1)
+            odb.plot_plate_element_stress(file_path=r"D:\\图片\\板应力.png",component=0,load_case_name="CQ:成桥(合计)",stage_id=-1)
         Returns: 无
         """
         try:
