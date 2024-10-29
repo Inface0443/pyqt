@@ -997,10 +997,10 @@ class Mdb:
             if rib_l is None:
                 rib_l = []
             if bias_info is None:
-                qt_model.AddThickness(id=index, name=name, t=t, type=thick_type, isBiased=False, ribPos=rib_pos,
+                qt_model.AddThickness(id=index, name=name, t=t, thickType=thick_type, isBiased=False, ribPos=rib_pos,
                                       verticalDis=dist_v, lateralDis=dist_l, verticalRib=rib_v, lateralRib=rib_l)
             else:
-                qt_model.AddThickness(id=index, name=name, t=t, type=thick_type, isBiased=False, ribPos=rib_pos,
+                qt_model.AddThickness(id=index, name=name, t=t, thickType=thick_type, isBiased=False, ribPos=rib_pos,
                                       offSetType=bias_info[0], offSetValue=bias_info[1],
                                       verticalDis=dist_v, lateralDis=dist_l, verticalRib=rib_v, lateralRib=rib_l)
             qt_model.UpdateModel()
@@ -2415,7 +2415,7 @@ class Mdb:
         """
         try:
             qt_model.AddGradientTemperature(elementId=element_id, caseName=case_name, temperature=temperature,
-                                            sectionOriental=section_oriental, elementType=element_type, groupNmae=group_name)
+                                            sectionOriental=section_oriental, elementType=element_type, groupName=group_name)
         except Exception as ex:
             raise Exception(ex)
 
