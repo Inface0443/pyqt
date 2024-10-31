@@ -775,19 +775,19 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def update_material_creep(index: int = 1, creep_id: int = 1, f_cuk: float = 0):
+    def update_material_creep(index: int = 1, creep_name: str = "", f_cuk: float = 0):
         """
         将收缩徐变参数连接到材料
         Args:
             index: 材料编号
-            creep_id: 收缩徐变编号
+            creep_name: 收缩徐变名称
             f_cuk: 材料标准抗压强度,仅自定义材料是需要输入
         Example:
-            mdb.update_material_creep(index=1,creep_id=1,f_cuk=5e7)
+            mdb.update_material_creep(index=1,creep_name="C60",f_cuk=5e7)
         Returns: 无
         """
         try:
-            qt_model.UpdateMaterialCreep(materialId=index, timePatameterId=creep_id, fcuk=f_cuk)
+            qt_model.UpdateMaterialCreep(materialId=index, creepName=creep_name, fcuk=f_cuk)
             qt_model.UpdateModel()
         except Exception as ex:
             raise Exception(ex)
@@ -1654,6 +1654,78 @@ class Mdb:
 
     # endregion
 
+    # region 动力荷载操作
+    @staticmethod
+    def add_load_to_mass(name: str, factor: float = 1):
+        """
+        添加荷载转为质量
+        Args:
+            name: 荷载工况名称
+            factor: 系数
+        Example:
+            mdb.add_load_to_mass(name="荷载工况",factor=1)
+        Returns: 无
+        """
+        try:
+            qt_model.AddLoadToMass(name=name, factor=factor)
+            qt_model.UpdateModel()
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def add_nodal_mass(node_id: (Union[int, List[int]]) = 1, mass_info: tuple[float, float, float, float] = None):
+        """
+        添加节点质量
+        Args:
+             node_id:节点编号，支持单个编号和编号列表
+             mass_info:[m,rmX,rmY,rmZ]
+        Example:
+            mdb.add_nodal_mass(node_id=1,mass_info=(100,0,0,0))
+        Returns: 无
+        """
+        try:
+            if mass_info is None:
+                raise Exception("操作错误，节点质量信息列表不能为空")
+            qt_model.AddNodalMass(nodeId=node_id, massInfo=mass_info)
+            qt_model.UpdateModel()
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def remove_nodal_mass(node_id: (Union[int, List[int]]) = -1):
+        """
+        删除节点质量
+        Args:
+             node_id:节点号，默认删除所有节点质量
+        Example:
+            mdb.remove_nodal_mass(node_id=1)
+        Returns: 无
+        """
+        try:
+            if node_id == -1:
+                qt_model.RemoveAllNodalMass()
+            else:
+                qt_model.RemoveNodalMass(nodeId=node_id)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def remove_load_to_mass(name: str):
+        """
+        删除荷载转为质量
+        Args:
+             name:荷载工况名
+        Example:
+            mdb.remove_load_to_mass(name="荷载工况")
+        Returns: 无
+        """
+        try:
+            qt_model.RemoveLoadToMass(name=name)
+        except Exception as ex:
+            raise Exception(ex)
+
+    # endregion
+
     # region 钢束操作
     @staticmethod
     def add_tendon_group(name: str = "", index: int = -1):
@@ -1927,75 +1999,6 @@ class Mdb:
             else:
                 qt_model.RemoveAllLoadGroup()
             qt_model.UpdateModel()
-        except Exception as ex:
-            raise Exception(ex)
-
-    @staticmethod
-    def add_load_to_mass(name: str, factor: float = 1):
-        """
-        添加荷载转为质量
-        Args:
-            name: 荷载工况名称
-            factor: 系数
-        Example:
-            mdb.add_load_to_mass(name="荷载工况",factor=1)
-        Returns: 无
-        """
-        try:
-            qt_model.AddLoadToMass(name=name, factor=factor)
-            qt_model.UpdateModel()
-        except Exception as ex:
-            raise Exception(ex)
-
-    @staticmethod
-    def add_nodal_mass(node_id: (Union[int, List[int]]) = 1, mass_info: tuple[float, float, float, float] = None):
-        """
-        添加节点质量
-        Args:
-             node_id:节点编号，支持单个编号和编号列表
-             mass_info:[m,rmX,rmY,rmZ]
-        Example:
-            mdb.add_nodal_mass(node_id=1,mass_info=(100,0,0,0))
-        Returns: 无
-        """
-        try:
-            if mass_info is None:
-                raise Exception("操作错误，节点质量信息列表不能为空")
-            qt_model.AddNodalMass(nodeId=node_id, massInfo=mass_info)
-            qt_model.UpdateModel()
-        except Exception as ex:
-            raise Exception(ex)
-
-    @staticmethod
-    def remove_nodal_mass(node_id: (Union[int, List[int]]) = -1):
-        """
-        删除节点质量
-        Args:
-             node_id:节点号，默认删除所有节点质量
-        Example:
-            mdb.remove_nodal_mass(node_id=1)
-        Returns: 无
-        """
-        try:
-            if node_id == -1:
-                qt_model.RemoveAllNodalMass()
-            else:
-                qt_model.RemoveNodalMass(nodeId=node_id)
-        except Exception as ex:
-            raise Exception(ex)
-
-    @staticmethod
-    def remove_load_to_mass(name: str):
-        """
-        删除荷载转为质量
-        Args:
-             name:荷载工况名
-        Example:
-            mdb.remove_load_to_mass(name="荷载工况")
-        Returns: 无
-        """
-        try:
-            qt_model.RemoveLoadToMass(name=name)
         except Exception as ex:
             raise Exception(ex)
 

@@ -1,4 +1,5 @@
-# 最新版本 V0.5.31 - 2024.10.29 
+C:\Users\Robert\.conda\envs\py39\python.exe C:/Users/Robert/Desktop/MyWork/Python建模/test.py
+# 最新版本 V0.5.32 - 2024.10.30 
 > pip install --upgrade qtmodel -i https://pypi.org/simple
 - 修改帮助文档 
 ##  项目管理
@@ -462,12 +463,12 @@ Returns: 无
 将收缩徐变参数连接到材料
 > 参数:  
 > index: 材料编号  
-> creep_id: 收缩徐变编号  
+> creep_name: 收缩徐变名称  
 > f_cuk: 材料标准抗压强度,仅自定义材料是需要输入  
 ```Python
 # 示例代码
 from qtmodel import *
-mdb.update_material_creep(index=1,creep_id=1,f_cuk=5e7)
+mdb.update_material_creep(index=1,creep_name="C60",f_cuk=5e7)
 ```  
 Returns: 无
 ### remove_material
