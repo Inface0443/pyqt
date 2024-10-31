@@ -296,6 +296,30 @@ class Mdb:
         except Exception as ex:
             raise Exception(ex)
 
+    @staticmethod
+    def update_response_spectrum_setting(do_analysis: bool = False, kind: int = 1, by_mode: bool = False,
+                                         damping_ratio: (Union[float, List[float]]) = 0.05):
+        """
+        更新反应谱设置
+        Args:
+            do_analysis:是否进行反应谱分析
+            kind:组合方式 1-SRSS 2-CQC
+            by_mode: 是否按照振型输入阻尼比
+            damping_ratio:常数阻尼比或振型阻尼比列表
+        Example:
+            mdb.update_response_spectrum_setting(do_analysis=True,kind=1,damping_ratio=0.05)
+        Returns: 无
+        """
+        try:
+            if isinstance(damping_ratio, float) and damping_ratio > 0:
+                qt_model.UpdateResponseSpectrumSetting(doAnalysis=do_analysis, kind=kind, isDampingByMode=by_mode, dampingRatio=damping_ratio)
+            elif isinstance(damping_ratio, list) and all(x > 0 for x in damping_ratio):
+                qt_model.UpdateResponseSpectrumSetting(doAnalysis=do_analysis, kind=kind, isDampingByMode=by_mode, dampingRatio=damping_ratio)
+            else:
+                raise Exception("操作失败,要求阻尼比大于零")
+        except Exception as ex:
+            raise Exception(ex)
+
     # endregion
 
     # region 节点操作
@@ -930,7 +954,7 @@ class Mdb:
         """
         try:
             qt_model.AddTapperSection(id=index, name=name, secType=sec_type, secBegin=sec_begin, secEnd=sec_end,
-                                      shearConsider=shear_consider,secNormalize=sec_normalize)
+                                      shearConsider=shear_consider, secNormalize=sec_normalize)
         except Exception as ex:
             raise Exception(ex)
 
@@ -1721,6 +1745,47 @@ class Mdb:
         """
         try:
             qt_model.RemoveLoadToMass(name=name)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def add_spectrum_function(name: str = "", factor: float = 1.0, kind: int = 0, function_info: list[tuple[float, float]] = None):
+        """
+        添加反应谱函数
+        Args:
+            name:反应谱函数名
+            factor:反应谱调整系数
+            kind:反应谱类型 0-无量纲 1-加速度 2-位移
+            function_info:反应谱函数信息
+        Example:
+            mdb.add_spectrum_function(name="反应谱函数1",factor=1.0,function_info=[(0,0.02),(1,0.03)])
+        Returns: 无
+        """
+        try:
+            qt_model.AddResponseSpectrumFunction(name=name, factor=factor, kind=kind, functionInfo=function_info)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def add_spectrum_case(name: str = "", description: str = "", kind: int = 1, info_x: tuple[str, float] = None,
+                          info_y: tuple[str, float] = None, info_z: tuple[str, float] = None):
+        """
+        添加反应谱工况
+        Args:
+             name:荷载工况名
+             description:说明
+             kind:组合方式 1-求模 2-求和
+             info_x: 反应谱X向信息 (X方向函数名,系数)
+             info_y: 反应谱Y向信息 (Y方向函数名,系数)
+             info_z: 反应谱Z向信息 (Z方向函数名,系数)
+        Example:
+            mdb.add_spectrum_case(name="反应谱工况",info_x=("函数1",1.0))
+        Returns: 无
+        """
+        try:
+            if info_x is None and info_y is None and info_z is None:
+                raise Exception("添加反应谱函数错误,无反应谱分项信息")
+            qt_model.AddResponseSpectrumCase(name=name, description=description, kind=kind, infoX=info_x, info_y=info_y, info_z=info_z)
         except Exception as ex:
             raise Exception(ex)
 

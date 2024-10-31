@@ -1,5 +1,4 @@
-C:\Users\Robert\.conda\envs\py39\python.exe C:/Users/Robert/Desktop/MyWork/Python建模/test.py
-# 最新版本 V0.5.32 - 2024.10.30 
+# 最新版本 V0.5.33 - 2024.10.31 
 > pip install --upgrade qtmodel -i https://pypi.org/simple
 - 修改帮助文档 
 ##  项目管理
@@ -188,6 +187,19 @@ Returns: 无
 # 示例代码
 from qtmodel import *
 mdb.update_self_vibration_setting(do_analysis=True,method=1,matrix_type=0,mode_num=3)
+```  
+Returns: 无
+### update_response_spectrum_setting
+更新反应谱设置
+> 参数:  
+> do_analysis:是否进行反应谱分析  
+> kind:组合方式 1-SRSS 2-CQC  
+> by_mode: 是否按照振型输入阻尼比  
+> damping_ratio:常数阻尼比或振型阻尼比列表  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.update_response_spectrum_setting(do_analysis=True,kind=1,damping_ratio=0.05)
 ```  
 Returns: 无
 ##  节点操作
@@ -1005,6 +1017,77 @@ from qtmodel import *
 mdb.remove_live_load_case(name="活载工况1")
 ```  
 Returns: 无
+##  动力荷载操作
+### add_load_to_mass
+添加荷载转为质量
+> 参数:  
+> name: 荷载工况名称  
+> factor: 系数  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.add_load_to_mass(name="荷载工况",factor=1)
+```  
+Returns: 无
+### add_nodal_mass
+添加节点质量
+> 参数:  
+> node_id:节点编号，支持单个编号和编号列表  
+> mass_info:[m,rmX,rmY,rmZ]  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.add_nodal_mass(node_id=1,mass_info=(100,0,0,0))
+```  
+Returns: 无
+### remove_nodal_mass
+删除节点质量
+> 参数:  
+> node_id:节点号，默认删除所有节点质量  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.remove_nodal_mass(node_id=1)
+```  
+Returns: 无
+### remove_load_to_mass
+删除荷载转为质量
+> 参数:  
+> name:荷载工况名  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.remove_load_to_mass(name="荷载工况")
+```  
+Returns: 无
+### add_spectrum_function
+添加反应谱函数
+> 参数:  
+> name:反应谱函数名  
+> factor:反应谱调整系数  
+> kind:反应谱类型 0-无量纲 1-加速度 2-位移  
+> function_info:反应谱函数信息  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.add_spectrum_function(name="反应谱函数1",factor=1.0,function_info=[(0,0.02),(1,0.03)])
+```  
+Returns: 无
+### add_spectrum_case
+添加反应谱工况
+> 参数:  
+> name:荷载工况名  
+> description:说明  
+> kind:组合方式 1-求模 2-求和  
+> info_x: 反应谱X向信息 (X方向函数名,系数)  
+> info_y: 反应谱Y向信息 (Y方向函数名,系数)  
+> info_z: 反应谱Z向信息 (Z方向函数名,系数)  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.add_spectrum_case(name="反应谱工况",info_x=("函数1",1.0))
+```  
+Returns: 无
 ##  钢束操作
 ### add_tendon_group
 按照名称添加钢束组，添加时可指定钢束组id
@@ -1161,48 +1244,6 @@ Returns: 无
 # 示例代码
 from qtmodel import *
 mdb.remove_load_group(name="荷载组1")
-```  
-Returns: 无
-### add_load_to_mass
-添加荷载转为质量
-> 参数:  
-> name: 荷载工况名称  
-> factor: 系数  
-```Python
-# 示例代码
-from qtmodel import *
-mdb.add_load_to_mass(name="荷载工况",factor=1)
-```  
-Returns: 无
-### add_nodal_mass
-添加节点质量
-> 参数:  
-> node_id:节点编号，支持单个编号和编号列表  
-> mass_info:[m,rmX,rmY,rmZ]  
-```Python
-# 示例代码
-from qtmodel import *
-mdb.add_nodal_mass(node_id=1,mass_info=(100,0,0,0))
-```  
-Returns: 无
-### remove_nodal_mass
-删除节点质量
-> 参数:  
-> node_id:节点号，默认删除所有节点质量  
-```Python
-# 示例代码
-from qtmodel import *
-mdb.remove_nodal_mass(node_id=1)
-```  
-Returns: 无
-### remove_load_to_mass
-删除荷载转为质量
-> 参数:  
-> name:荷载工况名  
-```Python
-# 示例代码
-from qtmodel import *
-mdb.remove_load_to_mass(name="荷载工况")
 ```  
 Returns: 无
 ### add_pre_stress
