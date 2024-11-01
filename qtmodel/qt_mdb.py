@@ -233,7 +233,7 @@ class Mdb:
 
     @staticmethod
     def update_non_linear_setting(non_linear_type: int = 1, non_linear_method: int = 1, max_loading_steps: int = 1, max_iteration_times: int = 30,
-                                  relative_accuracy_of_displacement: float = 0.0001, relative_accuracy_of_force: float = 0.0001):
+                                  accuracy_of_displacement: float = 0.0001, accuracy_of_force: float = 0.0001):
         """
         更新非线性设置
         Args:
@@ -241,23 +241,23 @@ class Mdb:
             non_linear_method: 非线性方法 0-修正牛顿法 1-牛顿法
             max_loading_steps: 最大加载步数
             max_iteration_times: 最大迭代次数
-            relative_accuracy_of_displacement: 位移相对精度
-            relative_accuracy_of_force: 内力相对精度
+            accuracy_of_displacement: 位移相对精度
+            accuracy_of_force: 内力相对精度
         Example:
             mdb.update_non_linear_setting(non_linear_type=-1, non_linear_method=1, max_loading_steps=-1, max_iteration_times=30,
-                relative_accuracy_of_displacement=0.0001, relative_accuracy_of_force=0.0001)
+                accuracy_of_displacement=0.0001, accuracy_of_force=0.0001)
         Returns: 无
         """
         try:
             qt_model.UpdateNonLinearSetting(
                 nonLinearType=non_linear_type, nonLinearMethod=non_linear_method, maxLoadingSteps=max_loading_steps,
-                maxIterationTimes=max_iteration_times, relativeAccuracyOfDisplacement=relative_accuracy_of_displacement,
-                relativeAccuracyOfInternalForce=relative_accuracy_of_force)
+                maxIterationTimes=max_iteration_times, relativeAccuracyOfDisplacement=accuracy_of_displacement,
+                relativeAccuracyOfInternalForce=accuracy_of_force)
         except Exception as ex:
             raise Exception(ex)
 
     @staticmethod
-    def update_operation_stage_setting(do_analysis: bool, final_stage: str = "", static_load_cases: list[str] = None,
+    def update_operation_stage_setting(do_analysis: bool = True, final_stage: str = "", static_load_cases: list[str] = None,
                                        sink_load_cases: list[str] = None, live_load_cases: list[str] = None, ):
         """
         更新运营阶段分析设置
@@ -279,7 +279,7 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def update_self_vibration_setting(do_analysis: bool = False, method: int = 1, matrix_type: int = 0, mode_num: int = 3):
+    def update_self_vibration_setting(do_analysis: bool = True, method: int = 1, matrix_type: int = 0, mode_num: int = 3):
         """
         更新自振分析设置
         Args:
@@ -297,7 +297,7 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def update_response_spectrum_setting(do_analysis: bool = False, kind: int = 1, by_mode: bool = False,
+    def update_response_spectrum_setting(do_analysis: bool = True, kind: int = 1, by_mode: bool = False,
                                          damping_ratio: (Union[float, List[float]]) = 0.05):
         """
         更新反应谱设置
@@ -2950,7 +2950,7 @@ class Mdb:
             describe:描述
             combine_info:荷载组合信息 [(荷载工况类型,工况名,系数)...] 工况类型如下
                 _"ST"-静力荷载工况  "CS"-施工阶段荷载工况  "CB"-荷载组合_
-                _"MV"-移动荷载工况  "SM"-沉降荷载工况_
+                _"MV"-移动荷载工况  "SM"-沉降荷载工况_ "RS"-反应谱工况_
         Example:
             mdb.add_load_combine(name="荷载组合1",combine_type=1,describe="无",combine_info=[("CS","合计值",1),("CS","恒载",1)])
         Returns: 无

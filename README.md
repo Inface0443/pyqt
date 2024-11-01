@@ -153,13 +153,13 @@ Returns: 无
 > non_linear_method: 非线性方法 0-修正牛顿法 1-牛顿法  
 > max_loading_steps: 最大加载步数  
 > max_iteration_times: 最大迭代次数  
-> relative_accuracy_of_displacement: 位移相对精度  
-> relative_accuracy_of_force: 内力相对精度  
+> accuracy_of_displacement: 位移相对精度  
+> accuracy_of_force: 内力相对精度  
 ```Python
 # 示例代码
 from qtmodel import *
 mdb.update_non_linear_setting(non_linear_type=-1, non_linear_method=1, max_loading_steps=-1, max_iteration_times=30,
-relative_accuracy_of_displacement=0.0001, relative_accuracy_of_force=0.0001)
+accuracy_of_displacement=0.0001, accuracy_of_force=0.0001)
 ```  
 Returns: 无
 ### update_operation_stage_setting
@@ -1810,7 +1810,7 @@ Returns: 无
 > describe:描述  
 > combine_info:荷载组合信息 [(荷载工况类型,工况名,系数)...] 工况类型如下  
 > _"ST"-静力荷载工况  "CS"-施工阶段荷载工况  "CB"-荷载组合_  
-> _"MV"-移动荷载工况  "SM"-沉降荷载工况_  
+> _"MV"-移动荷载工况  "SM"-沉降荷载工况_ "RS"-反应谱工况_  
 ```Python
 # 示例代码
 from qtmodel import *

@@ -282,7 +282,7 @@ class Odb:
     def plot_reaction_result(file_path: str, stage_id: int = 1, load_case_name: str = "", show_increment: bool = False,
                              envelope_type: int = 1, component: int = 1,
                              show_number: bool = True, text_rotation=0, max_min_kind: int = -1,
-                             show_legend: bool = True, digital_count=0, show_exponential: bool = True, arrow_scale: float = 1):
+                             show_legend: bool = True, digital_count=3, show_exponential: bool = True, arrow_scale: float = 1):
         """
         保存结果图片到指定文件甲
         Args:
@@ -317,7 +317,7 @@ class Odb:
                                  envelope_type: int = 1, component: int = 1,
                                  show_deformed: bool = True, deformed_scale: float = 1.0, deformed_actual: bool = False,
                                  show_number: bool = True, text_rotation=0, max_min_kind: int = 1,
-                                 show_legend: bool = True, digital_count=0, show_exponential: bool = True, show_pre_deformed: bool = True):
+                                 show_legend: bool = True, digital_count=3, show_exponential: bool = True, show_pre_deformed: bool = True):
         """
         保存结果图片到指定文件甲
         Args:
@@ -357,7 +357,7 @@ class Odb:
                                 show_line_chart: bool = True, line_scale: float = 1.0, flip_plot: bool = True,
                                 show_deformed: bool = True, deformed_actual: bool = False, deformed_scale: float = 1.0,
                                 show_number: bool = False, text_rotation: int = 0, max_min_kind: int = 0,
-                                show_legend: bool = True, digital_count: int = 0, show_exponential: bool = True,
+                                show_legend: bool = True, digital_count: int = 3, show_exponential: bool = True,
                                 show_pre_deformed: bool = False, position: int = 0):
         """
         绘制梁单元结果图并保存到指定文件
@@ -404,7 +404,7 @@ class Odb:
                                  show_line_chart: bool = True, line_scale: float = 1.0, flip_plot: bool = True,
                                  show_deformed: bool = True, deformed_actual: bool = False, deformed_scale: float = 1.0,
                                  show_number: bool = False, text_rotation: int = 0, max_min_kind: int = 0,
-                                 show_legend: bool = True, digital_count: int = 0, show_exponential: bool = True,
+                                 show_legend: bool = True, digital_count: int = 3, show_exponential: bool = True,
                                  show_pre_deformed: bool = False, position: int = 0):
         """
         绘制杆单元结果图并保存到指定文件
@@ -450,7 +450,7 @@ class Odb:
                                  envelope_type: int = 1, force_kind: int = 0, component: int = 0,
                                  show_number: bool = False, text_rotation_angle: int = 0, max_min_kind: int = 0,
                                  show_deformed: bool = True, deformed_scale: float = 1.0, deformed_actual: bool = False,
-                                 show_legend: bool = True, digital_count: int = 0, show_as_exponential: bool = True,
+                                 show_legend: bool = True, digital_count: int = 3, show_as_exponential: bool = True,
                                  show_pre_deformed: bool = False, ):
         """
         绘制板单元结果图并保存到指定文件
@@ -493,7 +493,7 @@ class Odb:
                                   show_line_chart: bool = True, line_scale: float = 1.0, flip_plot: bool = True,
                                   show_deformed: bool = True, deformed_actual: bool = False, deformed_scale: float = 1.0,
                                   show_number: bool = False, text_rotation: int = 0, max_min_kind: int = 0,
-                                  show_legend: bool = True, digital_count: int = 1, show_exponential: bool = True,
+                                  show_legend: bool = True, digital_count: int = 3, show_exponential: bool = True,
                                   show_pre_deformed: bool = False, position: int = 0):
         """
         绘制组合梁单元结果图并保存到指定文件
@@ -541,7 +541,7 @@ class Odb:
                                  show_line_chart: bool = True, line_scale: float = 1.0, flip_plot: bool = True,
                                  show_deformed: bool = True, deformed_actual: bool = False, deformed_scale: float = 1.0,
                                  show_number: bool = False, text_rotation: int = 0, max_min_kind: int = 0,
-                                 show_legend: bool = True, digital_count: int = 0, show_exponential: bool = True,
+                                 show_legend: bool = True, digital_count: int = 3, show_exponential: bool = True,
                                  show_pre_deformed: bool = False, position: int = 0):
         """
         绘制梁单元应力结果图并保存到指定文件
@@ -587,7 +587,7 @@ class Odb:
                                   show_line_chart: bool = True, line_scale: float = 1.0, flip_plot: bool = True,
                                   show_deformed: bool = True, deformed_actual: bool = False, deformed_scale: float = 1.0,
                                   show_number: bool = False, text_rotation: int = 0, max_min_kind: int = 0,
-                                  show_legend: bool = True, digital_count: int = 0, show_exponential: bool = True,
+                                  show_legend: bool = True, digital_count: int = 3, show_exponential: bool = True,
                                   show_pre_deformed: bool = False, position: int = 0):
         """
         绘制杆单元结果图并保存到指定文件
@@ -632,7 +632,7 @@ class Odb:
                                    show_line_chart: bool = True, line_scale: float = 1.0, flip_plot: bool = True,
                                    show_deformed: bool = True, deformed_actual: bool = False, deformed_scale: float = 1.0,
                                    show_number: bool = False, text_rotation: int = 0, max_min_kind: int = 0,
-                                   show_legend: bool = True, digital_count: int = 0, show_exponential: bool = True,
+                                   show_legend: bool = True, digital_count: int = 3, show_exponential: bool = True,
                                    show_pre_deformed: bool = False, position: int = 0):
         """
         绘制组合梁单元结果图并保存到指定文件
@@ -679,7 +679,7 @@ class Odb:
                                   envelope_type: int = 1, stress_kind: int = 0, component: int = 0,
                                   show_number: bool = False, text_rotation_angle: int = 0, max_min_kind: int = 0,
                                   show_deformed: bool = True, deformed_scale: float = 1.0, deformed_actual: bool = False,
-                                  show_legend: bool = True, digital_count: int = 1, show_as_exponential: bool = True,
+                                  show_legend: bool = True, digital_count: int = 3, show_as_exponential: bool = True,
                                   show_pre_deformed: bool = False, position: int = 0):
         """
         绘制板单元结果图并保存到指定文件
