@@ -1,4 +1,4 @@
-# 最新版本 V0.5.33 - 2024.10.31 
+# 最新版本 V0.5.34 - 2024.11.1 
 > pip install --upgrade qtmodel -i https://pypi.org/simple
 - 修改帮助文档 
 ##  项目管理
@@ -700,6 +700,29 @@ Returns: 无
 # 示例代码
 from qtmodel import *
 mdb.remove_boundary(remove_id = 1, bd_type = 1,group="边界组1")
+```  
+Returns: 无
+### add_general_elastic_support_property
+添加一般弹性支承特性
+> 参数:  
+> name:一般弹性支承特性名称  
+> data_matrix:一般弹性支承刚度矩阵(数据需按列输入至列表,共计21个参数)  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.add_general_elastic_support_property(name = "特性1", data_matrix=[i for i in range(1,22)])
+```  
+Returns: 无
+### add_general_elastic_support
+添加一般弹性支承特性
+> 参数:  
+> node_id:节点号  
+> property_name:一般弹性支承特性名  
+> group_name:一般弹性支承边界组名  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.add_general_elastic_support(node_id = 1, property_name = "特性1",group_name="边界组1")
 ```  
 Returns: 无
 ### add_general_support
@@ -2723,3 +2746,4 @@ odb.get_deviation_load(case_name="荷载工况1")
 ```  
 Returns: json字符串,包含信息为list[dict]
 
+Process finished with exit code 0

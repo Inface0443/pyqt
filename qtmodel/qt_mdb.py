@@ -1185,6 +1185,41 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
+    def add_general_elastic_support_property(name: str = "", data_matrix: list[float] = None):
+        """
+        添加一般弹性支承特性
+        Args:
+            name:一般弹性支承特性名称
+            data_matrix:一般弹性支承刚度矩阵(数据需按列输入至列表,共计21个参数)
+        Example:
+            mdb.add_general_elastic_support_property(name = "特性1", data_matrix=[i for i in range(1,22)])
+        Returns: 无
+        """
+        if data_matrix is None or len(data_matrix) is not 21:
+            raise Exception("添加一般弹性支承失败,矩阵参数有误(数据需按列输入至列表)")
+        try:
+            qt_model.AddGeneralElasticSupportProperty(name=name, dataMatrix=data_matrix)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def add_general_elastic_support(node_id: (Union[int, List[int]]) = 1, property_name: str = "", group_name: str = "默认边界组"):
+        """
+        添加一般弹性支承特性
+        Args:
+            node_id:节点号
+            property_name:一般弹性支承特性名
+            group_name:一般弹性支承边界组名
+        Example:
+            mdb.add_general_elastic_support(node_id = 1, property_name = "特性1",group_name="边界组1")
+        Returns: 无
+        """
+        try:
+            qt_model.AddGeneralElasticSupportProperty(nodeIds=node_id, propertyName=property_name, groupName=group_name)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
     def add_general_support(node_id: (Union[int, List[int]]) = 1, boundary_info: list[bool] = None, group_name: str = "默认边界组"):
         """
         添加一般支承
