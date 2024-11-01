@@ -492,7 +492,6 @@ class Mdb:
         """
         try:
             qt_model.AddStructureGroup(name=name, id=index, nodeIds=node_ids, elementIds=element_ids)
-            qt_model.UpdateModel()
         except Exception as ex:
             raise Exception(ex)
 
