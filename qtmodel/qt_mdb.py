@@ -1215,7 +1215,7 @@ class Mdb:
         Returns: 无
         """
         try:
-            qt_model.AddGeneralElasticSupportProperty(nodeIds=node_id, propertyName=property_name, groupName=group_name)
+            qt_model.AddGeneralElasticSupport(nodeIds=node_id, propertyName=property_name, groupName=group_name)
         except Exception as ex:
             raise Exception(ex)
 
