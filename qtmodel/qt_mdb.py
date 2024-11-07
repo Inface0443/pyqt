@@ -324,46 +324,49 @@ class Mdb:
 
     # region 节点操作
     @staticmethod
-    def add_node(node_data: list[float], intersected: bool = True,
-                 is_merged: bool = False, merge_error: float = 1e-4):
+    def add_node(node_data: list[float], intersected: bool = False,
+                 is_merged: bool = False, merge_error: float = 1e-3,
+                 numbering_type: int = 0, start_id: int = 1):
         """
-        根据坐标信息和节点编号添加节点，默认自动识别编号
+        根据坐标信息和节点编号添加节点
         Args:
-             node_data: [id,x,y,z]  或 [x,y,z]
+             node_data: [id,x,y,z]  或 [x,y,z] 指定节点编号时不进行交叉分割、合并、编号等操作
              intersected: 是否交叉分割
              is_merged: 是否忽略位置重复节点
              merge_error: 合并容许误差
+             numbering_type:编号方式 0-未使用的最小号码 1-最大号码加1 2-用户定义号码
+             start_id:自定义节点起始编号(用户定义号码时使用)
         Example:
             mdb.add_node(node_data=[1,2,3])
             mdb.add_node(node_data=[1,1,2,3])
         Returns: 无
         """
         try:
-            if len(node_data) == 4:
-                qt_model.AddNode(id=node_data[0], x=node_data[1], y=node_data[2], z=node_data[3],
-                                 intersected=intersected, isMerged=is_merged, merge_error=merge_error)
-            elif len(node_data) == 3:
-                qt_model.AddNode(x=node_data[0], y=node_data[1], z=node_data[2],
-                                 intersected=intersected, isMerged=is_merged, merge_error=merge_error)
+            qt_model.AddNodes(nodeData=[node_data], intersected=intersected, isMerged=is_merged, merge_error=merge_error,
+                              numberingType=numbering_type, startId=start_id)
         except Exception as ex:
             raise Exception(ex)
 
     @staticmethod
-    def add_nodes(node_data: list[list[float]], intersected: bool = True,
-                  is_merged: bool = False, merge_error: float = 1e-4):
+    def add_nodes(node_data: list[list[float]], intersected: bool = False,
+                  is_merged: bool = False, merge_error: float = 1e-3,
+                  numbering_type: int = 0, start_id: int = 1):
         """
-        根据坐标信息和节点编号添加一组节点，需要指定节点号
+        根据坐标信息和节点编号添加一组节点，可指定节点号，或不指定节点号
         Args:
-             node_data: [[id,x,y,z]...]
+             node_data: [[id,x,y,z]...]  或[[x,y,z]...]  指定节点编号时不进行交叉分割、合并、编号等操作
              intersected: 是否交叉分割
              is_merged: 是否忽略位置重复节点
              merge_error: 合并容许误差
+             numbering_type:编号方式 0-未使用的最小号码 1-最大号码加1 2-用户定义号码
+             start_id:自定义节点起始编号(用户定义号码时使用)
         Example:
             mdb.add_nodes(node_data=[[1,1,2,3],[1,1,2,3]])
         Returns: 无
         """
         try:
-            qt_model.AddNodes(nodeData=node_data, intersected=intersected, isMerged=is_merged, merge_error=merge_error)
+            qt_model.AddNodes(nodeData=node_data, intersected=intersected, isMerged=is_merged, merge_error=merge_error,
+                              numberingType=numbering_type, startId=start_id)
         except Exception as ex:
             raise Exception(ex)
 

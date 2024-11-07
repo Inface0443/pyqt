@@ -1,6 +1,6 @@
-# 最新版本 V0.5.36 - 2024.11.1 
+# 最新版本 V0.5.37 - 2024.11.7 
 > pip install --upgrade qtmodel -i https://pypi.org/simple
-- 修改帮助文档 
+- 扩展节点操作 
 ##  项目管理
 ### update_bim
 刷新Bim模型信息
@@ -204,12 +204,14 @@ mdb.update_response_spectrum_setting(do_analysis=True,kind=1,damping_ratio=0.05)
 Returns: 无
 ##  节点操作
 ### add_node
-根据坐标信息和节点编号添加节点，默认自动识别编号
+根据坐标信息和节点编号添加节点
 > 参数:  
-> node_data: [id,x,y,z]  或 [x,y,z]  
+> node_data: [id,x,y,z]  或 [x,y,z] 指定节点编号时不进行交叉分割、合并、编号等操作  
 > intersected: 是否交叉分割  
 > is_merged: 是否忽略位置重复节点  
 > merge_error: 合并容许误差  
+> numbering_type:编号方式 0-未使用的最小号码 1-最大号码加1 2-用户定义号码  
+> start_id:自定义节点起始编号(用户定义号码时使用)  
 ```Python
 # 示例代码
 from qtmodel import *
@@ -218,12 +220,14 @@ mdb.add_node(node_data=[1,1,2,3])
 ```  
 Returns: 无
 ### add_nodes
-根据坐标信息和节点编号添加一组节点，需要指定节点号
+根据坐标信息和节点编号添加一组节点，可指定节点号，或不指定节点号
 > 参数:  
-> node_data: [[id,x,y,z]...]  
+> node_data: [[id,x,y,z]...]  或[[x,y,z]...]  指定节点编号时不进行交叉分割、合并、编号等操作  
 > intersected: 是否交叉分割  
 > is_merged: 是否忽略位置重复节点  
 > merge_error: 合并容许误差  
+> numbering_type:编号方式 0-未使用的最小号码 1-最大号码加1 2-用户定义号码  
+> start_id:自定义节点起始编号(用户定义号码时使用)  
 ```Python
 # 示例代码
 from qtmodel import *
@@ -2746,4 +2750,3 @@ odb.get_deviation_load(case_name="荷载工况1")
 ```  
 Returns: json字符串,包含信息为list[dict]
 
-Process finished with exit code 0
