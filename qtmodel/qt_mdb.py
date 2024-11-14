@@ -739,7 +739,7 @@ class Mdb:
             if modified and len(data_info) != 4:
                 raise Exception("操作错误,modify_info数据无效!")
             if mat_type == 6:
-                qt_model.AddMaterial(id=index, name=name, compositeInfo=composite_info)
+                qt_model.AddMaterial(id=index, name=name,  materialType=mat_type, compositeInfo=composite_info)
             if not modified:
                 qt_model.AddMaterial(id=index, name=name, materialType=mat_type, standardIndex=standard,
                                      database=database, constructFactor=construct_factor, isModified=modified,
