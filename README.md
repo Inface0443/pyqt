@@ -1,6 +1,6 @@
-# 最新版本 V0.5.37 - 2024.11.7 
+# 最新版本 V0.5.38 - 2024.11.14 
 > pip install --upgrade qtmodel -i https://pypi.org/simple
-- 扩展节点操作 
+- 扩展组合材料 
 ##  项目管理
 ### update_bim
 刷新Bim模型信息
@@ -447,7 +447,7 @@ Returns: 无
 > 参数:  
 > index:材料编号,默认自动识别 (可选参数)  
 > name:材料名称  
-> mat_type: 材料类型,1-混凝土 2-钢材 3-预应力 4-钢筋 5-自定义  
+> mat_type: 材料类型,1-混凝土 2-钢材 3-预应力 4-钢筋 5-自定义 6-组合材料  
 > standard:规范序号,参考UI 默认从1开始  
 > database:数据库名称  
 > construct_factor:构造系数  
@@ -455,6 +455,7 @@ Returns: 无
 > data_info:材料参数列表[弹性模量,容重,泊松比,热膨胀系数] (可选参数)  
 > creep_id:徐变材料id (可选参数)  
 > f_cuk: 立方体抗压强度标准值 (可选参数)  
+> composite_info: 主材名和辅材名 (仅组合材料需要)  
 ```Python
 # 示例代码
 from qtmodel import *

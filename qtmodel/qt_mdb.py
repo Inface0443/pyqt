@@ -712,13 +712,14 @@ class Mdb:
     # region 材料操作
     @staticmethod
     def add_material(index: int = -1, name: str = "", mat_type: int = 1, standard: int = 1, database: str = "C50",
-                     construct_factor: float = 1, modified: bool = False, data_info: list[float] = None, creep_id: int = -1, f_cuk: float = 0):
+                     construct_factor: float = 1, modified: bool = False, data_info: list[float] = None, creep_id: int = -1,
+                     f_cuk: float = 0, composite_info: tuple[str, str] = None):
         """
         添加材料
         Args:
             index:材料编号,默认自动识别 (可选参数)
             name:材料名称
-            mat_type: 材料类型,1-混凝土 2-钢材 3-预应力 4-钢筋 5-自定义
+            mat_type: 材料类型,1-混凝土 2-钢材 3-预应力 4-钢筋 5-自定义 6-组合材料
             standard:规范序号,参考UI 默认从1开始
             database:数据库名称
             construct_factor:构造系数
@@ -726,6 +727,7 @@ class Mdb:
             data_info:材料参数列表[弹性模量,容重,泊松比,热膨胀系数] (可选参数)
             creep_id:徐变材料id (可选参数)
             f_cuk: 立方体抗压强度标准值 (可选参数)
+            composite_info: 主材名和辅材名 (仅组合材料需要)
         Example:
             mdb.add_material(index=1,name="混凝土材料1",mat_type=1,standard=1,database="C50")
             mdb.add_material(index=1,name="自定义材料1",mat_type=5,data_info=[3.5e10,2.5e4,0.2,1.5e-5])
@@ -736,6 +738,8 @@ class Mdb:
                 modified = True
             if modified and len(data_info) != 4:
                 raise Exception("操作错误,modify_info数据无效!")
+            if mat_type == 6:
+                qt_model.AddMaterial(id=index, name=name, compositeInfo=composite_info)
             if not modified:
                 qt_model.AddMaterial(id=index, name=name, materialType=mat_type, standardIndex=standard,
                                      database=database, constructFactor=construct_factor, isModified=modified,
