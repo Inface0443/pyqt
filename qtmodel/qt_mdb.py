@@ -1398,7 +1398,7 @@ class Mdb:
     # region 移动荷载操作
     @staticmethod
     def add_standard_vehicle(name: str, standard_code: int = 1, load_type: str = "高速铁路",
-                             load_length: float = 0, n: int = 6, calc_fatigue: bool = False):
+                             load_length: float = 0, factor: float = 1.0, n: int = 6, calc_fatigue: bool = False):
         """
         添加标准车辆
         Args:
@@ -1413,6 +1413,7 @@ class Mdb:
                 _7-市域铁路设计规范2017(T/CRS C0101-2017)
              load_type: 荷载类型,支持类型参考软件内界面
              load_length: 默认为0即不限制荷载长度  (铁路桥涵规范2017 所需参数)
+             factor: 默认为1.0(铁路桥涵规范2017 ZH荷载所需参数)
              n:车厢数: 默认6节车厢 (城市轨道交通桥梁规范2017 所需参数)
              calc_fatigue:计算公路疲劳 (公路桥涵设计通规2015 所需参数)
         Example:
@@ -1421,7 +1422,7 @@ class Mdb:
         """
         try:
             qt_model.AddStandardVehicle(name=name, standardIndex=standard_code, loadType=load_type,
-                                        loadLength=load_length, N=n, calcFatigue=calc_fatigue)
+                                        loadLength=load_length, factor=factor, N=n, calcFatigue=calc_fatigue)
             qt_model.UpdateModel()
         except Exception as ex:
             raise Exception(ex)
