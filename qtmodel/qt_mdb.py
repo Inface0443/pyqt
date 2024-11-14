@@ -738,18 +738,16 @@ class Mdb:
                 modified = True
             if modified and len(data_info) != 4:
                 raise Exception("操作错误,modify_info数据无效!")
-            if mat_type == 6:
-                qt_model.AddMaterial(id=index, name=name,  materialType=mat_type, compositeInfo=composite_info)
             if not modified:
                 qt_model.AddMaterial(id=index, name=name, materialType=mat_type, standardIndex=standard,
                                      database=database, constructFactor=construct_factor, isModified=modified,
-                                     timeParameterId=creep_id, fcuk=f_cuk)
+                                     timeParameterId=creep_id, fcuk=f_cuk, compositeInfo=composite_info)
             else:
                 qt_model.AddMaterial(id=index, name=name, materialType=mat_type, standardIndex=standard,
                                      database=database, constructFactor=construct_factor, isModified=modified,
                                      elasticModulus=data_info[0], unitWeight=data_info[1],
                                      posiRatio=data_info[2], temperatureCoefficient=data_info[3],
-                                     timeParameterId=creep_id, fcuk=f_cuk)
+                                     timeParameterId=creep_id, fcuk=f_cuk, compositeInfo=composite_info)
             qt_model.UpdateModel()
         except Exception as ex:
             raise Exception(ex)
