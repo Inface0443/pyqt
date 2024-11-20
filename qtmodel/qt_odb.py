@@ -304,7 +304,7 @@ class Odb:
         Returns: 无
         """
         try:
-            qt_model.PlotReactionResult(file_path=file_path, stageId=stage_id, loadCaseName=load_case_name, showIncrementResult=show_increment,
+            qt_model.PlotReactionResult(filePath=file_path, stageId=stage_id, loadCaseName=load_case_name, showIncrementResult=show_increment,
                                         envelopeType=envelope_type, component=component,
                                         showNumber=show_number, textRotationAngle=text_rotation, maxMinValueKind=max_min_kind,
                                         showLegend=show_legend, digitalCount=digital_count,
@@ -342,7 +342,7 @@ class Odb:
         Returns: 无
         """
         try:
-            qt_model.PlotDisplacementResult(file_path=file_path, stageId=stage_id, loadCaseName=load_case_name, showIncrementResult=show_increment,
+            qt_model.PlotDisplacementResult(filePath=file_path, stageId=stage_id, loadCaseName=load_case_name, showIncrementResult=show_increment,
                                             envelopeType=envelope_type, component=component,
                                             showAsDeformedShape=show_deformed, deformedScale=deformed_scale, deformedActual=deformed_actual,
                                             showNumber=show_number, textRotationAngle=text_rotation, digitalCount=digital_count,
@@ -1367,9 +1367,9 @@ class Odb:
                 item_list = qt_model.GetBeamConstraintData(group)
                 for data in item_list:
                     info_i = (
-                    not data.IsIFreedX, not data.IsIFreedY, not data.IsIFreedZ, not data.IsIFreedRx, not data.IsIFreedRy, not data.IsIFreedRZ)
+                        not data.IsIFreedX, not data.IsIFreedY, not data.IsIFreedZ, not data.IsIFreedRx, not data.IsIFreedRy, not data.IsIFreedRZ)
                     info_j = (
-                    not data.IsJFreedX, not data.IsJFreedY, not data.IsJFreedZ, not data.IsJFreedRx, not data.IsJFreedRy, not data.IsJFreedRZ)
+                        not data.IsJFreedX, not data.IsJFreedY, not data.IsJFreedZ, not data.IsJFreedRx, not data.IsJFreedRy, not data.IsJFreedRZ)
                     res_list.append(str(BeamConstraint(constraint_id=data.Id, beam_id=data.Beam.Id, info_i=info_i, info_j=info_j, group_name=group)))
             return json.dumps(res_list)
         except Exception as ex:

@@ -1,6 +1,6 @@
-# 最新版本 V0.5.39 - 2024.11.14 
+# 最新版本 V0.5.40 - 2024.11.14 
 > pip install --upgrade qtmodel -i https://pypi.org/simple
-- 扩展ZH车辆荷载参数 
+- 修复odb图像绘制 
 ##  项目管理
 ### update_bim
 刷新Bim模型信息
