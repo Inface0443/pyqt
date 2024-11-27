@@ -1,6 +1,6 @@
-# 最新版本 V0.5.40 - 2024.11.14 
+# 最新版本 V0.5.41 - 2024.11.26 
 > pip install --upgrade qtmodel -i https://pypi.org/simple
-- 修复odb图像绘制 
+- 添加自定义温度接口 
 ##  项目管理
 ### update_bim
 刷新Bim模型信息
@@ -1645,7 +1645,33 @@ Returns: 无
 ```Python
 # 示例代码
 from qtmodel import *
-mdb.remove_top_plate_temperature(case_name="荷载工况1",element_id=1)
+mdb.remove_top_plate_temperature(case_name="荷载工况1",element_id=1,group_name="默认荷载组")
+```  
+Returns: 无
+### add_custom_temperature
+删除梁单元顶板温度
+> 参数:  
+> case_name:荷载工况名  
+> element_id:单元编号，支持数或列表  
+> group_name:指定荷载组,后续升级开放指定荷载组删除功能  
+> orientation: 1-局部坐标z 2-局部坐标y  
+> temperature_data:自定义数据[(参考位置1-顶 2-底,高度,温度)...]  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.add_custom_temperature(case_name="荷载工况1",element_id=1,orientation=1,temperature_data=[(1,1,20),(1,2,10)])
+```  
+Returns: 无
+### remove_custom_temperature
+删除梁单元指数温度
+> 参数:  
+> case_name:荷载工况名  
+> element_id:单元编号，支持数或列表  
+> group_name:指定荷载组,后续升级开放指定荷载组删除功能  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.remove_custom_temperature(case_name="工况1",element_id=1,group_name="默认荷载组")
 ```  
 Returns: 无
 ##  沉降操作

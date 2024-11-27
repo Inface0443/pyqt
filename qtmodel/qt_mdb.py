@@ -2661,11 +2661,49 @@ class Mdb:
             element_id:单元编号，支持数或列表
             group_name:指定荷载组,后续升级开放指定荷载组删除功能
         Example:
-            mdb.remove_top_plate_temperature(case_name="荷载工况1",element_id=1)
+            mdb.remove_top_plate_temperature(case_name="荷载工况1",element_id=1,group_name="默认荷载组")
         Returns: 无
         """
         try:
             qt_model.RemoveTopPlateTemperature(caseName=case_name, elementId=element_id, groupName=group_name)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def add_custom_temperature(element_id: (Union[int, List[int]]) = 1, case_name: str = "", group_name: str = "默认荷载组",
+                               orientation: int = 1, temperature_data: List[tuple[int, float, float]] = None):
+        """
+        添加梁自定义温度
+        Args:
+            case_name:荷载工况名
+            element_id:单元编号，支持数或列表
+            group_name:指定荷载组,后续升级开放指定荷载组删除功能
+            orientation: 1-局部坐标z 2-局部坐标y
+            temperature_data:自定义数据[(参考位置1-顶 2-底,高度,温度)...]
+        Example:
+            mdb.add_custom_temperature(case_name="荷载工况1",element_id=1,orientation=1,temperature_data=[(1,1,20),(1,2,10)])
+        Returns: 无
+        """
+        try:
+            qt_model.AddCustomTemperature(caseName=case_name, elementId=element_id, groupName=group_name, orientation=orientation,
+                                          temperatureData=temperature_data)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def remove_custom_temperature(case_name: str, element_id: (Union[int, List[int]]) = 1, group_name: str = "默认荷载组"):
+        """
+        删除梁单元自定义温度
+        Args:
+            case_name:荷载工况名
+            element_id:单元编号，支持数或列表
+            group_name:指定荷载组,后续升级开放指定荷载组删除功能
+        Example:
+            mdb.remove_custom_temperature(case_name="工况1",element_id=1,group_name="默认荷载组")
+        Returns: 无
+        """
+        try:
+            qt_model.RemoveCustomTemperature(caseName=case_name, elementId=element_id, groupName=group_name)
         except Exception as ex:
             raise Exception(ex)
 
