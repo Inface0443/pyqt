@@ -1,6 +1,6 @@
-# 最新版本 V0.5.41 - 2024.11.26 
+# 最新版本 V0.5.42 - 2024.11.29 
 > pip install --upgrade qtmodel -i https://pypi.org/simple
-- 添加自定义温度接口 
+- 添加移动荷载分析接口 
 ##  项目管理
 ### update_bim
 刷新Bim模型信息
@@ -144,6 +144,37 @@ Returns: 无
 from qtmodel import *
 mdb.update_construction_stage_setting(do_analysis=True, to_end_stage=False, other_stage_id=1,analysis_type=0,
 do_creep_analysis=True, cable_tension_position=0, consider_completion_stage=True,shrink_creep_type=2)
+```  
+Returns: 无
+### update_live_load_setting
+更新移动荷载分析设置
+> 参数:  
+> lateral_spacing: 横向加密间距  
+> vertical_spacing: 纵向加密间距  
+> damper_calc_type: 模拟阻尼器约束方程计算类选项(-1-不考虑 0-全部组 1-部分)  
+> displacement_calc_type: 位移计算选项(-1-不考虑 0-全部组 1-部分)  
+> force_calc_type: 内力计算选项(-1-不考虑 0-全部组 1-部分)  
+> reaction_calc_type: 反力计算选项(-1-不考虑 0-全部组 1-部分)  
+> link_calc_type: 连接计算选项(-1-不考虑 0-全部组 1-部分)  
+> constrain_calc_type: 约束方程计算选项(-1-不考虑 0-全部组 1-部分)  
+> eccentricity: 离心力系数  
+> displacement_track: 是否追踪位移  
+> force_track: 是否追踪内力  
+> reaction_track: 是否追踪反力  
+> link_track: 是否追踪连接  
+> constrain_track: 是否追踪约束方程  
+> damper_groups: 模拟阻尼器约束方程计算类选项为组时边界组名称  
+> displacement_groups: 位移计算类选项为组时结构组名称  
+> force_groups: 内力计算类选项为组时结构组名称  
+> reaction_groups: 反力计算类选项为组时边界组名称  
+> link_groups:  弹性连接计算类选项为组时边界组名称  
+> constrain_groups: 约束方程计算类选项为组时边界组名称  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.update_live_load_setting(lateral_spacing=0.1, vertical_spacing=1, displacement_calc_type=1)
+mdb.update_live_load_setting(lateral_spacing=0.1, vertical_spacing=1, displacement_calc_type=2,displacement_track=True,
+displacement_groups=["结构组1","结构组2"])
 ```  
 Returns: 无
 ### update_non_linear_setting
@@ -959,7 +990,7 @@ Returns: 无
 添加移动荷载工况汽车折减
 > 参数:  
 > name:活载工况名  
-> code_index: 汽车折减规范编号  1-铁规2017_ZK_ZC 2-铁规2017_ZKH_ZH 3-无  
+> code_index: 火车折减规范编号  1-铁规2017_ZK_ZC 2-铁规2017_ZKH_ZH 3-无  
 > cross_factors:横向折减系数列表,自定义时要求长度为8,否则按照规范选取  
 > calc_fatigue:是否计算疲劳  
 > line_count: 疲劳加载线路数  
@@ -1649,7 +1680,7 @@ mdb.remove_top_plate_temperature(case_name="荷载工况1",element_id=1,group_na
 ```  
 Returns: 无
 ### add_custom_temperature
-删除梁单元顶板温度
+添加梁自定义温度
 > 参数:  
 > case_name:荷载工况名  
 > element_id:单元编号，支持数或列表  
@@ -1663,7 +1694,7 @@ mdb.add_custom_temperature(case_name="荷载工况1",element_id=1,orientation=1,
 ```  
 Returns: 无
 ### remove_custom_temperature
-删除梁单元指数温度
+删除梁单元自定义温度
 > 参数:  
 > case_name:荷载工况名  
 > element_id:单元编号，支持数或列表  

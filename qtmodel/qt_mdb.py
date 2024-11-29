@@ -231,6 +231,55 @@ class Mdb:
         except Exception as ex:
             raise Exception(ex)
 
+
+    @staticmethod
+    def update_live_load_setting(lateral_spacing:float = 0.1, vertical_spacing : float = 1,damper_calc_type :int= -1,
+                                 displacement_calc_type :int = -1, force_calc_type:int = -1,reaction_calc_type:int = -1,
+                                 link_calc_type:int=-1,constrain_calc_type:int=-1,eccentricity:float=0.0,
+                                 displacement_track:bool=False,force_track:bool=False,reaction_track:bool=False,
+                                 link_track:bool=False,constrain_track:bool=False,damper_groups:list[str]=None,
+                                 displacement_groups:list[str]=None,force_groups:list[str]=None,reaction_groups:list[str]=None,
+                                 link_groups:list[str]=None,constrain_groups:list[str]=None):
+        """
+        更新移动荷载分析设置
+        Args:
+            lateral_spacing: 横向加密间距
+            vertical_spacing: 纵向加密间距
+            damper_calc_type: 模拟阻尼器约束方程计算类选项(-1-不考虑 0-全部组 1-部分)
+            displacement_calc_type: 位移计算选项(-1-不考虑 0-全部组 1-部分)
+            force_calc_type: 内力计算选项(-1-不考虑 0-全部组 1-部分)
+            reaction_calc_type: 反力计算选项(-1-不考虑 0-全部组 1-部分)
+            link_calc_type: 连接计算选项(-1-不考虑 0-全部组 1-部分)
+            constrain_calc_type: 约束方程计算选项(-1-不考虑 0-全部组 1-部分)
+            eccentricity: 离心力系数
+            displacement_track: 是否追踪位移
+            force_track: 是否追踪内力
+            reaction_track: 是否追踪反力
+            link_track: 是否追踪连接
+            constrain_track: 是否追踪约束方程
+            damper_groups: 模拟阻尼器约束方程计算类选项为组时边界组名称
+            displacement_groups: 位移计算类选项为组时结构组名称
+            force_groups: 内力计算类选项为组时结构组名称
+            reaction_groups: 反力计算类选项为组时边界组名称
+            link_groups:  弹性连接计算类选项为组时边界组名称
+            constrain_groups: 约束方程计算类选项为组时边界组名称
+        Example:
+            mdb.update_live_load_setting(lateral_spacing=0.1, vertical_spacing=1, displacement_calc_type=1)
+            mdb.update_live_load_setting(lateral_spacing=0.1, vertical_spacing=1, displacement_calc_type=2,displacement_track=True,
+                displacement_groups=["结构组1","结构组2"])
+        Returns: 无
+        """
+        try:
+            qt_model.UpdateLiveLoadSetting(
+                lateralSpacing=lateral_spacing, verticalSpacing=vertical_spacing,damperCalcType=damper_calc_type,
+                displacementCalcType=displacement_calc_type, forceCalcType=force_calc_type, reactionCalcType=reaction_calc_type,
+                linkCalcType=link_calc_type,constrainCalcType=constrain_calc_type,eccentricity=eccentricity,
+                displacementTack=displacement_track,forceTrack=force_track,reactionTrack=reaction_track,
+                linkTrack=link_track,constrainTrack=constrain_track,damperGroups=damper_groups,displacementGroups=displacement_groups,
+                forceGroups=force_groups,reactionGroups=reaction_groups,linkGroups=link_groups,constrainGroups=constrain_groups)
+        except Exception as ex:
+            raise Exception(ex)
+
     @staticmethod
     def update_non_linear_setting(non_linear_type: int = 1, non_linear_method: int = 1, max_loading_steps: int = 1, max_iteration_times: int = 30,
                                   accuracy_of_displacement: float = 0.0001, accuracy_of_force: float = 0.0001):
@@ -1576,7 +1625,7 @@ class Mdb:
         添加移动荷载工况汽车折减
         Args:
             name:活载工况名
-            code_index: 汽车折减规范编号  1-铁规2017_ZK_ZC 2-铁规2017_ZKH_ZH 3-无
+            code_index: 火车折减规范编号  1-铁规2017_ZK_ZC 2-铁规2017_ZKH_ZH 3-无
             cross_factors:横向折减系数列表,自定义时要求长度为8,否则按照规范选取
             calc_fatigue:是否计算疲劳
             line_count: 疲劳加载线路数
