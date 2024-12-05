@@ -2463,7 +2463,7 @@ class Mdb:
         try:
             if parameters is None:
                 raise Exception("操作错误，制造误差信息不能为空")
-            if len(parameters) != 5 or len(parameters) != 7:
+            if len(parameters) != 5 and len(parameters) != 7:
                 raise Exception("操作错误，误差列表有误")
             qt_model.AddDeviationParameter(name=name, elementType=element_type, parameterInfo=parameters)
             qt_model.UpdateModel()
