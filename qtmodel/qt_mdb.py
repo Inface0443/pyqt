@@ -168,7 +168,7 @@ class Mdb:
         Args:
             file_path:导出文件全路径，支持格式(.mct/.qdat/.obj/.txt/.py)
             convert_sec_group:是否将变截面组转换为变截面
-            type_kind:输出文件类型  1-详细文件  2-计算文件
+            type_kind:输出文件类型  1-全部模型文件  2-计算相关文件 (py输出时1-输出截面特性  2-不输出截面特性)
             group_name:obj与 APDL导出时指定结构组导出
         Example:
             mdb.export_file(file_path="a.mct")
@@ -231,15 +231,14 @@ class Mdb:
         except Exception as ex:
             raise Exception(ex)
 
-
     @staticmethod
-    def update_live_load_setting(lateral_spacing:float = 0.1, vertical_spacing : float = 1,damper_calc_type :int= -1,
-                                 displacement_calc_type :int = -1, force_calc_type:int = -1,reaction_calc_type:int = -1,
-                                 link_calc_type:int=-1,constrain_calc_type:int=-1,eccentricity:float=0.0,
-                                 displacement_track:bool=False,force_track:bool=False,reaction_track:bool=False,
-                                 link_track:bool=False,constrain_track:bool=False,damper_groups:list[str]=None,
-                                 displacement_groups:list[str]=None,force_groups:list[str]=None,reaction_groups:list[str]=None,
-                                 link_groups:list[str]=None,constrain_groups:list[str]=None):
+    def update_live_load_setting(lateral_spacing: float = 0.1, vertical_spacing: float = 1, damper_calc_type: int = -1,
+                                 displacement_calc_type: int = -1, force_calc_type: int = -1, reaction_calc_type: int = -1,
+                                 link_calc_type: int = -1, constrain_calc_type: int = -1, eccentricity: float = 0.0,
+                                 displacement_track: bool = False, force_track: bool = False, reaction_track: bool = False,
+                                 link_track: bool = False, constrain_track: bool = False, damper_groups: list[str] = None,
+                                 displacement_groups: list[str] = None, force_groups: list[str] = None, reaction_groups: list[str] = None,
+                                 link_groups: list[str] = None, constrain_groups: list[str] = None):
         """
         更新移动荷载分析设置
         Args:
@@ -271,12 +270,12 @@ class Mdb:
         """
         try:
             qt_model.UpdateLiveLoadSetting(
-                lateralSpacing=lateral_spacing, verticalSpacing=vertical_spacing,damperCalcType=damper_calc_type,
+                lateralSpacing=lateral_spacing, verticalSpacing=vertical_spacing, damperCalcType=damper_calc_type,
                 displacementCalcType=displacement_calc_type, forceCalcType=force_calc_type, reactionCalcType=reaction_calc_type,
-                linkCalcType=link_calc_type,constrainCalcType=constrain_calc_type,eccentricity=eccentricity,
-                displacementTack=displacement_track,forceTrack=force_track,reactionTrack=reaction_track,
-                linkTrack=link_track,constrainTrack=constrain_track,damperGroups=damper_groups,displacementGroups=displacement_groups,
-                forceGroups=force_groups,reactionGroups=reaction_groups,linkGroups=link_groups,constrainGroups=constrain_groups)
+                linkCalcType=link_calc_type, constrainCalcType=constrain_calc_type, eccentricity=eccentricity,
+                displacementTack=displacement_track, forceTrack=force_track, reactionTrack=reaction_track,
+                linkTrack=link_track, constrainTrack=constrain_track, damperGroups=damper_groups, displacementGroups=displacement_groups,
+                forceGroups=force_groups, reactionGroups=reaction_groups, linkGroups=link_groups, constrainGroups=constrain_groups)
         except Exception as ex:
             raise Exception(ex)
 
@@ -944,7 +943,7 @@ class Mdb:
         try:
             if sec_type == "混凝土箱梁":
                 qt_model.AddSection(id=index, name=name, secType=sec_type, secInfo=sec_info, charmInfo=charm_info,
-                                    symmetry=symmetry, boxNum=box_num, H=box_height, charmInfoR=charm_right, secInfoR=sec_right,
+                                    symmetry=symmetry, boxNum=box_num, boxHeight=box_height, charmInfoR=charm_right, secInfoR=sec_right,
                                     biasType=bias_type, centerType=center_type, shearConsider=shear_consider,
                                     biasX=bias_x, biasY=bias_y, secProperty=sec_property)
             elif sec_type == "工字钢梁" or sec_type == "箱型钢梁":
@@ -965,7 +964,7 @@ class Mdb:
                                     biasType=bias_type, centerType=center_type, shearConsider=shear_consider,
                                     biasX=bias_x, biasY=bias_y, secProperty=sec_property)
         except Exception as ex:
-            raise Exception(ex)
+            raise Exception(f"添加截面:{name}失败，{ex}")
 
     @staticmethod
     def add_single_section(index: int = -1, name: str = "", sec_type: str = "矩形", sec_dict: dict = None):
@@ -1012,7 +1011,8 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def add_tapper_section_by_id(index: int = -1, name: str = "", begin_id: int = 1, end_id: int = 1):
+    def add_tapper_section_by_id(index: int = -1, name: str = "", begin_id: int = 1, end_id: int = 1,
+                                 shear_consider: bool = True, sec_normalize: bool = False):
         """
         添加变截面,需先建立单一截面
         Args:
@@ -1020,12 +1020,15 @@ class Mdb:
             name:截面名称
             begin_id:截面始端编号
             end_id:截面末端编号
+            shear_consider:考虑剪切变形
+            sec_normalize: 开启变截面线圈和线宽自适应排序 (避免两端截面绘制顺序导致的渲染和计算失效)
         Example:
             mdb.add_tapper_section_by_id(name="变截面1",begin_id=1,end_id=2)
         Returns: 无
         """
         try:
-            qt_model.AddTapperSectionById(id=index, name=name, beginId=begin_id, endId=end_id)
+            qt_model.AddTapperSectionById(id=index, name=name, beginId=begin_id, endId=end_id,
+                                          considerShear=shear_consider, secNormalize=sec_normalize)
         except Exception as ex:
             raise Exception(ex)
 
@@ -1131,9 +1134,8 @@ class Mdb:
         """
         try:
             qt_model.AddTapperSectionGroup(ids=ids, name=name, factorW=factor_w, factorH=factor_h, w=ref_w, h=ref_h, disW=dis_w, disH=dis_h)
-            qt_model.UpdateModel()
         except Exception as ex:
-            raise Exception(ex)
+            raise Exception(f"添加变截面组:{name}失败,{ex}")
 
     @staticmethod
     def update_section_bias(index: int = 1, bias_type: str = "中心", center_type: str = "质心", shear_consider: bool = True,
@@ -1999,13 +2001,12 @@ class Mdb:
                                  positionType=position_type, controlPoints=control_points,
                                  pointInsert=point_insert, tendonDirection=tendon_direction,
                                  rotationAngle=rotation_angle, trackGroup=track_group, isProject=projection)
-            qt_model.UpdateModel()
         except Exception as ex:
-            raise Exception(ex)
+            raise Exception(f"添加三维钢束:{name}失败,{ex}")
 
     @staticmethod
     def add_tendon_2d(name: str, property_name: str = "", group_name: str = "默认钢束组",
-                      num: int = 1, line_type: int = 1, position_type: int = 1, symmetry: int = 0,
+                      num: int = 1, line_type: int = 1, position_type: int = 1, symmetry: int = 2,
                       control_points: list[tuple[float, float, float]] = None,
                       control_points_lateral: list[tuple[float, float, float]] = None,
                       point_insert: tuple[float, float, float] = None,
@@ -2020,7 +2021,7 @@ class Mdb:
              num:根数
              line_type:1-导线点  2-折线点
              position_type: 定位方式 1-直线  2-轨迹线
-             symmetry: 对称点 0-左 1-右 2-无
+             symmetry: 对称点 0-左端点 1-右端点 2-不对称
              control_points: 控制点信息[(x1,z1,r1),(x2,z2,r2)....]
              control_points_lateral: 控制点横弯信息[(x1,y1,r1),(x2,y2,r2)....]，无横弯时不必输入
              point_insert: 定位方式
@@ -2050,9 +2051,8 @@ class Mdb:
                                  controlPointsLateral=control_points_lateral,
                                  pointInsert=point_insert, tendonDirection=tendon_direction,
                                  rotationAngle=rotation_angle, trackGroup=track_group, isProject=projection)
-            qt_model.UpdateModel()
         except Exception as ex:
-            raise Exception(ex)
+            raise Exception(f"添加二维钢束:{name}失败,{ex}")
 
     @staticmethod
     def update_tendon_element(ids: list[int] = None):
@@ -2984,9 +2984,8 @@ class Mdb:
             qt_model.AddConstructionStage(name=name, duration=duration, activeStructures=active_structures, inActiveStructures=delete_structures,
                                           activeBoundaries=active_boundaries, inActiveBoundaries=delete_boundaries, activeLoads=active_loads,
                                           inActiveLoads=delete_loads, tempLoads=temp_loads, id=index)
-            qt_model.UpdateModel()
         except Exception as ex:
-            raise Exception(ex)
+            raise Exception(f"添加施工阶段:{name}错误,{ex}")
 
     @staticmethod
     def update_construction_stage(name: str = "", duration: int = 0,
@@ -3023,27 +3022,25 @@ class Mdb:
             qt_model.UpdateConstructionStage(name=name, duration=duration, activeStructures=active_structures, inActiveStructures=delete_structures,
                                              activeBoundaries=active_boundaries, inActiveBoundaries=delete_boundaries, activeLoads=active_loads,
                                              inActiveLoads=delete_loads, tempLoads=temp_loads)
-            qt_model.UpdateModel()
         except Exception as ex:
-            raise Exception(ex)
+            raise Exception(f"更新施工阶段:{name}错误,{ex}")
 
     @staticmethod
-    def update_weight_stage(stage_name: str = "", structure_group_name: str = "", weight_stage_id: int = 1):
+    def update_weight_stage(name: str = "", structure_group_name: str = "", weight_stage_id: int = 1):
         """
-        添加施工阶段信息
+        更新施工阶段自重
         Args:
-           stage_name:施工阶段信息
+           name:施工阶段信息
            structure_group_name:结构组名
            weight_stage_id: 计自重阶段号 (0-不计自重,1-本阶段 n-第n阶段)
         Example:
-           mdb.update_weight_stage(stage_name="施工阶段1",structure_group_name="默认结构组",weight_stage_id=1)
+           mdb.update_weight_stage(name="施工阶段1",structure_group_name="默认结构组",weight_stage_id=1)
         Returns: 无
         """
         try:
-            qt_model.UpdateWeightStage(stageName=stage_name, structureGroupName=structure_group_name, weightStageId=weight_stage_id)
-            qt_model.UpdateModel()
+            qt_model.UpdateWeightStage(name=name, structureGroupName=structure_group_name, weightStageId=weight_stage_id)
         except Exception as ex:
-            raise Exception(ex)
+            raise Exception(f"更新施工阶段自重:{name}错误,{ex}")
 
     @staticmethod
     def remove_construction_stage(name: str = ""):
@@ -3060,9 +3057,8 @@ class Mdb:
                 qt_model.RemoveAllConstructionStage()
             else:
                 qt_model.RemoveConstructionStage(name=name)
-            qt_model.UpdateModel()
         except Exception as ex:
-            raise Exception(ex)
+            raise Exception(f"删除施工阶段自重:{name}错误,{ex}")
 
     # endregion
 

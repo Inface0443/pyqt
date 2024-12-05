@@ -1,6 +1,6 @@
-# 最新版本 V0.5.42 - 2024.11.29 
+# 最新版本 V0.5.43 - 2024.12.5 
 > pip install --upgrade qtmodel -i https://pypi.org/simple
-- 添加移动荷载分析接口 
+- 优化钢束导入并修复单箱多室混凝土截面导入 
 ##  项目管理
 ### update_bim
 刷新Bim模型信息
@@ -105,7 +105,7 @@ Returns: 无
 > 参数:  
 > file_path:导出文件全路径，支持格式(.mct/.qdat/.obj/.txt/.py)  
 > convert_sec_group:是否将变截面组转换为变截面  
-> type_kind:输出文件类型  1-详细文件  2-计算文件  
+> type_kind:输出文件类型  1-全部模型文件  2-计算相关文件 (py输出时1-输出截面特性  2-不输出截面特性)  
 > group_name:obj与 APDL导出时指定结构组导出  
 ```Python
 # 示例代码
@@ -612,6 +612,8 @@ Returns: 无
 > name:截面名称  
 > begin_id:截面始端编号  
 > end_id:截面末端编号  
+> shear_consider:考虑剪切变形  
+> sec_normalize: 开启变截面线圈和线宽自适应排序 (避免两端截面绘制顺序导致的渲染和计算失效)  
 ```Python
 # 示例代码
 from qtmodel import *
@@ -1229,7 +1231,7 @@ Returns: 无
 > num:根数  
 > line_type:1-导线点  2-折线点  
 > position_type: 定位方式 1-直线  2-轨迹线  
-> symmetry: 对称点 0-左 1-右 2-无  
+> symmetry: 对称点 0-左端点 1-右端点 2-不对称  
 > control_points: 控制点信息[(x1,z1,r1),(x2,z2,r2)....]  
 > control_points_lateral: 控制点横弯信息[(x1,y1,r1),(x2,y2,r2)....]，无横弯时不必输入  
 > point_insert: 定位方式  
@@ -1866,15 +1868,15 @@ active_boundaries=[("默认边界组",1)],active_loads=[("默认荷载组1",0)])
 ```  
 Returns: 无
 ### update_weight_stage
-添加施工阶段信息
+更新施工阶段自重
 > 参数:  
-> stage_name:施工阶段信息  
+> name:施工阶段信息  
 > structure_group_name:结构组名  
 > weight_stage_id: 计自重阶段号 (0-不计自重,1-本阶段 n-第n阶段)  
 ```Python
 # 示例代码
 from qtmodel import *
-mdb.update_weight_stage(stage_name="施工阶段1",structure_group_name="默认结构组",weight_stage_id=1)
+mdb.update_weight_stage(name="施工阶段1",structure_group_name="默认结构组",weight_stage_id=1)
 ```  
 Returns: 无
 ### remove_construction_stage
