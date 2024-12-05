@@ -2418,7 +2418,7 @@ class Mdb:
             if load_type == 2 or load_type == 4:
                 raise Exception("操作错误，板单元暂不支持弯矩荷载")
             if load_type == 1:
-                qt_model.AddPlateElementLoad(elementId=element_id, caseName=case_name, loadType=load_type,
+                qt_model.AddPlateElementLoad(elementId=element_id, caseName=case_name, loadType=load_type,distanceList=list_xy,
                                              coordSystem=coord_system, groupName=group_name, loads=list_load)
             elif load_type == 3:
                 if load_place == 0:
