@@ -168,7 +168,7 @@ class Mdb:
         Args:
             file_path:导出文件全路径，支持格式(.mct/.qdat/.obj/.txt/.py)
             convert_sec_group:是否将变截面组转换为变截面
-            type_kind:输出文件类型  1-全部模型文件  2-计算相关文件 (py输出时1-输出截面特性  2-不输出截面特性)
+            type_kind:输出文件类型  1-全部模型文件  2-计算相关文件 (py输出时  2-输出截面特性)
             group_name:obj与 APDL导出时指定结构组导出
         Example:
             mdb.export_file(file_path="a.mct")
@@ -2418,7 +2418,7 @@ class Mdb:
             if load_type == 2 or load_type == 4:
                 raise Exception("操作错误，板单元暂不支持弯矩荷载")
             if load_type == 1:
-                qt_model.AddPlateElementLoad(elementId=element_id, caseName=case_name, loadType=load_type,distanceList=list_xy,
+                qt_model.AddPlateElementLoad(elementId=element_id, caseName=case_name, loadType=load_type, distanceList=list_xy,
                                              coordSystem=coord_system, groupName=group_name, loads=list_load)
             elif load_type == 3:
                 if load_place == 0:

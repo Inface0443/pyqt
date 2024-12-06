@@ -1,4 +1,4 @@
-# 最新版本 V0.5.43 - 2024.12.5 
+# 最新版本 V0.5.43 - 2024.12.6 
 > pip install --upgrade qtmodel -i https://pypi.org/simple
 - 优化钢束导入并修复单箱多室混凝土截面导入 
 ##  项目管理
@@ -105,7 +105,7 @@ Returns: 无
 > 参数:  
 > file_path:导出文件全路径，支持格式(.mct/.qdat/.obj/.txt/.py)  
 > convert_sec_group:是否将变截面组转换为变截面  
-> type_kind:输出文件类型  1-全部模型文件  2-计算相关文件 (py输出时1-输出截面特性  2-不输出截面特性)  
+> type_kind:输出文件类型  1-全部模型文件  2-计算相关文件 (py输出时  2-输出截面特性)  
 > group_name:obj与 APDL导出时指定结构组导出  
 ```Python
 # 示例代码
