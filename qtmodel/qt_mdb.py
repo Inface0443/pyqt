@@ -2950,7 +2950,7 @@ class Mdb:
     # region 施工阶段操作
     @staticmethod
     def add_construction_stage(name: str = "", duration: int = 0,
-                               active_structures: list[tuple[str, int, int, int]] = None,
+                               active_structures: list[tuple[str, float, int, int]] = None,
                                delete_structures: list[str] = None,
                                active_boundaries: list[tuple[str, int]] = None,
                                delete_boundaries: list[str] = None,
@@ -2989,7 +2989,7 @@ class Mdb:
 
     @staticmethod
     def update_construction_stage(name: str = "", duration: int = 0,
-                                  active_structures: list[tuple[str, int, int, int]] = None,
+                                  active_structures: list[tuple[str, float, int, int]] = None,
                                   delete_structures: list[str] = None,
                                   active_boundaries: list[tuple[str, int]] = None,
                                   delete_boundaries: list[str] = None,
