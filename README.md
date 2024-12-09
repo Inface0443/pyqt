@@ -1,6 +1,6 @@
-# 最新版本 V0.5.43 - 2024.12.6 
+# 最新版本 V0.5.44 - 2024-12-09 
 > pip install --upgrade qtmodel -i https://pypi.org/simple
-- 优化钢束导入并修复单箱多室混凝土截面导入 
+- 添加视图控制接口 
 ##  项目管理
 ### update_bim
 刷新Bim模型信息
@@ -1931,6 +1931,29 @@ mdb.remove_load_combine(name="荷载组合1")
 ```  
 Returns: 无
 ##  视图控制
+### set_view_camera
+更改三维显示相机设置
+> 参数:  
+> camera_point: 相机坐标点  
+> focus_point: 相机焦点  
+> camera_rotate:相机绕XYZ旋转角度  
+> scale: 缩放系数  
+```Python
+# 示例代码
+from qtmodel import *
+odb.set_view_camera(camera_point=(-100,-100,-100),focus_point=(0,0,0))
+```  
+Returns: 无
+### set_view_direction
+更改三维显示默认视图
+> 参数:  
+> direction: 1-空间视图1 2-前视图 3-三维视图2 4-左视图  5-顶视图 6-右视图 7-空间视图3 8-后视图 9-空间视图4 10-底视图  
+```Python
+# 示例代码
+from qtmodel import *
+odb.set_view_direction(1)
+```  
+Returns: 无
 ### activate_structure
 激活指定阶段和单元,默认激活所有
 > 参数:  

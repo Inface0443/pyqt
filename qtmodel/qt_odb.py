@@ -10,6 +10,43 @@ class Odb:
 
     # region 视图控制
     @staticmethod
+    def set_view_camera(camera_point: tuple[float, float, float], focus_point: tuple[float, float, float],
+                        camera_rotate: tuple[float, float, float] = (45, 45, 0), scale: float = 0.5):
+        """
+        更改三维显示相机设置
+        Args:
+            camera_point: 相机坐标点
+            focus_point: 相机焦点
+            camera_rotate:相机绕XYZ旋转角度
+            scale: 缩放系数
+        Example:
+           odb.set_view_camera(camera_point=(-100,-100,-100),focus_point=(0,0,0))
+        Returns: 无
+        """
+        try:
+            qt_model.SetViewCamera(direction=[camera_point[0], camera_point[1], camera_point[2], focus_point[0], focus_point[1], focus_point[2],
+                                              camera_rotate[0], camera_rotate[1], camera_rotate[2], scale])
+            qt_model.UpdateModel()
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def set_view_direction(direction: int = 1):
+        """
+        更改三维显示默认视图
+        Args:
+            direction: 1-空间视图1 2-前视图 3-三维视图2 4-左视图  5-顶视图 6-右视图 7-空间视图3 8-后视图 9-空间视图4 10-底视图
+        Example:
+           odb.set_view_direction(1)
+        Returns: 无
+        """
+        try:
+            qt_model.SetViewDirection(direction=direction)
+            qt_model.UpdateModel()
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
     def activate_structure(node_ids: list[int] = None, element_ids: list[int] = None):
         """
         激活指定阶段和单元,默认激活所有
@@ -21,7 +58,7 @@ class Odb:
         Returns: 无
         """
         try:
-            qt_model.activate_structure(nodeIds=node_ids, elementIds=element_ids)
+            qt_model.ActivateStructure(nodeIds=node_ids, elementIds=element_ids)
             qt_model.UpdateModel()
         except Exception as ex:
             raise Exception(ex)
