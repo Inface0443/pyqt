@@ -1,6 +1,6 @@
-# 最新版本 V0.5.44 - 2024-12-09 
+# 最新版本 V0.5.45 - 2024-12-09 
 > pip install --upgrade qtmodel -i https://pypi.org/simple
-- 添加视图控制接口 
+- 添加安装方式更改接口 
 ##  项目管理
 ### update_bim
 刷新Bim模型信息
@@ -1879,6 +1879,16 @@ from qtmodel import *
 mdb.update_weight_stage(name="施工阶段1",structure_group_name="默认结构组",weight_stage_id=1)
 ```  
 Returns: 无
+### update_all_stage_setting_type
+更新施工阶段安装方式
+> 参数:  
+> setting_type:安装方式 (1-接线法 2-无应力法 3-变形法 4-切线法)  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.update_all_stage_setting_type(setting_type=1)
+```  
+Returns: 无
 ### remove_construction_stage
 按照施工阶段名删除施工阶段,默认删除所有施工阶段
 > 参数:  
@@ -1941,7 +1951,7 @@ Returns: 无
 ```Python
 # 示例代码
 from qtmodel import *
-odb.set_view_camera(camera_point=(-100,-100,-100),focus_point=(0,0,0))
+odb.set_view_camera(camera_point=(-100,-100,100),focus_point=(0,0,0))
 ```  
 Returns: 无
 ### set_view_direction

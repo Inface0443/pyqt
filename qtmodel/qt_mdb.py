@@ -3043,6 +3043,21 @@ class Mdb:
             raise Exception(f"更新施工阶段自重:{name}错误,{ex}")
 
     @staticmethod
+    def update_all_stage_setting_type(setting_type: int = 1):
+        """
+        更新施工阶段安装方式
+        Args:
+            setting_type:安装方式 (1-接线法 2-无应力法 3-变形法 4-切线法)
+        Example:
+           mdb.update_all_stage_setting_type(setting_type=1)
+        Returns: 无
+        """
+        try:
+            qt_model.UpdateAllStageSettingType(type=setting_type)
+        except Exception as ex:
+            raise Exception(f"操作错误,{ex}")
+
+    @staticmethod
     def remove_construction_stage(name: str = ""):
         """
         按照施工阶段名删除施工阶段,默认删除所有施工阶段
