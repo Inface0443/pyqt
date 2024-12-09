@@ -20,7 +20,7 @@ class Odb:
             camera_rotate:相机绕XYZ旋转角度
             scale: 缩放系数
         Example:
-           odb.set_view_camera(camera_point=(-100,-100,-100),focus_point=(0,0,0))
+           odb.set_view_camera(camera_point=(-100,-100,100),focus_point=(0,0,0))
         Returns: 无
         """
         try:
