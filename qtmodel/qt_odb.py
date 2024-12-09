@@ -31,17 +31,20 @@ class Odb:
             raise Exception(ex)
 
     @staticmethod
-    def set_view_direction(direction: int = 1):
+    def set_view_direction(direction: int = 1, horizontal_degree: float = 0, vertical_degree: float = 0, scale: float = 1):
         """
         更改三维显示默认视图
         Args:
             direction: 1-空间视图1 2-前视图 3-三维视图2 4-左视图  5-顶视图 6-右视图 7-空间视图3 8-后视图 9-空间视图4 10-底视图
+            horizontal_degree:水平向旋转角度
+            vertical_degree:竖向旋转角度
+            scale:缩放系数
         Example:
-           odb.set_view_direction(1)
+           odb.set_view_direction(direction=1,scale=1.2)
         Returns: 无
         """
         try:
-            qt_model.SetViewDirection(direction=direction)
+            qt_model.SetViewDirection(direction=direction, horizontalDegree=horizontal_degree, verticalDegree=vertical_degree, scale=scale)
             qt_model.UpdateModel()
         except Exception as ex:
             raise Exception(ex)

@@ -1958,10 +1958,13 @@ Returns: 无
 更改三维显示默认视图
 > 参数:  
 > direction: 1-空间视图1 2-前视图 3-三维视图2 4-左视图  5-顶视图 6-右视图 7-空间视图3 8-后视图 9-空间视图4 10-底视图  
+> horizontal_degree:水平向旋转角度  
+> vertical_degree:竖向旋转角度  
+> scale:缩放系数  
 ```Python
 # 示例代码
 from qtmodel import *
-odb.set_view_direction(1)
+odb.set_view_direction(direction=1,scale=1.2)
 ```  
 Returns: 无
 ### activate_structure
