@@ -1,6 +1,6 @@
-# 最新版本 V0.5.45 - 2024-12-09 
+# 最新版本 V0.5.46 - 2024-12-17 
 > pip install --upgrade qtmodel -i https://pypi.org/simple
-- 添加安装方式更改接口 
+- 除荷载组合外不自动刷新模型，用户可自行调用update_model刷新模型 
 ##  项目管理
 ### update_bim
 刷新Bim模型信息
@@ -388,11 +388,13 @@ Returns: 无
 根据单元编号和单元类型添加单元
 > 参数:  
 > index:单元编号  
-> ele_type:单元类型 1-梁 2-索 3-杆 4-板  
+> ele_type:单元类型 1-梁 2-杆 3-索 4-板  
 > node_ids:单元对应的节点列表 [i,j] 或 [i,j,k,l]  
 > beta_angle:贝塔角  
 > mat_id:材料编号  
 > sec_id:截面编号  
+> initial_type:索单元初始参数类型  
+> initial_value:索单元初始始参数值  
 ```Python
 # 示例代码
 from qtmodel import *
@@ -1904,7 +1906,7 @@ Returns: 无
 添加荷载组合
 > 参数:  
 > name:荷载组合名  
-> combine_type:荷载组合类型 1-叠加  2-判别  3-包络  
+> combine_type:荷载组合类型 1-叠加  2-判别  3-包络 4-SRss 5-AbsSum  
 > describe:描述  
 > combine_info:荷载组合信息 [(荷载工况类型,工况名,系数)...] 工况类型如下  
 > _"ST"-静力荷载工况  "CS"-施工阶段荷载工况  "CB"-荷载组合_  
@@ -2371,6 +2373,25 @@ odb.plot_plate_element_stress(file_path=r"D:\\图片\\板应力.png",component=0
 ```  
 Returns: 无
 ##  获取模型信息
+### get_overlap_nodes
+获取重合节点
+> 参数:  
+> round_num: 判断精度，默认小数点后四位  
+```Python
+# 示例代码
+from qtmodel import *
+odb.get_overlap_nodes()
+```  
+Returns: json字符串,包含信息为list[list[int]]
+### get_overlap_elements
+获取重合节点
+> 参数:  
+```Python
+# 示例代码
+from qtmodel import *
+odb.get_overlap_elements()
+```  
+Returns: json字符串,包含信息为list[list[int]]
 ### get_structure_group_names
 获取结构组名称
 > 参数:  

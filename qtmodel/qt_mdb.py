@@ -468,7 +468,6 @@ class Mdb:
                 qt_model.MergeNode(tolerance)
             else:
                 qt_model.MergeNodeByIds(ids, tolerance)
-            qt_model.UpdateModel()
         except Exception as ex:
             raise Exception(ex)
 
@@ -505,7 +504,6 @@ class Mdb:
         """
         try:
             qt_model.RenumberNodeId()
-            qt_model.UpdateModel()
         except Exception as ex:
             raise Exception(ex)
 
@@ -562,7 +560,7 @@ class Mdb:
                 qt_model.RemoveStructureGroup(name=name)
             else:
                 qt_model.RemoveAllStructureGroup()
-            qt_model.UpdateModel()
+
         except Exception as ex:
             raise Exception(ex)
 
@@ -584,7 +582,7 @@ class Mdb:
             if element_ids is None:
                 element_ids = []
             qt_model.AddStructureToGroup(name=name, nodeIds=node_ids, elementIds=element_ids)
-            qt_model.UpdateModel()
+
         except Exception as ex:
             raise Exception(ex)
 
@@ -606,7 +604,7 @@ class Mdb:
             if element_ids is None:
                 element_ids = []
             qt_model.RemoveStructureOnGroup(name=name, nodeIds=node_ids, elementIds=element_ids)
-            qt_model.UpdateModel()
+
         except Exception as ex:
             raise Exception(ex)
 
@@ -614,16 +612,19 @@ class Mdb:
 
     # region 单元操作
     @staticmethod
-    def add_element(index: int = 1, ele_type: int = 1, node_ids: list[int] = None, beta_angle: float = 0, mat_id: int = -1, sec_id: int = -1):
+    def add_element(index: int = 1, ele_type: int = 1, node_ids: list[int] = None, beta_angle: float = 0,
+                    mat_id: int = -1, sec_id: int = -1, initial_type: int = 1, initial_value: float = 0):
         """
         根据单元编号和单元类型添加单元
         Args:
             index:单元编号
-            ele_type:单元类型 1-梁 2-索 3-杆 4-板
+            ele_type:单元类型 1-梁 2-杆 3-索 4-板
             node_ids:单元对应的节点列表 [i,j] 或 [i,j,k,l]
             beta_angle:贝塔角
             mat_id:材料编号
             sec_id:截面编号
+            initial_type:索单元初始参数类型
+            initial_value:索单元初始始参数值
         Example:
             mdb.add_element(index=1,ele_type=1,node_ids=[1,2],beta_angle=1,mat_id=1,sec_id=1)
         Returns: 无
@@ -636,13 +637,15 @@ class Mdb:
             if ele_type == 1:
                 qt_model.AddBeam(id=index, idI=node_ids[0], idJ=node_ids[1], betaAngle=beta_angle, materialId=mat_id, sectionId=sec_id)
             elif ele_type == 2:
-                qt_model.AddCable(id=index, idI=node_ids[0], idJ=node_ids[1], betaAngle=beta_angle, materialId=mat_id, sectionId=sec_id)
-            elif ele_type == 3:
                 qt_model.AddLink(id=index, idI=node_ids[0], idJ=node_ids[1], betaAngle=beta_angle, materialId=mat_id, sectionId=sec_id)
+            elif ele_type == 3:
+                qt_model.AddCable(id=index, idI=node_ids[0], idJ=node_ids[1], betaAngle=beta_angle, materialId=mat_id, sectionId=sec_id,
+                                  initialType=initial_type, initialValue=initial_value)
             else:
                 qt_model.AddPlate(id=index, idI=node_ids[0], idJ=node_ids[1], idK=node_ids[2], idL=node_ids[3], betaAngle=beta_angle,
                                   materialId=mat_id,
                                   sectionId=sec_id)
+
         except Exception as ex:
             raise Exception(ex)
 
@@ -665,6 +668,7 @@ class Mdb:
         """
         try:
             qt_model.AddElements(eleData=ele_data)
+
         except Exception as ex:
             raise Exception(ex)
 
@@ -796,7 +800,7 @@ class Mdb:
                                      elasticModulus=data_info[0], unitWeight=data_info[1],
                                      posiRatio=data_info[2], temperatureCoefficient=data_info[3],
                                      timeParameterId=creep_id, fcuk=f_cuk, compositeInfo=composite_info)
-            qt_model.UpdateModel()
+
         except Exception as ex:
             raise Exception(ex)
 
@@ -846,7 +850,7 @@ class Mdb:
                     raise Exception("操作错误,time_parameter数据无效!")
                 qt_model.AddTimeParameter(id=index, name=name, codeId=code_index, creepEnd=time_parameter[0], creepSpeek=time_parameter[1],
                                           shrinkSpeek=time_parameter[2], shrinkEnd=time_parameter[3])
-            qt_model.UpdateModel()
+
         except Exception as ex:
             raise Exception(ex)
 
@@ -864,7 +868,7 @@ class Mdb:
         """
         try:
             qt_model.UpdateMaterialCreep(materialId=index, creepName=creep_name, fcuk=f_cuk)
-            qt_model.UpdateModel()
+
         except Exception as ex:
             raise Exception(ex)
 
@@ -884,7 +888,7 @@ class Mdb:
                 qt_model.RemoveAllMaterial()
             else:
                 qt_model.RemoveMaterial(id=index)
-            qt_model.UpdateModel()
+
         except Exception as ex:
             raise Exception(ex)
 
@@ -1048,7 +1052,7 @@ class Mdb:
                 qt_model.RemoveAllSection()
             else:
                 qt_model.RemoveSection(id=index)
-            qt_model.UpdateModel()
+
         except Exception as ex:
             raise Exception(ex)
 
@@ -1090,7 +1094,7 @@ class Mdb:
                 qt_model.AddThickness(id=index, name=name, t=t, thickType=thick_type, isBiased=False, ribPos=rib_pos,
                                       offSetType=bias_info[0], offSetValue=bias_info[1],
                                       verticalDis=dist_v, lateralDis=dist_l, verticalRib=rib_v, lateralRib=rib_l)
-            qt_model.UpdateModel()
+
         except Exception as ex:
             raise Exception(ex)
 
@@ -1110,7 +1114,7 @@ class Mdb:
                 qt_model.RemoveAllThickness()
             else:
                 qt_model.RemoveThickness(id=index)
-            qt_model.UpdateModel()
+
         except Exception as ex:
             raise Exception(ex)
 
@@ -1180,7 +1184,6 @@ class Mdb:
         """
         try:
             qt_model.AddBoundaryGroup(name=name)
-            qt_model.UpdateModel()
         except Exception as ex:
             raise Exception(ex)
 
@@ -1200,7 +1203,6 @@ class Mdb:
                 qt_model.RemoveBoundaryGroup(name)
             else:
                 qt_model.RemoveAllBoundaryGroup()
-            qt_model.UpdateModel()
         except Exception as ex:
             raise Exception(ex)
 
@@ -1215,7 +1217,6 @@ class Mdb:
         """
         try:
             qt_model.RemoveAllBoundary()
-            qt_model.UpdateModel()
         except Exception as ex:
             raise Exception(ex)
 
@@ -1474,7 +1475,7 @@ class Mdb:
         try:
             qt_model.AddStandardVehicle(name=name, standardIndex=standard_code, loadType=load_type,
                                         loadLength=load_length, factor=factor, N=n, calcFatigue=calc_fatigue)
-            qt_model.UpdateModel()
+
         except Exception as ex:
             raise Exception(ex)
 
@@ -1507,7 +1508,7 @@ class Mdb:
             qt_model.AddUserVehicle(name=name, loadType=load_type, p=p, q=q, dis=dis, loadLength=load_length,
                                     num=n, emptyLoad=empty_load, width=width, wheelbase=wheelbase,
                                     minDistance=min_dis, unitForce=unit_force, unitLength=unit_length)
-            qt_model.UpdateModel()
+
         except Exception as ex:
             raise Exception(ex)
 
@@ -1527,7 +1528,7 @@ class Mdb:
             if node_ids is None:
                 raise Exception("操作错误，输入节点列表不能为空")
             qt_model.AddNodeTandem(name=name, startId=start_id, nodeIds=node_ids)
-            qt_model.UpdateModel()
+
         except Exception as ex:
             raise Exception(ex)
 
@@ -1544,7 +1545,7 @@ class Mdb:
         """
         try:
             qt_model.AddInfluencePlane(name=name, tandemNames=tandem_names)
-            qt_model.UpdateModel()
+
         except Exception as ex:
             raise Exception(ex)
 
@@ -1564,7 +1565,7 @@ class Mdb:
         """
         try:
             qt_model.AddLaneLine(name, influenceName=influence_name, tandemName=tandem_name, offset=offset, laneWidth=lane_width)
-            qt_model.UpdateModel()
+
         except Exception as ex:
             raise Exception(ex)
 
@@ -1590,7 +1591,7 @@ class Mdb:
                 raise Exception("操作错误，子工况信息列表不能为空")
             qt_model.AddLiveLoadCase(name=name, influencePlane=influence_plane, span=span, subCase=sub_case,
                                      trailerCode=trailer_code, specialCode=special_code)
-            qt_model.UpdateModel()
+
         except Exception as ex:
             raise Exception(ex)
 
@@ -1614,7 +1615,7 @@ class Mdb:
             qt_model.AddCarRelativeFactor(name=name, codeIndex=code_index, crossFactors=cross_factors,
                                           longitudeFactor=longitude_factor,
                                           impactFactor=impact_factor, frequency=frequency)
-            qt_model.UpdateModel()
+
         except Exception as ex:
             raise Exception(ex)
 
@@ -1646,7 +1647,7 @@ class Mdb:
             qt_model.AddTrainRelativeFactor(name=name, codeIndex=code_index, crossFactors=cross_factors, calculateFatigue=calc_fatigue,
                                             longitudeFactor=longitude_factor, fatigueLineCount=line_count, fatigueFactor=fatigue_factor,
                                             impactFactor=impact_factor, bridgeKind=bridge_kind, fillThick=fill_thick, rise=rise, lambDa=calc_length)
-            qt_model.UpdateModel()
+
         except Exception as ex:
             raise Exception(ex)
 
@@ -1668,7 +1669,7 @@ class Mdb:
             qt_model.AddMetroRelativeFactor(name=name, crossFactors=cross_factors,
                                             longitudeFactor=longitude_factor,
                                             impactFactor=impact_factor)
-            qt_model.UpdateModel()
+
         except Exception as ex:
             raise Exception(ex)
 
@@ -1684,7 +1685,7 @@ class Mdb:
         """
         try:
             qt_model.RemoveVehicle(name=name)
-            qt_model.UpdateModel()
+
         except Exception as ex:
             raise Exception(ex)
 
@@ -1705,7 +1706,7 @@ class Mdb:
                 qt_model.RemoveNodeTandem(id=index)
             elif name != "":
                 qt_model.RemoveNodeTandem(name=name)
-            qt_model.UpdateModel()
+
         except Exception as ex:
             raise Exception(ex)
 
@@ -1726,7 +1727,7 @@ class Mdb:
                 qt_model.RemoveInfluencePlane(id=index)
             elif name != "":
                 qt_model.RemoveInfluencePlane(name=name)
-            qt_model.UpdateModel()
+
         except Exception as ex:
             raise Exception(ex)
 
@@ -1747,7 +1748,7 @@ class Mdb:
                 qt_model.RemoveLaneLine(id=index)
             elif name != "":
                 qt_model.RemoveLaneLine(name=name)
-            qt_model.UpdateModel()
+
         except Exception as ex:
             raise Exception(ex)
 
@@ -1763,7 +1764,7 @@ class Mdb:
         """
         try:
             qt_model.RemoveLiveLoadCase(name=name)
-            qt_model.UpdateModel()
+
         except Exception as ex:
             raise Exception(ex)
 
@@ -1783,7 +1784,6 @@ class Mdb:
         """
         try:
             qt_model.AddLoadToMass(name=name, factor=factor)
-            qt_model.UpdateModel()
         except Exception as ex:
             raise Exception(ex)
 
@@ -1802,7 +1802,6 @@ class Mdb:
             if mass_info is None:
                 raise Exception("操作错误，节点质量信息列表不能为空")
             qt_model.AddNodalMass(nodeId=node_id, massInfo=mass_info)
-            qt_model.UpdateModel()
         except Exception as ex:
             raise Exception(ex)
 
@@ -1896,7 +1895,6 @@ class Mdb:
         """
         try:
             qt_model.AddTendonGroup(name=name, id=index)
-            qt_model.UpdateModel()
         except Exception as ex:
             raise Exception(ex)
 
@@ -1915,7 +1913,6 @@ class Mdb:
                 qt_model.RemoveTendonGroup(name=name)
             else:
                 qt_model.RemoveAllStructureGroup()
-            qt_model.UpdateModel()
         except Exception as ex:
             raise Exception(ex)
 
@@ -1954,7 +1951,7 @@ class Mdb:
             qt_model.AddTendonProperty(name=name, tendonType=tendon_type, materialId=material_id,
                                        ductType=duct_type, steelType=steel_type, steelDetail=steel_detail,
                                        loosDetail=loos_detail, slipInfo=slip_info)
-            qt_model.UpdateModel()
+
         except Exception as ex:
             raise Exception(ex)
 
@@ -2066,7 +2063,7 @@ class Mdb:
         """
         try:
             qt_model.UpdatePreStressElement(ids)
-            qt_model.UpdateModel()
+
         except Exception as ex:
             raise Exception(ex)
 
@@ -2113,7 +2110,7 @@ class Mdb:
                 qt_model.RemoveTendonProperty(id=index)
             else:
                 qt_model.RemoveAllTendonGroup()
-            qt_model.UpdateModel()
+
         except Exception as ex:
             raise Exception(ex)
 
@@ -2133,7 +2130,7 @@ class Mdb:
         try:
             if name != "":
                 qt_model.AddLoadGroup(name=name)
-            qt_model.UpdateModel()
+
         except Exception as ex:
             raise Exception(ex)
 
@@ -2152,7 +2149,7 @@ class Mdb:
                 qt_model.RemoveLoadGroup(name=name)
             else:
                 qt_model.RemoveAllLoadGroup()
-            qt_model.UpdateModel()
+
         except Exception as ex:
             raise Exception(ex)
 
@@ -2466,7 +2463,7 @@ class Mdb:
             if len(parameters) != 5 and len(parameters) != 7:
                 raise Exception("操作错误，误差列表有误")
             qt_model.AddDeviationParameter(name=name, elementType=element_type, parameterInfo=parameters)
-            qt_model.UpdateModel()
+
         except Exception as ex:
             raise Exception(ex)
 
@@ -2775,7 +2772,7 @@ class Mdb:
             if node_ids is None:
                 raise Exception("操作错误，沉降定义中节点信息不能为空")
             qt_model.AddSinkGroup(name=name, sinkValue=sink, nodeIds=node_ids)
-            qt_model.UpdateModel()
+
         except Exception as ex:
             raise Exception(ex)
 
@@ -2795,7 +2792,7 @@ class Mdb:
                 qt_model.RemoveAllSinkGroup()
             else:
                 qt_model.RemoveSinkGroup(name=name)
-            qt_model.UpdateModel()
+
         except Exception as ex:
             raise Exception(ex)
 
@@ -2814,7 +2811,7 @@ class Mdb:
             if sink_groups is None:
                 raise Exception("操作错误，沉降工况定义中沉降组信息不能为空")
             qt_model.AddSinkCase(name=name, sinkGroups=sink_groups)
-            qt_model.UpdateModel()
+
         except Exception as ex:
             raise Exception(ex)
 
@@ -2834,7 +2831,7 @@ class Mdb:
                 qt_model.RemoveAllSinkCase()
             else:
                 qt_model.RemoveSinkCase()
-            qt_model.UpdateModel()
+
         except Exception as ex:
             raise Exception(ex)
 
@@ -2852,7 +2849,7 @@ class Mdb:
             if names is None:
                 raise Exception("操作错误，添加并发反力组时结构组名称不能为空")
             qt_model.AddConcurrentReaction(names=names)
-            qt_model.UpdateModel()
+
         except Exception as ex:
             raise Exception(ex)
 
@@ -2867,7 +2864,7 @@ class Mdb:
         """
         try:
             qt_model.RemoveConcurrentRection()
-            qt_model.UpdateModel()
+
         except Exception as ex:
             raise Exception(ex)
 
@@ -2883,7 +2880,7 @@ class Mdb:
         """
         try:
             qt_model.AddConcurrentForce(names=names)
-            qt_model.UpdateModel()
+
         except Exception as ex:
             raise Exception(ex)
 
@@ -2898,7 +2895,7 @@ class Mdb:
         """
         try:
             qt_model.RemoveConcurrentForce()
-            qt_model.UpdateModel()
+
         except Exception as ex:
             raise Exception(ex)
 
@@ -2917,7 +2914,7 @@ class Mdb:
         """
         try:
             qt_model.AddLoadCase(name=name, loadCaseType=case_type)
-            qt_model.UpdateModel()
+
         except Exception as ex:
             raise Exception(ex)
 
@@ -2941,7 +2938,7 @@ class Mdb:
                 qt_model.DeleteLoadCase(id=index)
             else:
                 qt_model.DeleteAllLoadCase()
-            qt_model.UpdateModel()
+
         except Exception as ex:
             raise Exception(ex)
 
@@ -3084,7 +3081,7 @@ class Mdb:
         添加荷载组合
         Args:
             name:荷载组合名
-            combine_type:荷载组合类型 1-叠加  2-判别  3-包络
+            combine_type:荷载组合类型 1-叠加  2-判别  3-包络 4-SRss 5-AbsSum
             describe:描述
             combine_info:荷载组合信息 [(荷载工况类型,工况名,系数)...] 工况类型如下
                 _"ST"-静力荷载工况  "CS"-施工阶段荷载工况  "CB"-荷载组合_

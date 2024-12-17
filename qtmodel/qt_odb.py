@@ -761,6 +761,43 @@ class Odb:
 
     # region 获取模型信息
     @staticmethod
+    def get_overlap_nodes(round_num: int = 4):
+        """
+        获取重合节点
+        Args:
+            round_num: 判断精度，默认小数点后四位
+        Example:
+            odb.get_overlap_nodes()
+        Returns: json字符串,包含信息为list[list[int]]
+        """
+        try:
+            result = []
+            qt_result = qt_model.GetOverlapNodes(mathRound=round_num)
+            for i in range(len(qt_result)):
+                result.append(list(qt_result[i]))
+            return json.dumps(result)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def get_overlap_elements():
+        """
+        获取重合节点
+        Args:无
+        Example:
+            odb.get_overlap_elements()
+        Returns: json字符串,包含信息为list[list[int]]
+        """
+        try:
+            result = []
+            qt_result = qt_model.GetOverlapElements()
+            for i in range(len(qt_result)):
+                result.append(list(qt_result[i]))
+            return json.dumps(result)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
     def get_structure_group_names():
         """
         获取结构组名称
@@ -769,8 +806,11 @@ class Odb:
             odb.get_structure_group_names()
         Returns: json字符串,包含信息为list[str]
         """
-        res_list = list(qt_model.GetStructureGroupNames())
-        return json.dumps(res_list)
+        try:
+            res_list = list(qt_model.GetStructureGroupNames())
+            return json.dumps(res_list)
+        except Exception as ex:
+            raise Exception(ex)
 
     @staticmethod
     def get_thickness_data(thick_id: int):
