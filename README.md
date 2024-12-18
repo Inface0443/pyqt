@@ -1,6 +1,6 @@
-# 最新版本 V0.5.48 - 2024-12-18 
+# 最新版本 V0.5.49 - 2024-12-18 
 > pip install --upgrade qtmodel -i https://pypi.org/simple
-- 除荷载组合外不自动刷新模型，用户可自行调用update_model刷新模型 
+- 增加两个获取单元接口 
 ##  项目管理
 ### update_bim
 刷新Bim模型信息
@@ -2373,6 +2373,29 @@ odb.plot_plate_element_stress(file_path=r"D:\\图片\\板应力.png",component=0
 ```  
 Returns: 无
 ##  获取模型信息
+### get_element_by_point
+获取某一点指定范围内单元集合,单元中心点为节点平均值
+> 参数:  
+> x: 坐标x  
+> y: 坐标y  
+> z: 坐标z  
+> tolerance:容许范围,默认为1  
+```Python
+# 示例代码
+from qtmodel import *
+odb.get_element_by_point(0.5,0.5,0.5,tolerance=1.0)
+```  
+Returns: json字符串,包含信息为list[int]
+### get_element_by_material
+获取某一材料相应的单元
+> 参数:  
+> name:材料名称  
+```Python
+# 示例代码
+from qtmodel import *
+odb.get_element_by_material("材料1")
+```  
+Returns: json字符串,包含信息为list[int]
 ### get_overlap_nodes
 获取重合节点
 > 参数:  

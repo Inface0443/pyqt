@@ -757,6 +757,43 @@ class Odb:
 
     # region 获取模型信息
     @staticmethod
+    def get_element_by_point(x: float = 0, y: float = 0, z: float = 0, tolerance: float = 1):
+        """
+        获取某一点指定范围内单元集合,单元中心点为节点平均值
+        Args:
+            x: 坐标x
+            y: 坐标y
+            z: 坐标z
+            tolerance:容许范围,默认为1
+        Example:
+            odb.get_element_by_point(0.5,0.5,0.5,tolerance=1)
+        Returns: json字符串,包含信息为list[int]
+        """
+        try:
+            qt_result = qt_model.GetElementByPoint(x=x, y=y, z=z, tolerance=tolerance)
+            result = list(qt_result)
+            return json.dumps(result)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def get_element_by_material(name: str = ""):
+        """
+        获取某一材料相应的单元
+        Args:
+            name:材料名称
+        Example:
+            odb.get_element_by_material("材料1")
+        Returns: json字符串,包含信息为list[int]
+        """
+        try:
+            qt_result = qt_model.GetElementByMaterial(name=name)
+            result = list(qt_result)
+            return json.dumps(result)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
     def get_overlap_nodes(round_num: int = 4):
         """
         获取重合节点
