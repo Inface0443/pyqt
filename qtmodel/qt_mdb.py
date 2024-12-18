@@ -3094,7 +3094,6 @@ class Mdb:
             if combine_info is None:
                 combine_info = []
             qt_model.AddLoadCombine(name=name, loadCombineType=combine_type, describe=describe, caseAndFactor=combine_info)
-            qt_model.UpdateModel()
         except Exception as ex:
             raise Exception(ex)
 
@@ -3117,7 +3116,6 @@ class Mdb:
             if combine_info is None:
                 combine_info = []
             qt_model.UpdateLoadCombine(name=name, loadCombineType=combine_type, describe=describe, caseAndFactor=combine_info)
-            qt_model.UpdateModel()
         except Exception as ex:
             raise Exception(ex)
 
@@ -3136,7 +3134,6 @@ class Mdb:
                 qt_model.DeleteLoadCombine(name=name)
             else:
                 qt_model.DeleteAllLoadCombine()
-            qt_model.UpdateModel()
         except Exception as ex:
             raise Exception(ex)
 

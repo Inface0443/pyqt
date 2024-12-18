@@ -26,7 +26,6 @@ class Odb:
         try:
             qt_model.SetViewCamera(direction=[camera_point[0], camera_point[1], camera_point[2], focus_point[0], focus_point[1], focus_point[2],
                                               camera_rotate[0], camera_rotate[1], camera_rotate[2], scale])
-            qt_model.UpdateModel()
         except Exception as ex:
             raise Exception(ex)
 
@@ -45,7 +44,6 @@ class Odb:
         """
         try:
             qt_model.SetViewDirection(direction=direction, horizontalDegree=horizontal_degree, verticalDegree=vertical_degree, scale=scale)
-            qt_model.UpdateModel()
         except Exception as ex:
             raise Exception(ex)
 
@@ -62,7 +60,6 @@ class Odb:
         """
         try:
             qt_model.ActivateStructure(nodeIds=node_ids, elementIds=element_ids)
-            qt_model.UpdateModel()
         except Exception as ex:
             raise Exception(ex)
 
@@ -79,7 +76,6 @@ class Odb:
         """
         try:
             qt_model.SetUnit(unitForce=unit_force, unit_length=unit_length)
-            qt_model.UpdateModel()
         except Exception as ex:
             raise Exception(ex)
 

@@ -1,4 +1,4 @@
-# 最新版本 V0.5.47 - 2024-12-17 
+# 最新版本 V0.5.48 - 2024-12-18 
 > pip install --upgrade qtmodel -i https://pypi.org/simple
 - 除荷载组合外不自动刷新模型，用户可自行调用update_model刷新模型 
 ##  项目管理
