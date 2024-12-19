@@ -1,4 +1,4 @@
-# 最新版本 V0.5.49 - 2024-12-18 
+# 最新版本 V0.5.50 - 2024-12-19 
 > pip install --upgrade qtmodel -i https://pypi.org/simple
 - 增加两个获取单元接口 
 ##  项目管理
@@ -730,16 +730,16 @@ mdb.remove_all_boundary()
 ```  
 Returns: 无
 ### remove_boundary
-根据节点号删除一般支撑、弹性支承/根据单元号删除梁端约束/根据主节点号删除主从约束/根据从节点号删除约束方程
+根据节点号删除一般支撑、弹性支承/根据弹性连接号删除弹性连接/根据单元号删除梁端约束/根据从节点号和约束方程名删除约束方程/根据从节点号删除主从约束
 > 参数:  
-> remove_id:节点号 or 单元号 or主节点号  or 从节点号  
-> bd_type:边界类型  
-> _1-一般支承 2-弹性支承 3-主从约束 4-弹性连接 5-约束方程 6-梁端约束_  
+> remove_id:节点号 or 单元号  or 从节点号  
+> bd_type:边界类型  ["一般支承", "弹性支承","一般弹性支承", "主从约束", "弹性连接", "约束方程", "梁端约束"]  
 > group:边界所处边界组名  
+> constrain_name:约束方程名，仅删除约束方程时需要  
 ```Python
 # 示例代码
 from qtmodel import *
-mdb.remove_boundary(remove_id = 1, bd_type = 1,group="边界组1")
+mdb.remove_boundary(remove_id=1, bd_type="弹性支承",group="边界组1")
 ```  
 Returns: 无
 ### add_general_elastic_support_property
@@ -793,8 +793,9 @@ mdb.add_elastic_support(node_id=1,support_type=3,boundary_info=[1,1e6])
 ```  
 Returns: 无
 ### add_elastic_link
-添加弹性连接
+添加弹性连接，建议指定index(弹性连接编号)
 > 参数:  
+> index:弹性连接编号,默认自动识别  
 > link_type:节点类型 1-一般弹性连接 2-刚性连接 3-受拉弹性连接 4-受压弹性连接  
 > start_id:起始节点号  
 > end_id:终节点号  
@@ -2383,7 +2384,7 @@ Returns: 无
 ```Python
 # 示例代码
 from qtmodel import *
-odb.get_element_by_point(0.5,0.5,0.5,tolerance=1.0)
+odb.get_element_by_point(0.5,0.5,0.5,tolerance=1)
 ```  
 Returns: json字符串,包含信息为list[int]
 ### get_element_by_material

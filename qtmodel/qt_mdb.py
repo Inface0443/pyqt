@@ -1221,22 +1221,20 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def remove_boundary(remove_id: int, bd_type: int, group: str = "默认边界组"):
+    def remove_boundary(remove_id: int, bd_type: str, group: str = "默认边界组", constrain_name=""):
         """
-        根据节点号删除一般支撑、弹性支承/根据单元号删除梁端约束/根据主节点号删除主从约束/根据从节点号删除约束方程
+        根据节点号删除一般支撑、弹性支承/根据弹性连接号删除弹性连接/根据单元号删除梁端约束/根据从节点号和约束方程名删除约束方程/根据从节点号删除主从约束
         Args:
-            remove_id:节点号 or 单元号 or主节点号  or 从节点号
-            bd_type:边界类型
-                _1-一般支承 2-弹性支承 3-主从约束 4-弹性连接 5-约束方程 6-梁端约束_
+            remove_id:节点号 or 单元号  or 从节点号
+            bd_type:边界类型  ["一般支承", "弹性支承","一般弹性支承", "主从约束", "弹性连接", "约束方程", "梁端约束"]
             group:边界所处边界组名
+            constrain_name:约束方程名，仅删除约束方程时需要
         Example:
-            mdb.remove_boundary(remove_id = 1, bd_type = 1,group="边界组1")
+            mdb.remove_boundary(remove_id=1, bd_type="弹性支承",group="边界组1")
         Returns: 无
         """
         try:
-            type_list = ["一般支承", "弹性支承", "主从约束", "弹性连接", "约束方程", "梁端约束"]
-            bd_name = type_list[bd_type - 1]
-            qt_model.RemoveBoundary(controlId=remove_id, type=bd_name, group=group)
+            qt_model.RemoveBoundary(controlId=remove_id, type=bd_type, group=group,constrainName=constrain_name)
         except Exception as ex:
             raise Exception(ex)
 
@@ -1317,20 +1315,21 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def add_elastic_link(link_type: int = 1, start_id: int = 1, end_id: int = 2, beta_angle: float = 0,
+    def add_elastic_link(index = -1,link_type: int = 1, start_id: int = 1, end_id: int = 2, beta_angle: float = 0,
                          boundary_info: list[float] = None,
                          group_name: str = "默认边界组", dis_ratio: float = 0.5, kx: float = 0):
         """
-        添加弹性连接
+        添加弹性连接，建议指定index(弹性连接编号)
         Args:
-             link_type:节点类型 1-一般弹性连接 2-刚性连接 3-受拉弹性连接 4-受压弹性连接
-             start_id:起始节点号
-             end_id:终节点号
-             beta_angle:贝塔角
-             boundary_info:边界信息
-             group_name:边界组名
-             dis_ratio:距i端距离比 (仅一般弹性连接需要)
-             kx:受拉或受压刚度
+            index:弹性连接编号,默认自动识别
+            link_type:节点类型 1-一般弹性连接 2-刚性连接 3-受拉弹性连接 4-受压弹性连接
+            start_id:起始节点号
+            end_id:终节点号
+            beta_angle:贝塔角
+            boundary_info:边界信息
+            group_name:边界组名
+            dis_ratio:距i端距离比 (仅一般弹性连接需要)
+            kx:受拉或受压刚度
         Example:
             mdb.add_elastic_link(link_type=1,start_id=1,end_id=2,boundary_info=[1e6,1e6,1e6,0,0,0])
             mdb.add_elastic_link(link_type=2,start_id=1,end_id=2)
@@ -1338,7 +1337,7 @@ class Mdb:
         Returns: 无
         """
         try:
-            qt_model.AddElasticLink(linkType=link_type, startId=start_id, endId=end_id, beta=beta_angle,
+            qt_model.AddElasticLink(id= index,linkType=link_type, startId=start_id, endId=end_id, beta=beta_angle,
                                     boundaryInfo=boundary_info, groupName=group_name, disRatio=dis_ratio, kDx=kx)
         except Exception as ex:
             raise Exception(ex)
