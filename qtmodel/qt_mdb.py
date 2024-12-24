@@ -419,20 +419,21 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def update_node(node_id: int, x: float = 1, y: float = 1, z: float = 1):
+    def update_node(node_id: int, new_id: int = -1, x: float = 1, y: float = 1, z: float = 1):
         """
         根据节点号修改节点坐标
         Args:
-             node_id: 节点编号
+             node_id: 旧节点编号
+             new_id: 新节点编号,默认为-1时不改变节点编号
              x: 更新后x坐标
              y: 更新后y坐标
              z: 更新后z坐标
         Example:
-            mdb.update_node(node_id=1,x=2,y=2,z=2)
+            mdb.update_node(node_id=1,new_id=2,x=2,y=2,z=2)
         Returns: 无
         """
         try:
-            qt_model.UpdateNode(id=node_id, x=x, y=y, z=z)
+            qt_model.UpdateNode(oldId=node_id, newId=new_id, x=x, y=y, z=z)
         except Exception as ex:
             raise Exception(ex)
 
@@ -1188,6 +1189,22 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
+    def update_boundary_group(name: str, new_name: str):
+        """
+        更改边界组名
+        Args:
+            name:边界组名
+            new_name:新边界组名
+        Example:
+            mdb.update_boundary_group("旧边界组","新边界组")
+        Returns: 无
+        """
+        try:
+            qt_model.UpdateBoundaryGroup(name=name, newName=new_name)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
     def remove_boundary_group(name: str = ""):
         """
         按照名称删除边界组
@@ -1221,20 +1238,21 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def remove_boundary(remove_id: int, bd_type: str, group: str = "默认边界组", constrain_name=""):
+    def remove_boundary(remove_id: int, bd_type: str, group: str = "默认边界组", extra_name="I"):
         """
-        根据节点号删除一般支撑、弹性支承/根据弹性连接号删除弹性连接/根据单元号删除梁端约束/根据从节点号和约束方程名删除约束方程/根据从节点号删除主从约束
+        根据节点号删除一般支撑、弹性支承/根据弹性连接I或J端(需指定)节点号删除弹性连接/根据单元号删除梁端约束/根据从节点号和约束方程名删除约束方程/根据从节点号删除主从约束
         Args:
             remove_id:节点号 or 单元号  or 从节点号
-            bd_type:边界类型  ["一般支承", "弹性支承","一般弹性支承", "主从约束", "弹性连接", "约束方程", "梁端约束"]
+            bd_type:边界类型  ["一般支承", "弹性支承","一般弹性支承", "主从约束", "一般/受拉/受压/刚性弹性连接", "约束方程", "梁端约束"]
             group:边界所处边界组名
-            constrain_name:约束方程名，仅删除约束方程时需要
+            extra_name:删除弹性连接或约束方程时额外标识,约束方程名或指定删除弹性连接节点类型 I/J
         Example:
-            mdb.remove_boundary(remove_id=1, bd_type="弹性支承",group="边界组1")
+            mdb.remove_boundary(remove_id=11, bd_type="一般弹性连接",group="边界组1", extra_name="J")
+            mdb.remove_boundary(remove_id=12, bd_type="约束方程",group="边界组1", extra_name="约束方程名")
         Returns: 无
         """
         try:
-            qt_model.RemoveBoundary(controlId=remove_id, type=bd_type, group=group,constrainName=constrain_name)
+            qt_model.RemoveBoundary(controlId=remove_id, type=bd_type, group=group, extraName=extra_name)
         except Exception as ex:
             raise Exception(ex)
 
@@ -1253,6 +1271,40 @@ class Mdb:
             raise Exception("添加一般弹性支承失败,矩阵参数有误(数据需按列输入至列表)")
         try:
             qt_model.AddGeneralElasticSupportProperty(name=name, dataMatrix=data_matrix)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def update_general_elastic_support_property(name: str = "", new_name: str = "", data_matrix: list[float] = None):
+        """
+        添加一般弹性支承特性
+        Args:
+            name:原一般弹性支承特性名称
+            new_name:现一般弹性支承特性名称
+            data_matrix:一般弹性支承刚度矩阵(数据需按列输入至列表,共计21个参数)
+        Example:
+            mdb.update_general_elastic_support_property(name = "特性1",new_name="特性2", data_matrix=[i for i in range(1,22)])
+        Returns: 无
+        """
+        if data_matrix is None or len(data_matrix) is not 21:
+            raise Exception("添加一般弹性支承失败,矩阵参数有误(数据需按列输入至列表)")
+        try:
+            qt_model.UpdateGeneralElasticSupportProperty(name=name, newName=new_name, dataMatrix=data_matrix)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def remove_general_elastic_support_property(name: str = ""):
+        """
+        添加一般弹性支承特性
+        Args:
+            name:一般弹性支承特性名称
+        Example:
+            mdb.remove_general_elastic_support_property(name = "特性1")
+        Returns: 无
+        """
+        try:
+            qt_model.RemoveGeneralElasticSupportProperty(name=name)
         except Exception as ex:
             raise Exception(ex)
 
@@ -1315,7 +1367,7 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def add_elastic_link(index = -1,link_type: int = 1, start_id: int = 1, end_id: int = 2, beta_angle: float = 0,
+    def add_elastic_link(index=-1, link_type: int = 1, start_id: int = 1, end_id: int = 2, beta_angle: float = 0,
                          boundary_info: list[float] = None,
                          group_name: str = "默认边界组", dis_ratio: float = 0.5, kx: float = 0):
         """
@@ -1337,7 +1389,7 @@ class Mdb:
         Returns: 无
         """
         try:
-            qt_model.AddElasticLink(id= index,linkType=link_type, startId=start_id, endId=end_id, beta=beta_angle,
+            qt_model.AddElasticLink(id=index, linkType=link_type, startId=start_id, endId=end_id, beta=beta_angle,
                                     boundaryInfo=boundary_info, groupName=group_name, disRatio=dis_ratio, kDx=kx)
         except Exception as ex:
             raise Exception(ex)
@@ -1375,30 +1427,6 @@ class Mdb:
         """
         try:
             qt_model.AddMasterSlaveLink(masterId=master_id, slaveId=slave_id, boundaryInfo=boundary_info, groupName=group_name)
-        except Exception as ex:
-            raise Exception(ex)
-
-    @staticmethod
-    def add_node_axis(input_type: int = 1, node_id: int = 1, coord_info: list = None):
-        """
-        添加节点坐标
-        Args:
-             input_type:输入方式 1-角度 2-三点  3-向量
-             node_id:节点号
-             coord_info:局部坐标信息 -List<float>(角)  -List<List<float>>(三点 or 向量)
-        Example:
-            mdb.add_node_axis(input_type=1,node_id=1,coord_info=[45,45,45])
-            mdb.add_node_axis(input_type=2,node_id=1,coord_info=[[0,0,1],[0,1,0],[1,0,0]])
-            mdb.add_node_axis(input_type=3,node_id=1,coord_info=[[0,0,1],[0,1,0]])
-        Returns: 无
-        """
-        try:
-            if coord_info is None:
-                raise Exception("操作错误，输入坐标系信息不能为空")
-            if input_type == 1:
-                qt_model.AddNodalAxis(inputType=input_type, nodeId=node_id, angleInfo=coord_info)
-            else:
-                qt_model.AddNodalAxis(inputType=input_type, nodeId=node_id, nodeInfo=coord_info)
         except Exception as ex:
             raise Exception(ex)
 
@@ -1441,6 +1469,70 @@ class Mdb:
         """
         try:
             qt_model.AddConstraintEquation(name=name, nodeId=sec_node, dofDirect=sec_dof, masterNodeInfo=master_info, groupName=group_name)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def add_node_axis(node_id: int = 1, input_type: int = 1, coord_info: list = None):
+        """
+        添加节点坐标
+        Args:
+             node_id:节点号
+             input_type:输入方式 1-角度 2-三点  3-向量
+             coord_info:局部坐标信息 -List<float>(角)  -List<List<float>>(三点 or 向量)
+        Example:
+            mdb.add_node_axis(input_type=1,node_id=1,coord_info=[45,45,45])
+            mdb.add_node_axis(input_type=2,node_id=1,coord_info=[[0,0,1],[0,1,0],[1,0,0]])
+            mdb.add_node_axis(input_type=3,node_id=1,coord_info=[[0,0,1],[0,1,0]])
+        Returns: 无
+        """
+        try:
+            if coord_info is None:
+                raise Exception("操作错误，输入坐标系信息不能为空")
+            if input_type == 1:
+                qt_model.AddNodalAxis(inputType=input_type, nodeId=node_id, angleInfo=coord_info)
+            else:
+                qt_model.AddNodalAxis(inputType=input_type, nodeId=node_id, nodeInfo=coord_info)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def update_node_axis(node_id: int = 1, new_id: int = 1, input_type: int = 1, coord_info: list = None):
+        """
+        添加节点坐标
+        Args:
+            node_id:节点号
+            new_id:新节点号
+            input_type:输入方式 1-角度 2-三点  3-向量
+            coord_info:局部坐标信息 -List<float>(角)  -List<List<float>>(三点 or 向量)
+        Example:
+            mdb.update_node_axis(node_id=1,new_id=1,input_type=1,coord_info=[45,45,45])
+            mdb.update_node_axis(node_id=2,new_id=2,input_type=2,coord_info=[[0,0,1],[0,1,0],[1,0,0]])
+            mdb.update_node_axis(node_id=3,new_id=3,input_type=3,coord_info=[[0,0,1],[0,1,0]])
+        Returns: 无
+        """
+        try:
+            if coord_info is None:
+                raise Exception("操作错误，输入坐标系信息不能为空")
+            if input_type == 1:
+                qt_model.UpdateNodeAxis(nodeId=node_id, newId=new_id, inputType=input_type, angleInfo=coord_info)
+            else:
+                qt_model.UpdateNodeAxis(nodeId=node_id, newId=new_id, inputType=input_type, nodeInfo=coord_info)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def remove_node_axis(node_id: int = 1):
+        """
+        添加节点坐标
+        Args:
+             node_id:节点号
+        Example:
+            mdb.remove_node_axis(node_id=1)
+        Returns: 无
+        """
+        try:
+            qt_model.RemoveNodalAxis(nodeId=node_id)
         except Exception as ex:
             raise Exception(ex)
 

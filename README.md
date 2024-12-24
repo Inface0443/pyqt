@@ -1,6 +1,6 @@
-# 最新版本 V0.5.50 - 2024-12-19 
+# 最新版本 V0.5.52 - 2024-12-24 
 > pip install --upgrade qtmodel -i https://pypi.org/simple
-- 增加两个获取单元接口 
+- 增加边界更新接口 
 ##  项目管理
 ### update_bim
 刷新Bim模型信息
@@ -268,14 +268,15 @@ Returns: 无
 ### update_node
 根据节点号修改节点坐标
 > 参数:  
-> node_id: 节点编号  
+> node_id: 旧节点编号  
+> new_id: 新节点编号,默认为-1时不改变节点编号  
 > x: 更新后x坐标  
 > y: 更新后y坐标  
 > z: 更新后z坐标  
 ```Python
 # 示例代码
 from qtmodel import *
-mdb.update_node(node_id=1,x=2,y=2,z=2)
+mdb.update_node(node_id=1,new_id=2,x=2,y=2,z=2)
 ```  
 Returns: 无
 ### update_node_id
@@ -709,6 +710,17 @@ from qtmodel import *
 mdb.add_boundary_group(name="边界组1")
 ```  
 Returns: 无
+### update_boundary_group
+更改边界组名
+> 参数:  
+> name:边界组名  
+> new_name:新边界组名  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.update_boundary_group("旧边界组","新边界组")
+```  
+Returns: 无
 ### remove_boundary_group
 按照名称删除边界组
 > 参数:  
@@ -730,16 +742,17 @@ mdb.remove_all_boundary()
 ```  
 Returns: 无
 ### remove_boundary
-根据节点号删除一般支撑、弹性支承/根据弹性连接号删除弹性连接/根据单元号删除梁端约束/根据从节点号和约束方程名删除约束方程/根据从节点号删除主从约束
+根据节点号删除一般支撑、弹性支承/根据弹性连接I或J端(需指定)节点号删除弹性连接/根据单元号删除梁端约束/根据从节点号和约束方程名删除约束方程/根据从节点号删除主从约束
 > 参数:  
 > remove_id:节点号 or 单元号  or 从节点号  
-> bd_type:边界类型  ["一般支承", "弹性支承","一般弹性支承", "主从约束", "弹性连接", "约束方程", "梁端约束"]  
+> bd_type:边界类型  ["一般支承", "弹性支承","一般弹性支承", "主从约束", "一般/受拉/受压/刚性弹性连接", "约束方程", "梁端约束"]  
 > group:边界所处边界组名  
-> constrain_name:约束方程名，仅删除约束方程时需要  
+> extra_name:删除弹性连接或约束方程时额外标识,约束方程名或指定删除弹性连接节点类型 I/J  
 ```Python
 # 示例代码
 from qtmodel import *
-mdb.remove_boundary(remove_id=1, bd_type="弹性支承",group="边界组1")
+mdb.remove_boundary(remove_id=11, bd_type="一般弹性连接",group="边界组1", extra_name="J")
+mdb.remove_boundary(remove_id=12, bd_type="约束方程",group="边界组1", extra_name="约束方程名")
 ```  
 Returns: 无
 ### add_general_elastic_support_property
@@ -751,6 +764,28 @@ Returns: 无
 # 示例代码
 from qtmodel import *
 mdb.add_general_elastic_support_property(name = "特性1", data_matrix=[i for i in range(1,22)])
+```  
+Returns: 无
+### update_general_elastic_support_property
+添加一般弹性支承特性
+> 参数:  
+> name:原一般弹性支承特性名称  
+> new_name:现一般弹性支承特性名称  
+> data_matrix:一般弹性支承刚度矩阵(数据需按列输入至列表,共计21个参数)  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.update_general_elastic_support_property(name = "特性1",new_name="特性2", data_matrix=[i for i in range(1,22)])
+```  
+Returns: 无
+### remove_general_elastic_support_property
+添加一般弹性支承特性
+> 参数:  
+> name:一般弹性支承特性名称  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.remove_general_elastic_support_property(name = "特性1")
 ```  
 Returns: 无
 ### add_general_elastic_support
@@ -837,20 +872,6 @@ from qtmodel import *
 mdb.add_master_slave_link(master_id=1,slave_id=[2,3],boundary_info=[True,True,True,False,False,False])
 ```  
 Returns: 无
-### add_node_axis
-添加节点坐标
-> 参数:  
-> input_type:输入方式 1-角度 2-三点  3-向量  
-> node_id:节点号  
-> coord_info:局部坐标信息 -List<float>(角)  -List<List<float>>(三点 or 向量)  
-```Python
-# 示例代码
-from qtmodel import *
-mdb.add_node_axis(input_type=1,node_id=1,coord_info=[45,45,45])
-mdb.add_node_axis(input_type=2,node_id=1,coord_info=[[0,0,1],[0,1,0],[1,0,0]])
-mdb.add_node_axis(input_type=3,node_id=1,coord_info=[[0,0,1],[0,1,0]])
-```  
-Returns: 无
 ### add_beam_constraint
 添加梁端约束
 > 参数:  
@@ -876,6 +897,45 @@ Returns: 无
 # 示例代码
 from qtmodel import *
 mdb.add_beam_constraint(beam_id=2,info_i=[True,True,True,False,False,False],info_j=[True,True,True,False,False,False])
+```  
+Returns: 无
+### add_node_axis
+添加节点坐标
+> 参数:  
+> node_id:节点号  
+> input_type:输入方式 1-角度 2-三点  3-向量  
+> coord_info:局部坐标信息 -List<float>(角)  -List<List<float>>(三点 or 向量)  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.add_node_axis(input_type=1,node_id=1,coord_info=[45,45,45])
+mdb.add_node_axis(input_type=2,node_id=1,coord_info=[[0,0,1],[0,1,0],[1,0,0]])
+mdb.add_node_axis(input_type=3,node_id=1,coord_info=[[0,0,1],[0,1,0]])
+```  
+Returns: 无
+### update_node_axis
+添加节点坐标
+> 参数:  
+> node_id:节点号  
+> new_id:新节点号  
+> input_type:输入方式 1-角度 2-三点  3-向量  
+> coord_info:局部坐标信息 -List<float>(角)  -List<List<float>>(三点 or 向量)  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.update_node_axis(node_id=1,new_id=1,input_type=1,coord_info=[45,45,45])
+mdb.update_node_axis(node_id=2,new_id=2,input_type=2,coord_info=[[0,0,1],[0,1,0],[1,0,0]])
+mdb.update_node_axis(node_id=3,new_id=3,input_type=3,coord_info=[[0,0,1],[0,1,0]])
+```  
+Returns: 无
+### remove_node_axis
+添加节点坐标
+> 参数:  
+> node_id:节点号  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.remove_node_axis(node_id=1)
 ```  
 Returns: 无
 ##  移动荷载操作
