@@ -1,4 +1,4 @@
-# 最新版本 V0.5.52 - 2024-12-24 
+# 最新版本 V0.5.53 - 2024-12-28 
 > pip install --upgrade qtmodel -i https://pypi.org/simple
 - 增加边界更新接口 
 ##  项目管理
@@ -385,6 +385,27 @@ mdb.add_structure_to_group(name="现有结构组1",node_ids=[1,2,3,4],element_id
 ```  
 Returns: 无
 ##  单元操作
+### update_local_orientation
+反转杆系单元局部方向
+> 参数:  
+> ele_id: 杆系单元编号  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.update_local_orientation(1)
+```  
+Returns: 无
+### update_element_id
+更改单元编号
+> 参数:  
+> old_id: 单元编号  
+> new_id: 新单元编号  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.update_element_id(1,2)
+```  
+Returns: 无
 ### add_element
 根据单元编号和单元类型添加单元
 > 参数:  
@@ -394,12 +415,32 @@ Returns: 无
 > beta_angle:贝塔角  
 > mat_id:材料编号  
 > sec_id:截面编号  
-> initial_type:索单元初始参数类型  
+> initial_type:索单元初始参数类型 1-初始拉力 2-初始水平力 3-无应力长度  
 > initial_value:索单元初始始参数值  
+> plate_type:板单元类型  0-薄板 1-厚板  
 ```Python
 # 示例代码
 from qtmodel import *
 mdb.add_element(index=1,ele_type=1,node_ids=[1,2],beta_angle=1,mat_id=1,sec_id=1)
+```  
+Returns: 无
+### update_element
+根据单元编号和单元类型添加单元
+> 参数:  
+> old_id:原单元编号  
+> new_id:现单元编号，默认不修改原单元Id  
+> ele_type:单元类型 1-梁 2-杆 3-索 4-板  
+> node_ids:单元对应的节点列表 [i,j] 或 [i,j,k,l]  
+> beta_angle:贝塔角  
+> mat_id:材料编号  
+> sec_id:截面编号  
+> initial_type:索单元初始参数类型 1-初始拉力 2-初始水平力 3-无应力长度  
+> initial_value:索单元初始始参数值  
+> plate_type:板单元类型  0-薄板 1-厚板  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.update_element(old_id=1,ele_type=1,node_ids=[1,2],beta_angle=1,mat_id=1,sec_id=1)
 ```  
 Returns: 无
 ### add_elements
@@ -417,6 +458,16 @@ mdb.add_elements(ele_data=[
 [2,2,1,1,0,1,2],
 [3,3,1,1,0,1,2,1,100],
 [4,4,1,1,0,1,2,3,4]])
+```  
+Returns: 无
+### update_element_local_orientation
+更新指定单元的单元局部坐标系
+> 参数:  
+> index: 单元编号  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.update_element_local_orientation(index=1)
 ```  
 Returns: 无
 ### update_element_material
@@ -479,7 +530,7 @@ Returns: 无
 ### add_material
 添加材料
 > 参数:  
-> index:材料编号,默认自动识别 (可选参数)  
+> index:材料编号,默认为最大Id+1  
 > name:材料名称  
 > mat_type: 材料类型,1-混凝土 2-钢材 3-预应力 4-钢筋 5-自定义 6-组合材料  
 > standard:规范序号,参考UI 默认从1开始  

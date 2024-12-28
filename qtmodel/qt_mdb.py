@@ -613,8 +613,39 @@ class Mdb:
 
     # region 单元操作
     @staticmethod
+    def update_local_orientation(ele_id: int):
+        """
+        反转杆系单元局部方向
+        Args:
+            ele_id: 杆系单元编号
+        Example:
+            mdb.update_local_orientation(1)
+        Returns: 无
+        """
+        try:
+            qt_model.UpdateLocalOrientation(elementId=ele_id)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def update_element_id(old_id: int, new_id: int):
+        """
+        更改单元编号
+        Args:
+            old_id: 单元编号
+            new_id: 新单元编号
+        Example:
+            mdb.update_element_id(1,2)
+        Returns: 无
+        """
+        try:
+            qt_model.UpdateElementId(oldId=old_id, newId=new_id)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
     def add_element(index: int = 1, ele_type: int = 1, node_ids: list[int] = None, beta_angle: float = 0,
-                    mat_id: int = -1, sec_id: int = -1, initial_type: int = 1, initial_value: float = 0):
+                    mat_id: int = -1, sec_id: int = -1, initial_type: int = 1, initial_value: float = 0, plate_type: int = 0):
         """
         根据单元编号和单元类型添加单元
         Args:
@@ -624,8 +655,9 @@ class Mdb:
             beta_angle:贝塔角
             mat_id:材料编号
             sec_id:截面编号
-            initial_type:索单元初始参数类型
+            initial_type:索单元初始参数类型 1-初始拉力 2-初始水平力 3-无应力长度
             initial_value:索单元初始始参数值
+            plate_type:板单元类型  0-薄板 1-厚板
         Example:
             mdb.add_element(index=1,ele_type=1,node_ids=[1,2],beta_angle=1,mat_id=1,sec_id=1)
         Returns: 无
@@ -644,9 +676,37 @@ class Mdb:
                                   initialType=initial_type, initialValue=initial_value)
             else:
                 qt_model.AddPlate(id=index, idI=node_ids[0], idJ=node_ids[1], idK=node_ids[2], idL=node_ids[3], betaAngle=beta_angle,
-                                  materialId=mat_id,
-                                  sectionId=sec_id)
+                                  materialId=mat_id, sectionId=sec_id, type=plate_type)
+        except Exception as ex:
+            raise Exception(ex)
 
+    @staticmethod
+    def update_element(old_id: int, new_id: int = -1, ele_type: int = 1, node_ids: list[int] = None, beta_angle: float = 0,
+                       mat_id: int = -1, sec_id: int = -1, initial_type: int = 1, initial_value: float = 0, plate_type: int = 0):
+        """
+        根据单元编号和单元类型添加单元
+        Args:
+            old_id:原单元编号
+            new_id:现单元编号，默认不修改原单元Id
+            ele_type:单元类型 1-梁 2-杆 3-索 4-板
+            node_ids:单元对应的节点列表 [i,j] 或 [i,j,k,l]
+            beta_angle:贝塔角
+            mat_id:材料编号
+            sec_id:截面编号
+            initial_type:索单元初始参数类型 1-初始拉力 2-初始水平力 3-无应力长度
+            initial_value:索单元初始始参数值
+            plate_type:板单元类型  0-薄板 1-厚板
+        Example:
+            mdb.update_element(old_id=1,ele_type=1,node_ids=[1,2],beta_angle=1,mat_id=1,sec_id=1)
+        Returns: 无
+        """
+        try:
+            if node_ids is None and ele_type != 4:
+                raise Exception("操作错误,请输入此单元所需节点列表,[i,j]")
+            if node_ids is None and ele_type == 4:
+                raise Exception("操作错误,请输入此板单元所需节点列表,[i,j,k,l]")
+            qt_model.UpdateElement(oldId=old_id, newId=new_id, nodeIds=node_ids, betaAngle=beta_angle, initialType=initial_type,
+                                   initialValue=initial_value, materialId=mat_id, sectionId=sec_id, type=plate_type)
         except Exception as ex:
             raise Exception(ex)
 
@@ -674,7 +734,22 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def update_element_material(index: int, mat_id: int):
+    def update_element_local_orientation(index: Union[int, List[int]]):
+        """
+        更新指定单元的单元局部坐标系
+        Args:
+            index: 单元编号
+        Example:
+            mdb.update_element_local_orientation(index=1)
+        Returns: 无
+        """
+        try:
+            qt_model.UpdateElementLocalOrientation(elementId=index)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def update_element_material(index: Union[int, List[int]], mat_id: int):
         """
         更新指定单元的材料号
         Args:
@@ -690,7 +765,7 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def update_element_beta_angle(index: int, beta_angle: float):
+    def update_element_beta_angle(index: Union[int, List[int]], beta_angle: float):
         """
         更新指定单元的贝塔角
         Args:
@@ -706,7 +781,7 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def update_element_section(index: int, sec_id: int):
+    def update_element_section(index: Union[int, List[int]], sec_id: int):
         """
         更新杆系单元截面或板单元板厚
         Args:
@@ -717,7 +792,7 @@ class Mdb:
         Returns: 无
         """
         try:
-            if qt_model.GetSectionType(index) == "PLATE":
+            if qt_model.GetElemntType(index) == "PLATE":
                 qt_model.UpdatePlateThickness(elementId=index, thicknessId=sec_id)
             else:
                 qt_model.UpdateFrameSection(elementId=index, sectionId=sec_id)
@@ -742,7 +817,7 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def remove_element(index: int = None):
+    def remove_element(index: (Union[int, List[int]]) = None):
         """
         删除指定编号的单元
         Args:
@@ -770,7 +845,7 @@ class Mdb:
         """
         添加材料
         Args:
-            index:材料编号,默认自动识别 (可选参数)
+            index:材料编号,默认为最大Id+1
             name:材料名称
             mat_type: 材料类型,1-混凝土 2-钢材 3-预应力 4-钢筋 5-自定义 6-组合材料
             standard:规范序号,参考UI 默认从1开始
