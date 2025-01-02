@@ -839,6 +839,49 @@ class Mdb:
 
     # region 材料操作
     @staticmethod
+    def update_material(name: str = "", new_name="", new_id=-1, mat_type: int = 1, standard: int = 1, database: str = "C50",
+                        construct_factor: float = 1, modified: bool = False, data_info: list[float] = None, creep_id: int = -1,
+                        f_cuk: float = 0, composite_info: tuple[str, str] = None):
+        """
+        添加材料
+        Args:
+            name:旧材料名称
+            new_name:新材料名称,默认不更改名称
+            new_id:新材料Id,默认不更改Id
+            mat_type: 材料类型,1-混凝土 2-钢材 3-预应力 4-钢筋 5-自定义 6-组合材料
+            standard:规范序号,参考UI 默认从1开始
+            database:数据库名称
+            construct_factor:构造系数
+            modified:是否修改默认材料参数,默认不修改 (可选参数)
+            data_info:材料参数列表[弹性模量,容重,泊松比,热膨胀系数] (可选参数)
+            creep_id:徐变材料id (可选参数)
+            f_cuk: 立方体抗压强度标准值 (可选参数)
+            composite_info: 主材名和辅材名 (仅组合材料需要)
+        Example:
+            mdb.update_material(name="混凝土材料1",mat_type=1,standard=1,database="C50")
+            mdb.update_material(name="自定义材料1",mat_type=5,data_info=[3.5e10,2.5e4,0.2,1.5e-5])
+        Returns: 无
+        """
+        try:
+            if mat_type == 5:
+                modified = True
+            if modified and len(data_info) != 4:
+                raise Exception("操作错误,modify_info数据无效!")
+            if not modified:
+                qt_model.UpdateMaterial(name=name, newName=new_name, newId=new_id, materialType=mat_type, standardIndex=standard,
+                                        database=database, constructFactor=construct_factor, isModified=modified,
+                                        timeParameterId=creep_id, fcuk=f_cuk, compositeInfo=composite_info)
+            else:
+                qt_model.UpdateMaterial(name=name, newName=new_name, newId=new_id, materialType=mat_type, standardIndex=standard,
+                                        database=database, constructFactor=construct_factor, isModified=modified,
+                                        elasticModulus=data_info[0], unitWeight=data_info[1],
+                                        posiRatio=data_info[2], temperatureCoefficient=data_info[3],
+                                        timeParameterId=creep_id, fcuk=f_cuk, compositeInfo=composite_info)
+
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
     def add_material(index: int = -1, name: str = "", mat_type: int = 1, standard: int = 1, database: str = "C50",
                      construct_factor: float = 1, modified: bool = False, data_info: list[float] = None, creep_id: int = -1,
                      f_cuk: float = 0, composite_info: tuple[str, str] = None):
@@ -881,70 +924,201 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def add_time_material(index: int = -1, name: str = "", code_index: int = 1, time_parameter: list[float] = None):
+    def add_time_parameter(name: str = "", code_index: int = 1, time_parameter: list[float] = None,
+                           creep_data: list[tuple[str, float]] = None, shrink_data: str = ""):
         """
         添加收缩徐变材料
         Args:
-            index: 指定收缩徐变编号,默认则自动识别 (可选参数)
             name: 收缩徐变名
             code_index: 收缩徐变规范索引
             time_parameter: 对应规范的收缩徐变参数列表,默认不改变规范中信息 (可选参数)
+            creep_data: 徐变数据 [(函数名,龄期)...]
+            shrink_data: 收缩函数名
         Example:
             mdb.add_time_material(index=1,name="收缩徐变材料1",code_index=1)
         Returns: 无
         """
         try:
             if time_parameter is None:  # 默认不修改收缩徐变相关参数
-                qt_model.AddTimeParameter(id=index, name=name, codeId=code_index)
+                qt_model.AddTimeParameter(name=name, codeId=code_index)
             elif code_index == 1:  # 公规 JTG 3362-2018
                 if len(time_parameter) != 4:
                     raise Exception("操作错误,time_parameter数据无效!")
-                qt_model.AddTimeParameter(id=index, name=name, codeId=code_index, rh=time_parameter[0], bsc=time_parameter[1],
+                qt_model.AddTimeParameter(name=name, codeId=code_index, rh=time_parameter[0], bsc=time_parameter[1],
                                           timeStart=time_parameter[2], flyashCotent=time_parameter[3])
             elif code_index == 2:  # 公规 JTG D62-2004
                 if len(time_parameter) != 3:
                     raise Exception("操作错误,time_parameter数据无效!")
-                qt_model.AddTimeParameter(id=index, name=name, codeId=code_index, rh=time_parameter[0], bsc=time_parameter[1],
+                qt_model.AddTimeParameter(name=name, codeId=code_index, rh=time_parameter[0], bsc=time_parameter[1],
                                           timeStart=time_parameter[2])
             elif code_index == 3:  # 公规 JTJ 023-85
                 if len(time_parameter) != 4:
                     raise Exception("操作错误,time_parameter数据无效!")
-                qt_model.AddTimeParameter(id=index, name=name, codeId=code_index, creepBaseF1=time_parameter[0], creepNamda=time_parameter[1],
+                qt_model.AddTimeParameter(name=name, codeId=code_index, creepBaseF1=time_parameter[0], creepNamda=time_parameter[1],
                                           shrinkSpeek=time_parameter[2], shrinkEnd=time_parameter[3])
             elif code_index == 4:  # 铁规 TB 10092-2017
                 if len(time_parameter) != 5:
                     raise Exception("操作错误,time_parameter数据无效!")
-                qt_model.AddTimeParameter(id=index, name=name, codeId=code_index, rh=time_parameter[0], creepBaseF1=time_parameter[1],
+                qt_model.AddTimeParameter(name=name, codeId=code_index, rh=time_parameter[0], creepBaseF1=time_parameter[1],
                                           creepNamda=time_parameter[2], shrinkSpeek=time_parameter[3], shrinkEnd=time_parameter[4])
             elif code_index == 5:  # 地铁 GB 50157-2013
                 if len(time_parameter) != 3:
                     raise Exception("操作错误,time_parameter数据无效!")
-                qt_model.AddTimeParameter(id=index, name=name, codeId=code_index, rh=time_parameter[0], shrinkSpeek=time_parameter[1],
+                qt_model.AddTimeParameter(name=name, codeId=code_index, rh=time_parameter[0], shrinkSpeek=time_parameter[1],
                                           shrinkEnd=time_parameter[2])
             elif code_index == 6:  # 老化理论
                 if len(time_parameter) != 4:
                     raise Exception("操作错误,time_parameter数据无效!")
-                qt_model.AddTimeParameter(id=index, name=name, codeId=code_index, creepEnd=time_parameter[0], creepSpeek=time_parameter[1],
+                qt_model.AddTimeParameter(name=name, codeId=code_index, creepEnd=time_parameter[0], creepSpeek=time_parameter[1],
                                           shrinkSpeek=time_parameter[2], shrinkEnd=time_parameter[3])
-
+            elif code_index == 7:  # BS5400_4_1990
+                if len(time_parameter) != 4:
+                    raise Exception("操作错误,time_parameter数据无效!")
+                qt_model.AddTimeParameter(name=name, codeId=code_index, rh=time_parameter[0], creepBaseF1=time_parameter[1],
+                                          flyashCotent=time_parameter[2], bsc=time_parameter[3])
+            elif code_index == 8:  # AASHTO_LRFD_2017
+                if len(time_parameter) != 2:
+                    raise Exception("操作错误,time_parameter数据无效!")
+                qt_model.AddTimeParameter(name=name, codeId=code_index, rh=time_parameter[0], bsc=time_parameter[1])
+            elif code_index == 9:  # 自定义收缩徐变
+                qt_model.AddTimeParameter(name=name, codeId=code_index, creepData=creep_data, shrinkData=shrink_data)
         except Exception as ex:
             raise Exception(ex)
 
     @staticmethod
-    def update_material_creep(index: int = 1, creep_name: str = "", f_cuk: float = 0):
+    def add_creep_function(name: str, creep_data: list[tuple[float, float]], scale_factor: float = 1):
+        """
+        添加徐变函数
+        Args:
+            name:徐变函数名
+            creep_data:徐变数据[(时间,徐变系数)...]
+            scale_factor:缩放系数
+        Example:
+            mdb.add_creep_function(name="徐变函数名",creep_data=[(5,0.5),(100,0.75)])
+        Returns: 无
+        """
+        try:
+            qt_model.AddCreepFunction(name=name, creepData=creep_data, scaleFactor=scale_factor)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def update_creep_function(name: str, new_name="", creep_data: list[tuple[float, float]] = None, scale_factor: float = 1):
+        """
+        添加徐变函数
+        Args:
+            name:徐变函数名
+            new_name: 新徐变函数名，默认不改变函数名
+            creep_data:徐变数据，默认不改变函数名 [(时间,徐变系数)...]
+            scale_factor:缩放系数
+        Example:
+            mdb.add_creep_function(name="徐变函数名",creep_data=[(5,0.5),(100,0.75)])
+        Returns: 无
+        """
+        try:
+            qt_model.UpdateCreepFunction(name=name, newName=new_name, creepData=creep_data, scaleFactor=scale_factor)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def add_shrink_function(name: str, shrink_data: list[tuple[float, float]], scale_factor: float = 1):
+        """
+        添加收缩函数
+        Args:
+            name:收缩函数名
+            shrink_data:收缩数据[(时间,收缩系数)...]
+            scale_factor:缩放系数
+        Example:
+            mdb.add_shrink_function(name="收缩函数名",new_name="收缩函数名2")
+            mdb.add_shrink_function(name="收缩函数名",shrink_data=[(5,0.5),(100,0.75)])
+            mdb.add_shrink_function(name="收缩函数名",scale_factor=1.2)
+        Returns: 无
+        """
+        try:
+            qt_model.AddShrinkFunction(name=name, shrinkData=shrink_data, scaleFactor=scale_factor)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def update_shrink_function(name: str, new_name="", shrink_data: list[tuple[float, float]] = None, scale_factor: float = 1):
+        """
+        添加收缩函数
+        Args:
+            name:收缩函数名
+            new_name:收缩函数名
+            shrink_data:收缩数据,默认不改变数据 [(时间,收缩系数)...]
+            scale_factor:缩放系数
+        Example:
+            mdb.update_shrink_function(name="收缩函数名",new_name="函数名2")
+            mdb.update_shrink_function(name="收缩函数名",shrink_data=[(5,0.5),(100,0.75)])
+            mdb.update_shrink_function(name="收缩函数名",scale_factor=1.2)
+        Returns: 无
+        """
+        try:
+            qt_model.UpdateShrinkFunction(name=name, newName=new_name, ShrinkData=shrink_data, scaleFactor=scale_factor)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def remove_shrink_function(name: str = ""):
+        """
+        删除收缩函数
+        Args:
+            name:收缩函数名
+        Example:
+            mdb.remove_shrink_function(name="收缩函数名")
+        Returns: 无
+        """
+        try:
+            qt_model.RemoveShrinkFunction(name=name)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def remove_creep_function(name: str = ""):
+        """
+        删除徐变函数
+        Args:
+            name:徐变函数名
+        Example:
+            mdb.remove_creep_function(name="徐变函数名")
+        Returns: 无
+        """
+        try:
+            qt_model.RemoveShrinkFunction(name=name)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def update_material_time_parameter(name: str = 1, time_parameter_name: str = "", f_cuk: float = 0):
         """
         将收缩徐变参数连接到材料
         Args:
-            index: 材料编号
-            creep_name: 收缩徐变名称
+            name: 材料名
+            time_parameter_name: 收缩徐变名称
             f_cuk: 材料标准抗压强度,仅自定义材料是需要输入
         Example:
             mdb.update_material_creep(index=1,creep_name="C60",f_cuk=5e7)
         Returns: 无
         """
         try:
-            qt_model.UpdateMaterialCreep(materialId=index, creepName=creep_name, fcuk=f_cuk)
+            qt_model.UpdateMaterialTimeParameter(name=name, timeParameterName=time_parameter_name, fcuk=f_cuk)
+        except Exception as ex:
+            raise Exception(ex)
 
+    @staticmethod
+    def update_material_id(name: str, new_id: int):
+        """
+        更新材料编号
+        Args:
+            name:材料名称
+            new_id:新编号
+        Example:
+            mdb。update_material_id(name="材料1",new_id=2)
+        Returns: 无
+        """
+        try:
+            qt_model.UpdateMaterialId(name=name, newId=new_id)
         except Exception as ex:
             raise Exception(ex)
 
@@ -965,6 +1139,22 @@ class Mdb:
             else:
                 qt_model.RemoveMaterial(id=index)
 
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def update_material_construction_factor(name: str, factor: float = 1):
+        """
+        删除指定材料
+        Args:
+            name:指定材料编号，默认则删除所有材料
+            factor:指定材料编号，默认则删除所有材料
+        Example:
+            mdb.update_material_construction_factor(name="材料1",factor=1.0)
+        Returns: 无
+        """
+        try:
+            qt_model.UpdateMaterialConstructionFactor(name=name, factor=factor)
         except Exception as ex:
             raise Exception(ex)
 
@@ -2916,6 +3106,54 @@ class Mdb:
         """
         try:
             qt_model.RemoveCustomTemperature(caseName=case_name, elementId=element_id, groupName=group_name)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def add_plane_load_type(name: str, load_type: int, point_list: list[list[float]], load: float = 0, copy_x: str = None, copy_y: str = None,
+                            describe: str = ""):
+        """
+        添加分配面荷载类型
+        Args:
+            name:荷载类型名称
+            load_type:荷载类型  1-集中荷载 2-线荷载 3-面荷载
+            point_list:点列表，集中力时为列表内元素为 [x,y,force] 线荷载与面荷载时为 [x,y]
+            load:荷载值,仅线荷载与面荷载需要
+            copy_x:复制到x轴距离，与UI一致，支持3@2形式字符串，逗号分隔
+            copy_y:复制到y轴距离，与UI一致，支持3@2形式字符串，逗号分隔
+            describe:描述
+        Example:
+            mdb.remove_custom_temperature(case_name="工况1",element_id=1,group_name="默认荷载组")
+        Returns: 无
+        """
+        try:
+            qt_model.AddPlaneLoadType(name=name, loadType=load_type, pointList=point_list, load=load, copyToX=copy_x, copyToY=copy_y,
+                                      describe=describe)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def add_plane_load(case_name: str, type_name: str, point1: tuple[float, float, float], point2: tuple[float, float, float],
+                       point3: tuple[float, float, float],
+                       plate_ids: list[int] = None, coord_system: int = 3, group_name: str = "默认荷载组"):
+        """
+        添加分配面荷载类型
+        Args:
+            case_name:工况名
+            type_name:荷载类型  1-集中荷载 2-线荷载 3-面荷载
+            point1:第一点(原点)
+            point2:第一点(在x轴上)
+            point3:第一点(在y轴上)
+            plate_ids:指定板单元。默认时为全部板单元
+            coord_system:描述
+            group_name:描述
+        Example:
+            mdb.remove_custom_temperature(case_name="工况1",element_id=1,group_name="默认荷载组")
+        Returns: 无
+        """
+        try:
+            qt_model.AddPlaneLoad(caseName=case_name, typeName=type_name, point1=point1, point2=point2, point3=point3, coordSystem=coord_system,
+                                  plateIds=plate_ids, groupName=group_name)
         except Exception as ex:
             raise Exception(ex)
 
