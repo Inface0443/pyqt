@@ -986,6 +986,70 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
+    def update_time_parameter(name: str = "", new_name: str = "", code_index: int = 1, time_parameter: list[float] = None,
+                              creep_data: list[tuple[str, float]] = None, shrink_data: str = ""):
+        """
+        添加收缩徐变材料
+        Args:
+            name: 收缩徐变名
+            new_name: 新收缩徐变名,默认不改变名称
+            code_index: 收缩徐变规范索引
+            time_parameter: 对应规范的收缩徐变参数列表,默认不改变规范中信息 (可选参数)
+            creep_data: 徐变数据 [(函数名,龄期)...]
+            shrink_data: 收缩函数名
+        Example:
+            mdb.update_time_parameter(name="收缩徐变材料1",name="新收缩徐变材料1",index=1,code_index=1)
+        Returns: 无
+        """
+        try:
+            if time_parameter is None:  # 默认不修改收缩徐变相关参数
+                qt_model.UpdateTimeParameter(name=name, newName=new_name, codeId=code_index)
+            elif code_index == 1:  # 公规 JTG 3362-2018
+                if len(time_parameter) != 4:
+                    raise Exception("操作错误,time_parameter数据无效!")
+                qt_model.UpdateTimeParameter(name=name, newName=new_name, codeId=code_index, rh=time_parameter[0], bsc=time_parameter[1],
+                                             timeStart=time_parameter[2], flyashCotent=time_parameter[3])
+            elif code_index == 2:  # 公规 JTG D62-2004
+                if len(time_parameter) != 3:
+                    raise Exception("操作错误,time_parameter数据无效!")
+                qt_model.UpdateTimeParameter(name=name, newName=new_name, codeId=code_index, rh=time_parameter[0], bsc=time_parameter[1],
+                                             timeStart=time_parameter[2])
+            elif code_index == 3:  # 公规 JTJ 023-85
+                if len(time_parameter) != 4:
+                    raise Exception("操作错误,time_parameter数据无效!")
+                qt_model.UpdateTimeParameter(name=name, newName=new_name, codeId=code_index, creepBaseF1=time_parameter[0],
+                                             creepNamda=time_parameter[1],
+                                             shrinkSpeek=time_parameter[2], shrinkEnd=time_parameter[3])
+            elif code_index == 4:  # 铁规 TB 10092-2017
+                if len(time_parameter) != 5:
+                    raise Exception("操作错误,time_parameter数据无效!")
+                qt_model.UpdateTimeParameter(name=name, newName=new_name, codeId=code_index, rh=time_parameter[0], creepBaseF1=time_parameter[1],
+                                             creepNamda=time_parameter[2], shrinkSpeek=time_parameter[3], shrinkEnd=time_parameter[4])
+            elif code_index == 5:  # 地铁 GB 50157-2013
+                if len(time_parameter) != 3:
+                    raise Exception("操作错误,time_parameter数据无效!")
+                qt_model.UpdateTimeParameter(name=name, newName=new_name, codeId=code_index, rh=time_parameter[0], shrinkSpeek=time_parameter[1],
+                                             shrinkEnd=time_parameter[2])
+            elif code_index == 6:  # 老化理论
+                if len(time_parameter) != 4:
+                    raise Exception("操作错误,time_parameter数据无效!")
+                qt_model.UpdateTimeParameter(name=name, newName=new_name, codeId=code_index, creepEnd=time_parameter[0], creepSpeek=time_parameter[1],
+                                             shrinkSpeek=time_parameter[2], shrinkEnd=time_parameter[3])
+            elif code_index == 7:  # BS5400_4_1990
+                if len(time_parameter) != 4:
+                    raise Exception("操作错误,time_parameter数据无效!")
+                qt_model.UpdateTimeParameter(name=name, newName=new_name, codeId=code_index, rh=time_parameter[0], creepBaseF1=time_parameter[1],
+                                             flyashCotent=time_parameter[2], bsc=time_parameter[3])
+            elif code_index == 8:  # AASHTO_LRFD_2017
+                if len(time_parameter) != 2:
+                    raise Exception("操作错误,time_parameter数据无效!")
+                qt_model.UpdateTimeParameter(name=name, newName=new_name, codeId=code_index, rh=time_parameter[0], bsc=time_parameter[1])
+            elif code_index == 9:  # 自定义收缩徐变
+                qt_model.UpdateTimeParameter(name=name, newName=new_name, codeId=code_index, creepData=creep_data, shrinkData=shrink_data)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
     def add_creep_function(name: str, creep_data: list[tuple[float, float]], scale_factor: float = 1):
         """
         添加徐变函数
@@ -1090,7 +1154,7 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def update_material_time_parameter(name: str = 1, time_parameter_name: str = "", f_cuk: float = 0):
+    def update_material_time_parameter(name: str = "", time_parameter_name: str = "", f_cuk: float = 0):
         """
         将收缩徐变参数连接到材料
         Args:
@@ -1123,18 +1187,21 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def remove_material(index: int = -1):
+    def remove_material(index: int = -1, name: str = ""):
         """
         删除指定材料
         Args:
             index:指定材料编号，默认则删除所有材料
+            name: 指定材料名，材料名为空时按照index删除
         Example:
             mdb.remove_material()
             mdb.remove_material(index=1)
         Returns: 无
         """
         try:
-            if index == -1:
+            if name != "":
+                qt_model.RemoveMaterialByName(name=name)
+            elif index == -1:
                 qt_model.RemoveAllMaterial()
             else:
                 qt_model.RemoveMaterial(id=index)
@@ -1145,7 +1212,7 @@ class Mdb:
     @staticmethod
     def update_material_construction_factor(name: str, factor: float = 1):
         """
-        删除指定材料
+        更新材料构造系数
         Args:
             name:指定材料编号，默认则删除所有材料
             factor:指定材料编号，默认则删除所有材料
@@ -1158,9 +1225,24 @@ class Mdb:
         except Exception as ex:
             raise Exception(ex)
 
+    @staticmethod
+    def remove_time_parameter(name: str = ""):
+        """
+        删除指定时间依存材料
+        Args:
+            name: 指定收缩徐变材料名
+        Example:
+            mdb.remove_time_parameter("收缩徐变材料1")
+        Returns: 无
+        """
+        try:
+            qt_model.RemoveTimeParameter(name=name)
+        except Exception as ex:
+            raise Exception(ex)
+
     # endregion
 
-    # region 截面操作
+    # region 截面板厚操作
     @staticmethod
     def add_section(index: int = -1, name: str = "", sec_type: str = "矩形", sec_info: list[float] = None,
                     symmetry: bool = True, charm_info: list[str] = None, sec_right: list[float] = None,
@@ -1217,11 +1299,8 @@ class Mdb:
                                     biasType=bias_type, centerType=center_type, shearConsider=shear_consider,
                                     biasX=bias_x, biasY=bias_y, secProperty=sec_property)
             elif sec_type == "工字钢梁" or sec_type == "箱型钢梁":
-                rib_names = list(rib_info.keys())
-                rib_data = list(rib_info.values())
                 qt_model.AddSection(id=index, name=name, secType=sec_type, secInfo=sec_info,
-                                    ribNameList=rib_names, ribInfoList=rib_data,
-                                    ribPlaceList=rib_place, biasType=bias_type, centerType=center_type,
+                                    ribInfo=rib_info, ribPlaceList=rib_place, biasType=bias_type, centerType=center_type,
                                     shearConsider=shear_consider, biasX=bias_x, biasY=bias_y, secProperty=sec_property)
             elif sec_type == "特性截面" or sec_type.startswith("自定义"):
                 qt_model.AddSection(id=index, name=name, secType=sec_type, secInfo=sec_info, biasType=bias_type,
@@ -1256,7 +1335,27 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def add_tapper_section(index: int = -1, name: str = "", sec_type: str = "矩形", sec_begin: dict = None, sec_end: dict = None,
+    def update_single_section(index: int, new_id: int = -1, name: str = "", sec_type: str = "矩形", sec_dict: dict = None):
+        """
+        以字典形式添加单一截面
+        Args:
+            index:截面编号
+            new_id:新截面编号，默认不修改截面编号
+            name:截面名称
+            sec_type:截面类型
+            sec_dict:截面始端编号
+        Example:
+            mdb.update_single_section(index=1,name="变截面1",sec_type="矩形",
+                sec_dict={"sec_info":[1,2],"bias_type":"中心"})
+        Returns: 无
+        """
+        try:
+            qt_model.UpdateSingleSection(id=index, newId=new_id, name=name, secType=sec_type, secDict=sec_dict)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def add_tapper_section(index: int, name: str = "", sec_type: str = "矩形", sec_begin: dict = None, sec_end: dict = None,
                            shear_consider: bool = True, sec_normalize: bool = False):
         """
         添加变截面,字典参数参考单一截面,如果截面存在则自动覆盖
@@ -1277,6 +1376,32 @@ class Mdb:
         try:
             qt_model.AddTapperSection(id=index, name=name, secType=sec_type, secBegin=sec_begin, secEnd=sec_end,
                                       shearConsider=shear_consider, secNormalize=sec_normalize)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def update_tapper_section(index: int, new_id: int = -1, name: str = "", sec_type: str = "矩形", sec_begin: dict = None, sec_end: dict = None,
+                              shear_consider: bool = True, sec_normalize: bool = False):
+        """
+        添加变截面,字典参数参考单一截面,如果截面存在则自动覆盖
+        Args:
+            index:截面编号
+            new_id:新截面编号，默认不修改截面编号
+            name:截面名称
+            sec_type:截面类型
+            sec_begin:截面始端编号
+            sec_end:截面末端编号
+            shear_consider:考虑剪切变形
+            sec_normalize:变截面线段线圈重新排序
+        Example:
+            mdb.add_tapper_section(index=1,name="变截面1",sec_type="矩形",
+                sec_begin={"sec_info":[1,2],"bias_type":"中心"},
+                sec_end={"sec_info":[2,2],"bias_type":"中心"})
+        Returns: 无
+        """
+        try:
+            qt_model.UpdateTapperSection(id=index, newId=new_id, name=name, secType=sec_type, secBegin=sec_begin, secEnd=sec_end,
+                                         shearConsider=shear_consider, secNormalize=sec_normalize)
         except Exception as ex:
             raise Exception(ex)
 
@@ -1322,9 +1447,6 @@ class Mdb:
         except Exception as ex:
             raise Exception(ex)
 
-    # endregion
-
-    # region 板厚操作
     @staticmethod
     def add_thickness(index: int = -1, name: str = "", t: float = 0,
                       thick_type: int = 0, bias_info: tuple[int, float] = None,
