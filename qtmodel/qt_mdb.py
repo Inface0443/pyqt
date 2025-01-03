@@ -935,7 +935,7 @@ class Mdb:
             creep_data: 徐变数据 [(函数名,龄期)...]
             shrink_data: 收缩函数名
         Example:
-            mdb.add_time_material(index=1,name="收缩徐变材料1",code_index=1)
+            mdb.add_time_parameter(name="收缩徐变材料1",code_index=1)
         Returns: 无
         """
         try:
@@ -998,7 +998,7 @@ class Mdb:
             creep_data: 徐变数据 [(函数名,龄期)...]
             shrink_data: 收缩函数名
         Example:
-            mdb.update_time_parameter(name="收缩徐变材料1",name="新收缩徐变材料1",index=1,code_index=1)
+            mdb.update_time_parameter(name="收缩徐变材料1",new_name="新收缩徐变材料1",code_index=1)
         Returns: 无
         """
         try:
@@ -1085,7 +1085,7 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def add_shrink_function(name: str, shrink_data: list[tuple[float, float]], scale_factor: float = 1):
+    def add_shrink_function(name: str, shrink_data: list[tuple[float, float]] = None, scale_factor: float = 1):
         """
         添加收缩函数
         Args:
@@ -1093,7 +1093,6 @@ class Mdb:
             shrink_data:收缩数据[(时间,收缩系数)...]
             scale_factor:缩放系数
         Example:
-            mdb.add_shrink_function(name="收缩函数名",new_name="收缩函数名2")
             mdb.add_shrink_function(name="收缩函数名",shrink_data=[(5,0.5),(100,0.75)])
             mdb.add_shrink_function(name="收缩函数名",scale_factor=1.2)
         Returns: 无
@@ -1162,7 +1161,7 @@ class Mdb:
             time_parameter_name: 收缩徐变名称
             f_cuk: 材料标准抗压强度,仅自定义材料是需要输入
         Example:
-            mdb.update_material_creep(index=1,creep_name="C60",f_cuk=5e7)
+            mdb.update_material_time_parameter(name="C60",time_parameter_name="收缩徐变1",f_cuk=5e7)
         Returns: 无
         """
         try:
@@ -1178,7 +1177,7 @@ class Mdb:
             name:材料名称
             new_id:新编号
         Example:
-            mdb。update_material_id(name="材料1",new_id=2)
+            mdb.update_material_id(name="材料1",new_id=2)
         Returns: 无
         """
         try:

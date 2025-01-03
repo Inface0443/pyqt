@@ -1,6 +1,6 @@
-# 最新版本 V0.5.53 - 2024-12-28 
+# 最新版本 V0.5.54 - 2025-01-03 
 > pip install --upgrade qtmodel -i https://pypi.org/simple
-- 增加边界更新接口 
+- 修改部分接口 
 ##  项目管理
 ### update_bim
 刷新Bim模型信息
@@ -527,6 +527,28 @@ mdb.remove_element(index=1)
 ```  
 Returns: 无
 ##  材料操作
+### update_material
+添加材料
+> 参数:  
+> name:旧材料名称  
+> new_name:新材料名称,默认不更改名称  
+> new_id:新材料Id,默认不更改Id  
+> mat_type: 材料类型,1-混凝土 2-钢材 3-预应力 4-钢筋 5-自定义 6-组合材料  
+> standard:规范序号,参考UI 默认从1开始  
+> database:数据库名称  
+> construct_factor:构造系数  
+> modified:是否修改默认材料参数,默认不修改 (可选参数)  
+> data_info:材料参数列表[弹性模量,容重,泊松比,热膨胀系数] (可选参数)  
+> creep_id:徐变材料id (可选参数)  
+> f_cuk: 立方体抗压强度标准值 (可选参数)  
+> composite_info: 主材名和辅材名 (仅组合材料需要)  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.update_material(name="混凝土材料1",mat_type=1,standard=1,database="C50")
+mdb.update_material(name="自定义材料1",mat_type=5,data_info=[3.5e10,2.5e4,0.2,1.5e-5])
+```  
+Returns: 无
 ### add_material
 添加材料
 > 参数:  
@@ -548,35 +570,136 @@ mdb.add_material(index=1,name="混凝土材料1",mat_type=1,standard=1,database=
 mdb.add_material(index=1,name="自定义材料1",mat_type=5,data_info=[3.5e10,2.5e4,0.2,1.5e-5])
 ```  
 Returns: 无
-### add_time_material
+### add_time_parameter
 添加收缩徐变材料
 > 参数:  
-> index: 指定收缩徐变编号,默认则自动识别 (可选参数)  
 > name: 收缩徐变名  
 > code_index: 收缩徐变规范索引  
 > time_parameter: 对应规范的收缩徐变参数列表,默认不改变规范中信息 (可选参数)  
+> creep_data: 徐变数据 [(函数名,龄期)...]  
+> shrink_data: 收缩函数名  
 ```Python
 # 示例代码
 from qtmodel import *
-mdb.add_time_material(index=1,name="收缩徐变材料1",code_index=1)
+mdb.add_time_parameter(name="收缩徐变材料1",code_index=1)
 ```  
 Returns: 无
-### update_material_creep
+### update_time_parameter
+添加收缩徐变材料
+> 参数:  
+> name: 收缩徐变名  
+> new_name: 新收缩徐变名,默认不改变名称  
+> code_index: 收缩徐变规范索引  
+> time_parameter: 对应规范的收缩徐变参数列表,默认不改变规范中信息 (可选参数)  
+> creep_data: 徐变数据 [(函数名,龄期)...]  
+> shrink_data: 收缩函数名  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.update_time_parameter(name="收缩徐变材料1",new_name="新收缩徐变材料1",code_index=1)
+```  
+Returns: 无
+### add_creep_function
+添加徐变函数
+> 参数:  
+> name:徐变函数名  
+> creep_data:徐变数据[(时间,徐变系数)...]  
+> scale_factor:缩放系数  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.add_creep_function(name="徐变函数名",creep_data=[(5,0.5),(100,0.75)])
+```  
+Returns: 无
+### update_creep_function
+添加徐变函数
+> 参数:  
+> name:徐变函数名  
+> new_name: 新徐变函数名，默认不改变函数名  
+> creep_data:徐变数据，默认不改变函数名 [(时间,徐变系数)...]  
+> scale_factor:缩放系数  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.add_creep_function(name="徐变函数名",creep_data=[(5,0.5),(100,0.75)])
+```  
+Returns: 无
+### add_shrink_function
+添加收缩函数
+> 参数:  
+> name:收缩函数名  
+> shrink_data:收缩数据[(时间,收缩系数)...]  
+> scale_factor:缩放系数  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.add_shrink_function(name="收缩函数名",shrink_data=[(5,0.5),(100,0.75)])
+mdb.add_shrink_function(name="收缩函数名",scale_factor=1.2)
+```  
+Returns: 无
+### update_shrink_function
+添加收缩函数
+> 参数:  
+> name:收缩函数名  
+> new_name:收缩函数名  
+> shrink_data:收缩数据,默认不改变数据 [(时间,收缩系数)...]  
+> scale_factor:缩放系数  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.update_shrink_function(name="收缩函数名",new_name="函数名2")
+mdb.update_shrink_function(name="收缩函数名",shrink_data=[(5,0.5),(100,0.75)])
+mdb.update_shrink_function(name="收缩函数名",scale_factor=1.2)
+```  
+Returns: 无
+### remove_shrink_function
+删除收缩函数
+> 参数:  
+> name:收缩函数名  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.remove_shrink_function(name="收缩函数名")
+```  
+Returns: 无
+### remove_creep_function
+删除徐变函数
+> 参数:  
+> name:徐变函数名  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.remove_creep_function(name="徐变函数名")
+```  
+Returns: 无
+### update_material_time_parameter
 将收缩徐变参数连接到材料
 > 参数:  
-> index: 材料编号  
-> creep_name: 收缩徐变名称  
+> name: 材料名  
+> time_parameter_name: 收缩徐变名称  
 > f_cuk: 材料标准抗压强度,仅自定义材料是需要输入  
 ```Python
 # 示例代码
 from qtmodel import *
-mdb.update_material_creep(index=1,creep_name="C60",f_cuk=5e7)
+mdb.update_material_time_parameter(name="C60",time_parameter_name="收缩徐变1",f_cuk=5e7)
+```  
+Returns: 无
+### update_material_id
+更新材料编号
+> 参数:  
+> name:材料名称  
+> new_id:新编号  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.update_material_id(name="材料1",new_id=2)
 ```  
 Returns: 无
 ### remove_material
 删除指定材料
 > 参数:  
 > index:指定材料编号，默认则删除所有材料  
+> name: 指定材料名，材料名为空时按照index删除  
 ```Python
 # 示例代码
 from qtmodel import *
@@ -584,7 +707,28 @@ mdb.remove_material()
 mdb.remove_material(index=1)
 ```  
 Returns: 无
-##  截面操作
+### update_material_construction_factor
+更新材料构造系数
+> 参数:  
+> name:指定材料编号，默认则删除所有材料  
+> factor:指定材料编号，默认则删除所有材料  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.update_material_construction_factor(name="材料1",factor=1.0)
+```  
+Returns: 无
+### remove_time_parameter
+删除指定时间依存材料
+> 参数:  
+> name: 指定收缩徐变材料名  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.remove_time_parameter("收缩徐变材料1")
+```  
+Returns: 无
+##  截面板厚操作
 ### add_section
 添加单一截面信息,如果截面存在则自动覆盖
 > 参数:  
@@ -641,10 +785,44 @@ mdb.add_single_section(index=1,name="变截面1",sec_type="矩形",
 sec_dict={"sec_info":[1,2],"bias_type":"中心"})
 ```  
 Returns: 无
+### update_single_section
+以字典形式添加单一截面
+> 参数:  
+> index:截面编号  
+> new_id:新截面编号，默认不修改截面编号  
+> name:截面名称  
+> sec_type:截面类型  
+> sec_dict:截面始端编号  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.update_single_section(index=1,name="变截面1",sec_type="矩形",
+sec_dict={"sec_info":[1,2],"bias_type":"中心"})
+```  
+Returns: 无
 ### add_tapper_section
 添加变截面,字典参数参考单一截面,如果截面存在则自动覆盖
 > 参数:  
 > index:截面编号  
+> name:截面名称  
+> sec_type:截面类型  
+> sec_begin:截面始端编号  
+> sec_end:截面末端编号  
+> shear_consider:考虑剪切变形  
+> sec_normalize:变截面线段线圈重新排序  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.add_tapper_section(index=1,name="变截面1",sec_type="矩形",
+sec_begin={"sec_info":[1,2],"bias_type":"中心"},
+sec_end={"sec_info":[2,2],"bias_type":"中心"})
+```  
+Returns: 无
+### update_tapper_section
+添加变截面,字典参数参考单一截面,如果截面存在则自动覆盖
+> 参数:  
+> index:截面编号  
+> new_id:新截面编号，默认不修改截面编号  
 > name:截面名称  
 > sec_type:截面类型  
 > sec_begin:截面始端编号  
@@ -685,7 +863,6 @@ mdb.remove_section()
 mdb.remove_section(1)
 ```  
 Returns: 无
-##  板厚操作
 ### add_thickness
 添加板厚
 > 参数:  
@@ -1815,6 +1992,39 @@ Returns: 无
 > case_name:荷载工况名  
 > element_id:单元编号，支持数或列表  
 > group_name:指定荷载组,后续升级开放指定荷载组删除功能  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.remove_custom_temperature(case_name="工况1",element_id=1,group_name="默认荷载组")
+```  
+Returns: 无
+### add_plane_load_type
+添加分配面荷载类型
+> 参数:  
+> name:荷载类型名称  
+> load_type:荷载类型  1-集中荷载 2-线荷载 3-面荷载  
+> point_list:点列表，集中力时为列表内元素为 [x,y,force] 线荷载与面荷载时为 [x,y]  
+> load:荷载值,仅线荷载与面荷载需要  
+> copy_x:复制到x轴距离，与UI一致，支持3@2形式字符串，逗号分隔  
+> copy_y:复制到y轴距离，与UI一致，支持3@2形式字符串，逗号分隔  
+> describe:描述  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.remove_custom_temperature(case_name="工况1",element_id=1,group_name="默认荷载组")
+```  
+Returns: 无
+### add_plane_load
+添加分配面荷载类型
+> 参数:  
+> case_name:工况名  
+> type_name:荷载类型  1-集中荷载 2-线荷载 3-面荷载  
+> point1:第一点(原点)  
+> point2:第一点(在x轴上)  
+> point3:第一点(在y轴上)  
+> plate_ids:指定板单元。默认时为全部板单元  
+> coord_system:描述  
+> group_name:描述  
 ```Python
 # 示例代码
 from qtmodel import *
