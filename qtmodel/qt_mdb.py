@@ -370,6 +370,107 @@ class Mdb:
 
     # endregion
 
+    # region 结构组操作
+    @staticmethod
+    def add_structure_group(name: str = "", node_ids: list[int] = None, element_ids: list[int] = None):
+        """
+        添加结构组
+        Args:
+            name: 结构组名
+            node_ids: 节点编号列表(可选参数)
+            element_ids: 单元编号列表(可选参数)
+        Example:
+            mdb.add_structure_group(name="新建结构组1")
+            mdb.add_structure_group(name="新建结构组2",node_ids=[1,2,3,4],element_ids=[1,2])
+        Returns: 无
+        """
+        try:
+            qt_model.AddStructureGroup(name=name, nodeIds=node_ids, elementIds=element_ids)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def update_structure_group_name(name: str = "", new_name: str = ""):
+        """
+        更新结构组名
+        Args:
+            name: 结构组名
+            new_name: 节点编号列表(可选参数)
+        Example:
+            mdb.update_structure_group_name(name="结构组1",new_name="新结构组")
+        Returns: 无
+        """
+        try:
+            qt_model.UpdateStructureGroup(name=name, newName=new_name)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def remove_structure_group(name: str = ""):
+        """
+        可根据结构与组名删除结构组，当组名为默认则删除所有结构组
+        Args:
+            name:结构组名称
+        Example:
+            mdb.remove_structure_group(name="新建结构组1")
+            mdb.remove_structure_group()
+        Returns: 无
+        """
+        try:
+            if name != "":
+                qt_model.RemoveStructureGroup(name=name)
+            else:
+                qt_model.RemoveAllStructureGroup()
+
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def add_structure_to_group(name: str = "", node_ids: list[int] = None, element_ids: list[int] = None):
+        """
+        为结构组添加节点和/或单元
+        Args:
+            name: 结构组名
+            node_ids: 节点编号列表(可选参数)
+            element_ids: 单元编号列表(可选参数)
+        Example:
+            mdb.add_structure_to_group(name="现有结构组1",node_ids=[1,2,3,4],element_ids=[1,2])
+        Returns: 无
+        """
+        try:
+            if node_ids is None:
+                node_ids = []
+            if element_ids is None:
+                element_ids = []
+            qt_model.AddStructureToGroup(name=name, nodeIds=node_ids, elementIds=element_ids)
+
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def remove_structure_from_group(name: str = "", node_ids: list[int] = None, element_ids=None):
+        """
+        为结构组删除节点、单元
+        Args:
+            name: 结构组名
+            node_ids: 节点编号列表(可选参数)
+            element_ids: 单元编号列表(可选参数)
+        Example:
+            mdb.remove_structure_from_group(name="现有结构组1",node_ids=[1,2,3,4],element_ids=[1,2])
+        Returns: 无
+        """
+        try:
+            if node_ids is None:
+                node_ids = []
+            if element_ids is None:
+                element_ids = []
+            qt_model.RemoveStructureOnGroup(name=name, nodeIds=node_ids, elementIds=element_ids)
+
+        except Exception as ex:
+            raise Exception(ex)
+
+    # endregion
+
     # region 节点操作
     @staticmethod
     def add_node(node_data: list[float], intersected: bool = False,
@@ -495,16 +596,19 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def renumber_node():
+    def renumber_nodes(node_ids: list[int] = None, new_ids: list[int] = None):
         """
-        节点编号重拍
-        Args: 无
+        节点编号重排序，默认按1升序重排所有节点
+        Args:
+            node_ids:被修改节点号
+            new_ids:新节点号
         Example:
-            mdb.renumber_node()
+            mdb.renumber_nodes()
+            mdb.renumber_nodes([7,9,22],[1,2,3])
         Returns: 无
         """
         try:
-            qt_model.RenumberNodeId()
+            qt_model.RenumberNodeId(nodeIds=node_ids, newIds=new_ids)
         except Exception as ex:
             raise Exception(ex)
 
@@ -523,89 +627,6 @@ class Mdb:
         """
         try:
             qt_model.MoveNode(node_id, offsets=[offset_x, offset_y, offset_z])
-        except Exception as ex:
-            raise Exception(ex)
-
-    @staticmethod
-    def add_structure_group(name: str = "", index: int = -1, node_ids: list[int] = None, element_ids: list[int] = None):
-        """
-        添加结构组
-        Args:
-            name: 结构组名
-            index: 结构组编号(非必须参数)，默认自动识别当前编号
-            node_ids: 节点编号列表(可选参数)
-            element_ids: 单元编号列表(可选参数)
-        Example:
-            mdb.add_structure_group(name="新建结构组1")
-            mdb.add_structure_group(name="新建结构组2",node_ids=[1,2,3,4],element_ids=[1,2])
-        Returns: 无
-        """
-        try:
-            qt_model.AddStructureGroup(name=name, id=index, nodeIds=node_ids, elementIds=element_ids)
-        except Exception as ex:
-            raise Exception(ex)
-
-    @staticmethod
-    def remove_structure_group(name: str = ""):
-        """
-        可根据结构与组名删除结构组，当组名为默认则删除所有结构组
-        Args:
-            name:结构组名称
-        Example:
-            mdb.remove_structure_group(name="新建结构组1")
-            mdb.remove_structure_group()
-        Returns: 无
-        """
-        try:
-            if name != "":
-                qt_model.RemoveStructureGroup(name=name)
-            else:
-                qt_model.RemoveAllStructureGroup()
-
-        except Exception as ex:
-            raise Exception(ex)
-
-    @staticmethod
-    def add_structure_to_group(name: str = "", node_ids: list[int] = None, element_ids: list[int] = None):
-        """
-        为结构组添加节点和/或单元
-        Args:
-            name: 结构组名
-            node_ids: 节点编号列表(可选参数)
-            element_ids: 单元编号列表(可选参数)
-        Example:
-            mdb.add_structure_to_group(name="现有结构组1",node_ids=[1,2,3,4],element_ids=[1,2])
-        Returns: 无
-        """
-        try:
-            if node_ids is None:
-                node_ids = []
-            if element_ids is None:
-                element_ids = []
-            qt_model.AddStructureToGroup(name=name, nodeIds=node_ids, elementIds=element_ids)
-
-        except Exception as ex:
-            raise Exception(ex)
-
-    @staticmethod
-    def remove_structure_in_group(name: str = "", node_ids: list[int] = None, element_ids=None):
-        """
-        为结构组删除节点和/或单元
-        Args:
-            name: 结构组名
-            node_ids: 节点编号列表(可选参数)
-            element_ids: 单元编号列表(可选参数)
-        Example:
-            mdb.add_structure_to_group(name="现有结构组1",node_ids=[1,2,3,4],element_ids=[1,2])
-        Returns: 无
-        """
-        try:
-            if node_ids is None:
-                node_ids = []
-            if element_ids is None:
-                element_ids = []
-            qt_model.RemoveStructureOnGroup(name=name, nodeIds=node_ids, elementIds=element_ids)
-
         except Exception as ex:
             raise Exception(ex)
 
@@ -792,7 +813,7 @@ class Mdb:
         Returns: 无
         """
         try:
-            if qt_model.GetElemntType(index) == "PLATE":
+            if qt_model.GetElementType(index) == "PLATE":
                 qt_model.UpdatePlateThickness(elementId=index, thicknessId=sec_id)
             else:
                 qt_model.UpdateFrameSection(elementId=index, sectionId=sec_id)
@@ -832,6 +853,23 @@ class Mdb:
                 qt_model.RemoveAllElements()
             else:
                 qt_model.RemoveElement(index=index)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def renumber_elements(ele_ids: list[int] = None, new_ids: list[int] = None):
+        """
+        单元编号重排序，默认按1升序重排所有节点
+        Args:
+            ele_ids:被修改单元号
+            new_ids:新单元号
+        Example:
+            mdb.renumber_elements()
+            mdb.renumber_elements([7,9,22],[1,2,3])
+        Returns: 无
+        """
+        try:
+            qt_model.RenumberNodeId(elementIds=ele_ids, newIds=new_ids)
         except Exception as ex:
             raise Exception(ex)
 
@@ -1241,7 +1279,89 @@ class Mdb:
 
     # endregion
 
-    # region 截面板厚操作
+    # region 板厚操作
+    @staticmethod
+    def add_thickness(index: int = -1, name: str = "", t: float = 0,
+                      thick_type: int = 0, bias_info: tuple[int, float] = None,
+                      rib_pos: int = 0, dist_v: float = 0, dist_l: float = 0, rib_v=None, rib_l=None):
+        """
+        添加板厚
+        Args:
+            index: 板厚id
+            name: 板厚名称
+            t:   板厚度
+            thick_type: 板厚类型 0-普通板 1-加劲肋板
+            bias_info: 默认不偏心,偏心时输入列表[type,value]
+                _type:0-厚度比 1-数值_
+            rib_pos: 肋板位置 0-下部 1-上部
+            dist_v: 纵向截面肋板间距
+            dist_l: 横向截面肋板间距
+            rib_v: 纵向肋板信息
+            rib_l: 横向肋板信息
+        Example:
+            mdb.add_thickness(name="厚度1", t=0.2,thick_type=0,bias_info=(0,0.8))
+            mdb.add_thickness(name="厚度2", t=0.2,thick_type=1,rib_pos=0,dist_v=0.1,rib_v=[1,1,0.02,0.02])
+        Returns: 无
+        """
+        try:
+            if rib_v is None:
+                rib_v = []
+            if rib_l is None:
+                rib_l = []
+            if bias_info is None:
+                qt_model.AddThickness(id=index, name=name, t=t, thickType=thick_type, isBiased=False, ribPos=rib_pos,
+                                      verticalDis=dist_v, lateralDis=dist_l, verticalRib=rib_v, lateralRib=rib_l)
+            else:
+                qt_model.AddThickness(id=index, name=name, t=t, thickType=thick_type, isBiased=False, ribPos=rib_pos,
+                                      offSetType=bias_info[0], offSetValue=bias_info[1],
+                                      verticalDis=dist_v, lateralDis=dist_l, verticalRib=rib_v, lateralRib=rib_l)
+
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def update_thickness_id(index: int, new_id: int):
+        """
+        更新板厚编号
+        Args:
+            index: 板厚id
+            new_id: 新板厚id
+        Example:
+            mdb.update_thickness_id(1,2)
+        Returns: 无
+        """
+        try:
+            qt_model.UpdateThicknessId(id=index, newId=new_id)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def remove_thickness(index: int = -1, name: str = ""):
+        """
+        删除板厚
+        Args:
+             index:板厚编号,默认时删除所有板厚信息
+             name:默认按照编号删除,如果不为空则按照名称删除
+        Example:
+            mdb.remove_thickness()
+            mdb.remove_thickness(index=1)
+            mdb.remove_thickness(name="板厚1")
+        Returns: 无
+        """
+        try:
+            if name != "":
+                qt_model.RemoveThickness(name=name)
+            elif index == -1:
+                qt_model.RemoveAllThickness()
+            else:
+                qt_model.RemoveThickness(id=index)
+
+        except Exception as ex:
+            raise Exception(ex)
+
+    # endregion
+
+    # region 截面操作
     @staticmethod
     def add_section(index: int = -1, name: str = "", sec_type: str = "矩形", sec_info: list[float] = None,
                     symmetry: bool = True, charm_info: list[str] = None, sec_right: list[float] = None,
@@ -1269,7 +1389,6 @@ class Mdb:
             rib_place:肋板位置 list[tuple[布置具体部位,参考点0-下/左,距参考点间距,肋板名，加劲肋位置0-上/左 1-下/右 2-两侧,加劲肋名]]
                 布置具体部位(工字钢梁):1-上左 2-上右 3-腹板 4-下左 5-下右
                 布置具体部位(箱型钢梁):1-上左 2-上中 3-上右 4-左腹板 5-右腹板 6-下左 7-下中 8-下右
-            sec_info:截面特性列表，共计26个参数参考UI截面
             loop_segments:线圈坐标集合 list[dict] dict示例:{"main":[(x1,y1),(x2,y2)...],"sub1":[(x1,y1),(x2,y2)...],"sub2":[(x1,y1),(x2,y2)...]}
             sec_lines:线宽集合[(x1,y1,x2,y3,thick),]
             secondary_loop_segments:辅材线圈坐标集合 list[dict] (同loop_segments)
@@ -1315,26 +1434,26 @@ class Mdb:
             raise Exception(f"添加截面:{name}失败，{ex}")
 
     @staticmethod
-    def add_single_section(index: int = -1, name: str = "", sec_type: str = "矩形", sec_dict: dict = None):
+    def add_single_section(index: int = -1, name: str = "", sec_type: str = "矩形", sec_data: dict = None):
         """
         以字典形式添加单一截面
         Args:
             index:截面编号
             name:截面名称
             sec_type:截面类型
-            sec_dict:截面始端编号
+            sec_data:截面信息字典，键值参考添加add_section方法参数
         Example:
             mdb.add_single_section(index=1,name="变截面1",sec_type="矩形",
-                sec_dict={"sec_info":[1,2],"bias_type":"中心"})
+                sec_data={"sec_info":[1,2],"bias_type":"中心"})
         Returns: 无
         """
         try:
-            qt_model.AddSingleSection(id=index, name=name, secType=sec_type, secDict=sec_dict)
+            qt_model.AddSingleSection(id=index, name=name, secType=sec_type, secDict=sec_data)
         except Exception as ex:
             raise Exception(ex)
 
     @staticmethod
-    def update_single_section(index: int, new_id: int = -1, name: str = "", sec_type: str = "矩形", sec_dict: dict = None):
+    def update_single_section(index: int, new_id: int = -1, name: str = "", sec_type: str = "矩形", sec_data: dict = None):
         """
         以字典形式添加单一截面
         Args:
@@ -1342,14 +1461,14 @@ class Mdb:
             new_id:新截面编号，默认不修改截面编号
             name:截面名称
             sec_type:截面类型
-            sec_dict:截面始端编号
+            sec_data:截面信息字典，键值参考添加add_section方法参数
         Example:
             mdb.update_single_section(index=1,name="变截面1",sec_type="矩形",
-                sec_dict={"sec_info":[1,2],"bias_type":"中心"})
+                sec_data={"sec_info":[1,2],"bias_type":"中心"})
         Returns: 无
         """
         try:
-            qt_model.UpdateSingleSection(id=index, newId=new_id, name=name, secType=sec_type, secDict=sec_dict)
+            qt_model.UpdateSingleSection(id=index, newId=new_id, name=name, secType=sec_type, secDict=sec_data)
         except Exception as ex:
             raise Exception(ex)
 
@@ -1362,8 +1481,8 @@ class Mdb:
             index:截面编号
             name:截面名称
             sec_type:截面类型
-            sec_begin:截面始端编号
-            sec_end:截面末端编号
+            sec_begin:截面始端截面信息字典，键值参考添加add_section方法参数
+            sec_end:截面末端截面信息字典，键值参考添加add_section方法参数
             shear_consider:考虑剪切变形
             sec_normalize:变截面线段线圈重新排序
         Example:
@@ -1427,7 +1546,7 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def remove_section(index: int = -1):
+    def remove_section(index: (Union[int, List[int]]) = None):
         """
         删除截面信息
         Args:
@@ -1447,71 +1566,12 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def add_thickness(index: int = -1, name: str = "", t: float = 0,
-                      thick_type: int = 0, bias_info: tuple[int, float] = None,
-                      rib_pos: int = 0, dist_v: float = 0, dist_l: float = 0, rib_v=None, rib_l=None):
-        """
-        添加板厚
-        Args:
-            index: 板厚id
-            name: 板厚名称
-            t:   板厚度
-            thick_type: 板厚类型 0-普通板 1-加劲肋板
-            bias_info: 默认不偏心,偏心时输入列表[type,value]
-                _type:0-厚度比 1-数值_
-            rib_pos: 肋板位置 0-下部 1-上部
-            dist_v: 纵向截面肋板间距
-            dist_l: 横向截面肋板间距
-            rib_v: 纵向肋板信息
-            rib_l: 横向肋板信息
-        Example:
-            mdb.add_thickness(name="厚度1", t=0.2,thick_type=0,bias_info=(0,0.8))
-            mdb.add_thickness(name="厚度2", t=0.2,thick_type=1,rib_pos=0,dist_v=0.1,rib_v=[1,1,0.02,0.02])
-        Returns: 无
-        """
-        try:
-            if rib_v is None:
-                rib_v = []
-            if rib_l is None:
-                rib_l = []
-            if bias_info is None:
-                qt_model.AddThickness(id=index, name=name, t=t, thickType=thick_type, isBiased=False, ribPos=rib_pos,
-                                      verticalDis=dist_v, lateralDis=dist_l, verticalRib=rib_v, lateralRib=rib_l)
-            else:
-                qt_model.AddThickness(id=index, name=name, t=t, thickType=thick_type, isBiased=False, ribPos=rib_pos,
-                                      offSetType=bias_info[0], offSetValue=bias_info[1],
-                                      verticalDis=dist_v, lateralDis=dist_l, verticalRib=rib_v, lateralRib=rib_l)
-
-        except Exception as ex:
-            raise Exception(ex)
-
-    @staticmethod
-    def remove_thickness(index: int = -1):
-        """
-        删除板厚
-        Args:
-             index:板厚编号,默认时删除所有板厚信息
-        Example:
-            mdb.remove_thickness()
-            mdb.remove_thickness(index=1)
-        Returns: 无
-        """
-        try:
-            if index == -1:
-                qt_model.RemoveAllThickness()
-            else:
-                qt_model.RemoveThickness(id=index)
-
-        except Exception as ex:
-            raise Exception(ex)
-
-    @staticmethod
     def add_tapper_section_group(ids: list[int] = None, name: str = "", factor_w: float = 1.0, factor_h: float = 1.0,
                                  ref_w: int = 0, ref_h: int = 0, dis_w: float = 0, dis_h: float = 0):
         """
         添加变截面组
         Args:
-             ids:变截面组编号
+             ids:变截面组单元号
              name: 变截面组名
              factor_w: 宽度方向变化阶数 线性(1.0) 非线性(!=1.0)
              factor_h: 高度方向变化阶数 线性(1.0) 非线性(!=1.0)
@@ -1529,8 +1589,33 @@ class Mdb:
             raise Exception(f"添加变截面组:{name}失败,{ex}")
 
     @staticmethod
+    def update_tapper_section_group(name: str, new_name="", ids: list[int] = None, factor_w: float = 1.0, factor_h: float = 1.0,
+                                    ref_w: int = 0, ref_h: int = 0, dis_w: float = 0, dis_h: float = 0):
+        """
+        添加变截面组
+        Args:
+             name:变截面组组名
+             new_name: 新变截面组名
+             ids:变截面组单元号
+             factor_w: 宽度方向变化阶数 线性(1.0) 非线性(!=1.0)
+             factor_h: 高度方向变化阶数 线性(1.0) 非线性(!=1.0)
+             ref_w: 宽度方向参考点 0-i 1-j
+             ref_h: 高度方向参考点 0-i 1-j
+             dis_w: 宽度方向距离
+             dis_h: 高度方向距离
+        Example:
+            mdb.add_tapper_section_group(ids=[1,2,3,4],name="变截面组1")
+        Returns: 无
+        """
+        try:
+            qt_model.UpdateTapperSectionGroup(name=name, newName=new_name, ids=ids,
+                                              factorW=factor_w, factorH=factor_h, w=ref_w, h=ref_h, disW=dis_w, disH=dis_h)
+        except Exception as ex:
+            raise Exception(f"添加变截面组:{name}失败,{ex}")
+
+    @staticmethod
     def update_section_bias(index: int = 1, bias_type: str = "中心", center_type: str = "质心", shear_consider: bool = True,
-                            bias_point: list[float] = None):
+                            bias_point: list[float] = None, side_i: bool = True):
         """
         更新截面偏心
         Args:
@@ -1539,6 +1624,7 @@ class Mdb:
              center_type:中心类型
              shear_consider:考虑剪切
              bias_point:自定义偏心点(仅自定义类型偏心需要)
+             side_i: 是否为截面I,否则为截面J(仅变截面需要)
         Example:
             mdb.update_section_bias(index=1,bias_type="中上",center_type="几何中心")
             mdb.update_section_bias(index=1,bias_type="自定义",bias_point=[0.1,0.2])
@@ -1548,11 +1634,92 @@ class Mdb:
             if center_type == "自定义":
                 if len(bias_point) != 2:
                     raise Exception("操作错误,bias_point数据无效!")
-                qt_model.UpdateSectionBias(id=index, biasType=bias_type, centerType=center_type,
+                qt_model.UpdateSectionBias(id=index, biasType=bias_type, centerType=center_type, sideI=side_i,
                                            shearConsider=shear_consider, horizontalPos=bias_point[0], verticalPos=bias_point[1])
             else:
-                qt_model.UpdateSectionBias(id=index, biasType=bias_type, centerType=center_type,
+                qt_model.UpdateSectionBias(id=index, biasType=bias_type, centerType=center_type, sideI=side_i,
                                            shearConsider=shear_consider)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def update_section_property(index: int, sec_property: list[float], side_i: bool = True):
+        """
+        更新截面特性
+        Args:
+            index:截面号
+            sec_property:截面特性值参考UI共计26个数值
+            side_i:是否为I端截面(仅变截面需要)
+        Example:
+            mdb.update_section_property(index=1,sec_property=[i for i in range(1,27)])
+        Returns: 无
+        """
+        try:
+            qt_model.UpdateSectionProperty(id=index, property=sec_property, sideI=side_i)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def add_tapper_section_from_group(name: str = ""):
+        """
+        将变截面组转为变截面
+        Args:
+            name: 变截面组名，默认则转化全部变截面组
+        Example:
+            mdb.add_tapper_section_from_group()
+            mdb.add_tapper_section_from_group("变截面组1")
+        Returns: 无
+        """
+        try:
+            qt_model.AddTapperSectionFromGroup(name=name)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def update_section_id(index: int, new_id: int):
+        """
+        更新截面编号
+        Args:
+            index: 原编号
+            new_id: 新编号
+        Example:
+            mdb.update_section_id(index=1,new_id=2)
+        Returns:无
+        """
+        try:
+            qt_model.UpdateSectionId(id=index, newId=new_id)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def remove_tapper_section_group(name: str = ""):
+        """
+        删除变截面组，默认删除所有变截面组
+        Args:
+            name:变截面组名称
+        Example:
+            mdb.remove_tapper_section_group()
+            mdb.remove_tapper_section_group("变截面组1")
+        Returns:无
+        """
+        try:
+            qt_model.RemoveTapperSectionGroup(name=name)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def add_elements_to_tapper_section_group(name: str, ids: list[int] = None):
+        """
+        删除变截面组，默认删除所有变截面组
+        Args:
+          name:变截面组名称
+          ids:新增单元编号
+        Example:
+          mdb.add_elements_to_tapper_section_group("变截面组1",ids=[1,2,3,4,5,6])
+        Returns:无
+        """
+        try:
+            qt_model.AddElementToTapperSectionGroup(name=name, elementIds=ids)
         except Exception as ex:
             raise Exception(ex)
 
@@ -2356,7 +2523,7 @@ class Mdb:
         except Exception as ex:
             raise Exception(ex)
 
-    # endregion
+    # endregionfAdd
 
     # region 钢束操作
     @staticmethod
@@ -2394,7 +2561,7 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def add_tendon_property(name: str = "", tendon_type: int = 0, material_id: int = 1, duct_type: int = 1,
+    def add_tendon_property(name: str = "", tendon_type: int = 0, material_name: str = "", duct_type: int = 1,
                             steel_type: int = 1, steel_detail: list[float] = None, loos_detail: tuple[int, int, int] = None,
                             slip_info: tuple[float, float] = None):
         """
@@ -2402,7 +2569,7 @@ class Mdb:
         Args:
              name:钢束特性名
              tendon_type: 0-PRE 1-POST
-             material_id: 钢材材料编号
+             material_name: 钢材材料名
              duct_type: 1-金属波纹管  2-塑料波纹管  3-铁皮管  4-钢管  5-抽芯成型
              steel_type: 1-钢绞线  2-螺纹钢筋
              steel_detail: 钢束详细信息
@@ -2414,7 +2581,7 @@ class Mdb:
                 _松弛类型：1-一般松弛 2-低松弛_
              slip_info: 滑移信息[始端距离,末端距离] 默认为[0.006, 0.006]
         Example:
-            mdb.add_tendon_property(name="钢束1",tendon_type=0,material_id=1,duct_type=1,steel_type=1,
+            mdb.add_tendon_property(name="钢束1",tendon_type=0,material_name="预应力材料",duct_type=1,steel_type=1,
                                     steel_detail=[0.00014,0.10,0.25,0.0015],loos_detail=(1,1,1))
         Returns: 无
         """
@@ -2425,10 +2592,59 @@ class Mdb:
                 loos_detail = (1, 1, 1)
             if slip_info is None:
                 slip_info = (0.006, 0.006)
-            qt_model.AddTendonProperty(name=name, tendonType=tendon_type, materialId=material_id,
+            qt_model.AddTendonProperty(name=name, tendonType=tendon_type, materialName=material_name,
                                        ductType=duct_type, steelType=steel_type, steelDetail=steel_detail,
                                        loosDetail=loos_detail, slipInfo=slip_info)
 
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def update_tendon_property_material(name: str, material_name: str):
+        """
+        更新钢束特性材料
+        Args:
+            name:钢束特性名
+            material_name:材料名
+        Example:
+            mdb.update_tendon_property_material("特性1",material_name="材料1")
+        Returns:无
+        """
+        try:
+            qt_model.UpdateTendonPropertyMaterial(name=name, material_name=material_name)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def update_tendon_property(name: str, new_name: str = "", tendon_type: int = 0, material_name: str = "", duct_type: int = 1,
+                               steel_type: int = 1, steel_detail: list[float] = None, loos_detail: tuple[int, int, int] = None,
+                               slip_info: tuple[float, float] = None):
+        """
+        更新钢束特性
+        Args:
+            name:钢束特性名
+            new_name:新钢束特性名,默认不修改
+            tendon_type: 0-PRE 1-POST
+            material_name: 钢材材料名
+            duct_type: 1-金属波纹管  2-塑料波纹管  3-铁皮管  4-钢管  5-抽芯成型
+            steel_type: 1-钢绞线  2-螺纹钢筋
+            steel_detail: 钢束详细信息
+                _钢绞线[钢束面积,孔道直径,摩阻系数,偏差系数]_
+                _螺纹钢筋[钢筋直径,钢束面积,孔道直径,摩阻系数,偏差系数,张拉方式(1-一次张拉 2-超张拉)]_
+            loos_detail: 松弛信息[规范,张拉,松弛] (仅钢绞线需要,默认为[1,1,1])
+                _规范:1-公规 2-铁规_
+                _张拉方式:1-一次张拉 2-超张拉_
+                _松弛类型：1-一般松弛 2-低松弛_
+            slip_info: 滑移信息[始端距离,末端距离] 默认为[0.006, 0.006]
+        Example:
+            mdb.update_tendon_property(name="钢束1",tendon_type=0,material_id=1,duct_type=1,steel_type=1,
+                                    steel_detail=[0.00014,0.10,0.25,0.0015],loos_detail=(1,1,1))
+        Returns:无
+        """
+        try:
+            qt_model.UpdateTendonProperty(name=name, newName=new_name, tendonType=tendon_type, materialName=material_name,
+                                          ductType=duct_type, steelType=steel_type, steelDetail=steel_detail,
+                                          loosDetail=loos_detail, slipInfo=slip_info)
         except Exception as ex:
             raise Exception(ex)
 
@@ -2480,8 +2696,8 @@ class Mdb:
 
     @staticmethod
     def add_tendon_2d(name: str, property_name: str = "", group_name: str = "默认钢束组",
-                      num: int = 1, line_type: int = 1, position_type: int = 1, symmetry: int = 2,
-                      control_points: list[tuple[float, float, float]] = None,
+                      num: int = 1, line_type: int = 1, position_type: int = 1,
+                      symmetry: int = 2, control_points: list[tuple[float, float, float]] = None,
                       control_points_lateral: list[tuple[float, float, float]] = None,
                       point_insert: tuple[float, float, float] = None,
                       tendon_direction: tuple[float, float, float] = None,
@@ -2496,7 +2712,7 @@ class Mdb:
              line_type:1-导线点  2-折线点
              position_type: 定位方式 1-直线  2-轨迹线
              symmetry: 对称点 0-左端点 1-右端点 2-不对称
-             control_points: 控制点信息[(x1,z1,r1),(x2,z2,r2)....]
+             control_points: 控制点信息[(x1,z1,r1),(x2,z2,r2)....] 三维[(x1,y1,z1,r1),(x2,y2,z2,r2)....]
              control_points_lateral: 控制点横弯信息[(x1,y1,r1),(x2,y2,r2)....]，无横弯时不必输入
              point_insert: 定位方式
                 _直线: 插入点坐标[x,y,z]_
@@ -2529,18 +2745,68 @@ class Mdb:
             raise Exception(f"添加二维钢束:{name}失败,{ex}")
 
     @staticmethod
-    def update_tendon_element(ids: list[int] = None):
+    def update_tendon(name: str, new_name: str = "", tendon_2d: bool = True, property_name: str = "", group_name: str = "默认钢束组",
+                      num: int = 1, line_type: int = 1, symmetry: int = 2, control_points: list = None,
+                      control_points_lateral: list[tuple[float, float, float]] = None,
+                      position_type: int = 1, point_insert: tuple[float, float, float] = None,
+                      tendon_direction: tuple[float, float, float] = None,
+                      rotation_angle: float = 0, track_group: str = "默认结构组", projection: bool = True):
         """
-        赋予钢束构件
+        添加三维钢束
         Args:
-            ids: 钢束构件所在单元编号集合
+            name:钢束名称
+            new_name:新钢束名称
+            tendon_2d:是否为2维钢束
+            property_name:钢束特性名称
+            group_name:默认钢束组
+            num:根数
+            line_type:1-导线点  2-折线点
+            position_type: 定位方式 1-直线  2-轨迹线
+            symmetry: 对称点 0-左端点 1-右端点 2-不对称
+            control_points: 控制点信息二维[(x1,z1,r1),(x2,z2,r2)....]
+            control_points_lateral: 控制点横弯信息[(x1,y1,r1),(x2,y2,r2)....]，无横弯时不必输入
+            point_insert: 定位方式
+               _直线: 插入点坐标[x,y,z]_
+               _轨迹线:  [插入端(1-I 2-J),插入方向(1-ij 2-ji),插入单元id]_
+            tendon_direction:直线钢束X方向向量  默认为[1,0,0] (轨迹线不用赋值)
+               _x轴-[1,0,0] y轴-[0,1,0] z轴-[0,0,1]_
+            rotation_angle:绕钢束旋转角度
+            track_group:轨迹线结构组名  (直线时不用赋值)
+            projection:直线钢束投影 (默认为true)
         Example:
-           mdb.update_tendon_element(ids=[1,2,3,4])
+           mdb.update_tendon(name="BB1",property_name="22-15",num=2,position_type=1,
+                   control_points=[(0,-1,0),(10,-1,0)],point_insert=(0,0,0))
+           mdb.update_tendon(name="BB1",property_name="22-15",num=2,position_type=2,
+                   control_points=[(0,-1,0),(10,-1,0)],point_insert=(1,1,1),track_group="轨迹线结构组1")
         Returns: 无
         """
         try:
-            qt_model.UpdatePreStressElement(ids)
+            if tendon_direction is None:
+                tendon_direction = (1, 0, 0)
+            if control_points is None:
+                raise Exception("操作错误，钢束形状控制点不能为空")
+            qt_model.UpdateTendon(name=name, newName=new_name, tendon2D=tendon_2d,
+                                  propertyName=property_name, groupName=group_name, num=num, lineType=line_type,
+                                  positionType=position_type, symmetry=symmetry, controlPoints=control_points,
+                                  controlPointsLateral=control_points_lateral,
+                                  pointInsert=point_insert, tendonDirection=tendon_direction,
+                                  rotationAngle=rotation_angle, trackGroup=track_group, isProject=projection)
+        except Exception as ex:
+            raise Exception(f"修改钢束:{name}失败,{ex}")
 
+    @staticmethod
+    def update_element_component_type(ids: list[int] = None, component_type: int = 2):
+        """
+        赋予单元构件类型
+        Args:
+            ids: 钢束构件所在单元编号集合
+            component_type:0-钢结构构件 1-钢筋混凝土构件 2-预应力混凝土构件
+        Example:
+           mdb.update_element_component_type(ids=[1,2,3,4],component_type=2)
+        Returns: 无
+        """
+        try:
+            qt_model.UpdateElementComponentType(ids=ids, type=component_type)
         except Exception as ex:
             raise Exception(ex)
 

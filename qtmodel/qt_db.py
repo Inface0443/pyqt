@@ -1,6 +1,6 @@
 class DataHelper:
     @staticmethod
-    def parse_to_num(str_list: list[str]) -> list[int]:
+    def parsing(str_list: list[str]) -> list[int]:
         """
         将字符串转为列表
         Args:
