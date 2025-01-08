@@ -2119,7 +2119,6 @@ class Mdb:
         try:
             qt_model.AddStandardVehicle(name=name, standardIndex=standard_code, loadType=load_type,
                                         loadLength=load_length, factor=factor, N=n, calcFatigue=calc_fatigue)
-
         except Exception as ex:
             raise Exception(ex)
 
@@ -2157,21 +2156,18 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def add_node_tandem(name: str, start_id: int, node_ids: list[int]):
+    def add_node_tandem(name: str, node_ids: list[int]):
         """
-        添加节点纵列
+        添加节点纵列,默认以最小X对应节点作为纵列起点
         Args:
              name:节点纵列名
-             start_id:起始节点号
              node_ids:节点列表
         Example:
-            mdb.add_node_tandem(name="节点纵列1",start_id=1,node_ids=[i+1 for i in range(12)])
+            mdb.add_node_tandem(name="节点纵列1",node_ids=[i+1 for i in range(12)])
         Returns: 无
         """
         try:
-            if node_ids is None:
-                raise Exception("操作错误，输入节点列表不能为空")
-            qt_model.AddNodeTandem(name=name, startId=start_id, nodeIds=node_ids)
+            qt_model.AddNodeTandem(name=name, nodeIds=node_ids)
 
         except Exception as ex:
             raise Exception(ex)
@@ -2189,12 +2185,12 @@ class Mdb:
         """
         try:
             qt_model.AddInfluencePlane(name=name, tandemNames=tandem_names)
-
         except Exception as ex:
             raise Exception(ex)
 
     @staticmethod
-    def add_lane_line(name: str, influence_name: str, tandem_name: str, offset: float = 0, lane_width: float = 0):
+    def add_lane_line(name: str, influence_name: str, tandem_name: str, offset: float = 0, lane_width: float = 0,
+                      optimize: bool = False, direction: int = 0):
         """
         添加车道线
         Args:
@@ -2203,13 +2199,15 @@ class Mdb:
              tandem_name:节点纵列名
              offset:偏移
              lane_width:车道宽度
+             optimize:是否允许车辆摆动
+             direction:0-向前  1-向后
         Example:
             mdb.add_lane_line(name="车道1",influence_name="影响面1",tandem_name="节点纵列1",offset=0,lane_width=3.1)
         Returns: 无
         """
         try:
-            qt_model.AddLaneLine(name, influenceName=influence_name, tandemName=tandem_name, offset=offset, laneWidth=lane_width)
-
+            qt_model.AddLaneLine(name, influenceName=influence_name, tandemName=tandem_name, offset=offset, laneWidth=lane_width,
+                                 optimize=optimize, direction=direction)
         except Exception as ex:
             raise Exception(ex)
 
@@ -2235,7 +2233,6 @@ class Mdb:
                 raise Exception("操作错误，子工况信息列表不能为空")
             qt_model.AddLiveLoadCase(name=name, influencePlane=influence_plane, span=span, subCase=sub_case,
                                      trailerCode=trailer_code, specialCode=special_code)
-
         except Exception as ex:
             raise Exception(ex)
 
@@ -2259,7 +2256,6 @@ class Mdb:
             qt_model.AddCarRelativeFactor(name=name, codeIndex=code_index, crossFactors=cross_factors,
                                           longitudeFactor=longitude_factor,
                                           impactFactor=impact_factor, frequency=frequency)
-
         except Exception as ex:
             raise Exception(ex)
 
@@ -2291,7 +2287,6 @@ class Mdb:
             qt_model.AddTrainRelativeFactor(name=name, codeIndex=code_index, crossFactors=cross_factors, calculateFatigue=calc_fatigue,
                                             longitudeFactor=longitude_factor, fatigueLineCount=line_count, fatigueFactor=fatigue_factor,
                                             impactFactor=impact_factor, bridgeKind=bridge_kind, fillThick=fill_thick, rise=rise, lambDa=calc_length)
-
         except Exception as ex:
             raise Exception(ex)
 
@@ -2313,7 +2308,6 @@ class Mdb:
             qt_model.AddMetroRelativeFactor(name=name, crossFactors=cross_factors,
                                             longitudeFactor=longitude_factor,
                                             impactFactor=impact_factor)
-
         except Exception as ex:
             raise Exception(ex)
 
@@ -2350,7 +2344,6 @@ class Mdb:
                 qt_model.RemoveNodeTandem(id=index)
             elif name != "":
                 qt_model.RemoveNodeTandem(name=name)
-
         except Exception as ex:
             raise Exception(ex)
 
@@ -2371,7 +2364,6 @@ class Mdb:
                 qt_model.RemoveInfluencePlane(id=index)
             elif name != "":
                 qt_model.RemoveInfluencePlane(name=name)
-
         except Exception as ex:
             raise Exception(ex)
 
@@ -2392,7 +2384,6 @@ class Mdb:
                 qt_model.RemoveLaneLine(id=index)
             elif name != "":
                 qt_model.RemoveLaneLine(name=name)
-
         except Exception as ex:
             raise Exception(ex)
 
@@ -2408,7 +2399,115 @@ class Mdb:
         """
         try:
             qt_model.RemoveLiveLoadCase(name=name)
+        except Exception as ex:
+            raise Exception(ex)
 
+    @staticmethod
+    def update_standard_vehicle(name: str, new_name: str = "", standard_code: int = 1, load_type: str = "高速铁路",
+                                load_length: float = 0, factor: float = 1.0, n: int = 6, calc_fatigue: bool = False):
+        """
+        添加标准车辆
+        Args:
+             name: 车辆荷载名称
+             new_name: 新车辆荷载名称,默认不修改
+             standard_code: 荷载规范
+                _1-中国铁路桥涵规范(TB10002-2017)_
+                _2-城市桥梁设计规范(CJJ11-2019)_
+                _3-公路工程技术标准(JTJ 001-97)_
+                _4-公路桥涵设计通规(JTG D60-2004)_
+                _5-公路桥涵设计通规(JTG D60-2015)_
+                _6-城市轨道交通桥梁设计规范(GB/T51234-2017)_
+                _7-市域铁路设计规范2017(T/CRS C0101-2017)
+             load_type: 荷载类型,支持类型参考软件内界面
+             load_length: 默认为0即不限制荷载长度  (铁路桥涵规范2017 所需参数)
+             factor: 默认为1.0(铁路桥涵规范2017 ZH荷载所需参数)
+             n:车厢数: 默认6节车厢 (城市轨道交通桥梁规范2017 所需参数)
+             calc_fatigue:计算公路疲劳 (公路桥涵设计通规2015 所需参数)
+        Example:
+            mdb.update_standard_vehicle("高速铁路",standard_code=1,load_type="高速铁路")
+        Returns: 无
+        """
+        try:
+            qt_model.UpdateStandardVehicle(name=name, newName=new_name, standardIndex=standard_code, loadType=load_type,
+                                           loadLength=load_length, factor=factor, N=n, calcFatigue=calc_fatigue)
+
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def update_user_vehicle(name: str, new_name: str = "", load_type: str = "车辆荷载",
+                            p: (Union[float, List[float]]) = 270000, q: float = 10500,
+                            dis: list[float] = None, load_length: float = 500, n: int = 6, empty_load: float = 90000,
+                            width: float = 1.5, wheelbase: float = 1.8, min_dis: float = 1.5,
+                            unit_force: str = "N", unit_length: str = "M"):
+        """
+        修改自定义标准车辆
+        Args:
+             name: 车辆荷载名称
+             new_name: 新车辆荷载名称，默认不修改
+             load_type: 荷载类型,支持类型 -车辆/车道荷载 列车普通活载 城市轻轨活载 旧公路人群荷载 轮重集合
+             p: 荷载Pk或Pi列表
+             q: 均布荷载Qk或荷载集度dW
+             dis:荷载距离Li列表
+             load_length: 荷载长度  (列车普通活载 所需参数)
+             n:车厢数: 默认6节车厢 (列车普通活载 所需参数)
+             empty_load:空载 (列车普通活载、城市轻轨活载 所需参数)
+             width:宽度 (旧公路人群荷载 所需参数)
+             wheelbase:轮间距 (轮重集合 所需参数)
+             min_dis:车轮距影响面最小距离 (轮重集合 所需参数))
+             unit_force:荷载单位 默认为"N"
+             unit_length:长度单位 默认为"M"
+        Example:
+            mdb.update_user_vehicle(name="车道荷载",load_type="车道荷载",p=270000,q=10500)
+        Returns: 无
+        """
+        try:
+            qt_model.UpdateUserVehicle(name=name, newName=new_name, loadType=load_type, p=p, q=q, dis=dis, loadLength=load_length,
+                                       num=n, emptyLoad=empty_load, width=width, wheelbase=wheelbase,
+                                       minDistance=min_dis, unitForce=unit_force, unitLength=unit_length)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def update_node_tandem(name: str, new_name: str = "", node_ids: list[int] = None):
+        """
+        添加节点纵列,默认以最小X对应节点作为纵列起点
+        Args:
+             name:节点纵列名
+             new_name: 新节点纵列名，默认不修改
+             node_ids:节点列表
+        Example:
+            mdb.update_node_tandem(name="节点纵列1",node_ids=[i+1 for i in range(12)])
+        Returns: 无
+        """
+        try:
+            qt_model.UpdateNodeTandem(name=name, newName=new_name, nodeIds=node_ids)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def update_live_load_case(name: str, new_name: str = "", influence_plane: str = "", span: float = 0,
+                              sub_case: list[tuple[str, float, list[str]]] = None,
+                              trailer_code: str = "", special_code: str = ""):
+        """
+        添加移动荷载工况
+        Args:
+             name:活载工况名
+             new_name:新移动荷载名,默认不修改
+             influence_plane:影响线名
+             span:跨度
+             sub_case:子工况信息 [(车辆名称,系数,["车道1","车道2"])...]
+             trailer_code:考虑挂车时挂车车辆名
+             special_code:考虑特载时特载车辆名
+        Example:
+            mdb.update_live_load_case(name="活载工况1",influence_plane="影响面1",span=100,sub_case=[("车辆名称",1.0,["车道1","车道2"]),])
+        Returns: 无
+        """
+        try:
+            if sub_case is None:
+                raise Exception("操作错误，子工况信息列表不能为空")
+            qt_model.UpdateLiveLoadCase(name=name, newName=new_name, influencePlane=influence_plane, span=span, subCase=sub_case,
+                                        trailerCode=trailer_code, specialCode=special_code)
         except Exception as ex:
             raise Exception(ex)
 
@@ -2637,7 +2736,7 @@ class Mdb:
                 _松弛类型：1-一般松弛 2-低松弛_
             slip_info: 滑移信息[始端距离,末端距离] 默认为[0.006, 0.006]
         Example:
-            mdb.update_tendon_property(name="钢束1",tendon_type=0,material_id=1,duct_type=1,steel_type=1,
+            mdb.update_tendon_property(name="钢束1",tendon_type=0,material_name="材料1",duct_type=1,steel_type=1,
                                     steel_detail=[0.00014,0.10,0.25,0.0015],loos_detail=(1,1,1))
         Returns:无
         """
@@ -3546,7 +3645,7 @@ class Mdb:
 
     # endregion
 
-    # region 沉降操作
+    # region 荷载工况操作
     @staticmethod
     def add_sink_group(name: str = "", sink: float = 0.1, node_ids: (Union[int, List[int]]) = None):
         """
@@ -3560,10 +3659,25 @@ class Mdb:
         Returns: 无
         """
         try:
-            if node_ids is None:
-                raise Exception("操作错误，沉降定义中节点信息不能为空")
             qt_model.AddSinkGroup(name=name, sinkValue=sink, nodeIds=node_ids)
+        except Exception as ex:
+            raise Exception(ex)
 
+    @staticmethod
+    def update_sink_group(name: str = "", new_name: str = "", sink: float = 0.1, node_ids: (Union[int, List[int]]) = None):
+        """
+        添加沉降组
+        Args:
+             name: 沉降组名
+             new_name: 新沉降组名,默认不修改
+             sink: 沉降值
+             node_ids: 节点编号，支持数或列表
+        Example:
+            mdb.update_sink_group(name="沉降1",sink=0.1,node_ids=[1,2,3])
+        Returns: 无
+        """
+        try:
+            qt_model.UpdateSinkGroup(name=name, newName=new_name, sinkValue=sink, nodeIds=node_ids)
         except Exception as ex:
             raise Exception(ex)
 
@@ -3599,10 +3713,24 @@ class Mdb:
         Returns: 无
         """
         try:
-            if sink_groups is None:
-                raise Exception("操作错误，沉降工况定义中沉降组信息不能为空")
             qt_model.AddSinkCase(name=name, sinkGroups=sink_groups)
+        except Exception as ex:
+            raise Exception(ex)
 
+    @staticmethod
+    def update_sink_case(name: str, new_name: str = "", sink_groups: (Union[str, List[str]]) = None):
+        """
+        添加沉降工况
+        Args:
+            name:荷载工况名
+            new_name: 新沉降组名,默认不修改
+            sink_groups:沉降组名，支持字符串或列表
+        Example:
+            mdb.update_sink_case(name="沉降工况1",sink_groups=["沉降1","沉降2"])
+        Returns: 无
+        """
+        try:
+            qt_model.UpdateSinkCase(name=name, newName=new_name, sinkGroups=sink_groups)
         except Exception as ex:
             raise Exception(ex)
 
@@ -3776,7 +3904,7 @@ class Mdb:
             raise Exception(f"添加施工阶段:{name}错误,{ex}")
 
     @staticmethod
-    def update_construction_stage(name: str = "", duration: int = 0,
+    def update_construction_stage(name: str = "", new_name="", duration: int = 0,
                                   active_structures: list[tuple[str, float, int, int]] = None,
                                   delete_structures: list[str] = None,
                                   active_boundaries: list[tuple[str, int]] = None,
@@ -3788,6 +3916,7 @@ class Mdb:
         添加施工阶段信息
         Args:
            name:施工阶段信息
+           new_name:新施工阶段名
            duration:时长
            active_structures:激活结构组信息 [(结构组名,龄期,安装方法,计自重施工阶段id),...]
                                _计自重施工阶段id: 0-不计自重,1-本阶段 n-第n阶段)_
@@ -3807,11 +3936,28 @@ class Mdb:
         Returns: 无
         """
         try:
-            qt_model.UpdateConstructionStage(name=name, duration=duration, activeStructures=active_structures, inActiveStructures=delete_structures,
+            qt_model.UpdateConstructionStage(name=name, newName=new_name, duration=duration, activeStructures=active_structures,
+                                             inActiveStructures=delete_structures,
                                              activeBoundaries=active_boundaries, inActiveBoundaries=delete_boundaries, activeLoads=active_loads,
                                              inActiveLoads=delete_loads, tempLoads=temp_loads)
         except Exception as ex:
             raise Exception(f"更新施工阶段:{name}错误,{ex}")
+
+    @staticmethod
+    def update_construction_stage_id(stage_id: Union[int, List[int]], target_id: int):
+        """
+        更新部分施工阶段到致电给编号位置，从1计算，例如从{1,2,3}中将 1,2移动到3
+        Args:
+            stage_id:修改施工阶段编号
+            target_id:目标施工阶段编号
+        Example:
+            mdb.update_construction_stage_id([1,2],3)
+        Returns:无
+        """
+        try:
+            qt_model.UpdateConstructionStageId(stageIds=stage_id, targetId=target_id)
+        except Exception as ex:
+            raise Exception(f"更新施工阶段顺序发生错误,{ex}")
 
     @staticmethod
     def update_weight_stage(name: str = "", structure_group_name: str = "", weight_stage_id: int = 1):

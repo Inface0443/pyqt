@@ -1,4 +1,4 @@
-# 最新版本 V0.5.55 - 2025-01-07 
+# 最新版本 V0.5.56 - 2025-01-08 
 > pip install --upgrade qtmodel -i https://pypi.org/simple
 - 修改部分接口 
 ##  项目管理
@@ -1327,15 +1327,14 @@ mdb.add_user_vehicle(name="车道荷载",load_type="车道荷载",p=270000,q=105
 ```  
 Returns: 无
 ### add_node_tandem
-添加节点纵列
+添加节点纵列,默认以最小X对应节点作为纵列起点
 > 参数:  
 > name:节点纵列名  
-> start_id:起始节点号  
 > node_ids:节点列表  
 ```Python
 # 示例代码
 from qtmodel import *
-mdb.add_node_tandem(name="节点纵列1",start_id=1,node_ids=[i+1 for i in range(12)])
+mdb.add_node_tandem(name="节点纵列1",node_ids=[i+1 for i in range(12)])
 ```  
 Returns: 无
 ### add_influence_plane
@@ -1357,6 +1356,8 @@ Returns: 无
 > tandem_name:节点纵列名  
 > offset:偏移  
 > lane_width:车道宽度  
+> optimize:是否允许车辆摆动  
+> direction:0-向前  1-向后  
 ```Python
 # 示例代码
 from qtmodel import *
@@ -1482,6 +1483,81 @@ Returns: 无
 # 示例代码
 from qtmodel import *
 mdb.remove_live_load_case(name="活载工况1")
+```  
+Returns: 无
+### update_standard_vehicle
+添加标准车辆
+> 参数:  
+> name: 车辆荷载名称  
+> new_name: 新车辆荷载名称,默认不修改  
+> standard_code: 荷载规范  
+> _1-中国铁路桥涵规范(TB10002-2017)_  
+> _2-城市桥梁设计规范(CJJ11-2019)_  
+> _3-公路工程技术标准(JTJ 001-97)_  
+> _4-公路桥涵设计通规(JTG D60-2004)_  
+> _5-公路桥涵设计通规(JTG D60-2015)_  
+> _6-城市轨道交通桥梁设计规范(GB/T51234-2017)_  
+> _7-市域铁路设计规范2017(T/CRS C0101-2017)  
+> load_type: 荷载类型,支持类型参考软件内界面  
+> load_length: 默认为0即不限制荷载长度  (铁路桥涵规范2017 所需参数)  
+> factor: 默认为1.0(铁路桥涵规范2017 ZH荷载所需参数)  
+> n:车厢数: 默认6节车厢 (城市轨道交通桥梁规范2017 所需参数)  
+> calc_fatigue:计算公路疲劳 (公路桥涵设计通规2015 所需参数)  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.update_standard_vehicle("高速铁路",standard_code=1,load_type="高速铁路")
+```  
+Returns: 无
+### update_user_vehicle
+修改自定义标准车辆
+> 参数:  
+> name: 车辆荷载名称  
+> new_name: 新车辆荷载名称，默认不修改  
+> load_type: 荷载类型,支持类型 -车辆/车道荷载 列车普通活载 城市轻轨活载 旧公路人群荷载 轮重集合  
+> p: 荷载Pk或Pi列表  
+> q: 均布荷载Qk或荷载集度dW  
+> dis:荷载距离Li列表  
+> load_length: 荷载长度  (列车普通活载 所需参数)  
+> n:车厢数: 默认6节车厢 (列车普通活载 所需参数)  
+> empty_load:空载 (列车普通活载、城市轻轨活载 所需参数)  
+> width:宽度 (旧公路人群荷载 所需参数)  
+> wheelbase:轮间距 (轮重集合 所需参数)  
+> min_dis:车轮距影响面最小距离 (轮重集合 所需参数))  
+> unit_force:荷载单位 默认为"N"  
+> unit_length:长度单位 默认为"M"  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.update_user_vehicle(name="车道荷载",load_type="车道荷载",p=270000,q=10500)
+```  
+Returns: 无
+### update_node_tandem
+添加节点纵列,默认以最小X对应节点作为纵列起点
+> 参数:  
+> name:节点纵列名  
+> new_name: 新节点纵列名，默认不修改  
+> node_ids:节点列表  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.update_node_tandem(name="节点纵列1",node_ids=[i+1 for i in range(12)])
+```  
+Returns: 无
+### update_live_load_case
+添加移动荷载工况
+> 参数:  
+> name:活载工况名  
+> new_name:新移动荷载名,默认不修改  
+> influence_plane:影响线名  
+> span:跨度  
+> sub_case:子工况信息 [(车辆名称,系数,["车道1","车道2"])...]  
+> trailer_code:考虑挂车时挂车车辆名  
+> special_code:考虑特载时特载车辆名  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.update_live_load_case(name="活载工况1",influence_plane="影响面1",span=100,sub_case=[("车辆名称",1.0,["车道1","车道2"]),])
 ```  
 Returns: 无
 ##  动力荷载操作
@@ -1631,7 +1707,7 @@ Returns:无
 ```Python
 # 示例代码
 from qtmodel import *
-mdb.update_tendon_property(name="钢束1",tendon_type=0,material_id=1,duct_type=1,steel_type=1,
+mdb.update_tendon_property(name="钢束1",tendon_type=0,material_name="材料1",duct_type=1,steel_type=1,
 steel_detail=[0.00014,0.10,0.25,0.0015],loos_detail=(1,1,1))
 ```  
 Returns:无
@@ -2212,7 +2288,7 @@ from qtmodel import *
 mdb.remove_custom_temperature(case_name="工况1",element_id=1,group_name="默认荷载组")
 ```  
 Returns: 无
-##  沉降操作
+##  荷载工况操作
 ### add_sink_group
 添加沉降组
 > 参数:  
@@ -2223,6 +2299,19 @@ Returns: 无
 # 示例代码
 from qtmodel import *
 mdb.add_sink_group(name="沉降1",sink=0.1,node_ids=[1,2,3])
+```  
+Returns: 无
+### update_sink_group
+添加沉降组
+> 参数:  
+> name: 沉降组名  
+> new_name: 新沉降组名,默认不修改  
+> sink: 沉降值  
+> node_ids: 节点编号，支持数或列表  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.update_sink_group(name="沉降1",sink=0.1,node_ids=[1,2,3])
 ```  
 Returns: 无
 ### remove_sink_group
@@ -2245,6 +2334,18 @@ Returns: 无
 # 示例代码
 from qtmodel import *
 mdb.add_sink_case(name="沉降工况1",sink_groups=["沉降1","沉降2"])
+```  
+Returns: 无
+### update_sink_case
+添加沉降工况
+> 参数:  
+> name:荷载工况名  
+> new_name: 新沉降组名,默认不修改  
+> sink_groups:沉降组名，支持字符串或列表  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.update_sink_case(name="沉降工况1",sink_groups=["沉降1","沉降2"])
 ```  
 Returns: 无
 ### remove_sink_case
@@ -2352,6 +2453,7 @@ Returns: 无
 添加施工阶段信息
 > 参数:  
 > name:施工阶段信息  
+> new_name:新施工阶段名  
 > duration:时长  
 > active_structures:激活结构组信息 [(结构组名,龄期,安装方法,计自重施工阶段id),...]  
 > _计自重施工阶段id: 0-不计自重,1-本阶段 n-第n阶段)_  
@@ -2372,6 +2474,17 @@ mdb.update_construction_stage(name="施工阶段1",duration=5,active_structures=
 active_boundaries=[("默认边界组",1)],active_loads=[("默认荷载组1",0)])
 ```  
 Returns: 无
+### update_construction_stage_id
+更新部分施工阶段到致电给编号位置，从1计算，例如从{1,2,3}中将 1,2移动到3
+> 参数:  
+> stage_id:修改施工阶段编号  
+> target_id:目标施工阶段编号  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.update_construction_stage_id([1,2],3)
+```  
+Returns:无
 ### update_weight_stage
 更新施工阶段自重
 > 参数:  
