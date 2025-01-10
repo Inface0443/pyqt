@@ -3524,18 +3524,19 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def remove_initial_tension_load(case_name: str, element_id: (Union[int, List[int]]) = 1):
+    def remove_initial_tension_load(case_name: str, element_id: (Union[int, List[int]]) = 1, group_name: str = "默认荷载组"):
         """
         删除初始拉力
         Args:
             element_id:单元编号支持数或列表
             case_name:荷载工况名
+            group_name:荷载组名
         Example:
-            mdb.remove_initial_tension_load(case_name="工况1",element_id=1)
+            mdb.remove_initial_tension_load(case_name="工况1",element_id=1, group_name: str = "默认荷载组")
         Returns: 无
         """
         try:
-            qt_model.RemoveInitialTensionLoad(elementId=element_id, caseName=case_name)
+            qt_model.RemoveInitialTensionLoad(elementId=element_id, caseName=case_name, groupName=group_name)
         except Exception as ex:
             raise Exception(ex)
 
@@ -3560,18 +3561,19 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def remove_cable_length_load(case_name: str, element_id: (Union[int, List[int]])):
+    def remove_cable_length_load(case_name: str, element_id: (Union[int, List[int]]), group_name: str = "默认荷载组"):
         """
         删除索长张拉
         Args:
             element_id:单元号支持数或列表
             case_name:荷载工况名
+            group_name:荷载组名
         Example:
-            mdb.remove_cable_length_load(case_name="工况1",element_id=1)
+            mdb.remove_cable_length_load(case_name="工况1",element_id=1, group_name: str = "默认荷载组")
         Returns: 无
         """
         try:
-            qt_model.RemoveCableLengthLoad(elementId=element_id, caseName=case_name)
+            qt_model.RemoveCableLengthLoad(elementId=element_id, caseName=case_name, groupName=group_name)
         except Exception as ex:
             raise Exception(ex)
 
