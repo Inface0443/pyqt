@@ -9,16 +9,28 @@ class Mdb:
 
     # region 项目管理
     @staticmethod
-    def update_bim():
+    def undo_model():
         """
-        刷新Bim模型信息
-        Args: 无
-        Example:
-           mdb.update_bim()
+        撤销模型上次操作
+        Args:无
+        Example:mdb.undo_model()
         Returns: 无
         """
         try:
-            qt_model.PostLoggerRequest()
+            qt_model.Undo()
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def redo_model():
+        """
+        重做上次撤销
+        Args:无
+        Example:mdb.redo_model()
+        Returns: 无
+        """
+        try:
+            qt_model.Redo()
         except Exception as ex:
             raise Exception(ex)
 
