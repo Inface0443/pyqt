@@ -13,7 +13,8 @@ class Mdb:
         """
         撤销模型上次操作
         Args:无
-        Example:mdb.undo_model()
+        Example:
+            mdb.undo_model()
         Returns: 无
         """
         try:
@@ -26,7 +27,8 @@ class Mdb:
         """
         重做上次撤销
         Args:无
-        Example:mdb.redo_model()
+        Example:
+            mdb.redo_model()
         Returns: 无
         """
         try:
@@ -4219,11 +4221,13 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def update_load_combine(name: str = "", combine_type: int = 1, describe: str = "", combine_info: list[tuple[str, str, float]] = None):
+    def update_load_combine(name: str = "", new_name: str = "", combine_type: int = 1, describe: str = "",
+                            combine_info: list[tuple[str, str, float]] = None):
         """
         更新荷载组合
         Args:
             name:荷载组合名
+            new_name:新荷载组合名，默认不修改
             combine_type:荷载组合类型 (1-叠加  2-判别  3-包络)
             describe:描述
             combine_info:荷载组合信息 [(荷载工况类型,工况名,系数)...] 工况类型如下
@@ -4236,7 +4240,7 @@ class Mdb:
         try:
             if combine_info is None:
                 combine_info = []
-            qt_model.UpdateLoadCombine(name=name, loadCombineType=combine_type, describe=describe, caseAndFactor=combine_info)
+            qt_model.UpdateLoadCombine(name=name, newName=new_name, loadCombineType=combine_type, describe=describe, caseAndFactor=combine_info)
         except Exception as ex:
             raise Exception(ex)
 

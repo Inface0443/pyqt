@@ -1,14 +1,23 @@
-# 最新版本 V0.6.1 - 2025-01-13 
+# 最新版本 V0.6.2 - 2025-01-13 
 > pip install --upgrade qtmodel -i https://pypi.org/simple
 - 修改部分接口 
 ##  项目管理
-### update_bim
-刷新Bim模型信息
+### undo_model
+撤销模型上次操作
 > 参数:  
 ```Python
 # 示例代码
 from qtmodel import *
-mdb.update_bim()
+mdb.undo_model()
+```  
+Returns: 无
+### redo_model
+重做上次撤销
+> 参数:  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.redo_model()
 ```  
 Returns: 无
 ### update_model
@@ -2655,6 +2664,7 @@ Returns: 无
 更新荷载组合
 > 参数:  
 > name:荷载组合名  
+> new_name:新荷载组合名，默认不修改  
 > combine_type:荷载组合类型 (1-叠加  2-判别  3-包络)  
 > describe:描述  
 > combine_info:荷载组合信息 [(荷载工况类型,工况名,系数)...] 工况类型如下  
