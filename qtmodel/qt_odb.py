@@ -10,6 +10,38 @@ class Odb:
 
     # region 视图控制
     @staticmethod
+    def display_node_id(show_id: bool = True):
+        """
+        设置节点号显示
+        Args:
+            show_id:是否打开节点号显示
+        Example:
+            odb.display_node_id()
+            odb.display_node_id(False)
+        Returns: 无
+        """
+        try:
+            qt_model.DisplayNodeId(showId=show_id)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def display_element_id(show_id: bool = True):
+        """
+        设置单元号显示
+        Args:
+            show_id:是否打开单元号显示
+        Example:
+            odb.display_element_id()
+            odb.display_element_id(False)
+        Returns: 无
+        """
+        try:
+            qt_model.DisplayElementId(showId=show_id)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
     def set_view_camera(camera_point: tuple[float, float, float], focus_point: tuple[float, float, float],
                         camera_rotate: tuple[float, float, float] = (45, 45, 0), scale: float = 0.5):
         """

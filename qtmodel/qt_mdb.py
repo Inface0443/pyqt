@@ -3399,18 +3399,19 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def remove_nodal_force(node_id: int = -1, case_name: str = ""):
+    def remove_nodal_force(node_id: int = -1, case_name: str = "", group_name="默认荷载组"):
         """
         删除节点荷载
         Args:
              case_name:荷载工况名
              node_id:节点编号
+             group_name:指定荷载组
         Example:
-            mdb.remove_nodal_force(case_name="荷载工况1",node_id=1)
+            mdb.remove_nodal_force(case_name="荷载工况1",node_id=1,group_name="默认荷载组")
         Returns: 无
         """
         try:
-            qt_model.RemoveNodalForce(caseName=case_name, nodeId=node_id)
+            qt_model.RemoveNodalForce(caseName=case_name, nodeId=node_id, groupName=group_name)
         except Exception as ex:
             raise Exception(ex)
 
@@ -3438,18 +3439,19 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def remove_nodal_displacement(node_id: (Union[int, List[int]]) = -1, case_name: str = ""):
+    def remove_nodal_displacement(node_id: (Union[int, List[int]]) = -1, case_name: str = "", group_name="默认荷载组"):
         """
-        删除节点位移
+        删除节点位移荷载
         Args:
             node_id:节点编号,支持数或列表
             case_name:荷载工况名
+            group_name:指定荷载组
         Example:
-            mdb.remove_nodal_displacement(case_name="荷载工况1",node_id=1)
+            mdb.remove_nodal_displacement(case_name="荷载工况1",node_id=1,group_name="默认荷载组")
         Returns: 无
         """
         try:
-            qt_model.RemoveNodalDisplacement(caseName=case_name, nodeId=node_id)
+            qt_model.RemoveNodalDisplacement(caseName=case_name, nodeId=node_id, groupName=group_name)
         except Exception as ex:
             raise Exception(ex)
 
@@ -3486,7 +3488,7 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def remove_beam_element_load(element_id: (Union[int, List[int]]) = 1, case_name: str = "", load_type: int = 1):
+    def remove_beam_element_load(element_id: (Union[int, List[int]]) = 1, case_name: str = "", load_type: int = 1, group_name="默认荷载组"):
         """
         删除梁单元荷载
         Args:
@@ -3494,12 +3496,13 @@ class Mdb:
             case_name:荷载工况名
             load_type:荷载类型
                 _1-集中力   2-集中弯矩  3-分布力   4-分布弯矩_
+            group_name:荷载组名称
         Example:
-            mdb.remove_beam_element_load(case_name="工况1",element_id=1,load_type=1)
+            mdb.remove_beam_element_load(case_name="工况1",element_id=1,load_type=1,group_name="默认荷载组")
         Returns: 无
         """
         try:
-            qt_model.RemoveBeamElementLoad(caseName=case_name, elementId=element_id, loadType=load_type)
+            qt_model.RemoveBeamElementLoad(caseName=case_name, elementId=element_id, loadType=load_type, grouName=group_name)
         except Exception as ex:
             raise Exception(ex)
 
@@ -3532,7 +3535,7 @@ class Mdb:
             case_name:荷载工况名
             group_name:荷载组名
         Example:
-            mdb.remove_initial_tension_load(case_name="工况1",element_id=1, group_name: str = "默认荷载组")
+            mdb.remove_initial_tension_load(case_name="工况1",element_id=1, group_name="默认荷载组")
         Returns: 无
         """
         try:
@@ -3569,7 +3572,7 @@ class Mdb:
             case_name:荷载工况名
             group_name:荷载组名
         Example:
-            mdb.remove_cable_length_load(case_name="工况1",element_id=1, group_name: str = "默认荷载组")
+            mdb.remove_cable_length_load(case_name="工况1",element_id=1, group_name= "默认荷载组")
         Returns: 无
         """
         try:
@@ -3615,19 +3618,20 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def remove_plate_element_load(case_name: str, element_id: (Union[int, List[int]]), load_type: int):
+    def remove_plate_element_load(case_name: str, element_id: (Union[int, List[int]]), load_type: int, group_name="默认荷载组"):
         """
         删除指定荷载工况下指定单元的板单元荷载
         Args:
             element_id:单元编号，支持数或列表
             case_name:荷载工况名
             load_type: 板单元类型 1集中力   2-集中弯矩  3-分布线力  4-分布线弯矩  5-分布面力  6-分布面弯矩
+            group_name:荷载组名
         Example:
-            mdb.remove_plate_element_load(case_name="工况1",element_id=1,load_type=1)
+            mdb.remove_plate_element_load(case_name="工况1",element_id=1,load_type=1,group_name="默认荷载组")
         Returns: 无
         """
         try:
-            qt_model.RemovePlateElementLoad(elementId=element_id, caseName=case_name, loadType=load_type)
+            qt_model.RemovePlateElementLoad(elementId=element_id, caseName=case_name, loadType=load_type, groupName=group_name)
         except Exception as ex:
             raise Exception(ex)
 
