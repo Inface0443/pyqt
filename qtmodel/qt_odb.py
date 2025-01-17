@@ -343,6 +343,28 @@ class Odb:
         except Exception as ex:
             raise Exception(ex)
 
+    @staticmethod
+    def get_vibration_node_displacement(node_id: (Union[int, List[int]]) = None, mode: int = 1):
+        """
+        获取指定节点指定模态的振型向量
+        Args:
+            node_id: 节点号
+            mode: 模态号
+        Example:
+            odb.get_vibration_node_displacement(node_id=1,mode=1)
+        Returns: json字符串,包含信息为list[dict] or dict
+        """
+        try:
+            bf_list = qt_model.GetVibrationNodeDisplacement(nodeIds=node_id, mode=mode)
+            list_res = []
+            for item in bf_list:
+                displacements = [item.Displacement.Dx, item.Displacement.Dy, item.Displacement.Dz,
+                                 item.Displacement.Rx, item.Displacement.Ry, item.Displacement.Rz]
+                list_res.append(str(NodeDisplacement(item.NodeId, displacements)))
+            return json.dumps(list_res) if len(list_res) > 1 else list_res[0]
+        except Exception as ex:
+            raise Exception(ex)
+
     # endregion
 
     # region 绘制模型结果

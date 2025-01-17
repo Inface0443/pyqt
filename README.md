@@ -1,6 +1,7 @@
-# 最新版本 V0.6.2 - 2025-01-13 
+> 最新版本 V0.6.3 - 2025-01-17 
 > pip install --upgrade qtmodel -i https://pypi.org/simple
 - 修改部分接口 
+# 建模操作 
 ##  项目管理
 ### undo_model
 撤销模型上次操作
@@ -2686,6 +2687,7 @@ from qtmodel import *
 mdb.remove_load_combine(name="荷载组合1")
 ```  
 Returns: 无
+# 视图与结果提取 
 ##  视图控制
 ### display_node_id
 设置节点号显示
@@ -2860,6 +2862,17 @@ from qtmodel import *
 odb.get_node_displacement(node_id=1,stage_id=1)
 odb.get_node_displacement(node_id=[1,2,3],stage_id=1)
 odb.get_node_displacement(node_id=1,stage_id=-1,case_name="工况名")
+```  
+Returns: json字符串,包含信息为list[dict] or dict
+### get_vibration_node_displacement
+获取指定节点指定模态的振型向量
+> 参数:  
+> node_id: 节点号  
+> mode: 模态号  
+```Python
+# 示例代码
+from qtmodel import *
+odb.get_vibration_node_displacement(node_id=1,mode=1)
 ```  
 Returns: json字符串,包含信息为list[dict] or dict
 ##  绘制模型结果
