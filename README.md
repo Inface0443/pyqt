@@ -1,6 +1,6 @@
-> 最新版本 V0.6.3 - 2025-01-17 
+> 最新版本 V0.6.4 - 2025-01-21 
 > pip install --upgrade qtmodel -i https://pypi.org/simple
-- 修改部分接口 
+- 新增部分接口 
 # 建模操作 
 ##  项目管理
 ### undo_model
@@ -2875,6 +2875,17 @@ from qtmodel import *
 odb.get_vibration_node_displacement(node_id=1,mode=1)
 ```  
 Returns: json字符串,包含信息为list[dict] or dict
+##  动力结果查看
+### get_period_and_frequency
+获取周期和频率
+> 参数:  
+> mode:模态号  
+```Python
+# 示例代码
+from qtmodel import *
+odb.get_period_and_frequency(mode=1)
+```  
+Returns: json字符串,包含信息为dict
 ##  绘制模型结果
 ### plot_reaction_result
 保存结果图片到指定文件甲
@@ -2998,7 +3009,7 @@ Returns: 无
 > show_legend: 是否显示图例  
 > text_rotation_angle: 数值选项卡内文字旋转角度  
 > digital_count: 小数点位数  
-> show_as_exponential: 是否以指数形式显示  
+> show_exponential: 是否以指数形式显示  
 > max_min_kind: 最大最小值显示类型  
 > show_increment: 是否显示增量结果  
 ```Python
@@ -3141,7 +3152,7 @@ Returns: 无
 > show_legend: 是否显示图例  
 > text_rotation_angle: 数值选项卡内文字旋转角度  
 > digital_count: 小数点位数  
-> show_as_exponential: 是否以指数形式显示  
+> show_exponential: 是否以指数形式显示  
 > max_min_kind: 最大最小值显示类型  
 > show_increment: 是否显示增量结果  
 > position: 位置 0-板顶 1-板底 2-绝对值最大  
@@ -3149,6 +3160,24 @@ Returns: 无
 # 示例代码
 from qtmodel import *
 odb.plot_plate_element_stress(file_path=r"D:\\图片\\板应力.png",component=0,load_case_name="CQ:成桥(合计)",stage_id=-1)
+```  
+Returns: 无
+### plot_vibration_mode
+绘制板单元结果图并保存到指定文件
+> 参数:  
+> file_path: 保存路径名  
+> mode: 模态号  
+> show_number: 是否显示数值  
+> show_pre_deformed: 是否显示未变形形状  
+> show_legend: 是否显示图例  
+> text_rotation_angle: 数值选项卡内文字旋转角度  
+> digital_count: 小数点位数  
+> show_exponential: 是否以指数形式显示  
+> max_min_kind: 最大最小值显示类型  
+```Python
+# 示例代码
+from qtmodel import *
+odb.plot_vibration_mode(file_path=r"D:\\图片\\自振模态.png",mode=1)
 ```  
 Returns: 无
 ##  获取模型信息
@@ -3193,7 +3222,7 @@ Returns: json字符串,包含信息为list[list[int]]
 from qtmodel import *
 odb.get_overlap_elements()
 ```  
-Returns: json字符串,包含信息为list[list[int]]
+Returns:  json字符串,包含信息为list[list[int]]
 ### get_structure_group_names
 获取结构组名称
 > 参数:  
@@ -3211,7 +3240,7 @@ Returns: json字符串,包含信息为list[str]
 from qtmodel import *
 odb.get_thickness_data(1)
 ```  
-Returns: json字符串,包含信息为dict
+Returns:
 ### get_all_thickness_data
 获取所有板厚信息
 > 参数:  
@@ -3239,7 +3268,7 @@ Returns: json字符串,包含信息为list[dict]
 from qtmodel import *
 odb.get_section_shape(1)
 ```  
-Returns: json字符串,包含信息为dict
+Returns:
 ### get_all_section_data
 获取所有截面详细信息,截面特性详见UI自定义特性截面
 > 参数:  

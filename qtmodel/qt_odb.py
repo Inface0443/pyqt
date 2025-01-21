@@ -367,6 +367,24 @@ class Odb:
 
     # endregion
 
+    # region 动力结果查看
+    @staticmethod
+    def get_period_and_frequency(mode: int = 1):
+        """
+        获取周期和频率
+        Args:
+            mode:模态号
+        Example:
+            odb.get_period_and_frequency(mode=1)
+        Returns: json字符串,包含信息为dict
+        """
+        try:
+            qt_model.GetPeriodAndFrequency(mode=mode)
+        except Exception as ex:
+            raise Exception(ex)
+
+    # endregion
+
     # region 绘制模型结果
     @staticmethod
     def plot_reaction_result(file_path: str, stage_id: int = 1, load_case_name: str = "", show_increment: bool = False,
@@ -540,7 +558,7 @@ class Odb:
                                  envelope_type: int = 1, force_kind: int = 0, component: int = 0,
                                  show_number: bool = False, text_rotation_angle: int = 0, max_min_kind: int = 0,
                                  show_deformed: bool = True, deformed_scale: float = 1.0, deformed_actual: bool = False,
-                                 show_legend: bool = True, digital_count: int = 3, show_as_exponential: bool = True,
+                                 show_legend: bool = True, digital_count: int = 3, show_exponential: bool = True,
                                  show_pre_deformed: bool = False, ):
         """
         绘制板单元结果图并保存到指定文件
@@ -559,7 +577,7 @@ class Odb:
             show_legend: 是否显示图例
             text_rotation_angle: 数值选项卡内文字旋转角度
             digital_count: 小数点位数
-            show_as_exponential: 是否以指数形式显示
+            show_exponential: 是否以指数形式显示
             max_min_kind: 最大最小值显示类型
             show_increment: 是否显示增量结果
         Example:
@@ -572,7 +590,7 @@ class Odb:
                 envelopeType=envelope_type, forceKind=force_kind, component=component,
                 showAsDeformedShape=show_deformed, deformedScale=deformed_scale, deformedActual=deformed_actual,
                 showNumber=show_number, textRotationAngle=text_rotation_angle, maxMinValueKind=max_min_kind,
-                showLegend=show_legend, digitalCount=digital_count, showAsExponential=show_as_exponential,
+                showLegend=show_legend, digitalCount=digital_count, showAsExponential=show_exponential,
                 showUndeformedShape=show_pre_deformed)
         except Exception as ex:
             raise Exception(ex)
@@ -769,7 +787,7 @@ class Odb:
                                   envelope_type: int = 1, stress_kind: int = 0, component: int = 0,
                                   show_number: bool = False, text_rotation_angle: int = 0, max_min_kind: int = 0,
                                   show_deformed: bool = True, deformed_scale: float = 1.0, deformed_actual: bool = False,
-                                  show_legend: bool = True, digital_count: int = 3, show_as_exponential: bool = True,
+                                  show_legend: bool = True, digital_count: int = 3, show_exponential: bool = True,
                                   show_pre_deformed: bool = False, position: int = 0):
         """
         绘制板单元结果图并保存到指定文件
@@ -788,7 +806,7 @@ class Odb:
             show_legend: 是否显示图例
             text_rotation_angle: 数值选项卡内文字旋转角度
             digital_count: 小数点位数
-            show_as_exponential: 是否以指数形式显示
+            show_exponential: 是否以指数形式显示
             max_min_kind: 最大最小值显示类型
             show_increment: 是否显示增量结果
             position: 位置 0-板顶 1-板底 2-绝对值最大
@@ -802,8 +820,37 @@ class Odb:
                 envelopeType=envelope_type, stressKind=stress_kind, component=component,
                 showAsDeformedShape=show_deformed, deformedScale=deformed_scale, deformedActual=deformed_actual,
                 showNumber=show_number, textRotationAngle=text_rotation_angle, maxMinValueKind=max_min_kind,
-                showLegend=show_legend, digitalCount=digital_count, showAsExponential=show_as_exponential,
+                showLegend=show_legend, digitalCount=digital_count, showAsExponential=show_exponential,
                 showUndeformedShape=show_pre_deformed, position=position)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def plot_vibration_mode(file_path: str = "", mode: int = 1, show_number: bool = True, text_rotation_angle: float = 0, max_min_kind: int = 0,
+                            show_legend: bool = True, digital_count: int = 3, show_exponential: bool = True,
+                            show_pre_deformed: bool = False):
+        """
+        绘制板单元结果图并保存到指定文件
+        Args:
+           file_path: 保存路径名
+           mode: 模态号
+           show_number: 是否显示数值
+           show_pre_deformed: 是否显示未变形形状
+           show_legend: 是否显示图例
+           text_rotation_angle: 数值选项卡内文字旋转角度
+           digital_count: 小数点位数
+           show_exponential: 是否以指数形式显示
+           max_min_kind: 最大最小值显示类型
+        Example:
+           odb.plot_vibration_mode(file_path=r"D:\\图片\\自振模态.png",mode=1)
+        Returns: 无
+        """
+        try:
+            qt_model.PlotVibrationMode(
+                filePath=file_path, mode=mode,
+                showNumber=show_number, textRotationAngle=text_rotation_angle, maxMinValueKind=max_min_kind,
+                showLegend=show_legend, digitalCount=digital_count, showAsExponential=show_exponential,
+                showUndeformedShape=show_pre_deformed)
         except Exception as ex:
             raise Exception(ex)
 
@@ -873,7 +920,7 @@ class Odb:
         Args:无
         Example:
             odb.get_overlap_elements()
-        Returns: json字符串,包含信息为list[list[int]]
+        Returns:  json字符串,包含信息为list[list[int]]
         """
         try:
             result = []
@@ -906,7 +953,8 @@ class Odb:
         Args:
         Example:
             odb.get_thickness_data(1)
-        Returns: json字符串,包含信息为dict
+        Returns:
+            json字符串,包含信息为dict
         """
         try:
             return qt_model.GetThicknessData(thick_id)
@@ -957,7 +1005,8 @@ class Odb:
             sec_id: 目标截面编号
         Example:
             odb.get_section_shape(1)
-        Returns: json字符串,包含信息为dict
+        Returns:
+            json字符串,包含信息为dict
         """
         try:
             return qt_model.GetSectionShape(sec_id)

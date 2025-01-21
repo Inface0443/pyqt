@@ -214,7 +214,7 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def update_construction_stage_setting(do_analysis: bool, to_end_stage: bool, other_stage_id: int = 1, analysis_type: int = 0,
+    def update_construction_stage_setting(do_analysis: bool = True, to_end_stage: bool = True, other_stage_id: int = 1, analysis_type: int = 0,
                                           do_creep_analysis: bool = True, cable_tension_position: int = 0, consider_completion_stage: bool = True,
                                           shrink_creep_type: int = 2, creep_load_type: int = 1,
                                           sub_step_info: tuple[bool, float, float, float, float, float] = None):
