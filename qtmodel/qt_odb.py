@@ -344,6 +344,73 @@ class Odb:
             raise Exception(ex)
 
     @staticmethod
+    def get_self_concurrent_reaction(node_id: int, case_name: str):
+        """
+        获取自并发反力
+        Args:
+          node_id:节点号
+          case_name:工况号
+        Example:
+          odb.get_self_concurrent_reaction(node_id=1,case_name="工况1_Fx最大")
+        Returns: json字符串,包含信息为dict
+        """
+        try:
+            qt_model.GetSelfConcurrentReaction(nodeId=node_id, loadCaseName=case_name)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def get_all_concurrent_reaction(node_id: int, case_name: str):
+        """
+        获取完全并发反力
+        Args:
+          node_id:节点号
+          case_name:工况号
+        Example:
+          odb.get_all_concurrent_reaction(node_id=1,case_name="工况1_Fx最大")
+        Returns: json字符串,包含信息为dict
+        """
+        try:
+            qt_model.GetAllConcurrentReaction(nodeId=node_id, loadCaseName=case_name)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def get_beam_concurrent_force(ele_id: (Union[int, List[int]]) = None, case_name: str = ""):
+        """
+        获取梁单元并发内力
+        Args:
+          ele_id:单元号
+          case_name:工况号
+        Example:
+          odb.get_beam_concurrent_force(ele_id=1,case_name="工况1_Fx最大")
+        Returns: json字符串,包含信息为dict
+        """
+        try:
+            qt_model.GetBeamConcurrentForce(eleId=ele_id, loadCaseName=case_name)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def get_composite_beam_concurrent_force(ele_id: (Union[int, List[int]]) = None, case_name: str = ""):
+        """
+        获取组合梁单元并发内力
+        Args:
+          ele_id:单元号
+          case_name:工况号
+        Example:
+          odb.get_composite_beam_concurrent_force(ele_id=1,case_name="工况1_Fx最大")
+        Returns: json字符串,包含信息为dict
+        """
+        try:
+            qt_model.GetCompositeBeamConcurrentForce(eleId=ele_id, loadCaseName=case_name)
+        except Exception as ex:
+            raise Exception(ex)
+
+    # endregion
+
+    # region 动力结果查看
+    @staticmethod
     def get_vibration_node_displacement(node_id: (Union[int, List[int]]) = None, mode: int = 1):
         """
         获取指定节点指定模态的振型向量
@@ -365,9 +432,6 @@ class Odb:
         except Exception as ex:
             raise Exception(ex)
 
-    # endregion
-
-    # region 动力结果查看
     @staticmethod
     def get_period_and_frequency(mode: int = 1):
         """
@@ -380,6 +444,36 @@ class Odb:
         """
         try:
             qt_model.GetPeriodAndFrequency(mode=mode)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def get_participation_mass(mode: int = 1):
+        """
+        获取振型参与质量百分比
+        Args:
+            mode:模态号
+        Example:
+            odb.get_participation_mass(mode=1)
+        Returns: json字符串,包含信息为dict
+        """
+        try:
+            qt_model.GetParticipationMass(mode=mode)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def get_participation_factor(mode: int = 1):
+        """
+        获取振型参与质量系数
+        Args:
+            mode:模态号
+        Example:
+            odb.get_participation_factor(mode=1)
+        Returns: json字符串,包含信息为dict
+        """
+        try:
+            qt_model.GetParticipationFactor(mode=mode)
         except Exception as ex:
             raise Exception(ex)
 

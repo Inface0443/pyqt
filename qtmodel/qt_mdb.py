@@ -3390,7 +3390,6 @@ class Mdb:
     # endregion
 
     # region 静力荷载操作
-
     @staticmethod
     def add_nodal_force(node_id: (Union[int, List[int]]) = 1, case_name: str = "", load_info: list[float] = None,
                         group_name: str = "默认荷载组"):
@@ -4194,6 +4193,81 @@ class Mdb:
                 qt_model.RemoveConstructionStage(name=name)
         except Exception as ex:
             raise Exception(f"删除施工阶段自重:{name}错误,{ex}")
+
+    @staticmethod
+    def add_section_connection_stage(name: str, sec_id: int, ele_id: (Union[int, List[int]]) = None, stage_name="", age: float = 0,
+                                     weight_type: int = 0):
+        """
+        添加施工阶段联合截面
+        Args:
+            name:名称
+            sec_id:截面号
+            ele_id:单元号，支持整型和整型列表
+            stage_name:结合阶段名
+            age:材龄
+            weight_type:辅材计自重方式 0-由主材承担  1-由整体承担 2-不计辅材自重
+        Example:
+            mdb.add_section_connection_stage(name="联合阶段",sec_id=1,ele_id=[2,3,4,5],stage_name="施工阶段1")
+        Returns:无
+        """
+        try:
+            qt_model.AddSectionConnectionStage(name=name, secId=sec_id, elementIds=ele_id, stageName=stage_name, age=age, weightType=weight_type)
+        except Exception as ex:
+            raise Exception(f"添加施工阶段联合截面失败:{name}错误,{ex}")
+
+    @staticmethod
+    def update_section_connection_stage(name: str, new_name="", sec_id: int = 1, ele_id: (Union[int, List[int]]) = None,
+                                        stage_name="", age: float = 0, weight_type: int = 0):
+        """
+        更新施工阶段联合截面
+        Args:
+            name:名称
+            new_name:新名称
+            sec_id:截面号
+            ele_id:单元号，支持整型和整型列表
+            stage_name:结合阶段名
+            age:材龄
+            weight_type:辅材计自重方式 0-由主材承担  1-由整体承担 2-不计辅材自重
+        Example:
+            mdb.update_section_connection_stage(name="联合阶段",sec_id=1,ele_id=[2,3,4,5],stage_name="施工阶段1")
+        Returns:无
+        """
+        try:
+            qt_model.UpdateSectionConnectionStage(name=name, newName=new_name, secId=sec_id, elementIds=ele_id,
+                                                  stageName=stage_name, age=age, weightType=weight_type)
+        except Exception as ex:
+            raise Exception(f"更新施工阶段联合截面失败:{name}错误,{ex}")
+
+    @staticmethod
+    def remove_section_connection_stage(name: str):
+        """
+        删除施工阶段联合截面
+        Args:
+            name:名称
+        Example:
+            mdb.remove_section_connection_stage(name="联合阶段")
+        Returns:无
+        """
+        try:
+            qt_model.RemoveSectionConnectionStage(name=name)
+        except Exception as ex:
+            raise Exception(f"删除施工阶段联合截面失败:{name}错误,{ex}")
+
+    @staticmethod
+    def add_element_to_connection_stage(ele_id: (Union[int, List[int]]), name: str):
+        """
+        添加单元到施工阶段联合截面
+        Args:
+            ele_id:单元号
+            name:联合阶段名
+        Example:
+            mdb.add_element_to_connection_stage([1,2,3,4],"联合阶段")
+        Returns:无
+        """
+        try:
+            qt_model.AddElementToConnectionStage(elementIds=ele_id, name=name)
+        except Exception as ex:
+            raise Exception(f"添加单元到施工阶段联合截面失败:{name}错误,{ex}")
 
     # endregion
 

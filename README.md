@@ -1,4 +1,4 @@
-> 最新版本 V0.6.4 - 2025-01-21 
+> 最新版本 V0.6.5 - 2025-01-23 
 > pip install --upgrade qtmodel -i https://pypi.org/simple
 - 新增部分接口 
 # 建模操作 
@@ -2111,7 +2111,6 @@ from qtmodel import *
 mdb.add_custom_temperature(case_name="荷载工况1",element_id=1,orientation=1,temperature_data=[(1,1,20),(1,2,10)])
 ```  
 Returns: 无
-##  静力荷载操作
 ### remove_custom_temperature
 删除梁单元自定义温度
 > 参数:  
@@ -2645,6 +2644,58 @@ from qtmodel import *
 mdb.remove_construction_stage(name="施工阶段1")
 ```  
 Returns: 无
+### add_section_connection_stage
+添加施工阶段联合截面
+> 参数:  
+> name:名称  
+> sec_id:截面号  
+> ele_id:单元号，支持整型和整型列表  
+> stage_name:结合阶段名  
+> age:材龄  
+> weight_type:辅材计自重方式 0-由主材承担  1-由整体承担 2-不计辅材自重  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.add_section_connection_stage(name="联合阶段",sec_id=1,ele_id=[2,3,4,5],stage_name="施工阶段1")
+```  
+Returns:无
+### update_section_connection_stage
+更新施工阶段联合截面
+> 参数:  
+> name:名称  
+> new_name:新名称  
+> sec_id:截面号  
+> ele_id:单元号，支持整型和整型列表  
+> stage_name:结合阶段名  
+> age:材龄  
+> weight_type:辅材计自重方式 0-由主材承担  1-由整体承担 2-不计辅材自重  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.update_section_connection_stage(name="联合阶段",sec_id=1,ele_id=[2,3,4,5],stage_name="施工阶段1")
+```  
+Returns:无
+### remove_section_connection_stage
+删除施工阶段联合截面
+> 参数:  
+> name:名称  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.remove_section_connection_stage(name="联合阶段")
+```  
+Returns:无
+### add_element_to_connection_stage
+添加单元到施工阶段联合截面
+> 参数:  
+> ele_id:单元号  
+> name:联合阶段名  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.add_element_to_connection_stage([1,2,3,4],"联合阶段")
+```  
+Returns:无
 ##  荷载组合操作
 ### add_load_combine
 添加荷载组合
@@ -2864,6 +2915,51 @@ odb.get_node_displacement(node_id=[1,2,3],stage_id=1)
 odb.get_node_displacement(node_id=1,stage_id=-1,case_name="工况名")
 ```  
 Returns: json字符串,包含信息为list[dict] or dict
+### get_self_concurrent_reaction
+获取自并发反力
+> 参数:  
+> node_id:节点号  
+> case_name:工况号  
+```Python
+# 示例代码
+from qtmodel import *
+odb.get_self_concurrent_reaction(node_id=1,case_name="工况1_Fx最大")
+```  
+Returns: json字符串,包含信息为dict
+### get_all_concurrent_reaction
+获取完全并发反力
+> 参数:  
+> node_id:节点号  
+> case_name:工况号  
+```Python
+# 示例代码
+from qtmodel import *
+odb.get_all_concurrent_reaction(node_id=1,case_name="工况1_Fx最大")
+```  
+Returns: json字符串,包含信息为dict
+### get_beam_concurrent_force
+获取梁单元并发内力
+> 参数:  
+> ele_id:单元号  
+> case_name:工况号  
+```Python
+# 示例代码
+from qtmodel import *
+odb.get_beam_concurrent_force(ele_id=1,case_name="工况1_Fx最大")
+```  
+Returns: json字符串,包含信息为dict
+### get_composite_beam_concurrent_force
+获取组合梁单元并发内力
+> 参数:  
+> ele_id:单元号  
+> case_name:工况号  
+```Python
+# 示例代码
+from qtmodel import *
+odb.get_composite_beam_concurrent_force(ele_id=1,case_name="工况1_Fx最大")
+```  
+Returns: json字符串,包含信息为dict
+##  动力结果查看
 ### get_vibration_node_displacement
 获取指定节点指定模态的振型向量
 > 参数:  
@@ -2875,7 +2971,6 @@ from qtmodel import *
 odb.get_vibration_node_displacement(node_id=1,mode=1)
 ```  
 Returns: json字符串,包含信息为list[dict] or dict
-##  动力结果查看
 ### get_period_and_frequency
 获取周期和频率
 > 参数:  
@@ -2884,6 +2979,26 @@ Returns: json字符串,包含信息为list[dict] or dict
 # 示例代码
 from qtmodel import *
 odb.get_period_and_frequency(mode=1)
+```  
+Returns: json字符串,包含信息为dict
+### get_participation_mass
+获取振型参与质量百分比
+> 参数:  
+> mode:模态号  
+```Python
+# 示例代码
+from qtmodel import *
+odb.get_participation_mass(mode=1)
+```  
+Returns: json字符串,包含信息为dict
+### get_participation_factor
+获取振型参与质量系数
+> 参数:  
+> mode:模态号  
+```Python
+# 示例代码
+from qtmodel import *
+odb.get_participation_factor(mode=1)
 ```  
 Returns: json字符串,包含信息为dict
 ##  绘制模型结果
