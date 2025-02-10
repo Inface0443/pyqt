@@ -355,7 +355,8 @@ class Odb:
         Returns: json字符串,包含信息为dict
         """
         try:
-            qt_model.GetSelfConcurrentReaction(nodeId=node_id, loadCaseName=case_name)
+            res_dict = qt_model.GetSelfConcurrentReaction(nodeId=node_id, loadCaseName=case_name)
+            return json.dumps(res_dict)
         except Exception as ex:
             raise Exception(ex)
 
@@ -371,7 +372,8 @@ class Odb:
         Returns: json字符串,包含信息为dict
         """
         try:
-            qt_model.GetAllConcurrentReaction(nodeId=node_id, loadCaseName=case_name)
+            res_dict = qt_model.GetAllConcurrentReaction(nodeId=node_id, loadCaseName=case_name)
+            return json.dumps(res_dict)
         except Exception as ex:
             raise Exception(ex)
 
@@ -387,7 +389,8 @@ class Odb:
         Returns: json字符串,包含信息为dict
         """
         try:
-            qt_model.GetBeamConcurrentForce(eleId=ele_id, loadCaseName=case_name)
+            res_dict = qt_model.GetBeamConcurrentForce(eleId=ele_id, loadCaseName=case_name)
+            return json.dumps(res_dict)
         except Exception as ex:
             raise Exception(ex)
 
@@ -403,7 +406,8 @@ class Odb:
         Returns: json字符串,包含信息为dict
         """
         try:
-            qt_model.GetCompositeBeamConcurrentForce(eleId=ele_id, loadCaseName=case_name)
+            res_dict = qt_model.GetCompositeBeamConcurrentForce(eleId=ele_id, loadCaseName=case_name)
+            return json.dumps(res_dict)
         except Exception as ex:
             raise Exception(ex)
 
@@ -443,7 +447,8 @@ class Odb:
         Returns: json字符串,包含信息为dict
         """
         try:
-            qt_model.GetPeriodAndFrequency(mode=mode)
+            res_dict = qt_model.GetPeriodAndFrequency(mode=mode)
+            return json.dumps(res_dict)
         except Exception as ex:
             raise Exception(ex)
 
@@ -458,7 +463,8 @@ class Odb:
         Returns: json字符串,包含信息为dict
         """
         try:
-            qt_model.GetParticipationMass(mode=mode)
+            res_dict = qt_model.GetParticipationMass(mode=mode)
+            return json.dumps(res_dict)
         except Exception as ex:
             raise Exception(ex)
 
@@ -473,7 +479,8 @@ class Odb:
         Returns: json字符串,包含信息为dict
         """
         try:
-            qt_model.GetParticipationFactor(mode=mode)
+            res_dict = qt_model.GetParticipationFactor(mode=mode)
+            return json.dumps(res_dict)
         except Exception as ex:
             raise Exception(ex)
 
