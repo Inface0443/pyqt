@@ -2275,8 +2275,8 @@ class Mdb:
 
     @staticmethod
     def add_train_relative_factor(name: str, code_index: int = 1, cross_factors: list[float] = None, calc_fatigue: bool = False,
-                                  line_count: int = 0, longitude_factor: int = -1, impact_factor: int = -1,
-                                  fatigue_factor: int = -1, bridge_kind: int = 0, fill_thick: float = 0.5,
+                                  line_count: int = 0, longitude_factor: float = -1, impact_factor: float = -1,
+                                  fatigue_factor: float = -1, bridge_kind: int = 0, fill_thick: float = 0.5,
                                   rise: float = 1.5, calc_length: float = 50):
         """
         添加移动荷载工况汽车折减
@@ -2305,7 +2305,7 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def add_metro_relative_factor(name: str, cross_factors: list[float] = None, longitude_factor: int = -1, impact_factor: int = -1):
+    def add_metro_relative_factor(name: str, cross_factors: list[float] = None, longitude_factor: float = -1, impact_factor: float = -1):
         """
         添加移动荷载工况汽车折减
         Args:
