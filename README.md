@@ -1,7 +1,24 @@
-> 最新版本 V0.6.6 - 2025-02-10 
-> pip install --upgrade qtmodel -i https://pypi.org/simple 
+> 最新版本 V0.6.8 - 2025-02-18 
+> pip install --upgrade qtmodel -i https://pypi.org/simple
 - 新增部分接口 
 # 建模操作 
+##  建模助手
+### create_cantilever_bridge
+悬浇桥快速建模
+> 参数:  
+> span_len:桥跨分段  
+> span_seg:各桥跨内节段基准长度  
+> bearing_spacing:支座间距  
+> top_width:主梁顶板宽度  
+> bottom_width:主梁顶板宽度  
+> box_num:主梁箱室长度  
+> material:主梁材料类型  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.create_cantilever_bridge(span_len=[6,70,70,6],span_seg=[2,3.5,3.5,2],bearing_spacing=[5.6,5.6])
+```  
+Returns: 无
 ##  项目管理
 ### undo_model
 撤销模型上次操作
