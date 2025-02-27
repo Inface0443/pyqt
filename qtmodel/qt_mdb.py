@@ -1329,10 +1329,9 @@ class Mdb:
         Args:
             index: 板厚id
             name: 板厚名称
-            t:   板厚度
+            t: 板厚度
             thick_type: 板厚类型 0-普通板 1-加劲肋板
-            bias_info: 默认不偏心,偏心时输入列表[type,value]
-                _type:0-厚度比 1-数值_
+            bias_info: 默认不偏心,偏心时输入列表[type(0-厚度比 1-数值),value]
             rib_pos: 肋板位置 0-下部 1-上部
             dist_v: 纵向截面肋板间距
             dist_l: 横向截面肋板间距
@@ -1427,8 +1426,8 @@ class Mdb:
             mat_combine: 组合截面材料信息 (仅组合材料需要) [弹性模量比s/c、密度比s/c、钢材泊松比、混凝土泊松比、热膨胀系数比s/c]
             rib_info:肋板信息
             rib_place:肋板位置 list[tuple[布置具体部位,参考点0-下/左,距参考点间距,肋板名，加劲肋位置0-上/左 1-下/右 2-两侧,加劲肋名]]
-                布置具体部位(工字钢梁):1-上左 2-上右 3-腹板 4-下左 5-下右
-                布置具体部位(箱型钢梁):1-上左 2-上中 3-上右 4-左腹板 5-右腹板 6-下左 7-下中 8-下右
+                _布置具体部位(工字钢梁) 1-上左 2-上右 3-腹板 4-下左 5-下右
+                _布置具体部位(箱型钢梁) 1-上左 2-上中 3-上右 4-左腹板 5-右腹板 6-下左 7-下中 8-下右
             loop_segments:线圈坐标集合 list[dict] dict示例:{"main":[(x1,y1),(x2,y2)...],"sub1":[(x1,y1),(x2,y2)...],"sub2":[(x1,y1),(x2,y2)...]}
             sec_lines:线宽集合[(x1,y1,x2,y3,thick),]
             secondary_loop_segments:辅材线圈坐标集合 list[dict] (同loop_segments)
@@ -2140,12 +2139,12 @@ class Mdb:
         Args:
              name: 车辆荷载名称
              standard_code: 荷载规范
-                _1-中国铁路桥涵规范(TB10002-2017)_
-                _2-城市桥梁设计规范(CJJ11-2019)_
-                _3-公路工程技术标准(JTJ 001-97)_
-                _4-公路桥涵设计通规(JTG D60-2004)_
-                _5-公路桥涵设计通规(JTG D60-2015)_
-                _6-城市轨道交通桥梁设计规范(GB/T51234-2017)_
+                _1-中国铁路桥涵规范(TB10002-2017)
+                _2-城市桥梁设计规范(CJJ11-2019)
+                _3-公路工程技术标准(JTJ 001-97)
+                _4-公路桥涵设计通规(JTG D60-2004
+                _5-公路桥涵设计通规(JTG D60-2015)
+                _6-城市轨道交通桥梁设计规范(GB/T51234-2017)
                 _7-市域铁路设计规范2017(T/CRS C0101-2017)
              load_type: 荷载类型,支持类型参考软件内界面
              load_length: 默认为0即不限制荷载长度  (铁路桥涵规范2017 所需参数)
@@ -2451,12 +2450,12 @@ class Mdb:
              name: 车辆荷载名称
              new_name: 新车辆荷载名称,默认不修改
              standard_code: 荷载规范
-                _1-中国铁路桥涵规范(TB10002-2017)_
-                _2-城市桥梁设计规范(CJJ11-2019)_
-                _3-公路工程技术标准(JTJ 001-97)_
-                _4-公路桥涵设计通规(JTG D60-2004)_
-                _5-公路桥涵设计通规(JTG D60-2015)_
-                _6-城市轨道交通桥梁设计规范(GB/T51234-2017)_
+                _1-中国铁路桥涵规范(TB10002-2017)
+                _2-城市桥梁设计规范(CJJ11-2019)
+                _3-公路工程技术标准(JTJ 001-97)
+                _4-公路桥涵设计通规(JTG D60-2004
+                _5-公路桥涵设计通规(JTG D60-2015)
+                _6-城市轨道交通桥梁设计规范(GB/T51234-2017)
                 _7-市域铁路设计规范2017(T/CRS C0101-2017)
              load_type: 荷载类型,支持类型参考软件内界面
              load_length: 默认为0即不限制荷载长度  (铁路桥涵规范2017 所需参数)
@@ -2800,12 +2799,9 @@ class Mdb:
             duct_type: 1-金属波纹管  2-塑料波纹管  3-铁皮管  4-钢管  5-抽芯成型
             steel_type: 1-钢绞线  2-螺纹钢筋
             steel_detail: 钢束详细信息
-                _钢绞线[钢束面积,孔道直径,摩阻系数,偏差系数]_
-                _螺纹钢筋[钢筋直径,钢束面积,孔道直径,摩阻系数,偏差系数,张拉方式(1-一次张拉 2-超张拉)]_
-            loos_detail: 松弛信息[规范,张拉,松弛] (仅钢绞线需要,默认为[1,1,1])
-                _规范:1-公规 2-铁规_
-                _张拉方式:1-一次张拉 2-超张拉_
-                _松弛类型：1-一般松弛 2-低松弛_
+                _钢绞线[钢束面积,孔道直径,摩阻系数,偏差系数]
+                _螺纹钢筋[钢筋直径,钢束面积,孔道直径,摩阻系数,偏差系数,张拉方式(1-一次张拉 2-超张拉)]
+            loos_detail: 松弛信息[规范(1-公规 2-铁规),张拉(1-一次张拉 2-超张拉),松弛(1-一般松弛 2-低松弛)] (仅钢绞线需要,默认为[1,1,1])
             slip_info: 滑移信息[始端距离,末端距离] 默认为[0.006, 0.006]
         Example:
             mdb.update_tendon_property(name="钢束1",tendon_type=0,material_name="材料1",duct_type=1,steel_type=1,
@@ -2836,11 +2832,8 @@ class Mdb:
              line_type:1-导线点  2-折线点
              position_type: 定位方式 1-直线  2-轨迹线
              control_points: 控制点信息[(x1,y1,z1,r1),(x2,y2,z2,r2)....]
-             point_insert: 定位方式
-                _直线: 插入点坐标[x,y,z]_
-                _轨迹线:  [插入端(1-I 2-J),插入方向(1-ij 2-ji),插入单元id]_
-             tendon_direction:直线钢束X方向向量  默认为[1,0,0] (轨迹线不用赋值)
-                _x轴-[1,0,0] y轴-[0,1,0] z轴-[0,0,1]_
+             point_insert: 定位方式 (直线时为插入点坐标[x,y,z]  轨迹线时[插入端(1-I 2-J),插入方向(1-ij 2-ji),插入单元id])
+             tendon_direction:直线钢束X方向向量  默认为x轴即[1,0,0] (轨迹线不用赋值)
              rotation_angle:绕钢束旋转角度
              track_group:轨迹线结构组名  (直线时不用赋值)
              projection:直线钢束投影 (默认为true)
@@ -2885,11 +2878,8 @@ class Mdb:
              symmetry: 对称点 0-左端点 1-右端点 2-不对称
              control_points: 控制点信息[(x1,z1,r1),(x2,z2,r2)....] 三维[(x1,y1,z1,r1),(x2,y2,z2,r2)....]
              control_points_lateral: 控制点横弯信息[(x1,y1,r1),(x2,y2,r2)....]，无横弯时不必输入
-             point_insert: 定位方式
-                _直线: 插入点坐标[x,y,z]_
-                _轨迹线:  [插入端(1-I 2-J),插入方向(1-ij 2-ji),插入单元id]_
-             tendon_direction:直线钢束X方向向量  默认为[1,0,0] (轨迹线不用赋值)
-                _x轴-[1,0,0] y轴-[0,1,0] z轴-[0,0,1]_
+             point_insert: 定位方式 (直线时为插入点坐标[x,y,z]  轨迹线时[插入端(1-I 2-J),插入方向(1-ij 2-ji),插入单元id])
+             tendon_direction:直线钢束X方向向量  默认为x轴即[1,0,0] (轨迹线不用赋值)
              rotation_angle:绕钢束旋转角度
              track_group:轨迹线结构组名  (直线时不用赋值)
              projection:直线钢束投影 (默认为true)
@@ -2936,11 +2926,8 @@ class Mdb:
             symmetry: 对称点 0-左端点 1-右端点 2-不对称
             control_points: 控制点信息二维[(x1,z1,r1),(x2,z2,r2)....]
             control_points_lateral: 控制点横弯信息[(x1,y1,r1),(x2,y2,r2)....]，无横弯时不必输入
-            point_insert: 定位方式
-               _直线: 插入点坐标[x,y,z]_
-               _轨迹线:  [插入端(1-I 2-J),插入方向(1-ij 2-ji),插入单元id]_
-            tendon_direction:直线钢束X方向向量  默认为[1,0,0] (轨迹线不用赋值)
-               _x轴-[1,0,0] y轴-[0,1,0] z轴-[0,0,1]_
+            point_insert: 定位方式 (直线时为插入点坐标[x,y,z]  轨迹线时[插入端(1-I 2-J),插入方向(1-ij 2-ji),插入单元id])
+            tendon_direction:直线钢束X方向向量  默认为x轴即[1,0,0] (轨迹线不用赋值)
             rotation_angle:绕钢束旋转角度
             track_group:轨迹线结构组名  (直线时不用赋值)
             projection:直线钢束投影 (默认为true)
@@ -3052,8 +3039,7 @@ class Mdb:
         Args:
              case_name:荷载工况名
              tendon_name:钢束名,支持钢束名或钢束名列表
-             tension_type:预应力类型
-                _0-始端 1-末端 2-两端_
+             tension_type:预应力类型 (0-始端 1-末端 2-两端)
              force:预应力
              group_name:边界组
         Example:
@@ -3092,8 +3078,8 @@ class Mdb:
             name:名称
             element_type:单元类型  1-梁单元  2-板单元
             parameters:参数列表
-                _梁杆单元:[轴向,I端X向转角,I端Y向转角,I端Z向转角,J端X向转角,J端Y向转角,J端Z向转角]_
-                _板单元:[X向位移,Y向位移,Z向位移,X向转角,Y向转角]_
+                _梁杆单元为[轴向,I端X向转角,I端Y向转角,I端Z向转角,J端X向转角,J端Y向转角,J端Z向转角]
+                _板单元为[X向位移,Y向位移,Z向位移,X向转角,Y向转角]
         Example:
             mdb.add_deviation_parameter(name="梁端制造误差",element_type=1,parameters=[1,0,0,0,0,0,0])
             mdb.add_deviation_parameter(name="板端制造误差",element_type=1,parameters=[1,0,0,0,0])
@@ -3117,8 +3103,8 @@ class Mdb:
             new_name:新名称，默认不修改名称
             element_type:单元类型  1-梁单元  2-板单元
             parameters:参数列表
-                _梁杆单元:[轴向,I端X向转角,I端Y向转角,I端Z向转角,J端X向转角,J端Y向转角,J端Z向转角]_
-                _板单元:[X向位移,Y向位移,Z向位移,X向转角,Y向转角]_
+                 _梁杆单元为[轴向,I端X向转角,I端Y向转角,I端Z向转角,J端X向转角,J端Y向转角,J端Z向转角]
+                _板单元为[X向位移,Y向位移,Z向位移,X向转角,Y向转角]
         Example:
             mdb.update_deviation_parameter(name="梁端制造误差",element_type=1,parameters=[1,0,0,0,0,0,0])
             mdb.update_deviation_parameter(name="板端制造误差",element_type=1,parameters=[1,0,0,0,0])
@@ -3158,8 +3144,8 @@ class Mdb:
             element_id:单元编号，支持数或列表
             case_name:荷载工况名
             parameters:参数名列表
-                _梁杆单元时:制造误差参数名称_
-                _板单元时: [I端误差名,J端误差名,K端误差名,L端误差名]_
+                _梁杆单元为制造误差参数名称
+                _板单元为[I端误差名,J端误差名,K端误差名,L端误差名]
             group_name:荷载组名
         Example:
             mdb.add_deviation_load(element_id=1,case_name="工况1",parameters="梁端误差")
@@ -3504,10 +3490,8 @@ class Mdb:
         Args:
             element_id:单元编号,支持数或列表
             case_name:荷载工况名
-            load_type:荷载类型
-               _ 1-集中力 2-集中弯矩 3-分布力 4-分布弯矩
-            coord_system:坐标系
-                _1-整体坐标X  2-整体坐标Y 3-整体坐标Z  4-局部坐标X  5-局部坐标Y  6-局部坐标Z_
+            load_type:荷载类型 (1-集中力 2-集中弯矩 3-分布力 4-分布弯矩)
+            coord_system:坐标系 (1-整体X  2-整体Y 3-整体Z  4-局部X  5-局部Y  6-局部Z)
             is_abs: 荷载位置输入方式，True-绝对值   False-相对值
             list_x:荷载位置信息 ,荷载距离单元I端的距离，可输入绝对距离或相对距离
             list_load:荷载数值信息
@@ -3533,8 +3517,7 @@ class Mdb:
         Args:
             element_id:单元号支持数或列表
             case_name:荷载工况名
-            load_type:荷载类型
-                _1-集中力   2-集中弯矩  3-分布力   4-分布弯矩_
+            load_type:荷载类型 (1-集中力   2-集中弯矩  3-分布力   4-分布弯矩)
             group_name:荷载组名称
         Example:
             mdb.remove_beam_element_load(case_name="工况1",element_id=1,load_type=1,group_name="默认荷载组")
@@ -3629,12 +3612,9 @@ class Mdb:
         Args:
              element_id:单元编号支持数或列表
              case_name:荷载工况名
-             load_type:荷载类型
-                _1-集中力  2-集中弯矩  3-分布力  4-分布弯矩_
-             load_place:荷载位置
-                _0-面IJKL 1-边IJ  2-边JK  3-边KL  4-边LI  (仅分布荷载需要)_
-             coord_system:坐标系  (默认3)
-                _1-整体坐标X  2-整体坐标Y 3-整体坐标Z  4-局部坐标X  5-局部坐标Y  6-局部坐标Z_
+             load_type:荷载类型 (1-集中力  2-集中弯矩  3-分布力  4-分布弯矩)
+             load_place:荷载位置 (0-面IJKL 1-边IJ  2-边JK  3-边KL  4-边LI ) (仅分布荷载需要)
+             coord_system:坐标系  (1-整体X  2-整体Y 3-整体Z  4-局部X  5-局部Y  6-局部Z)
              group_name:荷载组名
              list_load:荷载列表
              list_xy:荷载位置信息 [IJ方向绝对距离x,IL方向绝对距离y]  (仅集中荷载需要)
@@ -3966,8 +3946,8 @@ class Mdb:
         Args:
             name:工况名
             case_type:荷载工况类型
-            -"施工阶段荷载", "恒载", "活载", "制动力", "风荷载","体系温度荷载","梯度温度荷载",
-            -"长轨伸缩挠曲力荷载", "脱轨荷载", "船舶撞击荷载","汽车撞击荷载","长轨断轨力荷载", "用户定义荷载"
+            _"施工阶段荷载", "恒载", "活载", "制动力", "风荷载","体系温度荷载","梯度温度荷载",
+            _"长轨伸缩挠曲力荷载", "脱轨荷载", "船舶撞击荷载","汽车撞击荷载","长轨断轨力荷载", "用户定义荷载"
         Example:
             mdb.add_load_case(name="工况1",case_type="施工阶段荷载")
         Returns: 无
@@ -4009,8 +3989,8 @@ class Mdb:
            name:工况名
            new_name:新工况名
            case_type:荷载工况类型
-           -"施工阶段荷载", "恒载", "活载", "制动力", "风荷载","体系温度荷载","梯度温度荷载",
-           -"长轨伸缩挠曲力荷载", "脱轨荷载", "船舶撞击荷载","汽车撞击荷载","长轨断轨力荷载", "用户定义荷载"
+           _"施工阶段荷载", "恒载", "活载", "制动力", "风荷载","体系温度荷载","梯度温度荷载",
+           _"长轨伸缩挠曲力荷载", "脱轨荷载", "船舶撞击荷载","汽车撞击荷载","长轨断轨力荷载", "用户定义荷载"
         Example:
            mdb.add_load_case(name="工况1",case_type="施工阶段荷载")
         Returns: 无
@@ -4090,16 +4070,16 @@ class Mdb:
            name:施工阶段信息
            duration:时长
            active_structures:激活结构组信息 [(结构组名,龄期,安装方法,计自重施工阶段id),...]
-                               _计自重施工阶段id: 0-不计自重,1-本阶段 n-第n阶段)_
-                               _安装方法：1-变形法 2-无应力法 3-接线法 4-切线法
+                               _计自重施工阶段id 0-不计自重,1-本阶段 n-第n阶段
+                               _安装方法 1-变形法 2-无应力法 3-接线法 4-切线法
            delete_structures:钝化结构组信息 [结构组1，结构组2,...]
            active_boundaries:激活边界组信息 [(边界组1，位置),...]
-                               _位置:  0-变形前 1-变形后_
+                               _位置 0-变形前 1-变形后
            delete_boundaries:钝化边界组信息 [边界组1，边界组2,...]
            active_loads:激活荷载组信息 [(荷载组1,时间),...]
-                               _时间: 0-开始 1-结束_
+                               _时间 0-开始 1-结束
            delete_loads:钝化荷载组信息 [(荷载组1,时间),...]
-                               _时间: 0-开始 1-结束_
+                               _时间 0-开始 1-结束
            temp_loads:临时荷载信息 [荷载组1，荷载组2,..]
            index:施工阶段插入位置,从0开始,默认添加到最后
         Example:
@@ -4130,16 +4110,16 @@ class Mdb:
            new_name:新施工阶段名
            duration:时长
            active_structures:激活结构组信息 [(结构组名,龄期,安装方法,计自重施工阶段id),...]
-                               _计自重施工阶段id: 0-不计自重,1-本阶段 n-第n阶段)_
-                               _安装方法：1-变形法 2-接线法 3-无应力法_
+                               _计自重施工阶段id 0-不计自重,1-本阶段 n-第n阶段
+                               _安装方法1-变形法 2-接线法 3-无应力法
            delete_structures:钝化结构组信息 [结构组1，结构组2,...]
            active_boundaries:激活边界组信息 [(边界组1，位置),...]
-                               _位置:  0-变形前 1-变形后_
+                               _位置 0-变形前 1-变形后
            delete_boundaries:钝化边界组信息 [边界组1，结构组2,...]
            active_loads:激活荷载组信息 [(荷载组1,时间),...]
-                               _时间: 0-开始 1-结束_
+                               _时间 0-开始 1-结束
            delete_loads:钝化荷载组信息 [(荷载组1,时间),...]
-                               _时间: 0-开始 1-结束_
+                               _时间 0-开始 1-结束
            temp_loads:临时荷载信息 [荷载组1，荷载组2,..]
         Example:
            mdb.update_construction_stage(name="施工阶段1",duration=5,active_structures=[("结构组1",5,1,1),("结构组2",5,1,1)],
@@ -4307,8 +4287,8 @@ class Mdb:
             combine_type:荷载组合类型 1-叠加  2-判别  3-包络 4-SRss 5-AbsSum
             describe:描述
             combine_info:荷载组合信息 [(荷载工况类型,工况名,系数)...] 工况类型如下
-                _"ST"-静力荷载工况  "CS"-施工阶段荷载工况  "CB"-荷载组合_
-                _"MV"-移动荷载工况  "SM"-沉降荷载工况_ "RS"-反应谱工况_
+                _"ST"-静力荷载工况  "CS"-施工阶段荷载工况  "CB"-荷载组合
+                _"MV"-移动荷载工况  "SM"-沉降荷载工况_ "RS"-反应谱工况
         Example:
             mdb.add_load_combine(name="荷载组合1",combine_type=1,describe="无",combine_info=[("CS","合计值",1),("CS","恒载",1)])
         Returns: 无
@@ -4331,8 +4311,8 @@ class Mdb:
             combine_type:荷载组合类型 (1-叠加  2-判别  3-包络)
             describe:描述
             combine_info:荷载组合信息 [(荷载工况类型,工况名,系数)...] 工况类型如下
-                _"ST"-静力荷载工况  "CS"-施工阶段荷载工况  "CB"-荷载组合_
-                _"MV"-移动荷载工况  "SM"-沉降荷载工况_
+                _"ST"-静力荷载工况  "CS"-施工阶段荷载工况  "CB"-荷载组合
+                _"MV"-移动荷载工况  "SM"-沉降荷载工况
         Example:
             mdb.update_load_combine(name="荷载组合1",combine_type=1,describe="无",combine_info=[("CS","合计值",1),("CS","恒载",1)])
         Returns: 无

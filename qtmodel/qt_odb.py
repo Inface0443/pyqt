@@ -1947,12 +1947,12 @@ class Odb:
     @staticmethod
     def get_initial_tension_load(case_name: str):
         """
-            获取初拉力荷载数据
-            Args:
-                case_name: 荷载工况名
-            Example:
-                odb.get_initial_tension_load(case_name="荷载工况1")
-            Returns: json字符串,包含信息为list[dict]
+        获取初拉力荷载数据
+        Args:
+            case_name: 荷载工况名
+        Example:
+            odb.get_initial_tension_load(case_name="荷载工况1")
+        Returns: json字符串,包含信息为list[dict]
         """
         try:
             res_list = []
