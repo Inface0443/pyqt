@@ -14,7 +14,6 @@
 > - bottom_width:主梁顶板宽度  
 > - box_num:主梁箱室长度  
 > - material:主梁材料类型  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.create_cantilever_bridge(span_len=[6,70,70,6],span_seg=[2,3.5,3.5,2],bearing_spacing=[5.6,5.6])  
@@ -26,7 +25,6 @@
 > **说明**  
 > 撤销模型上次操作  
 > **参数**  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.undo_model()  
@@ -37,7 +35,6 @@
 > **说明**  
 > 重做上次撤销  
 > **参数**  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.redo_model()  
@@ -48,7 +45,6 @@
 > **说明**  
 > 刷新模型信息  
 > **参数**  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.update_model()  
@@ -60,7 +56,6 @@
 > 切换模型前后处理状态  
 > **参数**  
 > - num: 1-前处理  2-后处理  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.update_app_stage(num=1)  
@@ -72,7 +67,6 @@
 > **说明**  
 > 运行分析  
 > **参数**  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.do_solve()  
@@ -83,7 +77,6 @@
 > **说明**  
 > 初始化模型,新建模型  
 > **参数**  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.initial()  
@@ -95,7 +88,6 @@
 > 打开bfmd文件  
 > **参数**  
 > - file_path: 文件全路径  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.open_file(file_path="a.bfmd")  
@@ -106,7 +98,6 @@
 > **说明**  
 > 关闭项目  
 > **参数**  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.close_project()  
@@ -118,7 +109,6 @@
 > 保存bfmd文件  
 > **参数**  
 > - file_path: 文件全路径  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.save_file(file_path="a.bfmd")  
@@ -131,7 +121,6 @@
 > **参数**  
 > - command:命令字符  
 > - command_type:命令类型,默认桥通命令 1-桥通命令 2-mct命令  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.import_command(command="*SECTION")  
@@ -144,7 +133,6 @@
 > 导入文件  
 > **参数**  
 > - file_path:导入文件(.mct/.qdat/.dxf/.3dx)  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.import_file(file_path="a.mct")  
@@ -159,7 +147,6 @@
 > - convert_sec_group:是否将变截面组转换为变截面  
 > - type_kind:输出文件类型  1-全部模型文件  2-计算相关文件 (py输出时  2-输出截面特性)  
 > - group_name:obj与 APDL导出时指定结构组导出  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.export_file(file_path="a.mct")  
@@ -174,7 +161,6 @@
 > - solver_type:求解器类型 0-稀疏矩阵求解器  1-变带宽求解器  
 > - calculation_type: 计算设置 0-单线程 1-用户自定义  2-自动设置  
 > - thread_count: 线程数  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.update_global_setting(solver_type=0,calculation_type=2,thread_count=12)  
@@ -195,7 +181,6 @@
 > - shrink_creep_type: 收缩徐变类型 (0-仅徐变 1-仅收缩 2-收缩徐变)  
 > - creep_load_type: 徐变荷载类型  (1-开始  2-中间  3-结束)  
 > - sub_step_info: 子步信息 [是否开启子部划分设置,10天步数,100天步数,1000天步数,5000天步数,10000天步数] None时为UI默认值  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.update_construction_stage_setting(do_analysis=True, to_end_stage=False, other_stage_id=1,analysis_type=0,  
@@ -227,7 +212,6 @@
 > - reaction_groups: 反力计算类选项为组时边界组名称  
 > - link_groups:  弹性连接计算类选项为组时边界组名称  
 > - constrain_groups: 约束方程计算类选项为组时边界组名称  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.update_live_load_setting(lateral_spacing=0.1, vertical_spacing=1, displacement_calc_type=1)  
@@ -246,7 +230,6 @@
 > - max_iteration_times: 最大迭代次数  
 > - accuracy_of_displacement: 位移相对精度  
 > - accuracy_of_force: 内力相对精度  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.update_non_linear_setting(non_linear_type=-1, non_linear_method=1, max_loading_steps=-1, max_iteration_times=30,  
@@ -263,7 +246,6 @@
 > - static_load_cases: 静力工况名列表  
 > - sink_load_cases: 沉降工况名列表  
 > - live_load_cases: 活载工况名列表  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.update_operation_stage_setting(do_analysis=True, final_stage="上二恒",static_load_cases=None)  
@@ -278,7 +260,6 @@
 > - method: 计算方法 1-子空间迭代法 2-滤频法  3-多重Ritz法  4-兰索斯法  
 > - matrix_type: 矩阵类型 0-集中质量矩阵  1-一致质量矩阵  
 > - mode_num: 振型数量  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.update_self_vibration_setting(do_analysis=True,method=1,matrix_type=0,mode_num=3)  
@@ -293,7 +274,6 @@
 > - kind:组合方式 1-SRSS 2-CQC  
 > - by_mode: 是否按照振型输入阻尼比  
 > - damping_ratio:常数阻尼比或振型阻尼比列表  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.update_response_spectrum_setting(do_analysis=True,kind=1,damping_ratio=0.05)  
@@ -308,7 +288,6 @@
 > - name: 结构组名  
 > - node_ids: 节点编号列表(可选参数)  
 > - element_ids: 单元编号列表(可选参数)  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.add_structure_group(name="新建结构组1")  
@@ -322,7 +301,6 @@
 > **参数**  
 > - name: 结构组名  
 > - new_name: 节点编号列表(可选参数)  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.update_structure_group_name(name="结构组1",new_name="新结构组")  
@@ -334,7 +312,6 @@
 > 可根据结构与组名删除结构组，当组名为默认则删除所有结构组  
 > **参数**  
 > - name:结构组名称  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.remove_structure_group(name="新建结构组1")  
@@ -349,7 +326,6 @@
 > - name: 结构组名  
 > - node_ids: 节点编号列表(可选参数)  
 > - element_ids: 单元编号列表(可选参数)  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.add_structure_to_group(name="现有结构组1",node_ids=[1,2,3,4],element_ids=[1,2])  
@@ -363,7 +339,6 @@
 > - name: 结构组名  
 > - node_ids: 节点编号列表(可选参数)  
 > - element_ids: 单元编号列表(可选参数)  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.remove_structure_from_group(name="现有结构组1",node_ids=[1,2,3,4],element_ids=[1,2])  
@@ -381,7 +356,6 @@
 > - merge_error: 合并容许误差  
 > - numbering_type:编号方式 0-未使用的最小号码 1-最大号码加1 2-用户定义号码  
 > - start_id:自定义节点起始编号(用户定义号码时使用)  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.add_node(node_data=[1,2,3])  
@@ -399,7 +373,6 @@
 > - merge_error: 合并容许误差  
 > - numbering_type:编号方式 0-未使用的最小号码 1-最大号码加1 2-用户定义号码  
 > - start_id:自定义节点起始编号(用户定义号码时使用)  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.add_nodes(node_data=[[1,1,2,3],[1,1,2,3]])  
@@ -415,7 +388,6 @@
 > - x: 更新后x坐标  
 > - y: 更新后y坐标  
 > - z: 更新后z坐标  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.update_node(node_id=1,new_id=2,x=2,y=2,z=2)  
@@ -428,7 +400,6 @@
 > **参数**  
 > - node_id: 节点编号  
 > - new_id: 新节点编号  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.update_node_id(node_id=1,new_id=2)  
@@ -441,7 +412,6 @@
 > **参数**  
 > - ids: 合并节点集合  默认全部节点  
 > - tolerance: 合并容许误差  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.merge_nodes()  
@@ -453,7 +423,6 @@
 > 删除指定节点,不输入参数时默认删除所有节点  
 > **参数**  
 > - ids:节点编号  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.remove_node()  
@@ -468,7 +437,6 @@
 > **参数**  
 > - node_ids:被修改节点号  
 > - new_ids:新节点号  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.renumber_nodes()  
@@ -484,7 +452,6 @@
 > - offset_x:X轴偏移量  
 > - offset_y:Y轴偏移量  
 > - offset_z:Z轴偏移量  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.move_node(node_id=1,offset_x=1.5,offset_y=1.5,offset_z=1.5)  
@@ -497,7 +464,6 @@
 > 反转杆系单元局部方向  
 > **参数**  
 > - ele_id: 杆系单元编号  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.update_local_orientation(1)  
@@ -510,7 +476,6 @@
 > **参数**  
 > - old_id: 单元编号  
 > - new_id: 新单元编号  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.update_element_id(1,2)  
@@ -530,7 +495,6 @@
 > - initial_type:索单元初始参数类型 1-初始拉力 2-初始水平力 3-无应力长度  
 > - initial_value:索单元初始始参数值  
 > - plate_type:板单元类型  0-薄板 1-厚板  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.add_element(index=1,ele_type=1,node_ids=[1,2],beta_angle=1,mat_id=1,sec_id=1)  
@@ -551,7 +515,6 @@
 > - initial_type:索单元初始参数类型 1-初始拉力 2-初始水平力 3-无应力长度  
 > - initial_value:索单元初始始参数值  
 > - plate_type:板单元类型  0-薄板 1-厚板  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.update_element(old_id=1,ele_type=1,node_ids=[1,2],beta_angle=1,mat_id=1,sec_id=1)  
@@ -566,7 +529,6 @@
 > [编号,类型(1-梁 2-杆),materialId,sectionId,betaAngle,nodeI,nodeJ]  
 > [编号,类型(3-索),materialId,sectionId,betaAngle,nodeI,nodeJ,张拉类型(1-初拉力 2-初始水平力 3-无应力长度),张拉值]  
 > [编号,类型(4-板),materialId,thicknessId,betaAngle,nodeI,nodeJ,nodeK,nodeL]  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.add_elements(ele_data=[  
@@ -582,7 +544,6 @@
 > 更新指定单元的单元局部坐标系  
 > **参数**  
 > - index: 单元编号  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.update_element_local_orientation(index=1)  
@@ -595,7 +556,6 @@
 > **参数**  
 > - index: 单元编号  
 > - mat_id: 材料编号  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.update_element_material(index=1,mat_id=2)  
@@ -608,7 +568,6 @@
 > **参数**  
 > - index: 单元编号  
 > - beta_angle: 贝塔角度数  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.update_element_beta_angle(index=1,beta_angle=90)  
@@ -621,7 +580,6 @@
 > **参数**  
 > - index: 单元编号  
 > - sec_id: 截面号  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.update_element_section(index=1,sec_id=2)  
@@ -634,7 +592,6 @@
 > **参数**  
 > - index: 单元编号  
 > - nodes: 杆系单元时为[node_i,node_j] 板单元[i,j,k,l]  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.update_element_node(1,[1,2])  
@@ -647,7 +604,6 @@
 > 删除指定编号的单元  
 > **参数**  
 > - index: 单元编号,默认时删除所有单元  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.remove_element()  
@@ -661,7 +617,6 @@
 > **参数**  
 > - ele_ids:被修改单元号  
 > - new_ids:新单元号  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.renumber_elements()  
@@ -686,7 +641,6 @@
 > - creep_id:徐变材料id (可选参数)  
 > - f_cuk: 立方体抗压强度标准值 (可选参数)  
 > - composite_info: 主材名和辅材名 (仅组合材料需要)  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.update_material(name="混凝土材料1",mat_type=1,standard=1,database="C50")  
@@ -709,7 +663,6 @@
 > - creep_id:徐变材料id (可选参数)  
 > - f_cuk: 立方体抗压强度标准值 (可选参数)  
 > - composite_info: 主材名和辅材名 (仅组合材料需要)  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.add_material(index=1,name="混凝土材料1",mat_type=1,standard=1,database="C50")  
@@ -726,7 +679,6 @@
 > - time_parameter: 对应规范的收缩徐变参数列表,默认不改变规范中信息 (可选参数)  
 > - creep_data: 徐变数据 [(函数名,龄期)...]  
 > - shrink_data: 收缩函数名  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.add_time_parameter(name="收缩徐变材料1",code_index=1)  
@@ -743,7 +695,6 @@
 > - time_parameter: 对应规范的收缩徐变参数列表,默认不改变规范中信息 (可选参数)  
 > - creep_data: 徐变数据 [(函数名,龄期)...]  
 > - shrink_data: 收缩函数名  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.update_time_parameter(name="收缩徐变材料1",new_name="新收缩徐变材料1",code_index=1)  
@@ -757,7 +708,6 @@
 > - name:徐变函数名  
 > - creep_data:徐变数据[(时间,徐变系数)...]  
 > - scale_factor:缩放系数  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.add_creep_function(name="徐变函数名",creep_data=[(5,0.5),(100,0.75)])  
@@ -772,7 +722,6 @@
 > - new_name: 新徐变函数名，默认不改变函数名  
 > - creep_data:徐变数据，默认不改变函数名 [(时间,徐变系数)...]  
 > - scale_factor:缩放系数  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.add_creep_function(name="徐变函数名",creep_data=[(5,0.5),(100,0.75)])  
@@ -786,7 +735,6 @@
 > - name:收缩函数名  
 > - shrink_data:收缩数据[(时间,收缩系数)...]  
 > - scale_factor:缩放系数  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.add_shrink_function(name="收缩函数名",shrink_data=[(5,0.5),(100,0.75)])  
@@ -802,7 +750,6 @@
 > - new_name:收缩函数名  
 > - shrink_data:收缩数据,默认不改变数据 [(时间,收缩系数)...]  
 > - scale_factor:缩放系数  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.update_shrink_function(name="收缩函数名",new_name="函数名2")  
@@ -816,7 +763,6 @@
 > 删除收缩函数  
 > **参数**  
 > - name:收缩函数名  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.remove_shrink_function(name="收缩函数名")  
@@ -828,7 +774,6 @@
 > 删除徐变函数  
 > **参数**  
 > - name:徐变函数名  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.remove_creep_function(name="徐变函数名")  
@@ -842,7 +787,6 @@
 > - name: 材料名  
 > - time_parameter_name: 收缩徐变名称  
 > - f_cuk: 材料标准抗压强度,仅自定义材料是需要输入  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.update_material_time_parameter(name="C60",time_parameter_name="收缩徐变1",f_cuk=5e7)  
@@ -855,7 +799,6 @@
 > **参数**  
 > - name:材料名称  
 > - new_id:新编号  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.update_material_id(name="材料1",new_id=2)  
@@ -868,7 +811,6 @@
 > **参数**  
 > - index:指定材料编号，默认则删除所有材料  
 > - name: 指定材料名，材料名为空时按照index删除  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.remove_material()  
@@ -882,7 +824,6 @@
 > **参数**  
 > - name:指定材料编号，默认则删除所有材料  
 > - factor:指定材料编号，默认则删除所有材料  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.update_material_construction_factor(name="材料1",factor=1.0)  
@@ -894,7 +835,6 @@
 > 删除指定时间依存材料  
 > **参数**  
 > - name: 指定收缩徐变材料名  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.remove_time_parameter("收缩徐变材料1")  
@@ -916,7 +856,6 @@
 > - dist_l: 横向截面肋板间距  
 > - rib_v: 纵向肋板信息  
 > - rib_l: 横向肋板信息  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.add_thickness(name="厚度1", t=0.2,thick_type=0,bias_info=(0,0.8))  
@@ -930,7 +869,6 @@
 > **参数**  
 > - index: 板厚id  
 > - new_id: 新板厚id  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.update_thickness_id(1,2)  
@@ -943,7 +881,6 @@
 > **参数**  
 > - index:板厚编号,默认时删除所有板厚信息  
 > - name:默认按照编号删除,如果不为空则按照名称删除  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.remove_thickness()  
@@ -981,7 +918,6 @@
 > - shear_consider:考虑剪切 bool 默认考虑剪切变形  
 > - bias_x:自定义偏心点x坐标 (仅自定义类型偏心需要,相对于center_type偏移)  
 > - bias_y:自定义偏心点y坐标 (仅自定义类型偏心需要,相对于center_type偏移)  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.add_section(name="截面1",sec_type="矩形",sec_info=[2,4],bias_type="中心")  
@@ -1004,7 +940,6 @@
 > - name:截面名称  
 > - sec_type:截面类型  
 > - sec_data:截面信息字典，键值参考添加add_section方法参数  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.add_single_section(index=1,name="变截面1",sec_type="矩形",  
@@ -1021,7 +956,6 @@
 > - name:截面名称  
 > - sec_type:截面类型  
 > - sec_data:截面信息字典，键值参考添加add_section方法参数  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.update_single_section(index=1,name="变截面1",sec_type="矩形",  
@@ -1040,7 +974,6 @@
 > - sec_end:截面末端截面信息字典，键值参考添加add_section方法参数  
 > - shear_consider:考虑剪切变形  
 > - sec_normalize:变截面线段线圈重新排序  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.add_tapper_section(index=1,name="变截面1",sec_type="矩形",  
@@ -1061,7 +994,6 @@
 > - sec_end:截面末端编号  
 > - shear_consider:考虑剪切变形  
 > - sec_normalize:变截面线段线圈重新排序  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.add_tapper_section(index=1,name="变截面1",sec_type="矩形",  
@@ -1080,7 +1012,6 @@
 > - end_id:截面末端编号  
 > - shear_consider:考虑剪切变形  
 > - sec_normalize: 开启变截面线圈和线宽自适应排序 (避免两端截面绘制顺序导致的渲染和计算失效)  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.add_tapper_section_by_id(name="变截面1",begin_id=1,end_id=2)  
@@ -1092,7 +1023,6 @@
 > 删除截面信息  
 > **参数**  
 > - index: 截面编号,参数为默认时删除全部截面  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.remove_section()  
@@ -1112,7 +1042,6 @@
 > - ref_h: 高度方向参考点 0-i 1-j  
 > - dis_w: 宽度方向距离  
 > - dis_h: 高度方向距离  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.add_tapper_section_group(ids=[1,2,3,4],name="变截面组1")  
@@ -1132,7 +1061,6 @@
 > - ref_h: 高度方向参考点 0-i 1-j  
 > - dis_w: 宽度方向距离  
 > - dis_h: 高度方向距离  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.add_tapper_section_group(ids=[1,2,3,4],name="变截面组1")  
@@ -1149,7 +1077,6 @@
 > - shear_consider:考虑剪切  
 > - bias_point:自定义偏心点(仅自定义类型偏心需要)  
 > - side_i: 是否为截面I,否则为截面J(仅变截面需要)  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.update_section_bias(index=1,bias_type="中上",center_type="几何中心")  
@@ -1164,7 +1091,6 @@
 > - index:截面号  
 > - sec_property:截面特性值参考UI共计26个数值  
 > - side_i:是否为I端截面(仅变截面需要)  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.update_section_property(index=1,sec_property=[i for i in range(1,27)])  
@@ -1176,7 +1102,6 @@
 > 将变截面组转为变截面  
 > **参数**  
 > - name: 变截面组名，默认则转化全部变截面组  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.add_tapper_section_from_group()  
@@ -1190,7 +1115,6 @@
 > **参数**  
 > - index: 原编号  
 > - new_id: 新编号  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.update_section_id(index=1,new_id=2)  
@@ -1202,7 +1126,6 @@
 > 删除变截面组，默认删除所有变截面组  
 > **参数**  
 > - name:变截面组名称  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.remove_tapper_section_group()  
@@ -1216,7 +1139,6 @@
 > **参数**  
 > - name:变截面组名称  
 > - ids:新增单元编号  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.add_elements_to_tapper_section_group("变截面组1",ids=[1,2,3,4,5,6])  
@@ -1229,7 +1151,6 @@
 > 新建边界组  
 > **参数**  
 > - name:边界组名  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.add_boundary_group(name="边界组1")  
@@ -1242,7 +1163,6 @@
 > **参数**  
 > - name:边界组名  
 > - new_name:新边界组名  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.update_boundary_group("旧边界组","新边界组")  
@@ -1254,7 +1174,6 @@
 > 按照名称删除边界组  
 > **参数**  
 > - name: 边界组名称，默认删除所有边界组 (非必须参数)  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.remove_boundary_group()  
@@ -1266,7 +1185,6 @@
 > **说明**  
 > 根据边界组名称、边界的类型和编号删除边界信息,默认时删除所有边界信息  
 > **参数**  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.remove_all_boundary()  
@@ -1281,7 +1199,6 @@
 > - bd_type:边界类型  ["一般支承", "弹性支承","一般弹性支承", "主从约束", "一般/受拉/受压/刚性弹性连接", "约束方程", "梁端约束"]  
 > - group:边界所处边界组名  
 > - extra_name:删除弹性连接或约束方程时额外标识,约束方程名或指定删除弹性连接节点类型 I/J  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.remove_boundary(remove_id=11, bd_type="一般弹性连接",group="边界组1", extra_name="J")  
@@ -1295,7 +1212,6 @@
 > **参数**  
 > - name:一般弹性支承特性名称  
 > - data_matrix:一般弹性支承刚度矩阵(数据需按列输入至列表,共计21个参数)  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.add_general_elastic_support_property(name = "特性1", data_matrix=[i for i in range(1,22)])  
@@ -1309,7 +1225,6 @@
 > - name:原一般弹性支承特性名称  
 > - new_name:现一般弹性支承特性名称  
 > - data_matrix:一般弹性支承刚度矩阵(数据需按列输入至列表,共计21个参数)  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.update_general_elastic_support_property(name = "特性1",new_name="特性2", data_matrix=[i for i in range(1,22)])  
@@ -1321,7 +1236,6 @@
 > 添加一般弹性支承特性  
 > **参数**  
 > - name:一般弹性支承特性名称  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.remove_general_elastic_support_property(name = "特性1")  
@@ -1335,7 +1249,6 @@
 > - node_id:节点号  
 > - property_name:一般弹性支承特性名  
 > - group_name:一般弹性支承边界组名  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.add_general_elastic_support(node_id = 1, property_name = "特性1",group_name="边界组1")  
@@ -1349,7 +1262,6 @@
 > - node_id:节点编号,支持整数或整数型列表  
 > - boundary_info:边界信息  [X,Y,Z,Rx,Ry,Rz]  ture-固定 false-自由  
 > - group_name:边界组名,默认为默认边界组  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.add_general_support(node_id=1, boundary_info=[True,True,True,False,False,False])  
@@ -1364,7 +1276,6 @@
 > - support_type:支承类型 1-线性  2-受拉  3-受压  
 > - boundary_info:边界信息 受拉和受压时列表长度为2-[direct(1-X 2-Y 3-Z),stiffness]  线性时列表长度为6-[kx,ky,kz,krx,kry,krz]  
 > - group_name:边界组  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.add_elastic_support(node_id=1,support_type=1,boundary_info=[1e6,0,1e6,0,0,0])  
@@ -1386,7 +1297,6 @@
 > - group_name:边界组名  
 > - dis_ratio:距i端距离比 (仅一般弹性连接需要)  
 > - kx:受拉或受压刚度  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.add_elastic_link(link_type=1,start_id=1,end_id=2,boundary_info=[1e6,1e6,1e6,0,0,0])  
@@ -1402,7 +1312,6 @@
 > - node_ids:主节点号和从节点号，主节点号位于首位  
 > - boundary_info:边界信息 [X,Y,Z,Rx,Ry,Rz] ture-固定 false-自由  
 > - group_name:边界组名  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.add_master_slave_links(node_ids=[(1,2),(1,3),(4,5),(4,6)],boundary_info=[True,True,True,False,False,False])  
@@ -1417,7 +1326,6 @@
 > - slave_id:从节点号，支持整数或整数型列表  
 > - boundary_info:边界信息 [X,Y,Z,Rx,Ry,Rz] ture-固定 false-自由  
 > - group_name:边界组名  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.add_master_slave_link(master_id=1,slave_id=[2,3],boundary_info=[True,True,True,False,False,False])  
@@ -1432,7 +1340,6 @@
 > - info_i:i端约束信息 [X,Y,Z,Rx,Ry,Rz] ture-固定 false-自由  
 > - info_j:j端约束信息 [X,Y,Z,Rx,Ry,Rz] ture-固定 false-自由  
 > - group_name:边界组名  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.add_beam_constraint(beam_id=2,info_i=[True,True,True,False,False,False],info_j=[True,True,True,False,False,False])  
@@ -1448,7 +1355,6 @@
 > - sec_dof: 从节点自由度 1-x 2-y 3-z 4-rx 5-ry 6-rz  
 > - master_info:主节点约束信息列表  
 > - group_name:边界组名  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.add_beam_constraint(beam_id=2,info_i=[True,True,True,False,False,False],info_j=[True,True,True,False,False,False])  
@@ -1462,7 +1368,6 @@
 > - node_id:节点号  
 > - input_type:输入方式 1-角度 2-三点  3-向量  
 > - coord_info:局部坐标信息 -List<float>(角)  -List<List<float>>(三点 or 向量)  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.add_node_axis(input_type=1,node_id=1,coord_info=[45,45,45])  
@@ -1479,7 +1384,6 @@
 > - new_id:新节点号  
 > - input_type:输入方式 1-角度 2-三点  3-向量  
 > - coord_info:局部坐标信息 -List<float>(角)  -List<List<float>>(三点 or 向量)  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.update_node_axis(node_id=1,new_id=1,input_type=1,coord_info=[45,45,45])  
@@ -1493,7 +1397,6 @@
 > 添加节点坐标  
 > **参数**  
 > - node_id:节点号  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.remove_node_axis(node_id=1)  
@@ -1519,7 +1422,6 @@
 > - factor: 默认为1.0(铁路桥涵规范2017 ZH荷载所需参数)  
 > - n:车厢数: 默认6节车厢 (城市轨道交通桥梁规范2017 所需参数)  
 > - calc_fatigue:计算公路疲劳 (公路桥涵设计通规2015 所需参数)  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.add_standard_vehicle("高速铁路",standard_code=1,load_type="高速铁路")  
@@ -1543,7 +1445,6 @@
 > - min_dis:车轮距影响面最小距离 (轮重集合 所需参数))  
 > - unit_force:荷载单位 默认为"N"  
 > - unit_length:长度单位 默认为"M"  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.add_user_vehicle(name="车道荷载",load_type="车道荷载",p=270000,q=10500)  
@@ -1556,7 +1457,6 @@
 > **参数**  
 > - name:节点纵列名  
 > - node_ids:节点列表  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.add_node_tandem(name="节点纵列1",node_ids=[i+1 for i in range(12)])  
@@ -1569,7 +1469,6 @@
 > **参数**  
 > - name:影响面名称  
 > - tandem_names:节点纵列名称组  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.add_influence_plane(name="影响面1",tandem_names=["节点纵列1","节点纵列2"])  
@@ -1587,7 +1486,6 @@
 > - lane_width:车道宽度  
 > - optimize:是否允许车辆摆动  
 > - direction:0-向前  1-向后  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.add_lane_line(name="车道1",influence_name="影响面1",tandem_name="节点纵列1",offset=0,lane_width=3.1)  
@@ -1604,7 +1502,6 @@
 > - sub_case:子工况信息 [(车辆名称,系数,["车道1","车道2"])...]  
 > - trailer_code:考虑挂车时挂车车辆名  
 > - special_code:考虑特载时特载车辆名  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.add_live_load_case(name="活载工况1",influence_plane="影响面1",span=100,sub_case=[("车辆名称",1.0,["车道1","车道2"]),])  
@@ -1621,7 +1518,6 @@
 > - longitude_factor:纵向折减系数，大于0时为自定义，否则为规范自动选取  
 > - impact_factor:冲击系数大于1时为自定义，否则按照规范自动选取  
 > - frequency:桥梁基频  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.add_car_relative_factor(name="活载工况1",code_index=1,cross_factors=[1.2,1,0.78,0.67,0.6,0.55,0.52,0.5])  
@@ -1644,7 +1540,6 @@
 > - fill_thick:填土厚度 (规ZKH ZH钢筋/素混凝土、石砌桥跨结构以及涵洞所需参数)  
 > - rise:拱高 (规ZKH ZH活载-空腹式拱桥所需参数)  
 > - calc_length:计算跨度(铁规ZKH ZH活载-空腹式拱桥所需参数)或计算长度(铁规ZK ZC活载所需参数)  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.add_train_relative_factor(name="活载工况1",code_index=1,cross_factors=[1.2,1,0.78,0.67,0.6,0.55,0.52,0.5],calc_length=50)  
@@ -1659,7 +1554,6 @@
 > - cross_factors:横向折减系数列表,自定义时要求长度为8,否则按照规范选取  
 > - longitude_factor:纵向折减系数，大于0时为自定义，否则为规范自动选取  
 > - impact_factor:强度冲击系数大于1时为自定义，否则按照规范自动选取  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.add_metro_relative_factor(name="活载工况1",cross_factors=[1.2,1,0.78,0.67,0.6,0.55,0.52,0.5],  
@@ -1672,7 +1566,6 @@
 > 删除车辆信息  
 > **参数**  
 > - name:车辆名称  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.remove_vehicle(name="车辆名称")  
@@ -1685,7 +1578,6 @@
 > **参数**  
 > - index:节点纵列编号  
 > - name:节点纵列名  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.remove_node_tandem(index=1)  
@@ -1699,7 +1591,6 @@
 > **参数**  
 > - index:影响面编号  
 > - name:影响面名称  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.remove_influence_plane(index=1)  
@@ -1713,7 +1604,6 @@
 > **参数**  
 > - name:车道线名称  
 > - index:车道线编号  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.remove_lane_line(index=1)  
@@ -1726,7 +1616,6 @@
 > 删除移动荷载工况  
 > **参数**  
 > - name:移动荷载工况名  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.remove_live_load_case(name="活载工况1")  
@@ -1752,7 +1641,6 @@
 > - factor: 默认为1.0(铁路桥涵规范2017 ZH荷载所需参数)  
 > - n:车厢数: 默认6节车厢 (城市轨道交通桥梁规范2017 所需参数)  
 > - calc_fatigue:计算公路疲劳 (公路桥涵设计通规2015 所需参数)  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.update_standard_vehicle("高速铁路",standard_code=1,load_type="高速铁路")  
@@ -1777,7 +1665,6 @@
 > - min_dis:车轮距影响面最小距离 (轮重集合 所需参数))  
 > - unit_force:荷载单位 默认为"N"  
 > - unit_length:长度单位 默认为"M"  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.update_user_vehicle(name="车道荷载",load_type="车道荷载",p=270000,q=10500)  
@@ -1791,7 +1678,6 @@
 > - name:节点纵列名  
 > - new_name: 新节点纵列名，默认不修改  
 > - node_ids:节点列表  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.update_node_tandem(name="节点纵列1",node_ids=[i+1 for i in range(12)])  
@@ -1809,7 +1695,6 @@
 > - sub_case:子工况信息 [(车辆名称,系数,["车道1","车道2"])...]  
 > - trailer_code:考虑挂车时挂车车辆名  
 > - special_code:考虑特载时特载车辆名  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.update_live_load_case(name="活载工况1",influence_plane="影响面1",span=100,sub_case=[("车辆名称",1.0,["车道1","车道2"]),])  
@@ -1823,7 +1708,6 @@
 > **参数**  
 > - name: 荷载工况名称  
 > - factor: 系数  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.add_load_to_mass(name="荷载工况",factor=1)  
@@ -1836,7 +1720,6 @@
 > **参数**  
 > - node_id:节点编号，支持单个编号和编号列表  
 > - mass_info:[m,rmX,rmY,rmZ]  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.add_nodal_mass(node_id=1,mass_info=(100,0,0,0))  
@@ -1848,7 +1731,6 @@
 > 删除节点质量  
 > **参数**  
 > - node_id:节点号，默认删除所有节点质量  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.remove_nodal_mass(node_id=1)  
@@ -1860,7 +1742,6 @@
 > 删除荷载转为质量,默认删除所有荷载转质量  
 > **参数**  
 > - name:荷载工况名  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.remove_load_to_mass(name="荷载工况")  
@@ -1875,7 +1756,6 @@
 > - factor:反应谱调整系数  
 > - kind:反应谱类型 0-无量纲 1-加速度 2-位移  
 > - function_info:反应谱函数信息  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.add_spectrum_function(name="反应谱函数1",factor=1.0,function_info=[(0,0.02),(1,0.03)])  
@@ -1892,7 +1772,6 @@
 > - info_x: 反应谱X向信息 (X方向函数名,系数)  
 > - info_y: 反应谱Y向信息 (Y方向函数名,系数)  
 > - info_z: 反应谱Z向信息 (Z方向函数名,系数)  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.add_spectrum_case(name="反应谱工况",info_x=("函数1",1.0))  
@@ -1904,7 +1783,6 @@
 > 更新荷载转为质量  
 > **参数**  
 > - data_list:荷载工况和系数列表[("工况1",1.2),("工况2",1.3)...]  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.update_load_to_mass(data_list=[("工况1",1.2),("工况2",1.3)])  
@@ -1918,7 +1796,6 @@
 > - node_id:节点编号  
 > - new_node_id:新节点编号，默认不改变节点  
 > - mass_info:[m,rmX,rmY,rmZ]  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.add_nodal_mass(node_id=1,mass_info=(100,0,0,0))  
@@ -1932,7 +1809,6 @@
 > **参数**  
 > - name: 钢束组名称  
 > - index: 钢束组编号(非必须参数)，默认自动识别  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.add_tendon_group(name="钢束组1")  
@@ -1944,7 +1820,6 @@
 > 按照钢束组名称或钢束组编号删除钢束组，两参数均为默认时删除所有钢束组  
 > **参数**  
 > - name:钢束组名称,默认自动识别 (可选参数)  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.remove_tendon_group(name="钢束组1")  
@@ -1968,7 +1843,6 @@
 > - _张拉方式:1-一次张拉 2-超张拉_  
 > _松弛类型：1-一般松弛 2-低松弛_  
 > - slip_info: 滑移信息[始端距离,末端距离] 默认为[0.006, 0.006]  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.add_tendon_property(name="钢束1",tendon_type=0,material_name="预应力材料",duct_type=1,steel_type=1,  
@@ -1982,7 +1856,6 @@
 > **参数**  
 > - name:钢束特性名  
 > - material_name:材料名  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.update_tendon_property_material("特性1",material_name="材料1")  
@@ -2004,7 +1877,6 @@
 > _螺纹钢筋[钢筋直径,钢束面积,孔道直径,摩阻系数,偏差系数,张拉方式(1-一次张拉 2-超张拉)]  
 > - loos_detail: 松弛信息[规范(1-公规 2-铁规),张拉(1-一次张拉 2-超张拉),松弛(1-一般松弛 2-低松弛)] (仅钢绞线需要,默认为[1,1,1])  
 > - slip_info: 滑移信息[始端距离,末端距离] 默认为[0.006, 0.006]  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.update_tendon_property(name="钢束1",tendon_type=0,material_name="材料1",duct_type=1,steel_type=1,  
@@ -2028,7 +1900,6 @@
 > - rotation_angle:绕钢束旋转角度  
 > - track_group:轨迹线结构组名  (直线时不用赋值)  
 > - projection:直线钢束投影 (默认为true)  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.add_tendon_3d("BB1",property_name="22-15",num=2,position_type=1,  
@@ -2056,7 +1927,6 @@
 > - rotation_angle:绕钢束旋转角度  
 > - track_group:轨迹线结构组名  (直线时不用赋值)  
 > - projection:直线钢束投影 (默认为true)  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.add_tendon_2d(name="BB1",property_name="22-15",num=2,position_type=1,  
@@ -2086,7 +1956,6 @@
 > - rotation_angle:绕钢束旋转角度  
 > - track_group:轨迹线结构组名  (直线时不用赋值)  
 > - projection:直线钢束投影 (默认为true)  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.update_tendon(name="BB1",property_name="22-15",num=2,position_type=1,  
@@ -2102,7 +1971,6 @@
 > **参数**  
 > - ids: 钢束构件所在单元编号集合  
 > - component_type:0-钢结构构件 1-钢筋混凝土构件 2-预应力混凝土构件  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.update_element_component_type(ids=[1,2,3,4],component_type=2)  
@@ -2115,7 +1983,6 @@
 > **参数**  
 > - name:钢束名称  
 > - index:钢束编号  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.remove_tendon(name="钢束1")  
@@ -2130,7 +1997,6 @@
 > **参数**  
 > - name:钢束组名称  
 > - index:钢束组编号  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.remove_tendon_property(name="钢束特性1")  
@@ -2145,7 +2011,6 @@
 > **参数**  
 > - name:原钢束组名  
 > - new_name:新钢束组名  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.update_tendon_group("钢束组1","钢束组2")  
@@ -2161,7 +2026,6 @@
 > - tension_type:预应力类型 (0-始端 1-末端 2-两端)  
 > - force:预应力  
 > - group_name:边界组  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.add_pre_stress(case_name="荷载工况名",tendon_name="钢束1",force=1390000)  
@@ -2173,7 +2037,6 @@
 > 删除预应力  
 > **参数**  
 > - tendon_name:钢束组,默认则删除所有预应力荷载  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.remove_pre_stress(tendon_name="钢束1")  
@@ -2191,7 +2054,6 @@
 > - parameters:参数列表  
 > _梁杆单元为[轴向,I端X向转角,I端Y向转角,I端Z向转角,J端X向转角,J端Y向转角,J端Z向转角]  
 > _板单元为[X向位移,Y向位移,Z向位移,X向转角,Y向转角]  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.add_deviation_parameter(name="梁端制造误差",element_type=1,parameters=[1,0,0,0,0,0,0])  
@@ -2209,7 +2071,6 @@
 > - parameters:参数列表  
 > _梁杆单元为[轴向,I端X向转角,I端Y向转角,I端Z向转角,J端X向转角,J端Y向转角,J端Z向转角]  
 > _板单元为[X向位移,Y向位移,Z向位移,X向转角,Y向转角]  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.update_deviation_parameter(name="梁端制造误差",element_type=1,parameters=[1,0,0,0,0,0,0])  
@@ -2223,7 +2084,6 @@
 > **参数**  
 > - name:制造偏差参数名  
 > - para_type:制造偏差类型 1-梁单元  2-板单元  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.remove_deviation_parameter(name="参数1",para_type=1)  
@@ -2240,7 +2100,6 @@
 > _梁杆单元为制造误差参数名称  
 > _板单元为[I端误差名,J端误差名,K端误差名,L端误差名]  
 > - group_name:荷载组名  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.add_deviation_load(element_id=1,case_name="工况1",parameters="梁端误差")  
@@ -2255,7 +2114,6 @@
 > - case_name:荷载工况名  
 > - element_id:单元编号，支持数或列表  
 > - group_name: 荷载组  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.remove_deviation_load(case_name="工况1",element_id=1,group_name="荷载组1")  
@@ -2270,7 +2128,6 @@
 > - case_name:荷载工况名  
 > - temperature:最终温度  
 > - group_name:荷载组名  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.add_element_temperature(element_id=1,case_name="自重",temperature=1,group_name="默认荷载组")  
@@ -2283,7 +2140,6 @@
 > **参数**  
 > - case_name:荷载工况名  
 > - element_id:单元编号，支持数或列表  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.remove_element_temperature(case_name="荷载工况1",element_id=1)  
@@ -2293,7 +2149,6 @@
 ### add_gradient_temperature
 > **说明**  
 > 添加梯度温度  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.add_gradient_temperature(element_id=1,case_name="荷载工况1",group_name="荷载组名1",temperature=10)  
@@ -2307,7 +2162,6 @@
 > **参数**  
 > - case_name:荷载工况名  
 > - element_id:单元编号，支持数或列表  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.remove_gradient_temperature(case_name="工况1",element_id=1)  
@@ -2327,7 +2181,6 @@
 > - t3:温度3  
 > - thick:厚度  
 > - group_name:荷载组名  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.add_beam_section_temperature(element_id=1,case_name="工况1",code_index=1,sec_type=1,t1=-4.2,t2=-1)  
@@ -2340,7 +2193,6 @@
 > **参数**  
 > - case_name:荷载工况名  
 > - element_id:单元编号，支持数或列表  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.remove_beam_section_temperature(case_name="工况1",element_id=1)  
@@ -2356,7 +2208,6 @@
 > - temperature:温差  
 > - index:指数  
 > - group_name:荷载组名  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.add_index_temperature(element_id=1,case_name="工况1",temperature=20,index=2)  
@@ -2369,7 +2220,6 @@
 > **参数**  
 > - case_name:荷载工况名  
 > - element_id:单元编号，支持数或列表  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.remove_index_temperature(case_name="工况1",element_id=1)  
@@ -2384,7 +2234,6 @@
 > - case_name:荷载  
 > - temperature:温差，最终温度于初始温度之差  
 > - group_name:荷载组名  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.add_top_plate_temperature(element_id=1,case_name="工况1",temperature=40,group_name="默认荷载组")  
@@ -2397,7 +2246,6 @@
 > **参数**  
 > - case_name:荷载工况名  
 > - element_id:单元编号，支持数或列表  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.remove_top_plate_temperature(case_name="荷载工况1",element_id=1)  
@@ -2413,7 +2261,6 @@
 > - group_name:指定荷载组,后续升级开放指定荷载组删除功能  
 > - orientation: 1-局部坐标z 2-局部坐标y  
 > - temperature_data:自定义数据[(参考位置1-顶 2-底,高度,温度)...]  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.add_custom_temperature(case_name="荷载工况1",element_id=1,orientation=1,temperature_data=[(1,1,20),(1,2,10)])  
@@ -2426,7 +2273,6 @@
 > **参数**  
 > - case_name:荷载工况名  
 > - element_id:单元编号，支持数或列表  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.remove_custom_temperature(case_name="工况1",element_id=1)  
@@ -2442,7 +2288,6 @@
 > - case_name:荷载工况名  
 > - load_info:荷载信息列表 [Fx,Fy,Fz,Mx,My,Mz]  
 > - group_name:荷载组名  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.add_nodal_force(case_name="荷载工况1",node_id=1,load_info=[1,1,1,1,1,1],group_name="默认结构组")  
@@ -2456,7 +2301,6 @@
 > - case_name:荷载工况名  
 > - node_id:节点编号  
 > - group_name:指定荷载组  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.remove_nodal_force(case_name="荷载工况1",node_id=1,group_name="默认荷载组")  
@@ -2471,7 +2315,6 @@
 > - case_name:荷载工况名  
 > - load_info:节点位移列表 [Dx,Dy,Dz,Rx,Ry,Rz]  
 > - group_name:荷载组名  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.add_node_displacement(case_name="荷载工况1",node_id=1,load_info=(1,0,0,0,0,0),group_name="默认荷载组")  
@@ -2486,7 +2329,6 @@
 > - node_id:节点编号,支持数或列表  
 > - case_name:荷载工况名  
 > - group_name:指定荷载组  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.remove_nodal_displacement(case_name="荷载工况1",node_id=1,group_name="默认荷载组")  
@@ -2507,7 +2349,6 @@
 > - group_name:荷载组名  
 > - load_bias:偏心荷载 (是否偏心,0-中心 1-偏心,偏心坐标系-int,偏心距离)  
 > - projected:荷载是否投影  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.add_beam_element_load(case_name="荷载工况1",element_id=1,load_type=1,list_x=[0.1,0.5,0.8],list_load=[100,100,100])  
@@ -2523,7 +2364,6 @@
 > - case_name:荷载工况名  
 > - load_type:荷载类型 (1-集中力   2-集中弯矩  3-分布力   4-分布弯矩)  
 > - group_name:荷载组名称  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.remove_beam_element_load(case_name="工况1",element_id=1,load_type=1,group_name="默认荷载组")  
@@ -2539,7 +2379,6 @@
 > - tension:初始拉力  
 > - tension_type:张拉类型  0-增量 1-全量  
 > - group_name:荷载组名  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.add_initial_tension_load(element_id=1,case_name="工况1",tension=100,tension_type=1)  
@@ -2553,7 +2392,6 @@
 > - element_id:单元编号支持数或列表  
 > - case_name:荷载工况名  
 > - group_name:荷载组名  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.remove_initial_tension_load(case_name="工况1",element_id=1, group_name="默认荷载组")  
@@ -2569,7 +2407,6 @@
 > - length:长度  
 > - tension_type:张拉类型  0-增量 1-全量  
 > - group_name:荷载组名  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.add_cable_length_load(element_id=1,case_name="工况1",length=1,tension_type=1)  
@@ -2583,7 +2420,6 @@
 > - element_id:单元号支持数或列表  
 > - case_name:荷载工况名  
 > - group_name:荷载组名  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.remove_cable_length_load(case_name="工况1",element_id=1, group_name= "默认荷载组")  
@@ -2602,7 +2438,6 @@
 > - group_name:荷载组名  
 > - list_load:荷载列表  
 > - list_xy:荷载位置信息 [IJ方向绝对距离x,IL方向绝对距离y]  (仅集中荷载需要)  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.add_plate_element_load(element_id=1,case_name="工况1",load_type=1,group_name="默认荷载组",list_load=[1000],list_xy=(0.2,0.5))  
@@ -2617,7 +2452,6 @@
 > - case_name:荷载工况名  
 > - load_type: 板单元类型 1集中力   2-集中弯矩  3-分布线力  4-分布线弯矩  5-分布面力  6-分布面弯矩  
 > - group_name:荷载组名  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.remove_plate_element_load(case_name="工况1",element_id=1,load_type=1,group_name="默认荷载组")  
@@ -2635,7 +2469,6 @@
 > - copy_x:复制到x轴距离，与UI一致，支持3@2形式字符串，逗号分隔  
 > - copy_y:复制到y轴距离，与UI一致，支持3@2形式字符串，逗号分隔  
 > - describe:描述  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.add_plane_load_type(name="荷载类型1",load_type=1,point_list=[[1,0,10],[1,1,10],[1,2,10]])  
@@ -2656,7 +2489,6 @@
 > - plate_ids:指定板单元。默认时为全部板单元  
 > - coord_system:描述  
 > - group_name:描述  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.add_plane_load(index=1,case_name="工况1",type_name="荷载类型1",point1=(0,0,0),  
@@ -2676,7 +2508,6 @@
 > - copy_x:复制到x轴距离，与UI一致，支持3@2形式字符串，逗号分隔  
 > - copy_y:复制到y轴距离，与UI一致，支持3@2形式字符串，逗号分隔  
 > - describe:描述  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.update_plane_load_type(name="荷载类型1",load_type=1,point_list=[[1,0,10],[1,1,10],[1,2,10]])  
@@ -2689,7 +2520,6 @@
 > 根据荷载编号删除分配面荷载  
 > **参数**  
 > - index: 指定荷载编号，默认则删除所有分配面荷载  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.remove_plane_load()  
@@ -2702,7 +2532,6 @@
 > 删除分配面荷载类型  
 > **参数**  
 > - name: 指定荷载类型，默认则删除所有分配面荷载  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.remove_plane_load_type("类型1")  
@@ -2717,7 +2546,6 @@
 > - name: 沉降组名  
 > - sink: 沉降值  
 > - node_ids: 节点编号，支持数或列表  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.add_sink_group(name="沉降1",sink=0.1,node_ids=[1,2,3])  
@@ -2732,7 +2560,6 @@
 > - new_name: 新沉降组名,默认不修改  
 > - sink: 沉降值  
 > - node_ids: 节点编号，支持数或列表  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.update_sink_group(name="沉降1",sink=0.1,node_ids=[1,2,3])  
@@ -2744,7 +2571,6 @@
 > 按照名称删除沉降组  
 > **参数**  
 > - name:沉降组名,默认删除所有沉降组  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.remove_sink_group()  
@@ -2758,7 +2584,6 @@
 > **参数**  
 > - name:荷载工况名  
 > - sink_groups:沉降组名，支持字符串或列表  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.add_sink_case(name="沉降工况1",sink_groups=["沉降1","沉降2"])  
@@ -2772,7 +2597,6 @@
 > - name:荷载工况名  
 > - new_name: 新沉降组名,默认不修改  
 > - sink_groups:沉降组名，支持字符串或列表  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.update_sink_case(name="沉降工况1",sink_groups=["沉降1","沉降2"])  
@@ -2784,7 +2608,6 @@
 > 按照名称删除沉降工况,不输入名称时默认删除所有沉降工况  
 > **参数**  
 > - name:沉降工况名  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.remove_sink_case()  
@@ -2797,7 +2620,6 @@
 > 添加并发反力组  
 > **参数**  
 > - names: 结构组名称集合  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.add_concurrent_reaction(names=["默认结构组"])  
@@ -2808,7 +2630,6 @@
 > **说明**  
 > 删除所有并发反力组  
 > **参数**  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.remove_concurrent_reaction()  
@@ -2820,7 +2641,6 @@
 > 创建并发内力组  
 > **参数**  
 > - names: 结构组名称集合  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.add_concurrent_force(names=["默认结构组"])  
@@ -2831,7 +2651,6 @@
 > **说明**  
 > 删除所有并发内力组  
 > **参数**  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.remove_concurrent_force()  
@@ -2846,7 +2665,6 @@
 > - case_type:荷载工况类型  
 > _"施工阶段荷载", "恒载", "活载", "制动力", "风荷载","体系温度荷载","梯度温度荷载",  
 > _"长轨伸缩挠曲力荷载", "脱轨荷载", "船舶撞击荷载","汽车撞击荷载","长轨断轨力荷载", "用户定义荷载"  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.add_load_case(name="工况1",case_type="施工阶段荷载")  
@@ -2859,7 +2677,6 @@
 > **参数**  
 > - index:荷载编号  
 > - name:荷载名  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.remove_load_case(index=1)  
@@ -2877,7 +2694,6 @@
 > - case_type:荷载工况类型  
 > _"施工阶段荷载", "恒载", "活载", "制动力", "风荷载","体系温度荷载","梯度温度荷载",  
 > _"长轨伸缩挠曲力荷载", "脱轨荷载", "船舶撞击荷载","汽车撞击荷载","长轨断轨力荷载", "用户定义荷载"  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.add_load_case(name="工况1",case_type="施工阶段荷载")  
@@ -2889,7 +2705,6 @@
 > 根据荷载组名称添加荷载组  
 > **参数**  
 > - name: 荷载组名称  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.add_load_group(name="荷载组1")  
@@ -2901,7 +2716,6 @@
 > 根据荷载组名称删除荷载组,参数为默认时删除所有荷载组  
 > **参数**  
 > - name: 荷载组名称  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.remove_load_group(name="荷载组1")  
@@ -2914,7 +2728,6 @@
 > **参数**  
 > - name: 荷载组名称  
 > - new_name: 荷载组名称  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.update_load_group(name="荷载组1",new_name="荷载组2")  
@@ -2941,7 +2754,6 @@
 > _时间 0-开始 1-结束  
 > - temp_loads:临时荷载信息 [荷载组1，荷载组2,..]  
 > - index:施工阶段插入位置,从0开始,默认添加到最后  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.add_construction_stage(name="施工阶段1",duration=5,active_structures=[("结构组1",5,1,1),("结构组2",5,1,1)],  
@@ -2968,7 +2780,6 @@
 > - delete_loads:钝化荷载组信息 [(荷载组1,时间),...]  
 > _时间 0-开始 1-结束  
 > - temp_loads:临时荷载信息 [荷载组1，荷载组2,..]  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.update_construction_stage(name="施工阶段1",duration=5,active_structures=[("结构组1",5,1,1),("结构组2",5,1,1)],  
@@ -2982,7 +2793,6 @@
 > **参数**  
 > - stage_id:修改施工阶段编号  
 > - target_id:目标施工阶段编号  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.update_construction_stage_id([1,2],3)  
@@ -2996,7 +2806,6 @@
 > - name:施工阶段信息  
 > - structure_group_name:结构组名  
 > - weight_stage_id: 计自重阶段号 (0-不计自重,1-本阶段 n-第n阶段)  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.update_weight_stage(name="施工阶段1",structure_group_name="默认结构组",weight_stage_id=1)  
@@ -3008,7 +2817,6 @@
 > 更新施工阶段安装方式  
 > **参数**  
 > - setting_type:安装方式 (1-接线法 2-无应力法 3-变形法 4-切线法)  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.update_all_stage_setting_type(setting_type=1)  
@@ -3020,7 +2828,6 @@
 > 按照施工阶段名删除施工阶段,默认删除所有施工阶段  
 > **参数**  
 > - name:所删除施工阶段名称  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.remove_construction_stage(name="施工阶段1")  
@@ -3037,7 +2844,6 @@
 > - stage_name:结合阶段名  
 > - age:材龄  
 > - weight_type:辅材计自重方式 0-由主材承担  1-由整体承担 2-不计辅材自重  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.add_section_connection_stage(name="联合阶段",sec_id=1,ele_id=[2,3,4,5],stage_name="施工阶段1")  
@@ -3055,7 +2861,6 @@
 > - stage_name:结合阶段名  
 > - age:材龄  
 > - weight_type:辅材计自重方式 0-由主材承担  1-由整体承担 2-不计辅材自重  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.update_section_connection_stage(name="联合阶段",sec_id=1,ele_id=[2,3,4,5],stage_name="施工阶段1")  
@@ -3067,7 +2872,6 @@
 > 删除施工阶段联合截面  
 > **参数**  
 > - name:名称  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.remove_section_connection_stage(name="联合阶段")  
@@ -3080,7 +2884,6 @@
 > **参数**  
 > - ele_id:单元号  
 > - name:联合阶段名  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.add_element_to_connection_stage([1,2,3,4],"联合阶段")  
@@ -3098,7 +2901,6 @@
 > - combine_info:荷载组合信息 [(荷载工况类型,工况名,系数)...] 工况类型如下  
 > _"ST"-静力荷载工况  "CS"-施工阶段荷载工况  "CB"-荷载组合  
 > _"MV"-移动荷载工况  "SM"-沉降荷载工况_ "RS"-反应谱工况  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.add_load_combine(name="荷载组合1",combine_type=1,describe="无",combine_info=[("CS","合计值",1),("CS","恒载",1)])  
@@ -3116,7 +2918,6 @@
 > - combine_info:荷载组合信息 [(荷载工况类型,工况名,系数)...] 工况类型如下  
 > _"ST"-静力荷载工况  "CS"-施工阶段荷载工况  "CB"-荷载组合  
 > _"MV"-移动荷载工况  "SM"-沉降荷载工况  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.update_load_combine(name="荷载组合1",combine_type=1,describe="无",combine_info=[("CS","合计值",1),("CS","恒载",1)])  
@@ -3128,7 +2929,6 @@
 > 删除荷载组合  
 > **参数**  
 > - name:指定删除荷载组合名，默认时则删除所有荷载组合  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > mdb.remove_load_combine(name="荷载组合1")  
@@ -3142,7 +2942,6 @@
 > 设置节点号显示  
 > **参数**  
 > - show_id:是否打开节点号显示  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > odb.display_node_id()  
@@ -3155,7 +2954,6 @@
 > 设置单元号显示  
 > **参数**  
 > - show_id:是否打开单元号显示  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > odb.display_element_id()  
@@ -3171,7 +2969,6 @@
 > - focus_point: 相机焦点  
 > - camera_rotate:相机绕XYZ旋转角度  
 > - scale: 缩放系数  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > odb.set_view_camera(camera_point=(-100,-100,100),focus_point=(0,0,0))  
@@ -3186,7 +2983,6 @@
 > - horizontal_degree:水平向旋转角度  
 > - vertical_degree:竖向旋转角度  
 > - scale:缩放系数  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > odb.set_view_direction(direction=1,scale=1.2)  
@@ -3199,7 +2995,6 @@
 > **参数**  
 > - node_ids: 节点集合  
 > - element_ids: 单元集合  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > odb.activate_structure(node_ids=[1,2,3],element_ids=[1,2,3])  
@@ -3212,7 +3007,6 @@
 > **参数**  
 > - unit_force: 支持 N KN TONF KIPS LBF  
 > - unit_length: 支持 M MM CM IN FT  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > odb.set_unit(unit_force="N",unit_length="M")  
@@ -3223,7 +3017,6 @@
 > **说明**  
 > 删除当前所有显示,包括边界荷载钢束等全部显示  
 > **参数**  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > odb.remove_display()  
@@ -3235,7 +3028,6 @@
 > 保存当前模型窗口图形信息  
 > **参数**  
 > - file_path: 文件全路径  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > odb.save_png(file_path=r"D:\\QT\\aa.png")  
@@ -3247,7 +3039,6 @@
 > 消隐设置开关  
 > **参数**  
 > - flag: 默认设置打开消隐  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > odb.set_render(flag=True)  
@@ -3259,7 +3050,6 @@
 > 消隐设置开关  
 > **参数**  
 > - stage: 施工阶段名称或施工阶段号  0-基本  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > odb.change_construct_stage(0)  
@@ -3277,7 +3067,6 @@
 > - result_kind: 施工阶段数据的类型 1-合计 2-收缩徐变效应 3-预应力效应 4-恒载  
 > - increment_type: 1-全量    2-增量  
 > - case_name: 运营阶段所需荷载工况名  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > odb.get_element_stress(element_id=1,stage_id=1)  
@@ -3295,7 +3084,6 @@
 > - result_kind: 施工阶段数据的类型 1-合计 2-收缩徐变效应 3-预应力效应 4-恒载  
 > - increment_type: 1-全量    2-增量  
 > - case_name: 运营阶段所需荷载工况名  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > odb.get_element_force(element_id=1,stage_id=1)  
@@ -3313,7 +3101,6 @@
 > - result_kind: 施工阶段数据的类型 1-合计 2-收缩徐变效应 3-预应力效应 4-恒载  
 > - increment_type: 1-全量    2-增量  
 > - case_name: 运营阶段所需荷载工况名  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > odb.get_reaction(node_id=1,stage_id=1)  
@@ -3331,7 +3118,6 @@
 > - result_kind: 施工阶段数据的类型 1-合计 2-收缩徐变效应 3-预应力效应 4-恒载  
 > - increment_type: 1-全量    2-增量  
 > - case_name: 运营阶段所需荷载工况名  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > odb.get_node_displacement(node_id=1,stage_id=1)  
@@ -3346,7 +3132,6 @@
 > **参数**  
 > - node_id:节点号  
 > - case_name:工况号  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > odb.get_self_concurrent_reaction(node_id=1,case_name="工况1_Fx最大")  
@@ -3359,7 +3144,6 @@
 > **参数**  
 > - node_id:节点号  
 > - case_name:工况号  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > odb.get_all_concurrent_reaction(node_id=1,case_name="工况1_Fx最大")  
@@ -3372,7 +3156,6 @@
 > **参数**  
 > - ele_id:单元号  
 > - case_name:工况号  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > odb.get_beam_concurrent_force(ele_id=1,case_name="工况1_Fx最大")  
@@ -3385,7 +3168,6 @@
 > **参数**  
 > - ele_id:单元号  
 > - case_name:工况号  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > odb.get_composite_beam_concurrent_force(ele_id=1,case_name="工况1_Fx最大")  
@@ -3399,7 +3181,6 @@
 > **参数**  
 > - node_id: 节点号  
 > - mode: 模态号  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > odb.get_vibration_node_displacement(node_id=1,mode=1)  
@@ -3411,7 +3192,6 @@
 > 获取周期和频率  
 > **参数**  
 > - mode:模态号  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > odb.get_period_and_frequency(mode=1)  
@@ -3423,7 +3203,6 @@
 > 获取振型参与质量百分比  
 > **参数**  
 > - mode:模态号  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > odb.get_participation_mass(mode=1)  
@@ -3435,7 +3214,6 @@
 > 获取振型参与质量系数  
 > **参数**  
 > - mode:模态号  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > odb.get_participation_factor(mode=1)  
@@ -3460,7 +3238,6 @@
 > - digital_count: 小数点位数  
 > - show_exponential: 指数显示开启  
 > - arrow_scale:箭头大小  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > odb.plot_reaction_result(file_path=r"D:\\图片\\反力图.png",component=0,load_case_name="CQ:成桥(合计)",stage_id=-1)  
@@ -3487,7 +3264,6 @@
 > - digital_count: 小数点位数  
 > - show_exponential: 指数显示开启  
 > - show_pre_deformed: 显示变形前  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > odb.plot_displacement_result(file_path=r"D:\\图片\\变形图.png",component=0,load_case_name="CQ:成桥(合计)",stage_id=-1)  
@@ -3518,7 +3294,6 @@
 > - show_legend: 图例选项卡开启  
 > - show_pre_deformed: 显示变形前  
 > - position: 位置编号 0-始端 1-末端 2-绝对最大 4-全部  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > odb.plot_beam_element_force(file_path=r"D:\\图片\\梁内力.png",component=0,load_case_name="CQ:成桥(合计)",stage_id=-1)  
@@ -3549,7 +3324,6 @@
 > - show_legend: 图例选项卡开启  
 > - show_pre_deformed: 显示变形前  
 > - position: 位置编号 0-始端 1-末端 2-绝对最大 4-全部  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > odb.plot_truss_element_force(file_path=r"D:\\图片\\杆内力.png",load_case_name="CQ:成桥(合计)",stage_id=-1)  
@@ -3577,7 +3351,6 @@
 > - show_exponential: 是否以指数形式显示  
 > - max_min_kind: 最大最小值显示类型  
 > - show_increment: 是否显示增量结果  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > odb.plot_plate_element_force(file_path=r"D:\\图片\\板内力.png",component=0,load_case_name="CQ:成桥(合计)",stage_id=-1)  
@@ -3609,7 +3382,6 @@
 > - show_legend: 图例选项卡开启  
 > - show_pre_deformed: 显示变形前  
 > - position: 位置编号 0-始端 1-末端 2-绝对最大 4-全部  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > odb.plot_composite_beam_force(file_path=r"D:\\图片\\组合梁内力.png",mat_type=0,component=0,load_case_name="CQ:成桥(合计)",stage_id=-1)  
@@ -3640,7 +3412,6 @@
 > - show_legend: 图例选项卡开启  
 > - show_pre_deformed: 显示变形前  
 > - position: 位置编号 0-始端 1-末端 2-绝对最大 4-全部  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > odb.plot_beam_element_stress(file_path=r"D:\\图片\\梁应力.png",show_line_chart=False,component=0,load_case_name="CQ:成桥(合计)",stage_id=-1)  
@@ -3670,7 +3441,6 @@
 > - show_legend: 图例选项卡开启  
 > - show_pre_deformed: 显示变形前  
 > - position: 位置编号 0-始端 1-末端 2-绝对最大 4-全部  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > odb.plot_truss_element_stress(file_path=r"D:\\图片\\杆应力.png",load_case_name="CQ:成桥(合计)",stage_id=-1)  
@@ -3702,7 +3472,6 @@
 > - show_legend: 图例选项卡开启  
 > - show_pre_deformed: 显示变形前  
 > - position: 位置编号 0-始端 1-末端 2-绝对最大 4-全部  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > odb.plot_composite_beam_stress(file_path=r"D:\\图片\\组合梁应力.png",component=0,load_case_name="CQ:成桥(合计)",stage_id=-1)  
@@ -3731,7 +3500,6 @@
 > - max_min_kind: 最大最小值显示类型  
 > - show_increment: 是否显示增量结果  
 > - position: 位置 0-板顶 1-板底 2-绝对值最大  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > odb.plot_plate_element_stress(file_path=r"D:\\图片\\板应力.png",component=0,load_case_name="CQ:成桥(合计)",stage_id=-1)  
@@ -3751,7 +3519,6 @@
 > - digital_count: 小数点位数  
 > - show_exponential: 是否以指数形式显示  
 > - max_min_kind: 最大最小值显示类型  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > odb.plot_vibration_mode(file_path=r"D:\\图片\\自振模态.png",mode=1)  
@@ -3767,7 +3534,6 @@
 > - y: 坐标y  
 > - z: 坐标z  
 > - tolerance:容许范围,默认为1  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > odb.get_element_by_point(0.5,0.5,0.5,tolerance=1)  
@@ -3779,7 +3545,6 @@
 > 获取某一材料相应的单元  
 > **参数**  
 > - name:材料名称  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > odb.get_element_by_material("材料1")  
@@ -3791,7 +3556,6 @@
 > 获取重合节点  
 > **参数**  
 > - round_num: 判断精度，默认小数点后四位  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > odb.get_overlap_nodes()  
@@ -3802,7 +3566,6 @@
 > **说明**  
 > 获取重合节点  
 > **参数**  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > odb.get_overlap_elements()  
@@ -3813,7 +3576,6 @@
 > **说明**  
 > 获取结构组名称  
 > **参数**  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > odb.get_structure_group_names()  
@@ -3824,7 +3586,6 @@
 > **说明**  
 > 获取所有板厚信息  
 > **参数**  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > odb.get_thickness_data(1)  
@@ -3835,7 +3596,6 @@
 > **说明**  
 > 获取所有板厚信息  
 > **参数**  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > odb.get_all_thickness_data()  
@@ -3846,7 +3606,6 @@
 > **说明**  
 > 获取所有截面形状信息  
 > **参数**  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > odb.get_all_section_shape()  
@@ -3858,7 +3617,6 @@
 > 获取截面形状信息  
 > **参数**  
 > - sec_id: 目标截面编号  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > odb.get_section_shape(1)  
@@ -3869,7 +3627,6 @@
 > **说明**  
 > 获取所有截面详细信息,截面特性详见UI自定义特性截面  
 > **参数**  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > odb.get_all_section_data()  
@@ -3881,7 +3638,6 @@
 > 获取截面详细信息,截面特性详见UI自定义特性截面  
 > **参数**  
 > - sec_id: 目标截面编号  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > odb.get_section_data(1)  
@@ -3893,7 +3649,6 @@
 > 获取指定截面特性  
 > **参数**  
 > - index:截面号  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > odb.get_section_property(1)  
@@ -3904,7 +3659,6 @@
 > **说明**  
 > 获取模型所有截面号  
 > **参数**  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > odb.get_section_ids()  
@@ -3919,7 +3673,6 @@
 > - y: 目标点Y轴坐标  
 > - z: 目标点Z轴坐标  
 > - tolerance: 距离容许误差  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > odb.get_node_id(x=1,y=1,z=1)  
@@ -3931,7 +3684,6 @@
 > 获取结构组单元编号  
 > **参数**  
 > - group_name: 结构组名  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > odb.get_group_elements(group_name="默认结构组")  
@@ -3943,7 +3695,6 @@
 > 获取结构组节点编号  
 > **参数**  
 > - group_name: 结构组名  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > odb.get_group_nodes(group_name="默认结构组")  
@@ -3954,7 +3705,6 @@
 > **说明**  
 > 获取节点信息 默认获取所有节点信息  
 > **参数**  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > odb.get_node_data()     # 获取所有节点信息  
@@ -3968,7 +3718,6 @@
 > 获取单元信息  
 > **参数**  
 > - ids:单元号,支持整数或整数型列表,默认为None时获取所有单元信息  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > odb.get_element_data() # 获取所有单元结果  
@@ -3981,7 +3730,6 @@
 > 获取单元类型  
 > **参数**  
 > - ele_id: 单元号  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > odb.get_element_type(ele_id=1) # 获取1号单元类型  
@@ -3993,7 +3741,6 @@
 > 获取梁单元信息  
 > **参数**  
 > - ids: 梁单元号,默认时获取所有梁单元  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > odb.get_beam_element() # 获取所有单元信息  
@@ -4005,7 +3752,6 @@
 > 获取板单元信息  
 > **参数**  
 > - ids: 板单元号,默认时获取所有板单元  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > odb.get_plate_element() # 获取所有单元信息  
@@ -4017,7 +3763,6 @@
 > 获取索单元信息  
 > **参数**  
 > - ids: 索单元号,默认时获取所有索单元  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > odb.get_cable_element() # 获取所有单元信息  
@@ -4029,7 +3774,6 @@
 > 获取杆单元信息  
 > **参数**  
 > - ids: 杆单元号,默认时输出全部杆单元  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > odb.get_link_element() # 获取所有单元信息  
@@ -4040,7 +3784,6 @@
 > **说明**  
 > 获取材料信息  
 > **参数**  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > odb.get_material_data() # 获取所有材料信息  
@@ -4052,7 +3795,6 @@
 > 获取混凝土材料信息  
 > **参数**  
 > - ids: 材料号,默认时输出全部材料  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > odb.get_concrete_material() # 获取所有材料信息  
@@ -4064,7 +3806,6 @@
 > 获取钢材材料信息  
 > **参数**  
 > - ids: 材料号,默认时输出全部材料  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > odb.get_steel_plate_material() # 获取所有钢材材料信息  
@@ -4076,7 +3817,6 @@
 > 获取钢材材料信息  
 > **参数**  
 > - ids: 材料号,默认时输出全部材料  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > odb.get_pre_stress_bar_material() # 获取所有预应力材料信息  
@@ -4088,7 +3828,6 @@
 > 获取钢筋材料信息  
 > **参数**  
 > - ids: 材料号,默认时输出全部材料  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > odb.get_steel_bar_material() # 获取所有钢筋材料信息  
@@ -4100,7 +3839,6 @@
 > 获取自定义材料信息  
 > **参数**  
 > - ids: 材料号,默认时输出全部材料  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > odb.get_user_define_material() # 获取所有自定义材料信息  
@@ -4112,7 +3850,6 @@
 > **说明**  
 > 获取自边界组名称  
 > **参数**  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > odb.get_boundary_group_names()  
@@ -4124,7 +3861,6 @@
 > 获取一般支承信息  
 > **参数**  
 > - group_name:默认输出所有边界组信息  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > odb.get_general_support_data()  
@@ -4136,7 +3872,6 @@
 > 获取弹性连接信息  
 > **参数**  
 > - group_name:默认输出所有边界组信息  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > odb.get_elastic_link_data()  
@@ -4148,7 +3883,6 @@
 > 获取弹性支承信息  
 > **参数**  
 > - group_name:默认输出所有边界组信息  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > odb.get_elastic_support_data()  
@@ -4160,7 +3894,6 @@
 > 获取主从连接信息  
 > **参数**  
 > - group_name:默认输出所有边界组信息  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > odb.get_master_slave_link_data()  
@@ -4171,7 +3904,6 @@
 > **说明**  
 > 获取节点坐标信息  
 > **参数**  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > odb.get_node_local_axis_data()  
@@ -4183,7 +3915,6 @@
 > 获取节点坐标信息  
 > **参数**  
 > - group_name:默认输出所有边界组信息  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > odb.get_beam_constraint_data()  
@@ -4195,7 +3926,6 @@
 > 获取约束方程信息  
 > **参数**  
 > - group_name:默认输出所有边界组信息  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > odb.get_constraint_equation_data()  
@@ -4207,7 +3937,6 @@
 > **说明**  
 > 获取所有施工阶段名称  
 > **参数**  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > odb.get_stage_name()  
@@ -4219,7 +3948,6 @@
 > 获取指定施工阶段单元编号信息  
 > **参数**  
 > - stage_id: 施工阶段编号  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > odb.get_elements_of_stage(stage_id=1)  
@@ -4231,7 +3959,6 @@
 > 获取指定施工阶段节点编号信息  
 > **参数**  
 > - stage_id: 施工阶段编号  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > odb.get_nodes_of_stage(stage_id=1)  
@@ -4243,7 +3970,6 @@
 > 获取施工阶段结构组、边界组、荷载组名集合  
 > **参数**  
 > - stage_id: 施工阶段编号  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > odb.get_groups_of_stage(stage_id=1)  
@@ -4255,7 +3981,6 @@
 > **说明**  
 > 获取荷载工况名  
 > **参数**  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > odb.get_load_case_names()  
@@ -4267,7 +3992,6 @@
 > 获取预应力荷载  
 > **参数**  
 > - case_name: 荷载工况名  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > odb.get_pre_stress_load(case_name="荷载工况1")  
@@ -4278,7 +4002,6 @@
 > **说明**  
 > 获取节点质量  
 > **参数**  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > odb.get_node_mass_data()  
@@ -4290,7 +4013,6 @@
 > 获取节点力荷载  
 > **参数**  
 > - case_name: 荷载工况名  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > odb.get_nodal_force_load(case_name="荷载工况1")  
@@ -4302,7 +4024,6 @@
 > 获取节点位移荷载  
 > **参数**  
 > - case_name: 荷载工况名  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > odb.get_nodal_displacement_load(case_name="荷载工况1")  
@@ -4314,7 +4035,6 @@
 > 获取梁单元荷载  
 > **参数**  
 > - case_name: 荷载工况名  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > odb.get_beam_element_load(case_name="荷载工况1")  
@@ -4326,7 +4046,6 @@
 > 获取梁单元荷载  
 > **参数**  
 > - case_name: 荷载工况名  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > odb.get_beam_element_load(case_name="荷载工况1")  
@@ -4338,7 +4057,6 @@
 > 获取初拉力荷载数据  
 > **参数**  
 > - case_name: 荷载工况名  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > odb.get_initial_tension_load(case_name="荷载工况1")  
@@ -4350,7 +4068,6 @@
 > 获取指定荷载工况的初拉力荷载数据  
 > **参数**  
 > - case_name: 荷载工况名  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > odb.get_cable_length_load(case_name="荷载工况1")  
@@ -4361,7 +4078,6 @@
 > **说明**  
 > 获取制造偏差参数  
 > **参数**  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > odb.get_deviation_parameter()  
@@ -4373,7 +4089,6 @@
 > 获取指定荷载工况的制造偏差荷载  
 > **参数**  
 > - case_name:荷载工况名  
-> 
 > **示例代码**  
 > from qtmodel import*  
 > odb.get_deviation_load(case_name="荷载工况1")  
