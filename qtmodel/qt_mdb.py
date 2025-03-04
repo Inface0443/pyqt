@@ -1643,7 +1643,7 @@ class Mdb:
              dis_w: 宽度方向距离
              dis_h: 高度方向距离
         Example:
-            mdb.add_tapper_section_group(ids=[1,2,3,4],name="变截面组1")
+            mdb.update_tapper_section_group(ids=[1,2,3,4],name="变截面组1")
         Returns: 无
         """
         try:

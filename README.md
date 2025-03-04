@@ -1,4 +1,4 @@
-> 最新版本 V0.6.8 - 2025-03-04 
+> 最新版本 V0.6.9 - 2025-03-04 
 > pip install --upgrade qtmodel -i https://pypi.org/simple
 - 新增部分接口 
 # 建模操作 
@@ -1278,7 +1278,7 @@
 > **示例代码**  
 > ```Python  
 > from qtmodel import *  
-> mdb.add_tapper_section_group(ids=[1,2,3,4],name="变截面组1")  
+> mdb.update_tapper_section_group(ids=[1,2,3,4],name="变截面组1")  
 > ```    
 > **返回**  
 > Returns: 无  
