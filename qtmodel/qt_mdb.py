@@ -648,7 +648,7 @@ class Mdb:
         Returns: 无
         """
         try:
-            qt_model.RenumberNodeId(nodeIds=node_ids, newIds=new_ids)
+            qt_model.RenumberNodes(nodeIds=node_ids, newIds=new_ids)
         except Exception as ex:
             raise Exception(ex)
 
@@ -909,7 +909,7 @@ class Mdb:
         Returns: 无
         """
         try:
-            qt_model.RenumberNodeId(elementIds=ele_ids, newIds=new_ids)
+            qt_model.RenumberElements(elementIds=ele_ids, newIds=new_ids)
         except Exception as ex:
             raise Exception(ex)
 
