@@ -1,4 +1,4 @@
-> 最新版本 V0.6.8 - 2025-02-27 
+> 最新版本 V0.6.8 - 2025-03-04 
 > pip install --upgrade qtmodel -i https://pypi.org/simple
 - 新增部分接口 
 # 建模操作 
@@ -2006,6 +2006,43 @@
 > ```Python  
 > from qtmodel import *  
 > mdb.update_user_vehicle(name="车道荷载",load_type="车道荷载",p=270000,q=10500)  
+> ```    
+> **返回**  
+> Returns: 无  
+ 
+### update_influence_plane
+> **说明**  
+> 添加影响面  
+> **参数**  
+> - name:影响面名称  
+> - new_name:更改后影响面名称，若无更改则默认  
+> - tandem_names:节点纵列名称组  
+> 
+> **示例代码**  
+> ```Python  
+> from qtmodel import *  
+> mdb.update_influence_plane(name="影响面1",tandem_names=["节点纵列1","节点纵列2"])  
+> ```    
+> **返回**  
+> Returns: 无  
+ 
+### update_lane_line
+> **说明**  
+> 添加车道线  
+> **参数**  
+> - name:车道线名称  
+> - new_name:更改后车道名,默认为不更改  
+> - influence_name:影响面名称  
+> - tandem_name:节点纵列名  
+> - offset:偏移  
+> - lane_width:车道宽度  
+> - optimize:是否允许车辆摆动  
+> - direction:0-向前  1-向后  
+> 
+> **示例代码**  
+> ```Python  
+> from qtmodel import *  
+> mdb.update_lane_line(name="车道1",influence_name="影响面1",tandem_name="节点纵列1",offset=0,lane_width=3.1)  
 > ```    
 > **返回**  
 > Returns: 无  

@@ -2245,7 +2245,7 @@ class Mdb:
         Returns: 无
         """
         try:
-            qt_model.AddLaneLine(name, influenceName=influence_name, tandemName=tandem_name, offset=offset, laneWidth=lane_width,
+            qt_model.AddLaneLine(name=name, influenceName=influence_name, tandemName=tandem_name, offset=offset, laneWidth=lane_width,
                                  optimize=optimize, direction=direction)
         except Exception as ex:
             raise Exception(ex)
@@ -2504,6 +2504,48 @@ class Mdb:
             qt_model.UpdateUserVehicle(name=name, newName=new_name, loadType=load_type, p=p, q=q, dis=dis, loadLength=load_length,
                                        num=n, emptyLoad=empty_load, width=width, wheelbase=wheelbase,
                                        minDistance=min_dis, unitForce=unit_force, unitLength=unit_length)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def update_influence_plane(name: str, new_name: str = "", tandem_names: list[str] = None):
+        """
+        添加影响面
+        Args:
+             name:影响面名称
+             new_name:更改后影响面名称，若无更改则默认
+             tandem_names:节点纵列名称组
+        Example:
+            mdb.update_influence_plane(name="影响面1",tandem_names=["节点纵列1","节点纵列2"])
+        Returns: 无
+        """
+        try:
+            qt_model.UpdateInfluencePlane(name=name, newName=new_name, tandemNames=tandem_names)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def update_lane_line(name: str, new_name: str = "", influence_name: str = "", tandem_name: str = "", offset: float = 0, lane_width: float = 0,
+                         optimize: bool = False, direction: int = 0):
+        """
+        添加车道线
+        Args:
+             name:车道线名称
+             new_name:更改后车道名,默认为不更改
+             influence_name:影响面名称
+             tandem_name:节点纵列名
+             offset:偏移
+             lane_width:车道宽度
+             optimize:是否允许车辆摆动
+             direction:0-向前  1-向后
+        Example:
+            mdb.update_lane_line(name="车道1",influence_name="影响面1",tandem_name="节点纵列1",offset=0,lane_width=3.1)
+        Returns: 无
+        """
+        try:
+            qt_model.AddLaneLine(name=name, newName=new_name, influenceName=influence_name, tandemName=tandem_name, offset=offset,
+                                 laneWidth=lane_width,
+                                 optimize=optimize, direction=direction)
         except Exception as ex:
             raise Exception(ex)
 
