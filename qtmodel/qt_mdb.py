@@ -1018,7 +1018,7 @@ class Mdb:
         Returns: 无
         """
         try:
-            if time_parameter is None:  # 默认不修改收缩徐变相关参数
+            if time_parameter is None and code_index < 9:  # 默认不修改收缩徐变相关参数
                 qt_model.AddTimeParameter(id=index, name=name, codeId=code_index)
             elif code_index == 1:  # 公规 JTG 3362-2018
                 if len(time_parameter) != 4:
@@ -1081,7 +1081,7 @@ class Mdb:
         Returns: 无
         """
         try:
-            if time_parameter is None:  # 默认不修改收缩徐变相关参数
+            if time_parameter is None and code_index < 9:  # 默认不修改收缩徐变相关参数
                 qt_model.UpdateTimeParameter(name=name, newName=new_name, codeId=code_index)
             elif code_index == 1:  # 公规 JTG 3362-2018
                 if len(time_parameter) != 4:
@@ -1123,7 +1123,7 @@ class Mdb:
                 if len(time_parameter) != 2:
                     raise Exception("操作错误,time_parameter数据无效!")
                 qt_model.UpdateTimeParameter(name=name, newName=new_name, codeId=code_index, rh=time_parameter[0], bsc=time_parameter[1])
-            elif code_index == 9:  # 自定义收缩徐变
+            elif code_index >= 9:  # 自定义收缩徐变
                 qt_model.UpdateTimeParameter(name=name, newName=new_name, codeId=code_index, creepData=creep_data, shrinkData=shrink_data)
         except Exception as ex:
             raise Exception(ex)
