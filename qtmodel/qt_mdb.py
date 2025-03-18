@@ -1002,11 +1002,12 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def add_time_parameter(name: str = "", code_index: int = 1, time_parameter: list[float] = None,
+    def add_time_parameter(index: int = -1, name: str = "", code_index: int = 1, time_parameter: list[float] = None,
                            creep_data: list[tuple[str, float]] = None, shrink_data: str = ""):
         """
         添加收缩徐变材料
         Args:
+            index:材料编号,默认为最大Id+1
             name: 收缩徐变名
             code_index: 收缩徐变规范索引
             time_parameter: 对应规范的收缩徐变参数列表,默认不改变规范中信息 (可选参数)
@@ -1018,48 +1019,48 @@ class Mdb:
         """
         try:
             if time_parameter is None:  # 默认不修改收缩徐变相关参数
-                qt_model.AddTimeParameter(name=name, codeId=code_index)
+                qt_model.AddTimeParameter(id=index, name=name, codeId=code_index)
             elif code_index == 1:  # 公规 JTG 3362-2018
                 if len(time_parameter) != 4:
                     raise Exception("操作错误,time_parameter数据无效!")
-                qt_model.AddTimeParameter(name=name, codeId=code_index, rh=time_parameter[0], bsc=time_parameter[1],
+                qt_model.AddTimeParameter(id=index, name=name, codeId=code_index, rh=time_parameter[0], bsc=time_parameter[1],
                                           timeStart=time_parameter[2], flyashCotent=time_parameter[3])
             elif code_index == 2:  # 公规 JTG D62-2004
                 if len(time_parameter) != 3:
                     raise Exception("操作错误,time_parameter数据无效!")
-                qt_model.AddTimeParameter(name=name, codeId=code_index, rh=time_parameter[0], bsc=time_parameter[1],
+                qt_model.AddTimeParameter(id=index, name=name, codeId=code_index, rh=time_parameter[0], bsc=time_parameter[1],
                                           timeStart=time_parameter[2])
             elif code_index == 3:  # 公规 JTJ 023-85
                 if len(time_parameter) != 4:
                     raise Exception("操作错误,time_parameter数据无效!")
-                qt_model.AddTimeParameter(name=name, codeId=code_index, creepBaseF1=time_parameter[0], creepNamda=time_parameter[1],
+                qt_model.AddTimeParameter(id=index, name=name, codeId=code_index, creepBaseF1=time_parameter[0], creepNamda=time_parameter[1],
                                           shrinkSpeek=time_parameter[2], shrinkEnd=time_parameter[3])
             elif code_index == 4:  # 铁规 TB 10092-2017
                 if len(time_parameter) != 5:
                     raise Exception("操作错误,time_parameter数据无效!")
-                qt_model.AddTimeParameter(name=name, codeId=code_index, rh=time_parameter[0], creepBaseF1=time_parameter[1],
+                qt_model.AddTimeParameter(id=index, name=name, codeId=code_index, rh=time_parameter[0], creepBaseF1=time_parameter[1],
                                           creepNamda=time_parameter[2], shrinkSpeek=time_parameter[3], shrinkEnd=time_parameter[4])
             elif code_index == 5:  # 地铁 GB 50157-2013
                 if len(time_parameter) != 3:
                     raise Exception("操作错误,time_parameter数据无效!")
-                qt_model.AddTimeParameter(name=name, codeId=code_index, rh=time_parameter[0], shrinkSpeek=time_parameter[1],
+                qt_model.AddTimeParameter(id=index, name=name, codeId=code_index, rh=time_parameter[0], shrinkSpeek=time_parameter[1],
                                           shrinkEnd=time_parameter[2])
             elif code_index == 6:  # 老化理论
                 if len(time_parameter) != 4:
                     raise Exception("操作错误,time_parameter数据无效!")
-                qt_model.AddTimeParameter(name=name, codeId=code_index, creepEnd=time_parameter[0], creepSpeek=time_parameter[1],
+                qt_model.AddTimeParameter(id=index, name=name, codeId=code_index, creepEnd=time_parameter[0], creepSpeek=time_parameter[1],
                                           shrinkSpeek=time_parameter[2], shrinkEnd=time_parameter[3])
             elif code_index == 7:  # BS5400_4_1990
                 if len(time_parameter) != 4:
                     raise Exception("操作错误,time_parameter数据无效!")
-                qt_model.AddTimeParameter(name=name, codeId=code_index, rh=time_parameter[0], creepBaseF1=time_parameter[1],
+                qt_model.AddTimeParameter(id=index, name=name, codeId=code_index, rh=time_parameter[0], creepBaseF1=time_parameter[1],
                                           flyashCotent=time_parameter[2], bsc=time_parameter[3])
             elif code_index == 8:  # AASHTO_LRFD_2017
                 if len(time_parameter) != 2:
                     raise Exception("操作错误,time_parameter数据无效!")
-                qt_model.AddTimeParameter(name=name, codeId=code_index, rh=time_parameter[0], bsc=time_parameter[1])
-            elif code_index == 9:  # 自定义收缩徐变
-                qt_model.AddTimeParameter(name=name, codeId=code_index, creepData=creep_data, shrinkData=shrink_data)
+                qt_model.AddTimeParameter(id=index, name=name, codeId=code_index, rh=time_parameter[0], bsc=time_parameter[1])
+            elif code_index >= 9:  # 自定义收缩徐变
+                qt_model.AddTimeParameter(id=index, name=name, codeId=code_index, creepData=creep_data, shrinkData=shrink_data)
         except Exception as ex:
             raise Exception(ex)
 
