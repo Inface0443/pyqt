@@ -356,7 +356,7 @@ class Odb:
         """
         try:
             res_dict = qt_model.GetSelfConcurrentReaction(nodeId=node_id, loadCaseName=case_name)
-            return json.dumps(res_dict)
+            return res_dict
         except Exception as ex:
             raise Exception(ex)
 
@@ -373,7 +373,7 @@ class Odb:
         """
         try:
             res_dict = qt_model.GetAllConcurrentReaction(nodeId=node_id, loadCaseName=case_name)
-            return json.dumps(res_dict)
+            return res_dict
         except Exception as ex:
             raise Exception(ex)
 
@@ -390,7 +390,7 @@ class Odb:
         """
         try:
             res_dict = qt_model.GetBeamConcurrentForce(eleId=ele_id, loadCaseName=case_name)
-            return json.dumps(res_dict)
+            return res_dict
         except Exception as ex:
             raise Exception(ex)
 
@@ -407,7 +407,7 @@ class Odb:
         """
         try:
             res_dict = qt_model.GetCompositeBeamConcurrentForce(eleId=ele_id, loadCaseName=case_name)
-            return json.dumps(res_dict)
+            return res_dict
         except Exception as ex:
             raise Exception(ex)
 
@@ -448,7 +448,7 @@ class Odb:
         """
         try:
             res_dict = qt_model.GetPeriodAndFrequency(mode=mode)
-            return json.dumps(res_dict)
+            return res_dict
         except Exception as ex:
             raise Exception(ex)
 
@@ -464,7 +464,7 @@ class Odb:
         """
         try:
             res_dict = qt_model.GetParticipationMass(mode=mode)
-            return json.dumps(res_dict)
+            return res_dict
         except Exception as ex:
             raise Exception(ex)
 
@@ -480,7 +480,7 @@ class Odb:
         """
         try:
             res_dict = qt_model.GetParticipationFactor(mode=mode)
-            return json.dumps(res_dict)
+            return res_dict
         except Exception as ex:
             raise Exception(ex)
 
@@ -972,7 +972,7 @@ class Odb:
         Returns: json字符串,包含信息为list[int]
         """
         try:
-            qt_result = qt_model.GetElementByPoint(x=x, y=y, z=z, tolerance=tolerance)
+            qt_result = qt_model.GetElementsByPoint(x=x, y=y, z=z, tolerance=tolerance)
             result = list(qt_result)
             return json.dumps(result)
         except Exception as ex:
@@ -989,7 +989,7 @@ class Odb:
         Returns: json字符串,包含信息为list[int]
         """
         try:
-            qt_result = qt_model.GetElementByMaterial(name=name)
+            qt_result = qt_model.GetElementsByMaterial(name=name)
             result = list(qt_result)
             return json.dumps(result)
         except Exception as ex:
