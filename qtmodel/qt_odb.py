@@ -1572,7 +1572,7 @@ class Odb:
             group_name:默认输出所有边界组信息
         Example:
             odb.get_elastic_link_data()
-        Returns: json字符串,包含信息为list[dict]
+        Returns: json字符串,包含信息为list[dict]或 dict
         """
         try:
             res_list = []
@@ -1587,7 +1587,7 @@ class Odb:
                                                     start_id=data.StartNode.Id, end_id=data.EndNode.Id, beta_angle=data.Beta,
                                                     boundary_info=(data.Kx, data.Ky, data.Kz, data.Krx, data.Kry, data.Krz),
                                                     group_name=group, dis_ratio=data.DistanceRatio, kx=data.Kx)))
-            return json.dumps(res_list)
+            return json.dumps(res_list) if len(res_list) > 1 else res_list[0]
         except Exception as ex:
             raise Exception(ex)
 
@@ -1599,7 +1599,7 @@ class Odb:
             group_name:默认输出所有边界组信息
         Example:
             odb.get_elastic_support_data()
-        Returns: json字符串,包含信息为list[dict]
+        Returns: json字符串,包含信息为list[dict]或 dict
         """
         try:
             res_list = []
@@ -1613,7 +1613,7 @@ class Odb:
                     res_list.append(str(ElasticSupport(support_id=data.Id, node_id=data.Node.Id, support_type=int(data.Type) + 1,
                                                        boundary_info=(data.Kx, data.Ky, data.Kz, data.Krx, data.Kry, data.Krz),
                                                        group_name=group, node_system=int(data.NodalCoordinateSystem))))
-            return json.dumps(res_list)
+            return json.dumps(res_list) if len(res_list) > 1 else res_list[0]
         except Exception as ex:
             raise Exception(ex)
 
@@ -1625,7 +1625,7 @@ class Odb:
             group_name:默认输出所有边界组信息
         Example:
             odb.get_master_slave_link_data()
-        Returns: json字符串,包含信息为list[dict]
+        Returns: json字符串,包含信息为list[dict]或 dict
         """
         try:
             res_list = []
@@ -1640,7 +1640,7 @@ class Odb:
                                                         boundary_info=(data.IsFixedX, data.IsFixedY, data.IsFixedZ,
                                                                        data.IsFixedRx, data.IsFixedRy, data.IsFixedRZ),
                                                         group_name=group)))
-            return json.dumps(res_list)
+            return json.dumps(res_list) if len(res_list) > 1 else res_list[0]
         except Exception as ex:
             raise Exception(ex)
 
@@ -1672,7 +1672,7 @@ class Odb:
                group_name:默认输出所有边界组信息
            Example:
                odb.get_beam_constraint_data()
-           Returns: json字符串,包含信息为list[dict]
+           Returns: json字符串,包含信息为list[dict]或 dict
         """
         try:
             res_list = []
@@ -1688,7 +1688,7 @@ class Odb:
                     info_j = (
                         not data.IsJFreedX, not data.IsJFreedY, not data.IsJFreedZ, not data.IsJFreedRx, not data.IsJFreedRy, not data.IsJFreedRZ)
                     res_list.append(str(BeamConstraint(constraint_id=data.Id, beam_id=data.Beam.Id, info_i=info_i, info_j=info_j, group_name=group)))
-            return json.dumps(res_list)
+            return json.dumps(res_list) if len(res_list) > 1 else res_list[0]
         except Exception as ex:
             raise Exception(ex)
 
@@ -1700,7 +1700,7 @@ class Odb:
              group_name:默认输出所有边界组信息
          Example:
              odb.get_constraint_equation_data()
-         Returns: json字符串,包含信息为list[dict]
+         Returns: json字符串,包含信息为list[dict]或 dict
          """
         try:
             res_list = []
@@ -1717,7 +1717,7 @@ class Odb:
                     res_list.append(
                         str(ConstraintEquation(data.Id, name=data.Name, sec_node=data.SecondaryNode.Id, sec_dof=int(data.SecondaryDof) + 1,
                                                master_info=master_info, group_name=group)))
-            return json.dumps(res_list)
+            return json.dumps(res_list) if len(res_list) > 1 else res_list[0]
         except Exception as ex:
             raise Exception(ex)
 
