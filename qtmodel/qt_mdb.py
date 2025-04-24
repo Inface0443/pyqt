@@ -2700,7 +2700,8 @@ class Mdb:
         try:
             if info_x is None and info_y is None and info_z is None:
                 raise Exception("添加反应谱函数错误,无反应谱分项信息")
-            qt_model.AddResponseSpectrumCase(name=name, description=description, kind=kind, infoX=info_x, info_y=info_y, info_z=info_z)
+            qt_model.AddResponseSpectrumCase(name=name, description=description, kind=kind,
+                                             infoX=info_x, infoY=info_y, infoZ=info_z)
         except Exception as ex:
             raise Exception(ex)
 
