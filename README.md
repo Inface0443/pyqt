@@ -1,4 +1,4 @@
-> 最新版本 V0.6.10 - 2025-03-18 
+> 最新版本 V0.6.11 - 2025-04-24 
 > pip install --upgrade qtmodel -i https://pypi.org/simple
 - 新增部分接口 
 # 建模操作 
@@ -2248,6 +2248,8 @@ Returns: 无
 > tension:初始拉力  
 > tension_type:张拉类型  0-增量 1-全量  
 > group_name:荷载组名  
+> application_type:计算方式 1-体外力 2-体内力 3-转为索长张拉  
+> stiffness:索刚度参与系数  
 ```Python
 # 示例代码
 from qtmodel import *
@@ -3642,7 +3644,7 @@ Returns: json字符串,包含信息为list[dict]
 from qtmodel import *
 odb.get_elastic_link_data()
 ```  
-Returns: json字符串,包含信息为list[dict]
+Returns: json字符串,包含信息为list[dict]或 dict
 ### get_elastic_support_data
 获取弹性支承信息
 > 参数:  
@@ -3652,7 +3654,7 @@ Returns: json字符串,包含信息为list[dict]
 from qtmodel import *
 odb.get_elastic_support_data()
 ```  
-Returns: json字符串,包含信息为list[dict]
+Returns: json字符串,包含信息为list[dict]或 dict
 ### get_master_slave_link_data
 获取主从连接信息
 > 参数:  
@@ -3662,7 +3664,7 @@ Returns: json字符串,包含信息为list[dict]
 from qtmodel import *
 odb.get_master_slave_link_data()
 ```  
-Returns: json字符串,包含信息为list[dict]
+Returns: json字符串,包含信息为list[dict]或 dict
 ### get_node_local_axis_data
 获取节点坐标信息
 > 参数:  
@@ -3681,7 +3683,7 @@ Returns: json字符串,包含信息为list[dict]
 from qtmodel import *
 odb.get_beam_constraint_data()
 ```  
-Returns: json字符串,包含信息为list[dict]
+Returns: json字符串,包含信息为list[dict]或 dict
 ### get_constraint_equation_data
 获取约束方程信息
 > 参数:  
@@ -3691,7 +3693,7 @@ Returns: json字符串,包含信息为list[dict]
 from qtmodel import *
 odb.get_constraint_equation_data()
 ```  
-Returns: json字符串,包含信息为list[dict]
+Returns: json字符串,包含信息为list[dict]或 dict
 ##  获取施工阶段信息
 ### get_stage_name
 获取所有施工阶段名称

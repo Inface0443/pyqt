@@ -3573,7 +3573,7 @@ class Mdb:
 
     @staticmethod
     def add_initial_tension_load(element_id: (Union[int, List[int]]) = 1, case_name: str = "", group_name: str = "默认荷载组", tension: float = 0,
-                                 tension_type: int = 1):
+                                 tension_type: int = 1,application_type:int=1,stiffness:float=0):
         """
         添加初始拉力
         Args:
@@ -3582,12 +3582,15 @@ class Mdb:
              tension:初始拉力
              tension_type:张拉类型  0-增量 1-全量
              group_name:荷载组名
+             application_type:计算方式 1-体外力 2-体内力 3-转为索长张拉
+             stiffness:索刚度参与系数
         Example:
             mdb.add_initial_tension_load(element_id=1,case_name="工况1",tension=100,tension_type=1)
         Returns: 无
         """
         try:
-            qt_model.AddInitialTensionLoad(elementId=element_id, caseName=case_name, tension=tension, tensionType=tension_type, groupName=group_name)
+            qt_model.AddInitialTensionLoad(elementId=element_id, caseName=case_name, tension=tension, applicationType=application_type,
+                                           stiffness=stiffness,tensionType=tension_type, groupName=group_name)
         except Exception as ex:
             raise Exception(ex)
 
