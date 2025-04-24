@@ -1453,7 +1453,7 @@ class Mdb:
         try:
             if sec_type == "混凝土箱梁":
                 qt_model.AddSection(id=index, name=name, secType=sec_type, secInfo=sec_info, charmInfo=charm_info,
-                                    symmetry=symmetry, boxNum=box_num, boxHeight=box_height, charmInfoR=charm_right, secInfoR=sec_right,
+                                    symmetry=symmetry, boxNum=box_num, boxHeight=box_height, charmRight=charm_right, secRight=sec_right,
                                     biasType=bias_type, centerType=center_type, shearConsider=shear_consider,
                                     biasX=bias_x, biasY=bias_y, secProperty=sec_property)
             elif sec_type == "工字钢梁" or sec_type == "箱型钢梁":
