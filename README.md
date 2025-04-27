@@ -1,4 +1,4 @@
-> 最新版本 V0.6.11 - 2025-04-24 
+> 最新版本 V0.6.12 - 2025-04-27 
 > pip install --upgrade qtmodel -i https://pypi.org/simple
 - 新增部分接口 
 # 建模操作 
