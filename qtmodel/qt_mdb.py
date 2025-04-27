@@ -1024,7 +1024,7 @@ class Mdb:
                 if len(time_parameter) != 4:
                     raise Exception("操作错误,time_parameter数据无效!")
                 qt_model.AddTimeParameter(id=index, name=name, codeId=code_index, rh=time_parameter[0], bsc=time_parameter[1],
-                                          timeStart=time_parameter[2], flyashCotent=time_parameter[3])
+                                          timeStart=time_parameter[2], flyashContent=time_parameter[3])
             elif code_index == 2:  # 公规 JTG D62-2004
                 if len(time_parameter) != 3:
                     raise Exception("操作错误,time_parameter数据无效!")
@@ -1353,7 +1353,7 @@ class Mdb:
                                       verticalDis=dist_v, lateralDis=dist_l, verticalRib=rib_v, lateralRib=rib_l)
             else:
                 qt_model.AddThickness(id=index, name=name, t=t, thickType=thick_type, isBiased=False, ribPos=rib_pos,
-                                      offSetType=bias_info[0], offSetValue=bias_info[1],
+                                      offsetType=bias_info[0], offsetValue=bias_info[1],
                                       verticalDis=dist_v, lateralDis=dist_l, verticalRib=rib_v, lateralRib=rib_l)
 
         except Exception as ex:
