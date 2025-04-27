@@ -1352,7 +1352,7 @@ class Mdb:
                 qt_model.AddThickness(id=index, name=name, t=t, thickType=thick_type, isBiased=False, ribPos=rib_pos,
                                       verticalDis=dist_v, lateralDis=dist_l, verticalRib=rib_v, lateralRib=rib_l)
             else:
-                qt_model.AddThickness(id=index, name=name, t=t, thickType=thick_type, isBiased=False, ribPos=rib_pos,
+                qt_model.AddThickness(id=index, name=name, t=t, thickType=thick_type, isBiased=True, ribPos=rib_pos,
                                       offsetType=bias_info[0], offsetValue=bias_info[1],
                                       verticalDis=dist_v, lateralDis=dist_l, verticalRib=rib_v, lateralRib=rib_l)
 
