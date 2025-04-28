@@ -1,6 +1,6 @@
-> 最新版本 V0.6.14 - 2025-04-27 
+> 最新版本 V0.6.15 - 2025-04-28 
 > pip install --upgrade qtmodel -i https://pypi.org/simple
-- 新增部分接口 
+- 修复添加钢箱梁 
 # 建模操作 
 ##  建模助手
 ### create_cantilever_bridge

@@ -1458,7 +1458,7 @@ class Mdb:
                                     biasX=bias_x, biasY=bias_y, secProperty=sec_property)
             elif sec_type == "工字钢梁" or sec_type == "箱型钢梁":
                 qt_model.AddSection(id=index, name=name, secType=sec_type, secInfo=sec_info,
-                                    ribInfo=rib_info, ribPlaceList=rib_place, biasType=bias_type, centerType=center_type,
+                                    ribInfo=rib_info, ribPlace=rib_place, biasType=bias_type, centerType=center_type,
                                     shearConsider=shear_consider, biasX=bias_x, biasY=bias_y, secProperty=sec_property)
             elif sec_type == "特性截面" or sec_type.startswith("自定义"):
                 qt_model.AddSection(id=index, name=name, secType=sec_type, secInfo=sec_info, biasType=bias_type,
