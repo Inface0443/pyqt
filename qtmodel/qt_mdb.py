@@ -430,6 +430,24 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
+    def update_structure_group(name: str = "", new_name: str = "", node_ids: list[int] = None, element_ids: list[int] = None):
+        """
+        更新结构组信息
+        Args:
+            name: 结构组名
+            new_name: 新结构组名
+            node_ids: 节点编号列表(可选参数)
+            element_ids: 单元编号列表(可选参数)
+        Example:
+            mdb.update_structure_group(name="结构组",new_name="新建结构组",node_ids=[1,2,3,4],element_ids=[1,2])
+        Returns: 无
+        """
+        try:
+            qt_model.UpdateStructureGroup(name=name, newName=new_name, nodeIds=node_ids, elementIds=element_ids)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
     def update_structure_group_name(name: str = "", new_name: str = ""):
         """
         更新结构组名

@@ -1,6 +1,6 @@
-> 最新版本 V0.6.15 - 2025-04-28 
+> 最新版本 V0.6.16 - 2025-05-06 
 > pip install --upgrade qtmodel -i https://pypi.org/simple
-- 修复添加钢箱梁 
+- 新增更新结构组接口 
 # 建模操作 
 ##  建模助手
 ### create_cantilever_bridge
@@ -272,6 +272,19 @@ Returns: 无
 from qtmodel import *
 mdb.add_structure_group(name="新建结构组1")
 mdb.add_structure_group(name="新建结构组2",node_ids=[1,2,3,4],element_ids=[1,2])
+```  
+Returns: 无
+### update_structure_group
+更新结构组信息
+> 参数:  
+> name: 结构组名  
+> new_name: 新结构组名  
+> node_ids: 节点编号列表(可选参数)  
+> element_ids: 单元编号列表(可选参数)  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.update_structure_group(name="结构组",new_name="新建结构组",node_ids=[1,2,3,4],element_ids=[1,2])
 ```  
 Returns: 无
 ### update_structure_group_name
