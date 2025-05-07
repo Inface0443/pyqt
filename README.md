@@ -1,4 +1,4 @@
-> 最新版本 V0.6.16 - 2025-05-06 
+> 最新版本 V0.6.17 - 2025-05-07 
 > pip install --upgrade qtmodel -i https://pypi.org/simple
 - 新增更新结构组接口 
 # 建模操作 
@@ -132,7 +132,7 @@ Returns: 无
 > 参数:  
 > file_path:导出文件全路径，支持格式(.mct/.qdat/.obj/.txt/.py)  
 > convert_sec_group:是否将变截面组转换为变截面  
-> type_kind:输出文件类型  1-全部模型文件  2-计算相关文件 (py输出时  2-输出截面特性)  
+> type_kind:输出文件类型 0-仅输出截面特性和材料特性(仅供qdat输出) 1-仅输出模型文件  2-输出截面特性和截面信息  
 > group_name:obj与 APDL导出时指定结构组导出  
 ```Python
 # 示例代码
