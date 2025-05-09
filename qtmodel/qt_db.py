@@ -513,8 +513,8 @@ class NodalForceDisplacement:
 
 class BeamElementLoad:
     def __init__(self, beam_id: int, case_name: str, load_type: int, coord_system: int,
-                 list_x: list[float, float] = None,
-                 list_load: list[float, float] = None, group_name="默认荷载组",
+                 list_x: list[float] = None,
+                 list_load: list[float] = None, group_name="默认荷载组",
                  load_bias: tuple[bool, int, int, float] = None, projected: bool = False):
         """
         节点位移信息

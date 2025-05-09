@@ -1,4 +1,4 @@
-> 最新版本 V0.6.17 - 2025-05-07 
+> 最新版本 V0.6.17 - 2025-05-09 
 > pip install --upgrade qtmodel -i https://pypi.org/simple
 - 新增更新结构组接口 
 # 建模操作 
@@ -3618,7 +3618,7 @@ from qtmodel import *
 odb.get_steel_bar_material() # 获取所有钢筋材料信息
 ```  
 Returns:  list[str] 其中str为json格式
-### get_user_###ine_material
+### get_user_define_material
 获取自定义材料信息
 > 参数:  
 > ids: 材料号,默认时输出全部材料  
