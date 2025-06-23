@@ -1,3 +1,6 @@
+import math
+
+
 class DataHelper:
     @staticmethod
     def parsing(str_list: list[str]) -> list[int]:
@@ -57,7 +60,7 @@ class Node:
             'y': self.y,
             'z': self.z,
         }
-        return json.dumps(obj_dict, ensure_ascii=False)
+        return obj_dict
 
     def __repr__(self):
         return self.__str__()
@@ -116,7 +119,7 @@ class Element:
                 'thick_id': self.sec_id,
                 'beta': self.beta,
             }
-        return json.dumps(obj_dict, ensure_ascii=False)
+        return obj_dict
 
     def __repr__(self):
         return self.__str__()
@@ -163,7 +166,7 @@ class Material:
             'is_creep': self.is_creep,
             'f_cuk': self.f_cuk,
         }
-        return json.dumps(obj_dict, ensure_ascii=False)
+        return obj_dict
 
     def __repr__(self):
         return self.__str__()
@@ -195,7 +198,7 @@ class GeneralSupport:
             'group_name': self.group_name,
             'node_system': self.node_system,
         }
-        return json.dumps(obj_dict, ensure_ascii=False)
+        return obj_dict
 
     def __repr__(self):
         return self.__str__()
@@ -240,7 +243,7 @@ class ElasticLink:
             'dis_ratio': self.dis_ratio,
             'kx': self.kx,
         }
-        return json.dumps(obj_dict, ensure_ascii=False)
+        return obj_dict
 
     def __repr__(self):
         return self.__str__()
@@ -273,7 +276,7 @@ class ElasticSupport:
             'group_name': self.group_name,
             'node_system': self.node_system,
         }
-        return json.dumps(obj_dict, ensure_ascii=False)
+        return obj_dict
 
     def __repr__(self):
         return self.__str__()
@@ -304,7 +307,7 @@ class MasterSlaveLink:
             'boundary_info': self.boundary_info,
             'group_name': self.group_name,
         }
-        return json.dumps(obj_dict, ensure_ascii=False)
+        return obj_dict
 
     def __repr__(self):
         return self.__str__()
@@ -338,7 +341,7 @@ class ConstraintEquation:
             'master_info': self.master_info,
             'group_name': self.group_name,
         }
-        return json.dumps(obj_dict, ensure_ascii=False)
+        return obj_dict
 
     def __repr__(self):
         return self.__str__()
@@ -370,7 +373,7 @@ class BeamConstraint:
             'info_j': self.info_j,
             'group_name': self.group_name,
         }
-        return json.dumps(obj_dict, ensure_ascii=False)
+        return obj_dict
 
     def __repr__(self):
         return self.__str__()
@@ -395,7 +398,7 @@ class NodalLocalAxis:
             'vector_x': self.vector_x,
             'vector_y': self.vector_y,
         }
-        return json.dumps(obj_dict, ensure_ascii=False)
+        return obj_dict
 
     def __repr__(self):
         return self.__str__()
@@ -426,7 +429,7 @@ class PreStressLoad:
             'force': self.force,
             'group_name': self.group_name,
         }
-        return json.dumps(obj_dict, ensure_ascii=False)
+        return obj_dict
 
     def __repr__(self):
         return self.__str__()
@@ -448,14 +451,15 @@ class NodalMass:
             'node_id': self.node_id,
             'mass_info': self.mass_info,
         }
-        return json.dumps(obj_dict, ensure_ascii=False)
+        return obj_dict
 
     def __repr__(self):
         return self.__str__()
 
 
 class NodalForce:
-    def __init__(self, node_id: int, case_name: str, load_info: tuple[float, float, float, float, float, float] = None, group_name: str = "默认荷载组"):
+    def __init__(self, node_id: int, case_name: str, load_info: tuple[float, float, float, float, float, float] = None,
+                 group_name: str = "默认荷载组"):
         """
         节点质量
         Args:
@@ -476,7 +480,7 @@ class NodalForce:
             'load_info': self.load_info,
             'group_name': self.group_name,
         }
-        return json.dumps(obj_dict, ensure_ascii=False)
+        return obj_dict
 
     def __repr__(self):
         return self.__str__()
@@ -505,7 +509,7 @@ class NodalForceDisplacement:
             'load_info': self.load_info,
             'group_name': self.group_name,
         }
-        return json.dumps(obj_dict, ensure_ascii=False)
+        return obj_dict
 
     def __repr__(self):
         return self.__str__()
@@ -551,7 +555,7 @@ class BeamElementLoad:
             'load_bias': self.load_bias,
             'projected': self.projected,
         }
-        return json.dumps(obj_dict, ensure_ascii=False)
+        return obj_dict
 
     def __repr__(self):
         return self.__str__()
@@ -592,7 +596,7 @@ class PlateElementLoad:
             'load_list': self.load_list,
             'xy_list': self.xy_list,
         }
-        return json.dumps(obj_dict, ensure_ascii=False)
+        return obj_dict
 
     def __repr__(self):
         return self.__str__()
@@ -623,7 +627,7 @@ class InitialTension:
             'tension': self.tension,
             'tension_type': self.tension_type,
         }
-        return json.dumps(obj_dict, ensure_ascii=False)
+        return obj_dict
 
     def __repr__(self):
         return self.__str__()
@@ -654,7 +658,7 @@ class CableLengthLoad:
             'length': self.length,
             'tension_type': self.tension_type,
         }
-        return json.dumps(obj_dict, ensure_ascii=False)
+        return obj_dict
 
     def __repr__(self):
         return self.__str__()
@@ -681,7 +685,7 @@ class DeviationParameter:
             'element_type': self.element_type,
             'parameters': self.parameters,
         }
-        return json.dumps(obj_dict, ensure_ascii=False)
+        return obj_dict
 
     def __repr__(self):
         return self.__str__()
@@ -710,7 +714,7 @@ class DeviationLoad:
             'parameters': self.parameters,
             'group_name': self.group_name,
         }
-        return json.dumps(obj_dict, ensure_ascii=False)
+        return obj_dict
 
     def __repr__(self):
         return self.__str__()
@@ -767,7 +771,7 @@ class GradientTemperature:
             'temperature': self.temperature,
             'group_name': self.group_name,
         }
-        return json.dumps(obj_dict, ensure_ascii=False)
+        return obj_dict
 
     def __repr__(self):
         return self.__str__()
@@ -808,7 +812,7 @@ class BeamSectionTemperature:
             'temp_list': self.temp_list,
             'group_name': self.group_name,
         }
-        return json.dumps(obj_dict, ensure_ascii=False)
+        return obj_dict
 
     def __repr__(self):
         return self.__str__()
@@ -839,7 +843,7 @@ class IndexTemperature:
             'index': self.index,
             'group_name': self.group_name,
         }
-        return json.dumps(obj_dict, ensure_ascii=False)
+        return obj_dict
 
     def __repr__(self):
         return self.__str__()
@@ -867,7 +871,7 @@ class TopPlateTemperature:
             'temperature': self.temperature,
             'group_name': self.group_name,
         }
-        return json.dumps(obj_dict, ensure_ascii=False)
+        return obj_dict
 
     def __repr__(self):
         return self.__str__()
@@ -889,7 +893,7 @@ class SectionLoopSegment:
             'main_loop': self.main_loop,
             'sub_loops': self.sub_loops,
         }
-        return json.dumps(obj_dict, ensure_ascii=False)
+        return obj_dict
 
     def __repr__(self):
         return self.__str__()
@@ -914,14 +918,10 @@ class SectionLineSegment:
             'point_end': self.point_end,
             'thickness': self.thickness,
         }
-        return json.dumps(obj_dict, ensure_ascii=False)
+        return obj_dict
 
     def __repr__(self):
         return self.__str__()
-
-
-import math
-import json
 
 
 class NodeDisplacement:
@@ -929,9 +929,10 @@ class NodeDisplacement:
     节点位移
     """
 
-    def __init__(self, node_id, displacements: list[float]):
+    def __init__(self, node_id, displacements: list[float],time:float=0):
+        self.time = time
+        self.node_id = node_id
         if len(displacements) == 6:
-            self.id = node_id
             self.dx = displacements[0]
             self.dy = displacements[1]
             self.dz = displacements[2]
@@ -943,7 +944,8 @@ class NodeDisplacement:
 
     def __str__(self):
         obj_dict = {
-            'id': self.id,
+            'node_id': self.node_id,
+            'time': self.time,
             'dx': self.dx,
             'dy': self.dy,
             'dz': self.dz,
@@ -951,7 +953,7 @@ class NodeDisplacement:
             'ry': self.ry,
             'rz': self.rz
         }
-        return json.dumps(obj_dict)
+        return obj_dict
 
     def __repr__(self):
         return self.__str__()
@@ -962,8 +964,9 @@ class SupportReaction:
     支座反力
     """
 
-    def __init__(self, support_id: int, force: list[float]):
-        self.support_id = support_id
+    def __init__(self, node_id: int, force: list[float],time: float=0):
+        self.node_id = node_id
+        self.time = time
         if len(force) == 6:
             self.fx = force[0]
             self.fy = force[1]
@@ -976,7 +979,8 @@ class SupportReaction:
 
     def __str__(self):
         obj_dict = {
-            'support_id': self.support_id,
+            'node_id': self.node_id,
+            'time': self.time,
             'fx': self.fx,
             'fy': self.fy,
             'fz': self.fz,
@@ -984,7 +988,7 @@ class SupportReaction:
             'my': self.my,
             'mz': self.mz
         }
-        return json.dumps(obj_dict)
+        return obj_dict
 
     def __repr__(self):
         return self.__str__()
@@ -995,16 +999,18 @@ class BeamElementForce:
     梁单元内力
     """
 
-    def __init__(self, element_id: int, force_i: list[float], force_j: list[float]):
+    def __init__(self, element_id: int, force_i: list[float], force_j: list[float],time:float=0):
         """
         单元内力构造器
         Args:
             element_id: 单元id
             force_i: I端单元内力 [Fx,Fy,Fz,Mx,My,Mz]
             force_j: J端单元内力 [Fx,Fy,Fz,Mx,My,Mz]
+            time: 时程分析时间
         """
+        self.element_id = element_id
+        self.time = time
         if len(force_i) == 6 and len(force_j) == 6:
-            self.id = element_id
             self.force_i = Force(*force_i)
             self.force_j = Force(*force_j)
         else:
@@ -1012,11 +1018,12 @@ class BeamElementForce:
 
     def __str__(self):
         obj_dict = {
-            'id': self.id,
+            'element_id': self.element_id,
+            'time': self.time,
             'force_i': self.force_i.__str__(),
             'force_j': self.force_j.__str__()
         }
-        return json.dumps(obj_dict)
+        return obj_dict
 
     def __repr__(self):
         return self.__str__()
@@ -1027,16 +1034,18 @@ class TrussElementForce:
     桁架单元内力
     """
 
-    def __init__(self, element_id: int, force_i: list[float], force_j: list[float]):
+    def __init__(self, element_id: int, force_i: list[float], force_j: list[float],time: float=0):
         """
         单元内力构造器
         Args:
             element_id: 单元id
             force_i: I端单元内力 [Fx,Fy,Fz,Mx,My,Mz]
             force_j: J端单元内力 [Fx,Fy,Fz,Mx,My,Mz]
+            time: 时程分析结果时间
         """
+        self.element_id = element_id
+        self.time = time
         if len(force_i) == 6 and len(force_j) == 6:
-            self.id = element_id
             self.Ni = force_i[3]
             self.Fxi = force_i[0]
             self.Fyi = force_i[1]
@@ -1050,7 +1059,8 @@ class TrussElementForce:
 
     def __str__(self):
         obj_dict = {
-            'id': self.id,
+            'element_id': self.element_id,
+            'time': self.time,
             'Ni': self.Ni,
             'Fxi': self.Fxi,
             'Fyi': self.Fyi,
@@ -1060,7 +1070,7 @@ class TrussElementForce:
             'Fyj': self.Fyj,
             'Fzj': self.Fzj
         }
-        return json.dumps(obj_dict)
+        return obj_dict
 
     def __repr__(self):
         return self.__str__()
@@ -1071,7 +1081,8 @@ class ShellElementForce:
     板单元内力
     """
 
-    def __init__(self, element_id: int, force_i: list[float], force_j: list[float], force_k: list[float], force_l: list[float]):
+    def __init__(self, element_id: int, force_i: list[float], force_j: list[float],
+                 force_k: list[float], force_l: list[float],time:float=0):
         """
         单元内力构造器
         Args:
@@ -1079,10 +1090,12 @@ class ShellElementForce:
             force_i: I端单元内力 [Fx,Fy,Fz,Mx,My,Mz]
             force_j: J端单元内力 [Fx,Fy,Fz,Mx,My,Mz]
             force_k: K端单元内力 [Fx,Fy,Fz,Mx,My,Mz]
-            force_l: J端单元内力 [Fx,Fy,Fz,Mx,My,Mz]
+            force_l: L端单元内力 [Fx,Fy,Fz,Mx,My,Mz]
+            time: 时程分析时间
         """
+        self.element_id = element_id
+        self.time = time
         if len(force_i) == 6 and len(force_i) == 6 and len(force_k) == 6 and len(force_l) == 6:
-            self.id = element_id
             self.force_i = Force(*force_i)
             self.force_j = Force(*force_j)
             self.force_k = Force(*force_k)
@@ -1093,13 +1106,14 @@ class ShellElementForce:
 
     def __str__(self):
         obj_dict = {
-            'id': self.id,
+            'element_id': self.element_id,
+            'time': self.time,
             'force_i': self.force_i.__str__(),
             'force_j': self.force_j.__str__(),
             'force_k': self.force_k.__str__(),
             'force_l': self.force_l.__str__()
         }
-        return json.dumps(obj_dict)
+        return obj_dict
 
     def __repr__(self):
         return self.__str__()
@@ -1128,7 +1142,7 @@ class CompositeElementForce:
             shear_force: 接合面剪力
         """
         if len(force_i) == 6 and len(force_j) == 6:
-            self.id = element_id
+            self.element_id = element_id
             self.force_i = Force(*force_i)
             self.force_j = Force(*force_j)
             self.shear_force = shear_force
@@ -1143,11 +1157,11 @@ class CompositeElementForce:
 
     def __str__(self):
         obj_dict = {
-            'id': self.id,
+            'element_id': self.element_id,
             'force_i': self.force_i.__str__(),
             'force_j': self.force_j.__str__()
         }
-        return json.dumps(obj_dict)
+        return obj_dict
 
     def __repr__(self):
         return self.__str__()
@@ -1167,7 +1181,7 @@ class BeamElementStress:
             stress_j: J端单元应力  [top_left, top_right, bot_left, bot_right, sfx, smz_left, smz_right, smy_top, smy_bot]
         """
         if len(stress_i) == 9 and len(stress_i) == 9:
-            self.id = element_id
+            self.element_id = element_id
             self.stress_i = BeamStress(*stress_i)
             self.stress_j = BeamStress(*stress_j)
         else:
@@ -1175,11 +1189,11 @@ class BeamElementStress:
 
     def __str__(self):
         obj_dict = {
-            'id': self.id,
+            'element_id': self.element_id,
             'stress_i': self.stress_i.__str__(),
             'stress_j': self.stress_j.__str__()
         }
-        return json.dumps(obj_dict)
+        return obj_dict
 
     def __repr__(self):
         return self.__str__()
@@ -1190,13 +1204,13 @@ class ShellElementStress:
     板架单元应力
     """
 
-    def __init__(self, frame_id: int, stress_i_top: list[float], stress_j_top: list[float],
+    def __init__(self, element_id: int, stress_i_top: list[float], stress_j_top: list[float],
                  stress_k_top: list[float], stress_l_top: list[float], stress_i_bot: list[float],
                  stress_j_bot: list[float], stress_k_bot: list[float], stress_l_bot: list[float]):
         """
         单元内力构造器
         Args:
-            frame_id: 单元id
+            element_id: 单元id
             stress_i_top: I端单元上部应力 [sx,sy,sxy,s1,s2]
             stress_j_top: J端单元上部应力 [sx,sy,sxy,s1,s2]
             stress_k_top: K端单元上部应力 [sx,sy,sxy,s1,s2]
@@ -1210,7 +1224,7 @@ class ShellElementStress:
                 and len(stress_k_top) == 5 and len(stress_l_top) == 5 \
                 and len(stress_i_bot) == 5 and len(stress_j_bot) == 5 \
                 and len(stress_k_bot) == 5 and len(stress_l_bot) == 5:
-            self.id = frame_id
+            self.element_id = element_id
             self.stress_i_top = ShellStress(*stress_i_top)
             self.stress_j_top = ShellStress(*stress_j_top)
             self.stress_k_top = ShellStress(*stress_k_top)
@@ -1224,7 +1238,7 @@ class ShellElementStress:
 
     def __str__(self):
         obj_dict = {
-            'id': self.id,
+            'element_id': self.element_id,
             'stress_i_top': self.stress_i_top.__str__(),
             'stress_j_top': self.stress_j_top.__str__(),
             'stress_k_top': self.stress_k_top.__str__(),
@@ -1234,7 +1248,7 @@ class ShellElementStress:
             'stress_k_bot': self.stress_k_bot.__str__(),
             'stress_l_bot': self.stress_l_bot.__str__()
         }
-        return json.dumps(obj_dict)
+        return obj_dict
 
     def __repr__(self):
         return self.__str__()
@@ -1245,28 +1259,25 @@ class TrussElementStress:
     桁架单元应力
     """
 
-    def __init__(self, frame_id: int, stress_i: list[float], stress_j: list[float]):
+    def __init__(self, element_id: int, si: float, sj: float):
         """
         单元内力构造器
         Args:
-            frame_id: 单元id
-            stress_i: I端单元应力
-            stress_j: J端单元应力
+            element_id: 单元id
+            si: I端单元应力
+            sj: J端单元应力
         """
-        if len(stress_i) == 9 and len(stress_j) == 9:
-            self.id = frame_id
-            self.Si = stress_i[0]
-            self.Sj = stress_j[0]
-        else:
-            raise ValueError("操作错误:  'stress_i' and 'stress_j' 列表有误")
+        self.element_id = element_id
+        self.Si = si
+        self.Sj = sj
 
     def __str__(self):
         obj_dict = {
-            'id': self.id,
+            'element_id': self.element_id,
             'Si': self.Si,
             'Sj': self.Sj
         }
-        return json.dumps(obj_dict)
+        return obj_dict
 
     def __repr__(self):
         return self.__str__()
@@ -1288,7 +1299,7 @@ class CompositeBeamStress:
             sub_stress_j: 辅材J端单元应力  [top_left, top_right, bot_left, bot_right, sfx, smz_left, smz_right, smy_top, smy_bot]
         """
         if len(main_stress_i) == 9 and len(main_stress_j) == 9 and len(sub_stress_i) == 9 and len(sub_stress_j) == 9:
-            self.id = element_id
+            self.element_id = element_id
             self.main_stress_i = BeamStress(*main_stress_i)
             self.main_stress_j = BeamStress(*main_stress_j)
             self.sub_stress_i = BeamStress(*sub_stress_i)
@@ -1298,13 +1309,13 @@ class CompositeBeamStress:
 
     def __str__(self):
         obj_dict = {
-            'id': self.id,
+            'element_id': self.element_id,
             'main_stress_i': self.main_stress_i.__str__(),
             'main_stress_j': self.main_stress_j.__str__(),
             'sub_stress_i': self.sub_stress_i.__str__(),
             'sub_stress_j': self.sub_stress_j.__str__(),
         }
-        return json.dumps(obj_dict)
+        return obj_dict
 
     def __repr__(self):
         return self.__str__()
@@ -1362,7 +1373,7 @@ class ShellStress:
             's1': self.s1,
             's2': self.s2
         }
-        return json.dumps(obj_dict)
+        return obj_dict
 
     def __repr__(self):
         return self.__str__()

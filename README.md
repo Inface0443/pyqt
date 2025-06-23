@@ -1,4 +1,4 @@
-> 最新版本 V0.6.17 - 2025-05-09 
+> 最新版本 V0.7.1 - 2025-06-23 
 > pip install --upgrade qtmodel -i https://pypi.org/simple
 - 新增更新结构组接口 
 # 建模操作 
@@ -1652,33 +1652,13 @@ from qtmodel import *
 mdb.add_nodal_mass(node_id=1,mass_info=(100,0,0,0))
 ```  
 Returns: 无
-### remove_nodal_mass
-删除节点质量
-> 参数:  
-> node_id:节点号，默认删除所有节点质量  
-```Python
-# 示例代码
-from qtmodel import *
-mdb.remove_nodal_mass(node_id=1)
-```  
-Returns: 无
-### remove_load_to_mass
-删除荷载转为质量,默认删除所有荷载转质量
-> 参数:  
-> name:荷载工况名  
-```Python
-# 示例代码
-from qtmodel import *
-mdb.remove_load_to_mass(name="荷载工况")
-```  
-Returns: 无
 ### add_spectrum_function
 添加反应谱函数
 > 参数:  
 > name:反应谱函数名  
 > factor:反应谱调整系数  
 > kind:反应谱类型 0-无量纲 1-加速度 2-位移  
-> function_info:反应谱函数信息  
+> function_info:反应谱函数信息[(时间1,数值1),[时间2,数值2]]  
 ```Python
 # 示例代码
 from qtmodel import *
@@ -1720,6 +1700,348 @@ Returns: 无
 # 示例代码
 from qtmodel import *
 mdb.add_nodal_mass(node_id=1,mass_info=(100,0,0,0))
+```  
+Returns: 无
+### add_boundary_element_property
+添加边界单元特性
+> 参数:  
+> index: 边界单元ID  
+> name: 边界单元特性名称  
+> kind: 类型名，支持:粘滞阻尼器、支座摩阻、滑动摩擦摆(具体参考界面数据名)  
+> is_dx: 是否勾选自由度X  
+> is_dy: 是否勾选自由度Y  
+> is_dz: 是否勾选自由度Z  
+> info_x: 自由度X信息(参考界面数据，例如粘滞阻尼器为[阻尼系数,速度指数]，支座摩阻为[安装方向0/1,弹性刚度/摩擦系数,恒载支承力N])  
+> info_y: 自由度Y信息  
+> info_z: 自由度Z信息  
+> weight: 重量（单位N）  
+> pin_stiffness: 剪力销刚度  
+> pin_yield: 剪力销屈服力  
+> description: 说明  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.add_boundary_element_property(name="边界单元特性",kind="粘滞阻尼器",is_dx=True,info_x=[0.05,1])
+```  
+Returns: 无
+### add_boundary_element_link
+添加边界单元连接
+> 参数:  
+> index: 边界单元连接号  
+> property_name: 边界单元特性名称  
+> node_i: 起始节点  
+> node_j: 终止节点  
+> beta: 角度  
+> node_system: 参考坐标系0-整体 1-单元  
+> group_name: 边界组名  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.add_boundary_element_link(property_name="边界单元特性",node_i=1,node_j=2,group_name="边界组1")
+```  
+Returns: 无
+### add_nodal_dynamic_load
+添加节点动力荷载
+> 参数:  
+> index: 荷载编号，默认自动识别  
+> node_id: 节点号  
+> case_name: 时程工况名  
+> function_name: 函数名称  
+> force_type: 荷载类型 1-X 2-Y 3-Z 4-负X 5-负Y 6-负Z  
+> factor: 系数  
+> time: 到达时间  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.add_nodal_dynamic_load(node_id=1,case_name="时程工况1",function_name="函数1",time=10)
+```  
+Returns: 无
+### add_ground_motion
+添加地面加速度
+> 参数:  
+> index: 地面加速度编号，默认自动识别  
+> case_name: 工况名称  
+> info_x: X方向时程分析函数信息列表(函数名,系数,到达时间)  
+> info_y: Y方向时程分析函数信息列表  
+> info_z: Z方向时程分析函数信息列表  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.add_ground_motion(case_name="时程工况1",info_x=("函数名",1,10))
+```  
+Returns: 无
+### add_time_history_case
+添加时程工况
+> 参数:  
+> index: 时程工况号  
+> name: 时程工况名  
+> description: 描述  
+> analysis_kind: 分析类型(0-线性 1-边界非线性)  
+> nonlinear_groups: 非线性结构组列表  
+> duration: 分析时间  
+> time_step: 分析时间步长  
+> min_step: 最小收敛步长  
+> tolerance: 收敛容限  
+> damp_type: 组阻尼类型(0-不计阻尼 1-单一阻尼 2-组阻尼)  
+> single_damping: 单一阻尼信息列表(周期1,周期2,频率1,频率2)  
+> group_damping: 组阻尼信息列表[(材料名1,周期1,周期2,阻尼比),(材料名2,周期1,周期2,阻尼比)...]  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.add_time_history_case(name="时程工况1",analysis_kind=0,duration=10,time_step=0.02,damp_type=2,
+group_damping=[("材料1",8,1,0.05),("材料2",8,1,0.05),("材料3",8,1,0.02)])
+```  
+Returns: 无
+### add_time_history_function
+添加时程函数
+> 参数:  
+> name: 名称  
+> factor: 放大系数  
+> kind: 0-无量纲 1-加速度 2-力 3-力矩  
+> function_info: 函数信息[(时间1,数值1),(时间2,数值2)]  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.add_time_history_function(name="时程函数1",factor=1,function_info=[(0,0),(0.02,0.1),[0.04,0.3]])
+```  
+Returns: 无
+### update_boundary_element_property
+更新边界单元特性，输入参数单位默认为N、m
+> 参数:  
+> name: 原边界单元特性名称  
+> new_name: 更新后边界单元特性名称，默认时不修改  
+> kind: 类型名，支持:粘滞阻尼器、支座摩阻、滑动摩擦摆(具体参考界面数据名)  
+> is_dx: 是否勾选自由度X  
+> is_dy: 是否勾选自由度Y  
+> is_dz: 是否勾选自由度Z  
+> info_x: 自由度X信息(参考界面数据，例如粘滞阻尼器为[阻尼系数,速度指数]，支座摩阻为[安装方向0/1,弹性刚度/摩擦系数,恒载支承力N])  
+> info_y: 自由度Y信息  
+> info_z: 自由度Z信息  
+> weight: 重量（单位N）  
+> pin_stiffness: 剪力销刚度  
+> pin_yield: 剪力销屈服力  
+> description: 说明  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.update_boundary_element_property(name="old_prop",kind="粘滞阻尼器",is_dx=True,info_x=[0.5, 0.5],weight=1000.0)
+```  
+Returns: 无
+### update_boundary_element_link
+更新边界单元连接
+> 参数:  
+> index: 根据边界单元连接id选择待更新对象  
+> property_name: 边界单元特性名  
+> node_i: 起始节点点  
+> node_j: 终点节点号  
+> beta: 角度参数  
+> node_system: 0-单元坐标系 1-整体坐标系  
+> group_name: 边界组名称  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.update_boundary_element_link(index=1,property_name="边界单元特性名",node_i=101,node_j=102,beta=30.0)
+```  
+Returns: 无
+### update_time_history_case
+添加时程工况
+> 参数:  
+> name: 时程工况号  
+> new_name: 时程工况名  
+> description: 描述  
+> analysis_kind: 分析类型(0-线性 1-边界非线性)  
+> nonlinear_groups: 非线性结构组列表  
+> duration: 分析时间  
+> time_step: 分析时间步长  
+> min_step: 最小收敛步长  
+> tolerance: 收敛容限  
+> damp_type: 组阻尼类型(0-不计阻尼 1-单一阻尼 2-组阻尼)  
+> single_damping: 单一阻尼信息列表(周期1,周期2,频率1,频率2)  
+> group_damping: 组阻尼信息列表[(材料名1,周期1,周期2,阻尼比),(材料名2,周期1,周期2,阻尼比)...]  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.update_time_history_case(name="TH1",analysis_kind=1,
+nonlinear_groups=["结构组1", "结构组2"],duration=30.0,time_step=0.02,damp_type=2,
+group_damping=[("concrete", 0.1, 0.5, 0.05), ("steel", 0.1, 0.5, 0.02)])
+```  
+Returns: 无
+### update_time_history_function
+更新时程函数
+> 参数:  
+> name: 更新前函数名  
+> new_name: 更新后函数名，默认不更新名称  
+> factor: 放大系数  
+> kind: 0-无量纲 1-加速度 2-力 3-力矩  
+> function_info: 函数信息[(时间1,数值1),(时间2,数值2)]  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.update_time_history_function(name="old_func",factor=1.5,kind=1,function_info=[(0.0, 0.0), (0.1, 0.5)])
+```  
+Returns: 无
+### update_nodal_dynamic_load
+更新节点动力荷载
+> 参数:  
+> index: 荷载编号  
+> node_id: 节点号  
+> case_name: 时程工况名  
+> function_name: 函数名称  
+> direction: 荷载类型 1-X 2-Y 3-Z 4-负X 5-负Y 6-负Z  
+> factor: 系数  
+> time: 到达时间  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.update_nodal_dynamic_load(index=1,node_id=101,case_name="Earthquake_X",function_name="EQ_function",direction=1,factor=1.2,time=0.0 )
+```  
+Returns: 无
+### update_ground_motion
+更新地面加速度
+> 参数:  
+> index: 地面加速度编号  
+> case_name: 时程工况名  
+> info_x: X方向时程分析函数信息数据(函数名,系数,到达时间)  
+> info_y: Y方向信息  
+> info_z: Z方向信息  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.update_ground_motion(index=1,case_name="Earthquake_X",
+info_x=("EQ_X_func", 1.0, 0.0),info_y=("EQ_Y_func", 0.8, 0.0),info_z=("EQ_Z_func", 0.6, 0.0) )
+```  
+Returns: 无
+### update_spectrum_function
+更新反应谱函数
+> 参数:  
+> name: 函数名称  
+> new_name: 新函数名称  
+> factor: 反应谱调整系数  
+> kind: 0-无量纲 1-加速度 2-位移  
+> function_info: 函数信息[(时间1,数值1),(时间2,数值2)]  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.update_spectrum_function( name="函数名称", factor=1.2, kind=1, function_info=[(0.0, 0.0), (0.5, 0.8), (1.0, 1.2)])
+```  
+Returns: 无
+### update_spectrum_case
+更新反应谱工况
+> 参数:  
+> name: 工况名称  
+> new_name: 新工况名称  
+> description: 描述  
+> kind: 组合方式 1-求模 2-求和  
+> info_x: 反应谱X向信息 (X方向函数名,系数)  
+> info_y: Y向信息  
+> info_z: Z向信息  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.update_spectrum_case(name="RS1",kind=1,info_x=("函数X", 1.0),info_y=("函数Y", 0.85) )
+```  
+Returns: 无
+### remove_spectrum_case
+删除反应谱工况
+> 参数:  
+> name: 工况名称  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.remove_spectrum_case("工况名")
+```  
+Returns: 无
+### remove_spectrum_function
+删除反应谱函数
+> 参数:  
+> ids: 删除反应谱工况函数编号集合，默认为空时则按照名称删除  
+> name: 编号集合为空时则按照名称删除  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.remove_spectrum_function(name="工况名")
+```  
+Returns: 无
+### remove_time_history_load_case
+通过时程工况名删除时程工况
+> 参数:  
+> name: 时程工况名  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.remove_time_history_load_case("工况名")
+```  
+Returns: 无
+### remove_time_history_function
+通过函数编号删除时程函数
+> 参数:  
+> ids: 删除时程函数编号集合，默认为空时则按照名称删除  
+> name: 编号集合为空时则按照名称删除  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.remove_time_history_function(ids=[1,2,3])
+```  
+Returns: 无
+### remove_load_to_mass
+删除荷载转为质量,默认删除所有荷载转质量
+> 参数:  
+> name:荷载工况名  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.remove_load_to_mass(name="荷载工况")
+```  
+Returns: 无
+### remove_nodal_mass
+删除节点质量
+> 参数:  
+> node_id:节点号  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.remove_nodal_mass(node_id=1)
+mdb.remove_nodal_mass(node_id=[1,2,3,4])
+```  
+Returns: 无
+### remove_all_nodal_mass
+删除所有节点质量
+> 参数:  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.remove_all_nodal_mass()
+```  
+Returns: 无
+### remove_boundary_element_property
+删除边界单元特性
+> 参数:  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.remove_boundary_element_property(name="特性名")
+```  
+Returns: 无
+### remove_boundary_element_link
+删除边界单元连接
+> 参数:  
+> ids:所删除的边界单元连接号  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.remove_boundary_element_link(ids=1)
+mdb.remove_boundary_element_link(ids=[1,2,3,4])
+```  
+Returns: 无
+### remove_nodal_dynamic_load
+删除节点动力荷载
+> 参数:  
+> ids:所删除的节点动力荷载编号  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.remove_nodal_dynamic_load(ids=1)
+mdb.remove_nodal_dynamic_load(ids=[1,2,3,4])
 ```  
 Returns: 无
 ##  钢束操作
@@ -2892,11 +3214,48 @@ odb.change_construct_stage(0)
 odb.change_construct_stage(stage=1)
 ```  
 Returns: 无
-##  静力结果查看
+##  结果表格
+### get_reaction
+获取节点反力
+> 参数:  
+> node_id: 节点编号,支持整数或整数型列表  
+> envelop_type: 施工阶段包络类型 1-最大 2-最小  
+> stage_id: 施工阶段号 -1-运营阶段  0-施工阶段包络 n-施工阶段号  
+> result_kind: 施工阶段数据的类型 1-合计 2-收缩徐变效应 3-预应力效应 4-恒载  
+> increment_type: 1-全量    2-增量  
+> case_name: 运营阶段所需荷载工况名  
+> is_time_history: 运营阶段所需荷载工况名是否为时程分析  
+```Python
+# 示例代码
+from qtmodel import *
+odb.get_reaction(node_id=1,stage_id=1)
+odb.get_reaction(node_id=[1,2,3],stage_id=1)
+odb.get_reaction(node_id=1,stage_id=-1,case_name="工况名")
+```  
+Returns: 包含信息为list[dict] or dict
+### get_deformation
+获取节点变形结果,支持单个节点和节点列表
+> 参数:  
+> node_id: 查询结果的节点号  
+> envelop_type: 施工阶段包络类型 1-最大 2-最小  
+> stage_id: 施工阶段号 -1-运营阶段  0-施工阶段包络 n-施工阶段号  
+> result_kind: 施工阶段数据的类型(1-合计 2-收缩徐变效应 3-预应力效应 4-恒载) 时程分析类型(1-位移 2-速度 3-加速度)  
+> increment_type: 1-全量    2-增量  
+> case_name: 运营阶段所需荷载工况名  
+> is_time_history: 是否为时程分析  
+```Python
+# 示例代码
+from qtmodel import *
+odb.get_deformation(node_id=1,stage_id=1)
+odb.get_deformation(node_id=[1,2,3],stage_id=1)
+odb.get_deformation(node_id=1,stage_id=-1,case_name="工况名")
+```  
+Returns: 包含信息为list[dict] or dict
 ### get_element_stress
 获取单元应力,支持单个单元和单元列表
 > 参数:  
 > element_id: 单元编号,支持整数或整数型列表  
+> envelop_type:施工阶段包络类型 1-最大 2-最小 3-包络  
 > stage_id: 施工阶段号 -1-运营阶段  0-施工阶段包络 n-施工阶段号  
 > result_kind: 施工阶段数据的类型 1-合计 2-收缩徐变效应 3-预应力效应 4-恒载  
 > increment_type: 1-全量    2-增量  
@@ -2908,15 +3267,18 @@ odb.get_element_stress(element_id=1,stage_id=1)
 odb.get_element_stress(element_id=[1,2,3],stage_id=1)
 odb.get_element_stress(element_id=1,stage_id=-1,case_name="工况名")
 ```  
-Returns: json字符串,包含信息为list[dict] or dict
+Returns: 包含信息为list[dict] or dict
 ### get_element_force
 获取单元内力,支持单个单元和单元列表
 > 参数:  
 > element_id: 单元编号  
 > stage_id: 施工阶段号 -1-运营阶段  0-施工阶段包络 n-施工阶段号  
+> envelop_type: 1-最大 2-最小 3-包络  
 > result_kind: 施工阶段数据的类型 1-合计 2-收缩徐变效应 3-预应力效应 4-恒载  
 > increment_type: 1-全量    2-增量  
 > case_name: 运营阶段所需荷载工况名  
+> is_time_history: 是否为时程分析  
+> is_boundary_element: 是否为时程分析边界单元连接  
 ```Python
 # 示例代码
 from qtmodel import *
@@ -2924,39 +3286,7 @@ odb.get_element_force(element_id=1,stage_id=1)
 odb.get_element_force(element_id=[1,2,3],stage_id=1)
 odb.get_element_force(element_id=1,stage_id=-1,case_name="工况名")
 ```  
-Returns: json字符串,包含信息为list[dict] or dict
-### get_reaction
-获取节点反力
-> 参数:  
-> node_id: 节点编号,支持整数或整数型列表  
-> stage_id: 施工阶段号 -1-运营阶段  0-施工阶段包络 n-施工阶段号  
-> result_kind: 施工阶段数据的类型 1-合计 2-收缩徐变效应 3-预应力效应 4-恒载  
-> increment_type: 1-全量    2-增量  
-> case_name: 运营阶段所需荷载工况名  
-```Python
-# 示例代码
-from qtmodel import *
-odb.get_reaction(node_id=1,stage_id=1)
-odb.get_reaction(node_id=[1,2,3],stage_id=1)
-odb.get_reaction(node_id=1,stage_id=-1,case_name="工况名")
-```  
-Returns: json字符串,包含信息为list[dict] or dict
-### get_node_displacement
-获取节点,支持单个节点和节点列表
-> 参数:  
-> node_id: 节点号  
-> stage_id: 施工阶段号 -1-运营阶段  0-施工阶段包络 n-施工阶段号  
-> result_kind: 施工阶段数据的类型 1-合计 2-收缩徐变效应 3-预应力效应 4-恒载  
-> increment_type: 1-全量    2-增量  
-> case_name: 运营阶段所需荷载工况名  
-```Python
-# 示例代码
-from qtmodel import *
-odb.get_node_displacement(node_id=1,stage_id=1)
-odb.get_node_displacement(node_id=[1,2,3],stage_id=1)
-odb.get_node_displacement(node_id=1,stage_id=-1,case_name="工况名")
-```  
-Returns: json字符串,包含信息为list[dict] or dict
+Returns: 包含信息为list[dict] or dict
 ### get_self_concurrent_reaction
 获取自并发反力
 > 参数:  
@@ -2967,7 +3297,7 @@ Returns: json字符串,包含信息为list[dict] or dict
 from qtmodel import *
 odb.get_self_concurrent_reaction(node_id=1,case_name="工况1_Fx最大")
 ```  
-Returns: json字符串,包含信息为dict
+Returns: 返回该节点并发反力值dict
 ### get_all_concurrent_reaction
 获取完全并发反力
 > 参数:  
@@ -2978,41 +3308,30 @@ Returns: json字符串,包含信息为dict
 from qtmodel import *
 odb.get_all_concurrent_reaction(node_id=1,case_name="工况1_Fx最大")
 ```  
-Returns: json字符串,包含信息为dict
-### get_beam_concurrent_force
-获取梁单元并发内力
+Returns: 包含信息为list[dict]
+### get_concurrent_force
+获取单元并发内力
 > 参数:  
 > ele_id:单元号  
 > case_name:工况号  
 ```Python
 # 示例代码
 from qtmodel import *
-odb.get_beam_concurrent_force(ele_id=1,case_name="工况1_Fx最大")
+odb.get_concurrent_force(ele_id=1,case_name="工况1_Fx最大")
 ```  
-Returns: json字符串,包含信息为dict
-### get_composite_beam_concurrent_force
-获取组合梁单元并发内力
-> 参数:  
-> ele_id:单元号  
-> case_name:工况号  
-```Python
-# 示例代码
-from qtmodel import *
-odb.get_composite_beam_concurrent_force(ele_id=1,case_name="工况1_Fx最大")
-```  
-Returns: json字符串,包含信息为dict
-##  动力结果查看
+Returns: 包含信息为list[dict]
+##  自振分析结果查看
 ### get_vibration_node_displacement
 获取指定节点指定模态的振型向量
 > 参数:  
-> node_id: 节点号  
+> node_id: 节点号支持单个节点获取或节点列表获取  
 > mode: 模态号  
 ```Python
 # 示例代码
 from qtmodel import *
 odb.get_vibration_node_displacement(node_id=1,mode=1)
 ```  
-Returns: json字符串,包含信息为list[dict] or dict
+Returns: 包含信息为dict或list[dict]
 ### get_period_and_frequency
 获取周期和频率
 > 参数:  
@@ -3022,7 +3341,7 @@ Returns: json字符串,包含信息为list[dict] or dict
 from qtmodel import *
 odb.get_period_and_frequency(mode=1)
 ```  
-Returns: json字符串,包含信息为dict
+Returns: 包含信息为dict
 ### get_participation_mass
 获取振型参与质量百分比
 > 参数:  
@@ -3032,7 +3351,7 @@ Returns: json字符串,包含信息为dict
 from qtmodel import *
 odb.get_participation_mass(mode=1)
 ```  
-Returns: json字符串,包含信息为dict
+Returns: 包含信息为dict
 ### get_participation_factor
 获取振型参与质量系数
 > 参数:  
@@ -3042,28 +3361,31 @@ Returns: json字符串,包含信息为dict
 from qtmodel import *
 odb.get_participation_factor(mode=1)
 ```  
-Returns: json字符串,包含信息为dict
+Returns: 包含信息为dict
 ##  绘制模型结果
 ### plot_reaction_result
 保存结果图片到指定文件甲
 > 参数:  
 > file_path: 保存路径名  
 > stage_id: -1-运营阶段  0-施工阶段包络 n-施工阶段号  
-> load_case_name: 详细荷载工况名,参考桥通结果输出,例如： CQ:成桥(合计)  
+> case_name: 详细荷载工况名,参考桥通结果输出,例如： CQ:成桥(合计)  
 > show_increment: 是否显示增量结果  
 > envelope_type: 施工阶段包络类型 1-最大 2-最小  
-> component: 分量编号 0-Fx 1-Fy 2-Fz 3-Fxyz 4-Mx 5-My 6-Mz 7-Mxyz  
+> component: 分量编号 1-Fx 2-Fy 3-Fz 4-Fxyz 5-Mx 6-My 7-Mz 8-Mxyz  
 > show_number: 数值选项卡开启  
 > show_legend: 图例选项卡开启  
 > text_rotation: 数值选项卡内文字旋转角度  
-> max_min_kind: 数值选项卡内最大最小值显示 -1-不显示最大最小值  0-显示最大值和最小值  1-最大绝对值 2-最大值 3-最小值  
+> max_min_kind: 数值选项卡内最大最小值显示 0-不显示最大最小值  1-显示最大值和最小值  2-最大绝对值 3-最大值 4-最小值  
 > digital_count: 小数点位数  
-> show_exponential: 指数显示开启  
+> text_exponential: 指数显示开启  
 > arrow_scale:箭头大小  
+> is_time_history:是否为时程分析结果  
+> time_kind:时程分析类型 1-时刻 2-最大 3-最小  
+> time_tick:时程分析时刻  
 ```Python
 # 示例代码
 from qtmodel import *
-odb.plot_reaction_result(file_path=r"D:\\图片\\反力图.png",component=0,load_case_name="CQ:成桥(合计)",stage_id=-1)
+odb.plot_reaction_result(file_path=r"D:\\图片\\反力图.png",component=1,case_name="CQ:成桥(合计)",stage_id=-1)
 ```  
 Returns: 无
 ### plot_displacement_result
@@ -3071,24 +3393,28 @@ Returns: 无
 > 参数:  
 > file_path: 保存路径名  
 > stage_id: -1-运营阶段  0-施工阶段包络 n-施工阶段号  
-> load_case_name: 详细荷载工况名,参考桥通结果输出,例如： CQ:成桥(合计)  
+> case_name: 详细荷载工况名,参考桥通结果输出,例如： CQ:成桥(合计)  
 > show_increment: 是否显示增量结果  
 > envelope_type: 施工阶段包络类型 1-最大 2-最小  
-> component: 分量编号 0-Dx 1-Dy 2-Dz 3-Rx 4-Ry 5-Rz 6-Dxy 7-Dyz 8-Dxz 9-Dxyz  
+> component: 分量编号 1-Dx 2-Dy 3-Dz 4-Rx 5-Ry 6-Rz 7-Dxy 8-Dyz 9-Dxz 10-Dxyz  
 > show_deformed: 变形选项卡开启  
 > deformed_scale:变形比例  
 > deformed_actual:是否显示实际变形  
 > show_number: 数值选项卡开启  
 > text_rotation: 数值选项卡内文字旋转角度  
-> max_min_kind: 数值选项卡内最大最小值显示 -1-不显示最大最小值  0-显示最大值和最小值  1-最大绝对值 2-最大值 3-最小值  
+> max_min_kind: 数值选项卡内最大最小值显示 0-不显示最大最小值  1-显示最大值和最小值  2-最大绝对值 3-最大值 4-最小值  
 > show_legend: 图例选项卡开启  
 > digital_count: 小数点位数  
-> show_exponential: 指数显示开启  
-> show_pre_deformed: 显示变形前  
+> text_exponential: 指数显示开启  
+> show_undeformed: 显示变形前  
+> is_time_history:是否为时程分析结果  
+> time_kind:时程分析类型 1-时刻 2-最大 3-最小  
+> deform_kind:时程分析变形类型 1-位移 2-速度 3-加速度  
+> time_tick:时程分析时刻  
 ```Python
 # 示例代码
 from qtmodel import *
-odb.plot_displacement_result(file_path=r"D:\\图片\\变形图.png",component=0,load_case_name="CQ:成桥(合计)",stage_id=-1)
+odb.plot_displacement_result(file_path=r"D:\\图片\\变形图.png",component=1,case_name="CQ:成桥(合计)",stage_id=-1)
 ```  
 Returns: 无
 ### plot_beam_element_force
@@ -3096,10 +3422,10 @@ Returns: 无
 > 参数:  
 > file_path: 保存路径名  
 > stage_id: -1-运营阶段  0-施工阶段包络 n-施工阶段号  
-> load_case_name: 详细荷载工况名,参考桥通结果输出,例如： CQ:成桥(合计)  
+> case_name: 详细荷载工况名,参考桥通结果输出,例如： CQ:成桥(合计)  
 > show_increment: 是否显示增量结果  
 > envelope_type: 施工阶段包络类型 1-最大 2-最小  
-> component: 分量编号 0-Dx 1-Dy 2-Dz 3-Rx 4-Ry 5-Rz 6-Dxy 7-Dyz 8-Dxz 9-Dxyz  
+> component: 分量编号 1-Dx 2-Dy 3-Dz 4-Rx 5-Ry 6-Rz 7-Dxy 8-Dyz 9-Dxz 10-Dxyz  
 > show_line_chart: 折线图选项卡开启  
 > line_scale:折线图比例  
 > flip_plot:反向绘制  
@@ -3109,15 +3435,18 @@ Returns: 无
 > show_number: 数值选项卡开启  
 > text_rotation: 数值选项卡内文字旋转角度  
 > digital_count: 小数点位数  
-> show_exponential: 指数显示开启  
-> max_min_kind: 数值选项卡内最大最小值显示 -1-不显示最大最小值  0-显示最大值和最小值  1-最大绝对值 2-最大值 3-最小值  
+> text_exponential: 指数显示开启  
+> max_min_kind: 数值选项卡内最大最小值显示 0-不显示最大最小值  1-显示最大值和最小值  2-最大绝对值 3-最大值 4-最小值  
 > show_legend: 图例选项卡开启  
-> show_pre_deformed: 显示变形前  
-> position: 位置编号 0-始端 1-末端 2-绝对最大 4-全部  
+> show_undeformed: 显示变形前  
+> position: 位置编号 1-始端 2-末端 3-绝对最大 4-全部  
+> is_time_history:是否为时程分析结果  
+> time_kind:时程分析类型 1-时刻 2-最大 3-最小  
+> time_tick:时程分析时刻  
 ```Python
 # 示例代码
 from qtmodel import *
-odb.plot_beam_element_force(file_path=r"D:\\图片\\梁内力.png",component=0,load_case_name="CQ:成桥(合计)",stage_id=-1)
+odb.plot_beam_element_force(file_path=r"D:\\图片\\梁内力.png",component=1,case_name="CQ:成桥(合计)",stage_id=-1)
 ```  
 Returns: 无
 ### plot_truss_element_force
@@ -3125,7 +3454,7 @@ Returns: 无
 > 参数:  
 > file_path: 保存路径名  
 > stage_id: -1-运营阶段  0-施工阶段包络 n-施工阶段号  
-> load_case_name: 详细荷载工况名,参考桥通结果输出,例如： CQ:成桥(合计)  
+> case_name: 详细荷载工况名,参考桥通结果输出,例如： CQ:成桥(合计)  
 > show_increment: 是否显示增量结果  
 > envelope_type: 施工阶段包络类型 1-最大 2-最小  
 > component: 分量编号 0-N 1-Fx 2-Fy 3-Fz  
@@ -3138,41 +3467,47 @@ Returns: 无
 > show_number: 数值选项卡开启  
 > text_rotation: 数值选项卡内文字旋转角度  
 > digital_count: 小数点位数  
-> show_exponential: 指数显示开启  
-> max_min_kind: 数值选项卡内最大最小值显示 -1-不显示最大最小值  0-显示最大值和最小值  1-最大绝对值 2-最大值 3-最小值  
+> text_exponential: 指数显示开启  
+> max_min_kind: 数值选项卡内最大最小值显示 0-不显示最大最小值  1-显示最大值和最小值  2-最大绝对值 3-最大值 4-最小值  
 > show_legend: 图例选项卡开启  
-> show_pre_deformed: 显示变形前  
-> position: 位置编号 0-始端 1-末端 2-绝对最大 4-全部  
+> show_undeformed: 显示变形前  
+> position: 位置编号 1-始端 2-末端 3-绝对最大 4-全部  
+> is_time_history:是否为时程分析结果  
+> time_kind:时程分析类型 1-时刻 2-最大 3-最小  
+> time_tick:时程分析时刻  
 ```Python
 # 示例代码
 from qtmodel import *
-odb.plot_truss_element_force(file_path=r"D:\\图片\\杆内力.png",load_case_name="CQ:成桥(合计)",stage_id=-1)
+odb.plot_truss_element_force(file_path=r"D:\\图片\\杆内力.png",case_name="CQ:成桥(合计)",stage_id=-1)
 ```  
 Returns: 无
 ### plot_plate_element_force
 绘制板单元结果图并保存到指定文件
 > 参数:  
 > file_path: 保存路径名  
-> component: 分量编号 0-Fxx 1-Fyy 2-Fxy 3-Mxx 4-Myy 5-Mxy  
-> force_kind: 力类型  
-> load_case_name: 详细荷载工况名  
+> component: 分量编号 1-Fxx 2-Fyy 3-Fxy 4-Mxx 5-Myy 6-Mxy  
+> force_kind: 内力选项 1-单元 2-节点平均  
+> case_name: 详细荷载工况名  
 > stage_id: 阶段编号  
 > envelope_type: 包络类型  
 > show_number: 是否显示数值  
 > show_deformed: 是否显示变形形状  
-> show_pre_deformed: 是否显示未变形形状  
+> show_undeformed: 是否显示未变形形状  
 > deformed_actual: 是否显示实际变形  
 > deformed_scale: 变形比例  
 > show_legend: 是否显示图例  
 > text_rotation_angle: 数值选项卡内文字旋转角度  
 > digital_count: 小数点位数  
-> show_exponential: 是否以指数形式显示  
+> text_exponential: 是否以指数形式显示  
 > max_min_kind: 最大最小值显示类型  
 > show_increment: 是否显示增量结果  
+> is_time_history:是否为时程分析结果  
+> time_kind:时程分析类型 1-时刻 2-最大 3-最小  
+> time_tick:时程分析时刻  
 ```Python
 # 示例代码
 from qtmodel import *
-odb.plot_plate_element_force(file_path=r"D:\\图片\\板内力.png",component=0,load_case_name="CQ:成桥(合计)",stage_id=-1)
+odb.plot_plate_element_force(file_path=r"D:\\图片\\板内力.png",component=1,case_name="CQ:成桥(合计)",stage_id=-1)
 ```  
 Returns: 无
 ### plot_composite_beam_force
@@ -3180,11 +3515,11 @@ Returns: 无
 > 参数:  
 > file_path: 保存路径名  
 > stage_id: -1-运营阶段  0-施工阶段包络 n-施工阶段号  
-> load_case_name: 详细荷载工况名,参考桥通结果输出,例如： CQ:成桥(合计)  
+> case_name: 详细荷载工况名,参考桥通结果输出,例如： CQ:成桥(合计)  
 > show_increment: 是否显示增量结果  
 > envelope_type: 施工阶段包络类型 1-最大 2-最小  
-> mat_type: 材料类型 0-主材 1-辅材 2-主材+辅材  
-> component: 分量编号 0-Fx 1-Fy 2-Fz 3-Mx 4-My 5-Mz  
+> mat_type: 材料类型 1-主材 2-辅材 3-主材+辅材  
+> component: 分量编号 1-Fx 2-Fy 3-Fz 4-Mx 5-My 6-Mz  
 > show_line_chart: 折线图选项卡开启  
 > line_scale:折线图比例  
 > flip_plot:反向绘制  
@@ -3194,15 +3529,15 @@ Returns: 无
 > show_number: 数值选项卡开启  
 > text_rotation: 数值选项卡内文字旋转角度  
 > digital_count: 小数点位数  
-> show_exponential: 指数显示开启  
-> max_min_kind: 数值选项卡内最大最小值显示 -1-不显示最大最小值  0-显示最大值和最小值  1-最大绝对值 2-最大值 3-最小值  
+> text_exponential: 指数显示开启  
+> max_min_kind: 数值选项卡内最大最小值显示 0-不显示最大最小值  1-显示最大值和最小值  2-最大绝对值 3-最大值 4-最小值  
 > show_legend: 图例选项卡开启  
-> show_pre_deformed: 显示变形前  
-> position: 位置编号 0-始端 1-末端 2-绝对最大 4-全部  
+> show_undeformed: 显示变形前  
+> position: 位置编号 1-始端 2-末端 3-绝对最大 4-全部  
 ```Python
 # 示例代码
 from qtmodel import *
-odb.plot_composite_beam_force(file_path=r"D:\\图片\\组合梁内力.png",mat_type=0,component=0,load_case_name="CQ:成桥(合计)",stage_id=-1)
+odb.plot_composite_beam_force(file_path=r"D:\\图片\\组合梁内力.png",mat_type=0,component=1,case_name="CQ:成桥(合计)",stage_id=-1)
 ```  
 Returns: 无
 ### plot_beam_element_stress
@@ -3210,10 +3545,10 @@ Returns: 无
 > 参数:  
 > file_path: 保存路径名  
 > stage_id: -1-运营阶段  0-施工阶段包络 n-施工阶段号  
-> load_case_name: 详细荷载工况名,参考桥通结果输出,例如： CQ:成桥(合计)  
+> case_name: 详细荷载工况名,参考桥通结果输出,例如： CQ:成桥(合计)  
 > show_increment: 是否显示增量结果  
 > envelope_type: 施工阶段包络类型 1-最大 2-最小  
-> component: 分量编号 0-轴力分量 1-Mz分量 2-My分量 3-组合包络 4-左上 5-右上 6-右下 7-左下  
+> component: 分量编号 1-轴力 2-Mzx 3-My 4-组合包络 5-左上 6-右上 7-右下 8-左下  
 > show_line_chart: 折线图选项卡开启  
 > line_scale:折线图比例  
 > flip_plot:反向绘制  
@@ -3223,15 +3558,15 @@ Returns: 无
 > show_number: 数值选项卡开启  
 > text_rotation: 数值选项卡内文字旋转角度  
 > digital_count: 小数点位数  
-> show_exponential: 指数显示开启  
-> max_min_kind: 数值选项卡内最大最小值显示 -1-不显示最大最小值  0-显示最大值和最小值  1-最大绝对值 2-最大值 3-最小值  
+> text_exponential: 指数显示开启  
+> max_min_kind: 数值选项卡内最大最小值显示 0-不显示最大最小值  1-显示最大值和最小值  2-最大绝对值 3-最大值 4-最小值  
 > show_legend: 图例选项卡开启  
-> show_pre_deformed: 显示变形前  
-> position: 位置编号 0-始端 1-末端 2-绝对最大 4-全部  
+> show_undeformed: 显示变形前  
+> position: 位置编号 1-始端 2-末端 3-绝对最大 4-全部  
 ```Python
 # 示例代码
 from qtmodel import *
-odb.plot_beam_element_stress(file_path=r"D:\\图片\\梁应力.png",show_line_chart=False,component=0,load_case_name="CQ:成桥(合计)",stage_id=-1)
+odb.plot_beam_element_stress(file_path=r"D:\\图片\\梁应力.png",show_line_chart=False,component=1,case_name="CQ:成桥(合计)",stage_id=-1)
 ```  
 Returns: 无
 ### plot_truss_element_stress
@@ -3239,7 +3574,7 @@ Returns: 无
 > 参数:  
 > file_path: 保存路径名  
 > stage_id: -1-运营阶段  0-施工阶段包络 n-施工阶段号  
-> load_case_name: 详细荷载工况名,参考桥通结果输出,例如： CQ:成桥(合计)  
+> case_name: 详细荷载工况名,参考桥通结果输出,例如： CQ:成桥(合计)  
 > show_increment: 是否显示增量结果  
 > envelope_type: 施工阶段包络类型 1-最大 2-最小  
 > show_line_chart: 折线图选项卡开启  
@@ -3251,15 +3586,15 @@ Returns: 无
 > show_number: 数值选项卡开启  
 > text_rotation: 数值选项卡内文字旋转角度  
 > digital_count: 小数点位数  
-> show_exponential: 指数显示开启  
-> max_min_kind: 数值选项卡内最大最小值显示 -1-不显示最大最小值  0-显示最大值和最小值  1-最大绝对值 2-最大值 3-最小值  
+> text_exponential: 指数显示开启  
+> max_min_kind: 数值选项卡内最大最小值显示 0-不显示最大最小值  1-显示最大值和最小值  2-最大绝对值 3-最大值 4-最小值  
 > show_legend: 图例选项卡开启  
-> show_pre_deformed: 显示变形前  
-> position: 位置编号 0-始端 1-末端 2-绝对最大 4-全部  
+> show_undeformed: 显示变形前  
+> position: 位置编号 1-始端 2-末端 3-绝对最大 4-全部  
 ```Python
 # 示例代码
 from qtmodel import *
-odb.plot_truss_element_stress(file_path=r"D:\\图片\\杆应力.png",load_case_name="CQ:成桥(合计)",stage_id=-1)
+odb.plot_truss_element_stress(file_path=r"D:\\图片\\杆应力.png",case_name="CQ:成桥(合计)",stage_id=-1)
 ```  
 Returns: 无
 ### plot_composite_beam_stress
@@ -3267,11 +3602,11 @@ Returns: 无
 > 参数:  
 > file_path: 保存路径名  
 > stage_id: -1-运营阶段  0-施工阶段包络 n-施工阶段号  
-> load_case_name: 详细荷载工况名,参考桥通结果输出,例如： CQ:成桥(合计)  
+> case_name: 详细荷载工况名,参考桥通结果输出,例如： CQ:成桥(合计)  
 > show_increment: 是否显示增量结果  
 > envelope_type: 施工阶段包络类型 1-最大 2-最小  
-> mat_type: 材料类型 0-主材 1-辅材  
-> component: 分量编号 0-轴力分量 1-Mz分量 2-My分量 3-包络 4-左上 5-右上 6-左下 7-右下  
+> mat_type: 材料类型 1-主材 2-辅材  
+> component: 分量编号 1-轴力分量 2-Mz分量 3-My分量 4-包络 5-左上 6-右上 7-左下 8-右下  
 > show_line_chart: 折线图选项卡开启  
 > line_scale:折线图比例  
 > flip_plot:反向绘制  
@@ -3281,42 +3616,42 @@ Returns: 无
 > show_number: 数值选项卡开启  
 > text_rotation: 数值选项卡内文字旋转角度  
 > digital_count: 小数点位数  
-> show_exponential: 指数显示开启  
-> max_min_kind: 数值选项卡内最大最小值显示 -1-不显示最大最小值  0-显示最大值和最小值  1-最大绝对值 2-最大值 3-最小值  
+> text_exponential: 指数显示开启  
+> max_min_kind: 数值选项卡内最大最小值显示 0-不显示最大最小值  1-显示最大值和最小值  2-最大绝对值 3-最大值 4-最小值  
 > show_legend: 图例选项卡开启  
-> show_pre_deformed: 显示变形前  
-> position: 位置编号 0-始端 1-末端 2-绝对最大 4-全部  
+> show_undeformed: 显示变形前  
+> position: 位置编号 1-始端 2-末端 3-绝对最大 4-全部  
 ```Python
 # 示例代码
 from qtmodel import *
-odb.plot_composite_beam_stress(file_path=r"D:\\图片\\组合梁应力.png",component=0,load_case_name="CQ:成桥(合计)",stage_id=-1)
+odb.plot_composite_beam_stress(file_path=r"D:\\图片\\组合梁应力.png",component=1,case_name="CQ:成桥(合计)",stage_id=-1)
 ```  
 Returns: 无
 ### plot_plate_element_stress
 绘制板单元结果图并保存到指定文件
 > 参数:  
 > file_path: 保存路径名  
-> component: 分量编号 0-Fxx 1-Fyy 2-Fxy 3-Mxx 4-Myy 5-Mxy  
-> stress_kind: 力类型 0-单元 1-节点平均  
-> load_case_name: 详细荷载工况名  
+> component: 分量编号 1-Fxx 2-Fyy 3-Fxy 4-Mxx 5-Myy 6-Mxy  
+> stress_kind: 力类型 1-单元 2-节点平均  
+> case_name: 详细荷载工况名  
 > stage_id: 阶段编号  
 > envelope_type: 包络类型  
 > show_number: 是否显示数值  
 > show_deformed: 是否显示变形形状  
-> show_pre_deformed: 是否显示未变形形状  
+> show_undeformed: 是否显示未变形形状  
 > deformed_actual: 是否显示实际变形  
 > deformed_scale: 变形比例  
 > show_legend: 是否显示图例  
 > text_rotation_angle: 数值选项卡内文字旋转角度  
 > digital_count: 小数点位数  
-> show_exponential: 是否以指数形式显示  
+> text_exponential: 是否以指数形式显示  
 > max_min_kind: 最大最小值显示类型  
 > show_increment: 是否显示增量结果  
-> position: 位置 0-板顶 1-板底 2-绝对值最大  
+> position: 位置 1-板顶 2-板底 3-绝对值最大  
 ```Python
 # 示例代码
 from qtmodel import *
-odb.plot_plate_element_stress(file_path=r"D:\\图片\\板应力.png",component=0,load_case_name="CQ:成桥(合计)",stage_id=-1)
+odb.plot_plate_element_stress(file_path=r"D:\\图片\\板应力.png",component=1,case_name="CQ:成桥(合计)",stage_id=-1)
 ```  
 Returns: 无
 ### plot_vibration_mode
@@ -3325,11 +3660,11 @@ Returns: 无
 > file_path: 保存路径名  
 > mode: 模态号  
 > show_number: 是否显示数值  
-> show_pre_deformed: 是否显示未变形形状  
+> show_undeformed: 是否显示未变形形状  
 > show_legend: 是否显示图例  
 > text_rotation_angle: 数值选项卡内文字旋转角度  
 > digital_count: 小数点位数  
-> show_exponential: 是否以指数形式显示  
+> text_exponential: 是否以指数形式显示  
 > max_min_kind: 最大最小值显示类型  
 ```Python
 # 示例代码
@@ -3350,7 +3685,7 @@ Returns: 无
 from qtmodel import *
 odb.get_element_by_point(0.5,0.5,0.5,tolerance=1)
 ```  
-Returns: json字符串,包含信息为list[int]
+Returns: 包含信息为list[int]
 ### get_element_by_material
 获取某一材料相应的单元
 > 参数:  
@@ -3360,7 +3695,7 @@ Returns: json字符串,包含信息为list[int]
 from qtmodel import *
 odb.get_element_by_material("材料1")
 ```  
-Returns: json字符串,包含信息为list[int]
+Returns: 包含信息为list[int]
 ### get_overlap_nodes
 获取重合节点
 > 参数:  
@@ -3370,7 +3705,7 @@ Returns: json字符串,包含信息为list[int]
 from qtmodel import *
 odb.get_overlap_nodes()
 ```  
-Returns: json字符串,包含信息为list[list[int]]
+Returns: 包含信息为list[list[int]]
 ### get_overlap_elements
 获取重合节点
 > 参数:  
@@ -3379,7 +3714,7 @@ Returns: json字符串,包含信息为list[list[int]]
 from qtmodel import *
 odb.get_overlap_elements()
 ```  
-Returns:  json字符串,包含信息为list[list[int]]
+Returns:  包含信息为list[list[int]]
 ### get_structure_group_names
 获取结构组名称
 > 参数:  
@@ -3388,7 +3723,7 @@ Returns:  json字符串,包含信息为list[list[int]]
 from qtmodel import *
 odb.get_structure_group_names()
 ```  
-Returns: json字符串,包含信息为list[str]
+Returns: 包含信息为list[str]
 ### get_thickness_data
 获取所有板厚信息
 > 参数:  
@@ -3406,7 +3741,7 @@ Returns:
 from qtmodel import *
 odb.get_all_thickness_data()
 ```  
-Returns: json字符串,包含信息为list[dict]
+Returns: 包含信息为list[dict]
 ### get_all_section_shape
 获取所有截面形状信息
 > 参数:  
@@ -3415,7 +3750,7 @@ Returns: json字符串,包含信息为list[dict]
 from qtmodel import *
 odb.get_all_section_shape()
 ```  
-Returns: json字符串,包含信息为list[dict]
+Returns: 包含信息为list[dict]
 ### get_section_shape
 获取截面形状信息
 > 参数:  
@@ -3434,7 +3769,7 @@ Returns:
 from qtmodel import *
 odb.get_all_section_data()
 ```  
-Returns: json字符串,包含信息为list[dict]
+Returns: 包含信息为list[dict]
 ### get_section_data
 获取截面详细信息,截面特性详见UI自定义特性截面
 > 参数:  
@@ -3444,7 +3779,7 @@ Returns: json字符串,包含信息为list[dict]
 from qtmodel import *
 odb.get_section_data(1)
 ```  
-Returns: json字符串,包含信息为dict
+Returns: 包含信息为dict
 ### get_section_property
 获取指定截面特性
 > 参数:  
@@ -3507,7 +3842,7 @@ odb.get_node_data()     # 获取所有节点信息
 odb.get_node_data(ids=1)    # 获取单个节点信息
 odb.get_node_data(ids=[1,2])    # 获取多个节点信息
 ```  
-Returns:  json字符串,包含信息为list[dict] or dict
+Returns:  包含信息为list[dict] or dict
 ### get_element_data
 获取单元信息
 > 参数:  
@@ -3518,7 +3853,7 @@ from qtmodel import *
 odb.get_element_data() # 获取所有单元结果
 odb.get_element_data(ids=1) # 获取指定编号单元信息
 ```  
-Returns:  json字符串,包含信息为list[dict] or dict
+Returns:  包含信息为list[dict] or dict
 ### get_element_type
 获取单元类型
 > 参数:  
@@ -3577,7 +3912,7 @@ Returns:  list[str] 其中str为json格式
 from qtmodel import *
 odb.get_material_data() # 获取所有材料信息
 ```  
-Returns: json字符串,包含信息为list[dict]
+Returns: 包含信息为list[dict]
 ### get_concrete_material
 获取混凝土材料信息
 > 参数:  
@@ -3637,7 +3972,7 @@ Returns:  list[str] 其中str为json格式
 from qtmodel import *
 odb.get_boundary_group_names()
 ```  
-Returns: json字符串,包含信息为list[str]
+Returns: 包含信息为list[str]
 ### get_general_support_data
 获取一般支承信息
 > 参数:  
@@ -3647,7 +3982,7 @@ Returns: json字符串,包含信息为list[str]
 from qtmodel import *
 odb.get_general_support_data()
 ```  
-Returns: json字符串,包含信息为list[dict]
+Returns: 包含信息为list[dict]
 ### get_elastic_link_data
 获取弹性连接信息
 > 参数:  
@@ -3657,7 +3992,7 @@ Returns: json字符串,包含信息为list[dict]
 from qtmodel import *
 odb.get_elastic_link_data()
 ```  
-Returns: json字符串,包含信息为list[dict]或 dict
+Returns: 包含信息为list[dict]或 dict
 ### get_elastic_support_data
 获取弹性支承信息
 > 参数:  
@@ -3667,7 +4002,7 @@ Returns: json字符串,包含信息为list[dict]或 dict
 from qtmodel import *
 odb.get_elastic_support_data()
 ```  
-Returns: json字符串,包含信息为list[dict]或 dict
+Returns: 包含信息为list[dict]或 dict
 ### get_master_slave_link_data
 获取主从连接信息
 > 参数:  
@@ -3677,7 +4012,7 @@ Returns: json字符串,包含信息为list[dict]或 dict
 from qtmodel import *
 odb.get_master_slave_link_data()
 ```  
-Returns: json字符串,包含信息为list[dict]或 dict
+Returns: 包含信息为list[dict]或 dict
 ### get_node_local_axis_data
 获取节点坐标信息
 > 参数:  
@@ -3686,7 +4021,7 @@ Returns: json字符串,包含信息为list[dict]或 dict
 from qtmodel import *
 odb.get_node_local_axis_data()
 ```  
-Returns: json字符串,包含信息为list[dict]
+Returns: 包含信息为list[dict]
 ### get_beam_constraint_data
 获取节点坐标信息
 > 参数:  
@@ -3696,7 +4031,7 @@ Returns: json字符串,包含信息为list[dict]
 from qtmodel import *
 odb.get_beam_constraint_data()
 ```  
-Returns: json字符串,包含信息为list[dict]或 dict
+Returns: 包含信息为list[dict]或 dict
 ### get_constraint_equation_data
 获取约束方程信息
 > 参数:  
@@ -3706,7 +4041,7 @@ Returns: json字符串,包含信息为list[dict]或 dict
 from qtmodel import *
 odb.get_constraint_equation_data()
 ```  
-Returns: json字符串,包含信息为list[dict]或 dict
+Returns: 包含信息为list[dict]或 dict
 ##  获取施工阶段信息
 ### get_stage_name
 获取所有施工阶段名称
@@ -3716,7 +4051,7 @@ Returns: json字符串,包含信息为list[dict]或 dict
 from qtmodel import *
 odb.get_stage_name()
 ```  
-Returns: json字符串,包含信息为list[int]
+Returns: 包含信息为list[int]
 ### get_elements_of_stage
 获取指定施工阶段单元编号信息
 > 参数:  
@@ -3726,7 +4061,7 @@ Returns: json字符串,包含信息为list[int]
 from qtmodel import *
 odb.get_elements_of_stage(stage_id=1)
 ```  
-Returns: json字符串,包含信息为list[int]
+Returns: 包含信息为list[int]
 ### get_nodes_of_stage
 获取指定施工阶段节点编号信息
 > 参数:  
@@ -3736,7 +4071,7 @@ Returns: json字符串,包含信息为list[int]
 from qtmodel import *
 odb.get_nodes_of_stage(stage_id=1)
 ```  
-Returns: json字符串,包含信息为list[int]
+Returns: 包含信息为list[int]
 ### get_groups_of_stage
 获取施工阶段结构组、边界组、荷载组名集合
 > 参数:  
@@ -3746,17 +4081,17 @@ Returns: json字符串,包含信息为list[int]
 from qtmodel import *
 odb.get_groups_of_stage(stage_id=1)
 ```  
-Returns: json字符串,包含信息为dict
+Returns: 包含信息为dict
 ##  荷载信息
-### get_load_case_names
+### get_case_names
 获取荷载工况名
 > 参数:  
 ```Python
 # 示例代码
 from qtmodel import *
-odb.get_load_case_names()
+odb.get_case_names()
 ```  
-Returns: json字符串,包含信息为list[str]
+Returns: 包含信息为list[str]
 ### get_pre_stress_load
 获取预应力荷载
 > 参数:  
@@ -3766,7 +4101,7 @@ Returns: json字符串,包含信息为list[str]
 from qtmodel import *
 odb.get_pre_stress_load(case_name="荷载工况1")
 ```  
-Returns: json字符串,包含信息为list[dict]
+Returns: 包含信息为list[dict]
 ### get_node_mass_data
 获取节点质量
 > 参数:  
@@ -3775,7 +4110,7 @@ Returns: json字符串,包含信息为list[dict]
 from qtmodel import *
 odb.get_node_mass_data()
 ```  
-Returns: json字符串,包含信息为list[dict]
+Returns: 包含信息为list[dict]
 ### get_nodal_force_load
 获取节点力荷载
 > 参数:  
@@ -3785,7 +4120,7 @@ Returns: json字符串,包含信息为list[dict]
 from qtmodel import *
 odb.get_nodal_force_load(case_name="荷载工况1")
 ```  
-Returns: json字符串,包含信息为list[dict]
+Returns: 包含信息为list[dict]
 ### get_nodal_displacement_load
 获取节点位移荷载
 > 参数:  
@@ -3795,7 +4130,7 @@ Returns: json字符串,包含信息为list[dict]
 from qtmodel import *
 odb.get_nodal_displacement_load(case_name="荷载工况1")
 ```  
-Returns: json字符串,包含信息为list[dict]
+Returns: 包含信息为list[dict]
 ### get_beam_element_load
 获取梁单元荷载
 > 参数:  
@@ -3805,7 +4140,7 @@ Returns: json字符串,包含信息为list[dict]
 from qtmodel import *
 odb.get_beam_element_load(case_name="荷载工况1")
 ```  
-Returns: json字符串,包含信息为list[dict]
+Returns: 包含信息为list[dict]
 ### get_plate_element_load
 获取梁单元荷载
 > 参数:  
@@ -3815,7 +4150,7 @@ Returns: json字符串,包含信息为list[dict]
 from qtmodel import *
 odb.get_beam_element_load(case_name="荷载工况1")
 ```  
-Returns: json字符串,包含信息为list[dict]
+Returns: 包含信息为list[dict]
 ### get_initial_tension_load
 获取初拉力荷载数据
 > 参数:  
@@ -3825,7 +4160,7 @@ Returns: json字符串,包含信息为list[dict]
 from qtmodel import *
 odb.get_initial_tension_load(case_name="荷载工况1")
 ```  
-Returns: json字符串,包含信息为list[dict]
+Returns: 包含信息为list[dict]
 ### get_cable_length_load
 获取指定荷载工况的初拉力荷载数据
 > 参数:  
@@ -3835,7 +4170,7 @@ Returns: json字符串,包含信息为list[dict]
 from qtmodel import *
 odb.get_cable_length_load(case_name="荷载工况1")
 ```  
-Returns: json字符串,包含信息为list[dict]
+Returns: 包含信息为list[dict]
 ### get_deviation_parameter
 获取制造偏差参数
 > 参数:  
@@ -3844,7 +4179,7 @@ Returns: json字符串,包含信息为list[dict]
 from qtmodel import *
 odb.get_deviation_parameter()
 ```  
-Returns: json字符串,包含信息为list[dict]
+Returns: 包含信息为list[dict]
 ### get_deviation_load
 获取指定荷载工况的制造偏差荷载
 > 参数:  
@@ -3854,4 +4189,4 @@ Returns: json字符串,包含信息为list[dict]
 from qtmodel import *
 odb.get_deviation_load(case_name="荷载工况1")
 ```  
-Returns: json字符串,包含信息为list[dict]
+Returns: 包含信息为list[dict]

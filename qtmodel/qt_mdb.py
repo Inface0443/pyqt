@@ -2488,7 +2488,6 @@ class Mdb:
         try:
             qt_model.UpdateStandardVehicle(name=name, newName=new_name, standardIndex=standard_code, loadType=load_type,
                                            loadLength=load_length, factor=factor, N=n, calcFatigue=calc_fatigue)
-
         except Exception as ex:
             raise Exception(ex)
 
@@ -2649,39 +2648,6 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def remove_nodal_mass(node_id: (Union[int, List[int]]) = -1):
-        """
-        删除节点质量
-        Args:
-             node_id:节点号，默认删除所有节点质量
-        Example:
-            mdb.remove_nodal_mass(node_id=1)
-        Returns: 无
-        """
-        try:
-            if node_id == -1:
-                qt_model.RemoveAllNodalMass()
-            else:
-                qt_model.RemoveNodalMass(nodeId=node_id)
-        except Exception as ex:
-            raise Exception(ex)
-
-    @staticmethod
-    def remove_load_to_mass(name: str = ""):
-        """
-        删除荷载转为质量,默认删除所有荷载转质量
-        Args:
-             name:荷载工况名
-        Example:
-            mdb.remove_load_to_mass(name="荷载工况")
-        Returns: 无
-        """
-        try:
-            qt_model.RemoveLoadToMass(name=name)
-        except Exception as ex:
-            raise Exception(ex)
-
-    @staticmethod
     def add_spectrum_function(name: str = "", factor: float = 1.0, kind: int = 0, function_info: list[tuple[float, float]] = None):
         """
         添加反应谱函数
@@ -2689,7 +2655,7 @@ class Mdb:
             name:反应谱函数名
             factor:反应谱调整系数
             kind:反应谱类型 0-无量纲 1-加速度 2-位移
-            function_info:反应谱函数信息
+            function_info:反应谱函数信息[(时间1,数值1),[时间2,数值2]]
         Example:
             mdb.add_spectrum_function(name="反应谱函数1",factor=1.0,function_info=[(0,0.02),(1,0.03)])
         Returns: 无
@@ -2752,6 +2718,612 @@ class Mdb:
         """
         try:
             qt_model.UpdateLoadToMass(nodeId=node_id, newNodeId=new_node_id, massInfo=mass_info)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def add_boundary_element_property(index: int = -1, name: str = "", kind: str = "钩",
+                                      is_dx: bool = False, is_dy: bool = False, is_dz: bool = False,
+                                      info_x: list[float] = None, info_y: list[float] = None, info_z: list[float] = None,
+                                      weight: float = 0, pin_stiffness: float = 0, pin_yield: float = 0, description: str = ""):
+        """
+        添加边界单元特性
+        Args:
+            index: 边界单元ID
+            name: 边界单元特性名称
+            kind: 类型名，支持:粘滞阻尼器、支座摩阻、滑动摩擦摆(具体参考界面数据名)
+            is_dx: 是否勾选自由度X
+            is_dy: 是否勾选自由度Y
+            is_dz: 是否勾选自由度Z
+            info_x: 自由度X信息(参考界面数据，例如粘滞阻尼器为[阻尼系数,速度指数]，支座摩阻为[安装方向0/1,弹性刚度/摩擦系数,恒载支承力N])
+            info_y: 自由度Y信息
+            info_z: 自由度Z信息
+            weight: 重量（单位N）
+            pin_stiffness: 剪力销刚度
+            pin_yield: 剪力销屈服力
+            description: 说明
+        Example:
+            mdb.add_boundary_element_property(name="边界单元特性",kind="粘滞阻尼器",is_dx=True,info_x=[0.05,1])
+        Returns: 无
+        """
+        try:
+            qt_model.AddBoundaryElementProperty(index=index, name=name, type=kind,
+                                                isDx=is_dx, isDy=is_dy, isDz=is_dz, infoX=info_x, infoY=info_y, infoZ=info_z,
+                                                weight=weight, pinStiffness=pin_stiffness, pinYield=pin_yield, description=description)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def add_boundary_element_link(index: int = -1, property_name: str = "", node_i: int = 1, node_j: int = 2,
+                                  beta: float = 0, node_system: int = 0, group_name: str = "默认边界组"):
+        """
+        添加边界单元连接
+        Args:
+            index: 边界单元连接号
+            property_name: 边界单元特性名称
+            node_i: 起始节点
+            node_j: 终止节点
+            beta: 角度
+            node_system: 参考坐标系0-整体 1-单元
+            group_name: 边界组名
+        Example:
+            mdb.add_boundary_element_link(property_name="边界单元特性",node_i=1,node_j=2,group_name="边界组1")
+        Returns: 无
+        """
+        try:
+            qt_model.AddBoundaryElementLink(
+                index=index,
+                propertyName=property_name,
+                nodeI=node_i,
+                nodeJ=node_j,
+                beta=beta,
+                nodeSystem=node_system,
+                groupName=group_name
+            )
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def add_nodal_dynamic_load(index: int = -1, node_id: int = 1, case_name: str = "",
+                               function_name: str = "", force_type: int = 1, factor: float = 1, time: float = 1):
+        """
+        添加节点动力荷载
+        Args:
+            index: 荷载编号，默认自动识别
+            node_id: 节点号
+            case_name: 时程工况名
+            function_name: 函数名称
+            force_type: 荷载类型 1-X 2-Y 3-Z 4-负X 5-负Y 6-负Z
+            factor: 系数
+            time: 到达时间
+        Example:
+            mdb.add_nodal_dynamic_load(node_id=1,case_name="时程工况1",function_name="函数1",time=10)
+        Returns: 无
+        """
+        try:
+            qt_model.AddNodalDynamicLoad(
+                index=index,
+                nodeId=node_id,
+                caseName=case_name,
+                functionName=function_name,
+                direction=force_type,
+                factor=factor,
+                time=time
+            )
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def add_ground_motion(index: int = -1, case_name: str = "", info_x: tuple[str, float, float] = None,
+                          info_y: tuple[str, float, float] = None, info_z: tuple[str, float, float] = None):
+        """
+        添加地面加速度
+        Args:
+            index: 地面加速度编号，默认自动识别
+            case_name: 工况名称
+            info_x: X方向时程分析函数信息列表(函数名,系数,到达时间)
+            info_y: Y方向时程分析函数信息列表
+            info_z: Z方向时程分析函数信息列表
+        Example:
+            mdb.add_ground_motion(case_name="时程工况1",info_x=("函数名",1,10))
+        Returns: 无
+        """
+        try:
+            qt_model.AddGroundMotion(
+                index=index,
+                caseName=case_name,
+                infoX=info_x,
+                infoY=info_y,
+                infoZ=info_z
+            )
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def add_time_history_case(
+            index: int = -1,
+            name: str = "",
+            description: str = "",
+            analysis_kind: int = 0,
+            nonlinear_groups: list = None,
+            duration: float = 1,
+            time_step: float = 0.01,
+            min_step: float = 1e-4,
+            tolerance: float = 1e-4,
+            damp_type: int = 0,
+            single_damping: tuple[float, float, float, float] = None,
+            group_damping: list[tuple[str, float, float, float]] = None
+    ):
+        """
+        添加时程工况
+        Args:
+            index: 时程工况号
+            name: 时程工况名
+            description: 描述
+            analysis_kind: 分析类型(0-线性 1-边界非线性)
+            nonlinear_groups: 非线性结构组列表
+            duration: 分析时间
+            time_step: 分析时间步长
+            min_step: 最小收敛步长
+            tolerance: 收敛容限
+            damp_type: 组阻尼类型(0-不计阻尼 1-单一阻尼 2-组阻尼)
+            single_damping: 单一阻尼信息列表(周期1,周期2,频率1,频率2)
+            group_damping: 组阻尼信息列表[(材料名1,周期1,周期2,阻尼比),(材料名2,周期1,周期2,阻尼比)...]
+        Example:
+            mdb.add_time_history_case(name="时程工况1",analysis_kind=0,duration=10,time_step=0.02,damp_type=2,
+                group_damping=[("材料1",8,1,0.05),("材料2",8,1,0.05),("材料3",8,1,0.02)])
+        Returns: 无
+        """
+        try:
+            qt_model.AddTimeHistoryCase(
+                index=index,
+                name=name,
+                description=description,
+                analysisKind=analysis_kind,
+                nonlinearGroups=nonlinear_groups,
+                duration=duration,
+                timeStep=time_step,
+                minStep=min_step,
+                tolerance=tolerance,
+                dampType=damp_type,
+                singleDamping=single_damping,
+                groupDamping=group_damping
+            )
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def add_time_history_function(name: str = "", factor: float = 1.0, kind: int = 0, function_info: list = None):
+        """
+        添加时程函数
+        Args:
+            name: 名称
+            factor: 放大系数
+            kind: 0-无量纲 1-加速度 2-力 3-力矩
+            function_info: 函数信息[(时间1,数值1),(时间2,数值2)]
+        Example:
+            mdb.add_time_history_function(name="时程函数1",factor=1,function_info=[(0,0),(0.02,0.1),[0.04,0.3]])
+        Returns: 无
+        """
+        try:
+            qt_model.AddTimeHistoryFunction(
+                name=name,
+                factor=factor,
+                kind=kind,
+                functionInfo=function_info
+            )
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def update_boundary_element_property(name: str = "", new_name: str = "", kind: str = "钩",
+                                         is_dx: bool = False, is_dy: bool = False, is_dz: bool = False,
+                                         info_x: list[float] = None, info_y: list[float] = None, info_z: list[float] = None,
+                                         weight: float = 0, pin_stiffness: float = 0, pin_yield: float = 0, description: str = "") -> None:
+        """
+        更新边界单元特性，输入参数单位默认为N、m
+
+        Args:
+            name: 原边界单元特性名称
+            new_name: 更新后边界单元特性名称，默认时不修改
+            kind: 类型名，支持:粘滞阻尼器、支座摩阻、滑动摩擦摆(具体参考界面数据名)
+            is_dx: 是否勾选自由度X
+            is_dy: 是否勾选自由度Y
+            is_dz: 是否勾选自由度Z
+            info_x: 自由度X信息(参考界面数据，例如粘滞阻尼器为[阻尼系数,速度指数]，支座摩阻为[安装方向0/1,弹性刚度/摩擦系数,恒载支承力N])
+            info_y: 自由度Y信息
+            info_z: 自由度Z信息
+            weight: 重量（单位N）
+            pin_stiffness: 剪力销刚度
+            pin_yield: 剪力销屈服力
+            description: 说明
+        Example:
+            mdb.update_boundary_element_property(name="old_prop",kind="粘滞阻尼器",is_dx=True,info_x=[0.5, 0.5],weight=1000.0)
+        Returns: 无
+        """
+        try:
+            qt_model.UpdateBoundaryElementProperty(
+                name=name,
+                newName=new_name,
+                type=kind,
+                isDx=is_dx,
+                isDy=is_dy,
+                isDz=is_dz,
+                infoX=info_x,
+                infoY=info_y,
+                infoZ=info_z,
+                weight=weight,
+                pinStiffness=pin_stiffness,
+                pinYield=pin_yield,
+                description=description
+            )
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def update_boundary_element_link(index: int,property_name: str = "",node_i: int = 1,node_j: int = 2,
+                                     beta: float = 0,node_system: int = 0,group_name: str = "默认边界组") -> None:
+        """
+        更新边界单元连接
+        Args:
+            index: 根据边界单元连接id选择待更新对象
+            property_name: 边界单元特性名
+            node_i: 起始节点点
+            node_j: 终点节点号
+            beta: 角度参数
+            node_system: 0-单元坐标系 1-整体坐标系
+            group_name: 边界组名称
+        Example:
+            mdb.update_boundary_element_link(index=1,property_name="边界单元特性名",node_i=101,node_j=102,beta=30.0)
+        Returns: 无
+        """
+        try:
+            qt_model.UpdateBoundaryElementLink(
+                index=index,
+                propertyName=property_name,
+                nodeI=node_i,
+                nodeJ=node_j,
+                beta=beta,
+                nodeSystem=node_system,
+                groupName=group_name
+            )
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def update_time_history_case(name: str = "", new_name: str = "", description: str = "", analysis_kind: int = 0,
+                                 nonlinear_groups: list[str] = None, duration: float = 1, time_step: float = 0.01, min_step: float = 1e-4,
+                                 tolerance: float = 1e-4, damp_type: int = 0, single_damping: list[float] = None,
+                                 group_damping: list[tuple[str, float, float, float]] = None) -> None:
+        """
+        添加时程工况
+        Args:
+            name: 时程工况号
+            new_name: 时程工况名
+            description: 描述
+            analysis_kind: 分析类型(0-线性 1-边界非线性)
+            nonlinear_groups: 非线性结构组列表
+            duration: 分析时间
+            time_step: 分析时间步长
+            min_step: 最小收敛步长
+            tolerance: 收敛容限
+            damp_type: 组阻尼类型(0-不计阻尼 1-单一阻尼 2-组阻尼)
+            single_damping: 单一阻尼信息列表(周期1,周期2,频率1,频率2)
+            group_damping: 组阻尼信息列表[(材料名1,周期1,周期2,阻尼比),(材料名2,周期1,周期2,阻尼比)...]
+        Example:
+            mdb.update_time_history_case(name="TH1",analysis_kind=1,
+                nonlinear_groups=["结构组1", "结构组2"],duration=30.0,time_step=0.02,damp_type=2,
+                group_damping=[("concrete", 0.1, 0.5, 0.05), ("steel", 0.1, 0.5, 0.02)])
+        Returns: 无
+        """
+        try:
+            qt_model.UpdateTimeHistoryCase(
+                name=name,
+                newName=new_name,
+                description=description,
+                analysisKind=analysis_kind,
+                nonlinearGroups=nonlinear_groups if nonlinear_groups else [],
+                duration=duration,
+                timeStep=time_step,
+                minStep=min_step,
+                tolerance=tolerance,
+                dampType=damp_type,
+                singleDamping=single_damping if single_damping else [],
+                groupDamping=group_damping if group_damping else []
+            )
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def update_time_history_function(name: str, new_name: str = "", factor: float = 1.0, kind: int = 0,
+                                     function_info: list[tuple[float, float]] = None) -> None:
+        """
+        更新时程函数
+        Args:
+            name: 更新前函数名
+            new_name: 更新后函数名，默认不更新名称
+            factor: 放大系数
+            kind: 0-无量纲 1-加速度 2-力 3-力矩
+            function_info: 函数信息[(时间1,数值1),(时间2,数值2)]
+        Example:
+            mdb.update_time_history_function(name="old_func",factor=1.5,kind=1,function_info=[(0.0, 0.0), (0.1, 0.5)])
+        Returns: 无
+        """
+        try:
+            qt_model.UpdateTimeHistoryFunction(
+                name=name,
+                newName=new_name,
+                factor=factor,
+                kind=kind,
+                functionInfo=function_info
+            )
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def update_nodal_dynamic_load(index: int = -1, node_id: int = 1, case_name: str = "", function_name: str = "",
+                                  direction: int = 1, factor: float = 1, time: float = 1) -> None:
+        """
+        更新节点动力荷载
+        Args:
+            index: 荷载编号
+            node_id: 节点号
+            case_name: 时程工况名
+            function_name: 函数名称
+            direction: 荷载类型 1-X 2-Y 3-Z 4-负X 5-负Y 6-负Z
+            factor: 系数
+            time: 到达时间
+        Example:
+            mdb.update_nodal_dynamic_load(index=1,node_id=101,case_name="Earthquake_X",function_name="EQ_function",direction=1,factor=1.2,time=0.0 )
+        Returns: 无
+        """
+        try:
+            qt_model.UpdateNodalDynamicLoad(
+                id=index,
+                nodeId=node_id,
+                caseName=case_name,
+                functionName=function_name,
+                direction=direction,
+                factor=factor,
+                time=time
+            )
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def update_ground_motion(index: int, case_name: str = "", info_x: tuple[str, float, float] = None,
+                             info_y: tuple[str, float, float] = None, info_z: tuple[str, float, float] = None
+                             ) -> None:
+        """
+        更新地面加速度
+        Args:
+            index: 地面加速度编号
+            case_name: 时程工况名
+            info_x: X方向时程分析函数信息数据(函数名,系数,到达时间)
+            info_y: Y方向信息
+            info_z: Z方向信息
+        Example:
+            mdb.update_ground_motion(index=1,case_name="Earthquake_X",
+                info_x=("EQ_X_func", 1.0, 0.0),info_y=("EQ_Y_func", 0.8, 0.0),info_z=("EQ_Z_func", 0.6, 0.0) )
+        Returns: 无
+        """
+        try:
+            qt_model.UpdateGroundMotion(
+                id=index,
+                caseName=case_name,
+                infoX=info_x,
+                infoY=info_y,
+                infoZ=info_z
+            )
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def update_spectrum_function(name: str = "", new_name: str = "", factor: float = 1.0, kind: int = 0,
+                                 function_info: list[tuple[float, float]] = None) -> None:
+        """
+        更新反应谱函数
+        Args:
+            name: 函数名称
+            new_name: 新函数名称
+            factor: 反应谱调整系数
+            kind: 0-无量纲 1-加速度 2-位移
+            function_info: 函数信息[(时间1,数值1),(时间2,数值2)]
+        Example:
+            mdb.update_spectrum_function( name="函数名称", factor=1.2, kind=1, function_info=[(0.0, 0.0), (0.5, 0.8), (1.0, 1.2)])
+        Returns: 无
+        """
+        try:
+            qt_model.UpdateResponseSpectrumFunction(
+                name=name,
+                newName=new_name,
+                factor=factor,
+                kind=kind,
+                functionInfo=function_info if function_info else []
+            )
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def update_spectrum_case(name: str, new_name: str = "", description: str = "", kind: int = 1,
+                             info_x: tuple[str, float] = None, info_y: tuple[str, float] = None, info_z: tuple[str, float] = None) -> None:
+        """
+        更新反应谱工况
+        Args:
+            name: 工况名称
+            new_name: 新工况名称
+            description: 描述
+            kind: 组合方式 1-求模 2-求和
+            info_x: 反应谱X向信息 (X方向函数名,系数)
+            info_y: Y向信息
+            info_z: Z向信息
+        Example:
+            mdb.update_spectrum_case(name="RS1",kind=1,info_x=("函数X", 1.0),info_y=("函数Y", 0.85) )
+        Returns: 无
+        """
+        try:
+            qt_model.UpdateResponseSpectrumCase(
+                name=name,
+                newName=new_name,
+                description=description,
+                kind=kind,
+                infoX=info_x,
+                infoY=info_y,
+                infoZ=info_z
+            )
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def remove_spectrum_case(name: str) -> None:
+        """
+        删除反应谱工况
+        Args:
+            name: 工况名称
+        Example:
+            mdb.remove_spectrum_case("工况名")
+        Returns: 无
+        """
+        try:
+            qt_model.RemoveResponseSpectrumCase(name=name)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def remove_spectrum_function(ids: (Union[int, List[int]]) = None, name: str = "") -> None:
+        """
+        删除反应谱函数
+        Args:
+            ids: 删除反应谱工况函数编号集合，默认为空时则按照名称删除
+            name: 编号集合为空时则按照名称删除
+        Example:
+            mdb.remove_spectrum_function(name="工况名")
+        Returns: 无
+        """
+        try:
+            qt_model.RemoveResponseSpectrumFunction(ids=ids, name=name)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def remove_time_history_load_case(name: str) -> None:
+        """
+        通过时程工况名删除时程工况
+        Args:
+            name: 时程工况名
+        Example:
+            mdb.remove_time_history_load_case("工况名")
+        Returns: 无
+        """
+        try:
+            qt_model.RemoveTimeHistoryLoadCase(name=name)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def remove_time_history_function(ids: (Union[int, List[int]]) = None, name: str = "") -> None:
+        """
+        通过函数编号删除时程函数
+        Args:
+            ids: 删除时程函数编号集合，默认为空时则按照名称删除
+            name: 编号集合为空时则按照名称删除
+        Example:
+            mdb.remove_time_history_function(ids=[1,2,3])
+        Returns: 无
+        """
+        try:
+            qt_model.RemoveTimeHistoryFunction(ids=ids, name=name)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def remove_load_to_mass(name: str = ""):
+        """
+        删除荷载转为质量,默认删除所有荷载转质量
+        Args:
+            name:荷载工况名
+        Example:
+            mdb.remove_load_to_mass(name="荷载工况")
+        Returns: 无
+        """
+        try:
+            qt_model.RemoveLoadToMass(name=name)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def remove_nodal_mass(node_id: (Union[int, List[int]]) = -1):
+        """
+        删除节点质量
+        Args:
+             node_id:节点号
+        Example:
+            mdb.remove_nodal_mass(node_id=1)
+            mdb.remove_nodal_mass(node_id=[1,2,3,4])
+        Returns: 无
+        """
+        try:
+            qt_model.RemoveNodalMass(nodeId=node_id)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def remove_all_nodal_mass() -> None:
+        """
+        删除所有节点质量
+        Args: 无
+        Example:
+            mdb.remove_all_nodal_mass()
+        Returns: 无
+        """
+        try:
+            qt_model.RemoveAllNodalMass()
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def remove_boundary_element_property(name: str) -> None:
+        """
+        删除边界单元特性
+        Args: 无
+        Example:
+            mdb.remove_boundary_element_property(name="特性名")
+        Returns: 无
+        """
+        try:
+            qt_model.RemoveBoundaryElementProperty(name=name)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def remove_boundary_element_link(ids: (Union[int, List[int]]) = None) -> None:
+        """
+        删除边界单元连接
+        Args:
+            ids:所删除的边界单元连接号
+        Example:
+            mdb.remove_boundary_element_link(ids=1)
+            mdb.remove_boundary_element_link(ids=[1,2,3,4])
+        Returns: 无
+        """
+        try:
+            qt_model.RemoveBoundaryElementLink(ids=ids)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def remove_nodal_dynamic_load(ids: (Union[int, List[int]]) = None) -> None:
+        """
+        删除节点动力荷载
+        Args:
+            ids:所删除的节点动力荷载编号
+        Example:
+            mdb.remove_nodal_dynamic_load(ids=1)
+            mdb.remove_nodal_dynamic_load(ids=[1,2,3,4])
+        Returns: 无
+        """
+        try:
+            qt_model.RemoveNodalDynamicLoad(ids=ids)
         except Exception as ex:
             raise Exception(ex)
 
@@ -3391,7 +3963,8 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def add_top_plate_temperature(element_id: (Union[int, List[int]]) = 1, case_name: str = "", temperature: float = 0, group_name: str = "默认荷载组"):
+    def add_top_plate_temperature(element_id: (Union[int, List[int]]) = 1, case_name: str = "", temperature: float = 0,
+                                  group_name: str = "默认荷载组"):
         """
         添加顶板温度
         Args:
@@ -3592,7 +4165,7 @@ class Mdb:
 
     @staticmethod
     def add_initial_tension_load(element_id: (Union[int, List[int]]) = 1, case_name: str = "", group_name: str = "默认荷载组", tension: float = 0,
-                                 tension_type: int = 1,application_type:int=1,stiffness:float=0):
+                                 tension_type: int = 1, application_type: int = 1, stiffness: float = 0):
         """
         添加初始拉力
         Args:
@@ -3609,7 +4182,7 @@ class Mdb:
         """
         try:
             qt_model.AddInitialTensionLoad(elementId=element_id, caseName=case_name, tension=tension, applicationType=application_type,
-                                           stiffness=stiffness,tensionType=tension_type, groupName=group_name)
+                                           stiffness=stiffness, tensionType=tension_type, groupName=group_name)
         except Exception as ex:
             raise Exception(ex)
 

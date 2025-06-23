@@ -1,3 +1,4 @@
+import json
 from __main__ import qt_model
 from .qt_db import *
 from typing import Union, List
@@ -173,13 +174,77 @@ class Odb:
 
     # endregion
 
-    # region 静力结果查看
+    # region 结果表格
     @staticmethod
-    def get_element_stress(element_id: (Union[int, List[int]]) = 1, stage_id: int = 1, result_kind: int = 1, increment_type: int = 1, case_name=""):
+    def get_reaction(node_id, envelop_type=1, stage_id: int = 1, result_kind: int = 1,
+                     increment_type: int = 1, case_name="", is_time_history: bool = True):
+        """
+        获取节点反力
+        Args:
+            node_id: 节点编号,支持整数或整数型列表
+            envelop_type: 施工阶段包络类型 1-最大 2-最小
+            stage_id: 施工阶段号 -1-运营阶段  0-施工阶段包络 n-施工阶段号
+            result_kind: 施工阶段数据的类型 1-合计 2-收缩徐变效应 3-预应力效应 4-恒载
+            increment_type: 1-全量    2-增量
+            case_name: 运营阶段所需荷载工况名
+            is_time_history: 运营阶段所需荷载工况名是否为时程分析
+        Example:
+            odb.get_reaction(node_id=1,stage_id=1)
+            odb.get_reaction(node_id=[1,2,3],stage_id=1)
+            odb.get_reaction(node_id=1,stage_id=-1,case_name="工况名")
+        Returns: 包含信息为list[dict] or dict
+        """
+        try:
+            bs_list = qt_model.GetSupportReaction(nodeId=node_id, stageId=stage_id, envelopType=envelop_type, isTimeHistory=is_time_history,
+                                                  resultKind=result_kind, incrementType=increment_type, caseName=case_name)
+            list_res = []
+            for item in bs_list:
+                force = [item.Force.Fx, item.Force.Fy, item.Force.Fz, item.Force.Mx, item.Force.My, item.Force.Mz]
+                list_res.append(str(SupportReaction(item.NodeId, force, item.Time)))
+            return list_res if len(list_res) > 1 else list_res[0]
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def get_deformation(node_id: (Union[int, List[int]]) = None, envelop_type=1,
+                        stage_id: int = 1, result_kind: int = 1, increment_type: int = 1,
+                        case_name="", is_time_history: bool = True):
+        """
+        获取节点变形结果,支持单个节点和节点列表
+        Args:
+            node_id: 查询结果的节点号
+            envelop_type: 施工阶段包络类型 1-最大 2-最小
+            stage_id: 施工阶段号 -1-运营阶段  0-施工阶段包络 n-施工阶段号
+            result_kind: 施工阶段数据的类型(1-合计 2-收缩徐变效应 3-预应力效应 4-恒载) 时程分析类型(1-位移 2-速度 3-加速度)
+            increment_type: 1-全量    2-增量
+            case_name: 运营阶段所需荷载工况名
+            is_time_history: 是否为时程分析
+        Example:
+            odb.get_deformation(node_id=1,stage_id=1)
+            odb.get_deformation(node_id=[1,2,3],stage_id=1)
+            odb.get_deformation(node_id=1,stage_id=-1,case_name="工况名")
+        Returns: 包含信息为list[dict] or dict
+        """
+        try:
+            bf_list = qt_model.GetNodeDisplacement(nodeIds=node_id, stageId=stage_id, envelopType=envelop_type, isTimeHistory=is_time_history,
+                                                   resultKind=result_kind, incrementType=increment_type, caseName=case_name)
+            list_res = []
+            for item in bf_list:
+                displacements = [item.Displacement.Dx, item.Displacement.Dy, item.Displacement.Dz,
+                                 item.Displacement.Rx, item.Displacement.Ry, item.Displacement.Rz]
+                list_res.append(str(NodeDisplacement(item.NodeId, displacements, item.Time)))
+            return list_res if len(list_res) > 1 else list_res[0]
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def get_element_stress(element_id: (Union[int, List[int]]) = 1, envelop_type: int = 1, stage_id: int = 1, result_kind: int = 1,
+                           increment_type: int = 1, case_name=""):
         """
         获取单元应力,支持单个单元和单元列表
         Args:
             element_id: 单元编号,支持整数或整数型列表
+            envelop_type:施工阶段包络类型 1-最大 2-最小 3-包络
             stage_id: 施工阶段号 -1-运营阶段  0-施工阶段包络 n-施工阶段号
             result_kind: 施工阶段数据的类型 1-合计 2-收缩徐变效应 3-预应力效应 4-恒载
             increment_type: 1-全量    2-增量
@@ -188,10 +253,11 @@ class Odb:
             odb.get_element_stress(element_id=1,stage_id=1)
             odb.get_element_stress(element_id=[1,2,3],stage_id=1)
             odb.get_element_stress(element_id=1,stage_id=-1,case_name="工况名")
-        Returns: json字符串,包含信息为list[dict] or dict
+        Returns: 包含信息为list[dict] or dict
         """
         try:
-            bf_list = qt_model.GetElementStress(element_id, stage_id, result_kind, increment_type, case_name)
+            bf_list = qt_model.GetElementStress(elementIds=element_id, stageId=stage_id, envelopType=envelop_type,
+                                                resultKind=result_kind, incrementType=increment_type, caseName=case_name)
             list_res = []
             for item in bf_list:
                 if item.ElementType == "BEAM":
@@ -212,11 +278,7 @@ class Odb:
                     list_res.append(str(ShellElementStress(item.ElementId, stress_i, stress_j, stress_k, stress_l,
                                                            stress_i2, stress_j2, stress_k2, stress_l2)))
                 elif item.ElementType == "CABLE" or item.ElementType == "LINK" or item.ElementType == "TRUSS":
-                    stress_i = [item.StressI[0], item.StressI[1], item.StressI[2], item.StressI[3], item.StressI[4], item.StressI[5],
-                                item.StressI[6], item.StressI[7], item.StressI[8]]
-                    stress_j = [item.StressJ[0], item.StressJ[1], item.StressJ[2], item.StressJ[3], item.StressJ[4], item.StressJ[5],
-                                item.StressJ[6], item.StressJ[7], item.StressJ[8]]
-                    list_res.append(str(TrussElementStress(item.ElementId, stress_i, stress_j)))
+                    list_res.append(str(TrussElementStress(item.ElementId, item.StressI[0], item.StressJ[0])))
                 elif item.ElementType == "COM-BEAM":
                     stress_i = [item.StressI[0], item.StressI[1], item.StressI[2], item.StressI[3], item.StressI[4], item.StressI[5],
                                 item.StressI[6], item.StressI[7], item.StressI[8]]
@@ -229,46 +291,53 @@ class Odb:
                     list_res.append(str(CompositeBeamStress(element_id, stress_i, stress_j, stress_i2, stress_j2)))
                 else:
                     raise TypeError(f"操作错误,不存在{item.ElementType}类型")
-            return json.dumps(list_res) if len(list_res) > 1 else list_res[0]
+            return list_res if len(list_res) > 1 else list_res[0]
         except Exception as ex:
             raise Exception(ex)
 
     @staticmethod
-    def get_element_force(element_id, stage_id: int = 1, result_kind: int = 1, increment_type: int = 1, case_name=""):
+    def get_element_force(element_id, stage_id: int = 1, envelop_type: int = 1,
+                          result_kind: int = 1, increment_type: int = 1, case_name="",
+                          is_time_history: bool = False, is_boundary_element: bool = False):
         """
         获取单元内力,支持单个单元和单元列表
         Args:
             element_id: 单元编号
             stage_id: 施工阶段号 -1-运营阶段  0-施工阶段包络 n-施工阶段号
+            envelop_type: 1-最大 2-最小 3-包络
             result_kind: 施工阶段数据的类型 1-合计 2-收缩徐变效应 3-预应力效应 4-恒载
             increment_type: 1-全量    2-增量
             case_name: 运营阶段所需荷载工况名
+            is_time_history: 是否为时程分析
+            is_boundary_element: 是否为时程分析边界单元连接
         Example:
             odb.get_element_force(element_id=1,stage_id=1)
             odb.get_element_force(element_id=[1,2,3],stage_id=1)
             odb.get_element_force(element_id=1,stage_id=-1,case_name="工况名")
-        Returns: json字符串,包含信息为list[dict] or dict
+        Returns: 包含信息为list[dict] or dict
         """
         try:
             if type(element_id) != int and type(element_id) != list:
                 raise TypeError("类型错误,element_id仅支持 int和 list[int]")
-            bf_list = qt_model.GetElementForce(element_id, stage_id, result_kind, increment_type, case_name)
+            bf_list = qt_model.GetElementForce(elementIds=element_id, stageId=stage_id, envelopeType=envelop_type,
+                                               resultKind=result_kind, increamentType=increment_type, caseName=case_name,
+                                               isTimeHistory=is_time_history, isBoundaryElement=is_boundary_element)
             list_res = []
             for item in bf_list:
                 if item.ElementType == "BEAM":
                     force_i = [item.ForceI.Fx, item.ForceI.Fy, item.ForceI.Fz, item.ForceI.Mx, item.ForceI.My, item.ForceI.Mz]
                     force_j = [item.ForceJ.Fx, item.ForceJ.Fy, item.ForceJ.Fz, item.ForceJ.Mx, item.ForceJ.My, item.ForceJ.Mz]
-                    list_res.append(str(BeamElementForce(item.ElementId, force_i, force_j)))
+                    list_res.append(str(BeamElementForce(item.ElementId, force_i, force_j, item.Time)))
                 elif item.ElementType == "SHELL" or item.ElementType == "PLATE":
                     force_i = [item.ForceI.Fx, item.ForceI.Fy, item.ForceI.Fz, item.ForceI.Mx, item.ForceI.My, item.ForceI.Mz]
                     force_j = [item.ForceJ.Fx, item.ForceJ.Fy, item.ForceJ.Fz, item.ForceJ.Mx, item.ForceJ.My, item.ForceJ.Mz]
                     force_k = [item.ForceK.Fx, item.ForceK.Fy, item.ForceK.Fz, item.ForceK.Mx, item.ForceK.My, item.ForceK.Mz]
                     force_l = [item.ForceL.Fx, item.ForceL.Fy, item.ForceL.Fz, item.ForceL.Mx, item.ForceL.My, item.ForceL.Mz]
-                    list_res.append(str(ShellElementForce(item.ElementId, force_i, force_j, force_k, force_l)))
+                    list_res.append(str(ShellElementForce(item.ElementId, force_i, force_j, force_k, force_l, item.Time)))
                 elif item.ElementType == "CABLE" or item.ElementType == "LINK" or item.ElementType == "TRUSS":
                     force_i = [item.ForceI.Fx, item.ForceI.Fy, item.ForceI.Fz, item.ForceI.Mx, item.ForceI.My, item.ForceI.Mz]
                     force_j = [item.ForceJ.Fx, item.ForceJ.Fy, item.ForceJ.Fz, item.ForceJ.Mx, item.ForceJ.My, item.ForceJ.Mz]
-                    list_res.append(str(TrussElementForce(item.ElementId, force_i, force_j)))
+                    list_res.append(str(TrussElementForce(item.ElementId, force_i, force_j, item.Time)))
                 elif item.ElementType == "COM-BEAM":
                     all_force_i = [item.ForceI.Fx, item.ForceI.Fy, item.ForceI.Fz, item.ForceI.Mx, item.ForceI.My, item.ForceI.Mz]
                     all_force_j = [item.ForceJ.Fx, item.ForceJ.Fy, item.ForceJ.Fz, item.ForceJ.Mx, item.ForceJ.My, item.ForceJ.Mz]
@@ -285,61 +354,7 @@ class Odb:
 
                 else:
                     raise TypeError(f"操作错误,不存在{item.ElementType}类型")
-            return json.dumps(list_res) if len(list_res) > 1 else list_res[0]
-        except Exception as ex:
-            raise Exception(ex)
-
-    @staticmethod
-    def get_reaction(node_id, stage_id: int = 1, result_kind: int = 1, increment_type: int = 1, case_name=""):
-        """
-        获取节点反力
-        Args:
-            node_id: 节点编号,支持整数或整数型列表
-            stage_id: 施工阶段号 -1-运营阶段  0-施工阶段包络 n-施工阶段号
-            result_kind: 施工阶段数据的类型 1-合计 2-收缩徐变效应 3-预应力效应 4-恒载
-            increment_type: 1-全量    2-增量
-            case_name: 运营阶段所需荷载工况名
-        Example:
-            odb.get_reaction(node_id=1,stage_id=1)
-            odb.get_reaction(node_id=[1,2,3],stage_id=1)
-            odb.get_reaction(node_id=1,stage_id=-1,case_name="工况名")
-        Returns: json字符串,包含信息为list[dict] or dict
-        """
-        try:
-            bs_list = qt_model.GetSupportReaction(node_id, stage_id, result_kind, increment_type, case_name)
-            list_res = []
-            for item in bs_list:
-                force = [item.Force.Fx, item.Force.Fy, item.Force.Fz, item.Force.Mx, item.Force.My, item.Force.Mz]
-                list_res.append(str(SupportReaction(item.NodeId, force)))
-            return json.dumps(list_res) if len(list_res) > 1 else list_res[0]
-        except Exception as ex:
-            raise Exception(ex)
-
-    @staticmethod
-    def get_node_displacement(node_id: (Union[int, List[int]]) = None, stage_id: int = 1, result_kind: int = 1, increment_type: int = 1,
-                              case_name=""):
-        """
-        获取节点,支持单个节点和节点列表
-        Args:
-            node_id: 节点号
-            stage_id: 施工阶段号 -1-运营阶段  0-施工阶段包络 n-施工阶段号
-            result_kind: 施工阶段数据的类型 1-合计 2-收缩徐变效应 3-预应力效应 4-恒载
-            increment_type: 1-全量    2-增量
-            case_name: 运营阶段所需荷载工况名
-        Example:
-            odb.get_node_displacement(node_id=1,stage_id=1)
-            odb.get_node_displacement(node_id=[1,2,3],stage_id=1)
-            odb.get_node_displacement(node_id=1,stage_id=-1,case_name="工况名")
-        Returns: json字符串,包含信息为list[dict] or dict
-        """
-        try:
-            bf_list = qt_model.GetNodeDisplacement(node_id, stage_id, result_kind, increment_type, case_name)
-            list_res = []
-            for item in bf_list:
-                displacements = [item.Displacement.Dx, item.Displacement.Dy, item.Displacement.Dz,
-                                 item.Displacement.Rx, item.Displacement.Ry, item.Displacement.Rz]
-                list_res.append(str(NodeDisplacement(item.NodeId, displacements)))
-            return json.dumps(list_res) if len(list_res) > 1 else list_res[0]
+            return list_res if len(list_res) > 1 else list_res[0]
         except Exception as ex:
             raise Exception(ex)
 
@@ -352,11 +367,12 @@ class Odb:
           case_name:工况号
         Example:
           odb.get_self_concurrent_reaction(node_id=1,case_name="工况1_Fx最大")
-        Returns: json字符串,包含信息为dict
+        Returns: 返回该节点并发反力值dict
         """
         try:
-            res_dict = qt_model.GetSelfConcurrentReaction(nodeId=node_id, loadCaseName=case_name)
-            return res_dict
+            item = qt_model.GetSelfConcurrentReaction(nodeId=node_id, caseName=case_name)
+            force = [item.Force.Fx, item.Force.Fy, item.Force.Fz, item.Force.Mx, item.Force.My, item.Force.Mz]
+            return str(SupportReaction(item.NodeId, force))
         except Exception as ex:
             raise Exception(ex)
 
@@ -369,61 +385,73 @@ class Odb:
           case_name:工况号
         Example:
           odb.get_all_concurrent_reaction(node_id=1,case_name="工况1_Fx最大")
-        Returns: json字符串,包含信息为dict
+        Returns: 包含信息为list[dict]
         """
         try:
-            res_dict = qt_model.GetAllConcurrentReaction(nodeId=node_id, loadCaseName=case_name)
-            return res_dict
+            res_dict = qt_model.GetAllConcurrentReaction(nodeId=node_id, caseName=case_name)
+            list_res = []
+            for item in res_dict:
+                force = [item.Force.Fx, item.Force.Fy, item.Force.Fz, item.Force.Mx, item.Force.My, item.Force.Mz]
+                list_res.append(str(SupportReaction(item.NodeId, force)))
+            return list_res
         except Exception as ex:
             raise Exception(ex)
 
     @staticmethod
-    def get_beam_concurrent_force(ele_id: (Union[int, List[int]]) = None, case_name: str = ""):
+    def get_concurrent_force(ele_id: (Union[int, List[int]]) = None, case_name: str = ""):
         """
-        获取梁单元并发内力
+        获取单元并发内力
         Args:
           ele_id:单元号
           case_name:工况号
         Example:
-          odb.get_beam_concurrent_force(ele_id=1,case_name="工况1_Fx最大")
-        Returns: json字符串,包含信息为dict
+          odb.get_concurrent_force(ele_id=1,case_name="工况1_Fx最大")
+        Returns: 包含信息为list[dict]
         """
         try:
-            res_dict = qt_model.GetBeamConcurrentForce(eleId=ele_id, loadCaseName=case_name)
-            return res_dict
-        except Exception as ex:
-            raise Exception(ex)
-
-    @staticmethod
-    def get_composite_beam_concurrent_force(ele_id: (Union[int, List[int]]) = None, case_name: str = ""):
-        """
-        获取组合梁单元并发内力
-        Args:
-          ele_id:单元号
-          case_name:工况号
-        Example:
-          odb.get_composite_beam_concurrent_force(ele_id=1,case_name="工况1_Fx最大")
-        Returns: json字符串,包含信息为dict
-        """
-        try:
-            res_dict = qt_model.GetCompositeBeamConcurrentForce(eleId=ele_id, loadCaseName=case_name)
-            return res_dict
+            res_dict = qt_model.GetConcurrentElementForce(eleId=ele_id, caseName=case_name)
+            list_res = []
+            for item in res_dict:
+                if item.ElementType == "BEAM":
+                    force_i = [item.ForceI.Fx, item.ForceI.Fy, item.ForceI.Fz, item.ForceI.Mx, item.ForceI.My, item.ForceI.Mz]
+                    force_j = [item.ForceJ.Fx, item.ForceJ.Fy, item.ForceJ.Fz, item.ForceJ.Mx, item.ForceJ.My, item.ForceJ.Mz]
+                    list_res.append(str(BeamElementForce(item.ElementId, force_i, force_j, item.Time)))
+                elif item.ElementType == "SHELL" or item.ElementType == "PLATE":
+                    force_i = [item.ForceI.Fx, item.ForceI.Fy, item.ForceI.Fz, item.ForceI.Mx, item.ForceI.My, item.ForceI.Mz]
+                    force_j = [item.ForceJ.Fx, item.ForceJ.Fy, item.ForceJ.Fz, item.ForceJ.Mx, item.ForceJ.My, item.ForceJ.Mz]
+                    force_k = [item.ForceK.Fx, item.ForceK.Fy, item.ForceK.Fz, item.ForceK.Mx, item.ForceK.My, item.ForceK.Mz]
+                    force_l = [item.ForceL.Fx, item.ForceL.Fy, item.ForceL.Fz, item.ForceL.Mx, item.ForceL.My, item.ForceL.Mz]
+                    list_res.append(str(ShellElementForce(item.ElementId, force_i, force_j, force_k, force_l, item.Time)))
+                elif item.ElementType == "COM-BEAM":
+                    all_force_i = [item.ForceI.Fx, item.ForceI.Fy, item.ForceI.Fz, item.ForceI.Mx, item.ForceI.My, item.ForceI.Mz]
+                    all_force_j = [item.ForceJ.Fx, item.ForceJ.Fy, item.ForceJ.Fz, item.ForceJ.Mx, item.ForceJ.My, item.ForceJ.Mz]
+                    main_force_i = [item.MainForceI.Fx, item.MainForceI.Fy, item.MainForceI.Fz, item.MainForceI.Mx, item.MainForceI.My,
+                                    item.MainForceI.Mz]
+                    main_force_j = [item.MainForceJ.Fx, item.MainForceJ.Fy, item.MainForceJ.Fz, item.MainForceJ.Mx, item.MainForceJ.My,
+                                    item.MainForceJ.Mz]
+                    sub_force_i = [item.SubForceI.Fx, item.SubForceI.Fy, item.SubForceI.Fz, item.SubForceI.Mx, item.SubForceI.My, item.SubForceI.Mz]
+                    sub_force_j = [item.SubForceJ.Fx, item.SubForceJ.Fy, item.SubForceJ.Fz, item.SubForceJ.Mx, item.SubForceJ.My, item.SubForceJ.Mz]
+                    is_composite = item.IsComposite
+                    shear_force = item.ShearForce
+                    list_res.append(str(CompositeElementForce(item.ElementId, all_force_i, all_force_j, shear_force,
+                                                              main_force_i, main_force_j, sub_force_i, sub_force_j, is_composite)))
+            return list_res
         except Exception as ex:
             raise Exception(ex)
 
     # endregion
 
-    # region 动力结果查看
+    # region 自振分析结果查看
     @staticmethod
     def get_vibration_node_displacement(node_id: (Union[int, List[int]]) = None, mode: int = 1):
         """
         获取指定节点指定模态的振型向量
         Args:
-            node_id: 节点号
+            node_id: 节点号支持单个节点获取或节点列表获取
             mode: 模态号
         Example:
             odb.get_vibration_node_displacement(node_id=1,mode=1)
-        Returns: json字符串,包含信息为list[dict] or dict
+        Returns: 包含信息为dict或list[dict]
         """
         try:
             bf_list = qt_model.GetVibrationNodeDisplacement(nodeIds=node_id, mode=mode)
@@ -431,8 +459,8 @@ class Odb:
             for item in bf_list:
                 displacements = [item.Displacement.Dx, item.Displacement.Dy, item.Displacement.Dz,
                                  item.Displacement.Rx, item.Displacement.Ry, item.Displacement.Rz]
-                list_res.append(str(NodeDisplacement(item.NodeId, displacements)))
-            return json.dumps(list_res) if len(list_res) > 1 else list_res[0]
+                list_res.append(str(NodeDisplacement(item.NodeId, displacements, item.Time)))
+            return list_res if len(list_res) > 1 else list_res[0]
         except Exception as ex:
             raise Exception(ex)
 
@@ -444,11 +472,11 @@ class Odb:
             mode:模态号
         Example:
             odb.get_period_and_frequency(mode=1)
-        Returns: json字符串,包含信息为dict
+        Returns: 包含信息为dict
         """
         try:
             res_dict = qt_model.GetPeriodAndFrequency(mode=mode)
-            return res_dict
+            return json.loads(res_dict)
         except Exception as ex:
             raise Exception(ex)
 
@@ -460,11 +488,11 @@ class Odb:
             mode:模态号
         Example:
             odb.get_participation_mass(mode=1)
-        Returns: json字符串,包含信息为dict
+        Returns: 包含信息为dict
         """
         try:
             res_dict = qt_model.GetParticipationMass(mode=mode)
-            return res_dict
+            return json.loads(res_dict)
         except Exception as ex:
             raise Exception(ex)
 
@@ -476,11 +504,11 @@ class Odb:
             mode:模态号
         Example:
             odb.get_participation_factor(mode=1)
-        Returns: json字符串,包含信息为dict
+        Returns: 包含信息为dict
         """
         try:
             res_dict = qt_model.GetParticipationFactor(mode=mode)
-            return res_dict
+            return json.loads(res_dict)
         except Exception as ex:
             raise Exception(ex)
 
@@ -488,95 +516,107 @@ class Odb:
 
     # region 绘制模型结果
     @staticmethod
-    def plot_reaction_result(file_path: str, stage_id: int = 1, load_case_name: str = "", show_increment: bool = False,
+    def plot_reaction_result(file_path: str, stage_id: int = 1, case_name: str = "", show_increment: bool = False,
                              envelope_type: int = 1, component: int = 1,
                              show_number: bool = True, text_rotation=0, max_min_kind: int = -1,
-                             show_legend: bool = True, digital_count=3, show_exponential: bool = True, arrow_scale: float = 1):
+                             show_legend: bool = True, digital_count=3, text_exponential: bool = True, arrow_scale: float = 1,
+                             is_time_history: bool = True, time_kind: int = 1, time_tick: float = 1.0):
         """
         保存结果图片到指定文件甲
         Args:
             file_path: 保存路径名
             stage_id: -1-运营阶段  0-施工阶段包络 n-施工阶段号
-            load_case_name: 详细荷载工况名,参考桥通结果输出,例如： CQ:成桥(合计)
+            case_name: 详细荷载工况名,参考桥通结果输出,例如： CQ:成桥(合计)
             show_increment: 是否显示增量结果
             envelope_type: 施工阶段包络类型 1-最大 2-最小
-            component: 分量编号 0-Fx 1-Fy 2-Fz 3-Fxyz 4-Mx 5-My 6-Mz 7-Mxyz
+            component: 分量编号 1-Fx 2-Fy 3-Fz 4-Fxyz 5-Mx 6-My 7-Mz 8-Mxyz
             show_number: 数值选项卡开启
             show_legend: 图例选项卡开启
             text_rotation: 数值选项卡内文字旋转角度
-            max_min_kind: 数值选项卡内最大最小值显示 -1-不显示最大最小值  0-显示最大值和最小值  1-最大绝对值 2-最大值 3-最小值
+            max_min_kind: 数值选项卡内最大最小值显示 0-不显示最大最小值  1-显示最大值和最小值  2-最大绝对值 3-最大值 4-最小值
             digital_count: 小数点位数
-            show_exponential: 指数显示开启
+            text_exponential: 指数显示开启
             arrow_scale:箭头大小
+            is_time_history:是否为时程分析结果
+            time_kind:时程分析类型 1-时刻 2-最大 3-最小
+            time_tick:时程分析时刻
         Example:
-            odb.plot_reaction_result(file_path=r"D:\\图片\\反力图.png",component=0,load_case_name="CQ:成桥(合计)",stage_id=-1)
+            odb.plot_reaction_result(file_path=r"D:\\图片\\反力图.png",component=1,case_name="CQ:成桥(合计)",stage_id=-1)
         Returns: 无
         """
         try:
-            qt_model.PlotReactionResult(filePath=file_path, stageId=stage_id, loadCaseName=load_case_name, showIncrementResult=show_increment,
+            qt_model.PlotReactionResult(filePath=file_path, stageId=stage_id, caseName=case_name, showIncrement=show_increment,
                                         envelopeType=envelope_type, component=component,
-                                        showNumber=show_number, textRotationAngle=text_rotation, maxMinValueKind=max_min_kind,
+                                        showNumber=show_number, textRotate=text_rotation, maxMinKind=max_min_kind,
                                         showLegend=show_legend, digitalCount=digital_count,
-                                        showAsExponential=show_exponential, arrowScale=arrow_scale)
+                                        textExponential=text_exponential, arrowScale=arrow_scale,
+                                        isTimeHistory=is_time_history, timeKind=time_kind, timTick=time_tick)
         except Exception as ex:
             raise Exception(ex)
 
     @staticmethod
-    def plot_displacement_result(file_path: str, stage_id: int = 1, load_case_name: str = "", show_increment: bool = False,
+    def plot_displacement_result(file_path: str, stage_id: int = 1, case_name: str = "", show_increment: bool = False,
                                  envelope_type: int = 1, component: int = 1,
                                  show_deformed: bool = True, deformed_scale: float = 1.0, deformed_actual: bool = False,
                                  show_number: bool = True, text_rotation=0, max_min_kind: int = 1,
-                                 show_legend: bool = True, digital_count=3, show_exponential: bool = True, show_pre_deformed: bool = True):
+                                 show_legend: bool = True, digital_count=3, text_exponential: bool = True, show_undeformed: bool = True,
+                                 is_time_history: bool = True, deform_kind: int = 1, time_kind: int = 1, time_tick: float = 1.0):
         """
         保存结果图片到指定文件甲
         Args:
             file_path: 保存路径名
             stage_id: -1-运营阶段  0-施工阶段包络 n-施工阶段号
-            load_case_name: 详细荷载工况名,参考桥通结果输出,例如： CQ:成桥(合计)
+            case_name: 详细荷载工况名,参考桥通结果输出,例如： CQ:成桥(合计)
             show_increment: 是否显示增量结果
             envelope_type: 施工阶段包络类型 1-最大 2-最小
-            component: 分量编号 0-Dx 1-Dy 2-Dz 3-Rx 4-Ry 5-Rz 6-Dxy 7-Dyz 8-Dxz 9-Dxyz
+            component: 分量编号 1-Dx 2-Dy 3-Dz 4-Rx 5-Ry 6-Rz 7-Dxy 8-Dyz 9-Dxz 10-Dxyz
             show_deformed: 变形选项卡开启
             deformed_scale:变形比例
             deformed_actual:是否显示实际变形
             show_number: 数值选项卡开启
             text_rotation: 数值选项卡内文字旋转角度
-            max_min_kind: 数值选项卡内最大最小值显示 -1-不显示最大最小值  0-显示最大值和最小值  1-最大绝对值 2-最大值 3-最小值
+            max_min_kind: 数值选项卡内最大最小值显示 0-不显示最大最小值  1-显示最大值和最小值  2-最大绝对值 3-最大值 4-最小值
             show_legend: 图例选项卡开启
             digital_count: 小数点位数
-            show_exponential: 指数显示开启
-            show_pre_deformed: 显示变形前
+            text_exponential: 指数显示开启
+            show_undeformed: 显示变形前
+            is_time_history:是否为时程分析结果
+            time_kind:时程分析类型 1-时刻 2-最大 3-最小
+            deform_kind:时程分析变形类型 1-位移 2-速度 3-加速度
+            time_tick:时程分析时刻
         Example:
-            odb.plot_displacement_result(file_path=r"D:\\图片\\变形图.png",component=0,load_case_name="CQ:成桥(合计)",stage_id=-1)
+            odb.plot_displacement_result(file_path=r"D:\\图片\\变形图.png",component=1,case_name="CQ:成桥(合计)",stage_id=-1)
         Returns: 无
         """
         try:
-            qt_model.PlotDisplacementResult(filePath=file_path, stageId=stage_id, loadCaseName=load_case_name, showIncrementResult=show_increment,
+            qt_model.PlotDisplacementResult(filePath=file_path, stageId=stage_id, caseName=case_name, showIncrement=show_increment,
                                             envelopeType=envelope_type, component=component,
-                                            showAsDeformedShape=show_deformed, deformedScale=deformed_scale, deformedActual=deformed_actual,
-                                            showNumber=show_number, textRotationAngle=text_rotation, digitalCount=digital_count,
-                                            showAsExponential=show_exponential, maxMinValueKind=max_min_kind,
-                                            showLegend=show_legend, showUndeformedShape=show_pre_deformed)
+                                            showDeformed=show_deformed, deformedScale=deformed_scale, deformedActual=deformed_actual,
+                                            showNumber=show_number, textRotate=text_rotation, digitalCount=digital_count,
+                                            textExponential=text_exponential, maxMinKind=max_min_kind,
+                                            showLegend=show_legend, showUndeformed=show_undeformed,
+                                            isTimeHistory=is_time_history, timeKind=time_kind, deformKind=deform_kind, timeTick=time_tick)
         except Exception as ex:
             raise Exception(ex)
 
     @staticmethod
-    def plot_beam_element_force(file_path: str, stage_id: int = 1, load_case_name: str = "合计", show_increment: bool = False,
-                                envelope_type: int = 1, component: int = 0,
+    def plot_beam_element_force(file_path: str, stage_id: int = 1, case_name: str = "合计", show_increment: bool = False,
+                                envelope_type: int = 1, component: int = 1,
                                 show_line_chart: bool = True, line_scale: float = 1.0, flip_plot: bool = True,
                                 show_deformed: bool = True, deformed_actual: bool = False, deformed_scale: float = 1.0,
-                                show_number: bool = False, text_rotation: int = 0, max_min_kind: int = 0,
-                                show_legend: bool = True, digital_count: int = 3, show_exponential: bool = True,
-                                show_pre_deformed: bool = False, position: int = 0):
+                                show_number: bool = False, text_rotation: int = 0, max_min_kind: int = 1,
+                                show_legend: bool = True, digital_count: int = 3, text_exponential: bool = True,
+                                show_undeformed: bool = False, position: int = 1,
+                                is_time_history: bool = True, time_kind: int = 1, time_tick: float = 1.0):
         """
         绘制梁单元结果图并保存到指定文件
         Args:
             file_path: 保存路径名
             stage_id: -1-运营阶段  0-施工阶段包络 n-施工阶段号
-            load_case_name: 详细荷载工况名,参考桥通结果输出,例如： CQ:成桥(合计)
+            case_name: 详细荷载工况名,参考桥通结果输出,例如： CQ:成桥(合计)
             show_increment: 是否显示增量结果
             envelope_type: 施工阶段包络类型 1-最大 2-最小
-            component: 分量编号 0-Dx 1-Dy 2-Dz 3-Rx 4-Ry 5-Rz 6-Dxy 7-Dyz 8-Dxz 9-Dxyz
+            component: 分量编号 1-Dx 2-Dy 3-Dz 4-Rx 5-Ry 6-Rz 7-Dxy 8-Dyz 9-Dxz 10-Dxyz
             show_line_chart: 折线图选项卡开启
             line_scale:折线图比例
             flip_plot:反向绘制
@@ -586,41 +626,46 @@ class Odb:
             show_number: 数值选项卡开启
             text_rotation: 数值选项卡内文字旋转角度
             digital_count: 小数点位数
-            show_exponential: 指数显示开启
-            max_min_kind: 数值选项卡内最大最小值显示 -1-不显示最大最小值  0-显示最大值和最小值  1-最大绝对值 2-最大值 3-最小值
+            text_exponential: 指数显示开启
+            max_min_kind: 数值选项卡内最大最小值显示 0-不显示最大最小值  1-显示最大值和最小值  2-最大绝对值 3-最大值 4-最小值
             show_legend: 图例选项卡开启
-            show_pre_deformed: 显示变形前
-            position: 位置编号 0-始端 1-末端 2-绝对最大 4-全部
+            show_undeformed: 显示变形前
+            position: 位置编号 1-始端 2-末端 3-绝对最大 4-全部
+            is_time_history:是否为时程分析结果
+            time_kind:时程分析类型 1-时刻 2-最大 3-最小
+            time_tick:时程分析时刻
         Example:
-            odb.plot_beam_element_force(file_path=r"D:\\图片\\梁内力.png",component=0,load_case_name="CQ:成桥(合计)",stage_id=-1)
+            odb.plot_beam_element_force(file_path=r"D:\\图片\\梁内力.png",component=1,case_name="CQ:成桥(合计)",stage_id=-1)
         Returns: 无
         """
         try:
             qt_model.PlotBeamElementForce(
-                filePath=file_path, stageId=stage_id, loadCaseName=load_case_name, showIncrementResult=show_increment,
+                filePath=file_path, stageId=stage_id, caseName=case_name, showIncrement=show_increment,
                 envelopeType=envelope_type, component=component,
                 showLineChart=show_line_chart, lineScale=line_scale, flipPlot=flip_plot,
-                showAsDeformedShape=show_deformed, deformedScale=deformed_scale, deformedActual=deformed_actual,
-                showNumber=show_number, textRotationAngle=text_rotation, maxMinValueKind=max_min_kind,
-                showLegend=show_legend, digitalCount=digital_count, showAsExponential=show_exponential,
-                showUndeformedShape=show_pre_deformed, position=position)
+                showDeformed=show_deformed, deformedScale=deformed_scale, deformedActual=deformed_actual,
+                showNumber=show_number, textRotate=text_rotation, maxMinKind=max_min_kind,
+                showLegend=show_legend, digitalCount=digital_count, textExponential=text_exponential,
+                showUndeformed=show_undeformed, position=position,
+                isTimeHistory=is_time_history, timeKind=time_kind, timeTick=time_tick)
         except Exception as ex:
             raise Exception(ex)
 
     @staticmethod
-    def plot_truss_element_force(file_path: str, stage_id: int = 1, load_case_name: str = "合计", show_increment: bool = False,
-                                 envelope_type: int = 1, component: int = 0,
+    def plot_truss_element_force(file_path: str, stage_id: int = 1, case_name: str = "合计", show_increment: bool = False,
+                                 envelope_type: int = 1, component: int = 1,
                                  show_line_chart: bool = True, line_scale: float = 1.0, flip_plot: bool = True,
                                  show_deformed: bool = True, deformed_actual: bool = False, deformed_scale: float = 1.0,
-                                 show_number: bool = False, text_rotation: int = 0, max_min_kind: int = 0,
-                                 show_legend: bool = True, digital_count: int = 3, show_exponential: bool = True,
-                                 show_pre_deformed: bool = False, position: int = 0):
+                                 show_number: bool = False, text_rotation: int = 0, max_min_kind: int = 1,
+                                 show_legend: bool = True, digital_count: int = 3, text_exponential: bool = True,
+                                 show_undeformed: bool = False, position: int = 1,
+                                 is_time_history: bool = True, time_kind: int = 1, time_tick: float = 1.0):
         """
         绘制杆单元结果图并保存到指定文件
         Args:
             file_path: 保存路径名
             stage_id: -1-运营阶段  0-施工阶段包络 n-施工阶段号
-            load_case_name: 详细荷载工况名,参考桥通结果输出,例如： CQ:成桥(合计)
+            case_name: 详细荷载工况名,参考桥通结果输出,例如： CQ:成桥(合计)
             show_increment: 是否显示增量结果
             envelope_type: 施工阶段包络类型 1-最大 2-最小
             component: 分量编号 0-N 1-Fx 2-Fy 3-Fz
@@ -633,87 +678,94 @@ class Odb:
             show_number: 数值选项卡开启
             text_rotation: 数值选项卡内文字旋转角度
             digital_count: 小数点位数
-            show_exponential: 指数显示开启
-            max_min_kind: 数值选项卡内最大最小值显示 -1-不显示最大最小值  0-显示最大值和最小值  1-最大绝对值 2-最大值 3-最小值
+            text_exponential: 指数显示开启
+            max_min_kind: 数值选项卡内最大最小值显示 0-不显示最大最小值  1-显示最大值和最小值  2-最大绝对值 3-最大值 4-最小值
             show_legend: 图例选项卡开启
-            show_pre_deformed: 显示变形前
-            position: 位置编号 0-始端 1-末端 2-绝对最大 4-全部
+            show_undeformed: 显示变形前
+            position: 位置编号 1-始端 2-末端 3-绝对最大 4-全部
+            is_time_history:是否为时程分析结果
+            time_kind:时程分析类型 1-时刻 2-最大 3-最小
+            time_tick:时程分析时刻
         Example:
-            odb.plot_truss_element_force(file_path=r"D:\\图片\\杆内力.png",load_case_name="CQ:成桥(合计)",stage_id=-1)
+            odb.plot_truss_element_force(file_path=r"D:\\图片\\杆内力.png",case_name="CQ:成桥(合计)",stage_id=-1)
         Returns: 无
         """
         try:
             qt_model.PlotTrussElementForce(
-                filePath=file_path, stageId=stage_id, loadCaseName=load_case_name, showIncrementResult=show_increment,
+                filePath=file_path, stageId=stage_id, caseName=case_name, showIncrement=show_increment,
                 envelopeType=envelope_type, component=component,
                 showLineChart=show_line_chart, lineScale=line_scale, flipPlot=flip_plot,
-                showAsDeformedShape=show_deformed, deformedScale=deformed_scale, deformedActual=deformed_actual,
-                showNumber=show_number, textRotationAngle=text_rotation, maxMinValueKind=max_min_kind,
-                showLegend=show_legend, digitalCount=digital_count, showAsExponential=show_exponential,
-                showUndeformedShape=show_pre_deformed, position=position)
+                showDeformed=show_deformed, deformedScale=deformed_scale, deformedActual=deformed_actual,
+                showNumber=show_number, textRotate=text_rotation, maxMinKind=max_min_kind,
+                showLegend=show_legend, digitalCount=digital_count, textExponential=text_exponential,
+                showUndeformed=show_undeformed, position=position,
+                isTimeHistory=is_time_history, timeKind=time_kind, timeTick=time_tick)
         except Exception as ex:
             raise Exception(ex)
 
     @staticmethod
-    def plot_plate_element_force(file_path: str, stage_id: int = 1, load_case_name: str = "合计", show_increment: bool = False,
-                                 envelope_type: int = 1, force_kind: int = 0, component: int = 0,
-                                 show_number: bool = False, text_rotation_angle: int = 0, max_min_kind: int = 0,
+    def plot_plate_element_force(file_path: str, stage_id: int = 1, case_name: str = "合计", show_increment: bool = False,
+                                 envelope_type: int = 1, force_kind: int = 1, component: int = 1,
+                                 show_number: bool = False, text_rotation_angle: int = 0, max_min_kind: int = 1,
                                  show_deformed: bool = True, deformed_scale: float = 1.0, deformed_actual: bool = False,
-                                 show_legend: bool = True, digital_count: int = 3, show_exponential: bool = True,
-                                 show_pre_deformed: bool = False, ):
+                                 show_legend: bool = True, digital_count: int = 3, text_exponential: bool = True,
+                                 show_undeformed: bool = False, is_time_history: bool = True, time_kind: int = 1, time_tick: float = 1.0):
         """
         绘制板单元结果图并保存到指定文件
         Args:
             file_path: 保存路径名
-            component: 分量编号 0-Fxx 1-Fyy 2-Fxy 3-Mxx 4-Myy 5-Mxy
-            force_kind: 力类型
-            load_case_name: 详细荷载工况名
+            component: 分量编号 1-Fxx 2-Fyy 3-Fxy 4-Mxx 5-Myy 6-Mxy
+            force_kind: 内力选项 1-单元 2-节点平均
+            case_name: 详细荷载工况名
             stage_id: 阶段编号
             envelope_type: 包络类型
             show_number: 是否显示数值
             show_deformed: 是否显示变形形状
-            show_pre_deformed: 是否显示未变形形状
+            show_undeformed: 是否显示未变形形状
             deformed_actual: 是否显示实际变形
             deformed_scale: 变形比例
             show_legend: 是否显示图例
             text_rotation_angle: 数值选项卡内文字旋转角度
             digital_count: 小数点位数
-            show_exponential: 是否以指数形式显示
+            text_exponential: 是否以指数形式显示
             max_min_kind: 最大最小值显示类型
             show_increment: 是否显示增量结果
+            is_time_history:是否为时程分析结果
+            time_kind:时程分析类型 1-时刻 2-最大 3-最小
+            time_tick:时程分析时刻
         Example:
-            odb.plot_plate_element_force(file_path=r"D:\\图片\\板内力.png",component=0,load_case_name="CQ:成桥(合计)",stage_id=-1)
+            odb.plot_plate_element_force(file_path=r"D:\\图片\\板内力.png",component=1,case_name="CQ:成桥(合计)",stage_id=-1)
         Returns: 无
         """
         try:
             qt_model.PlotPlateElementForce(
-                filePath=file_path, stageId=stage_id, loadCaseName=load_case_name, showIncrementResult=show_increment,
+                filePath=file_path, stageId=stage_id, caseName=case_name, showIncrement=show_increment,
                 envelopeType=envelope_type, forceKind=force_kind, component=component,
-                showAsDeformedShape=show_deformed, deformedScale=deformed_scale, deformedActual=deformed_actual,
-                showNumber=show_number, textRotationAngle=text_rotation_angle, maxMinValueKind=max_min_kind,
-                showLegend=show_legend, digitalCount=digital_count, showAsExponential=show_exponential,
-                showUndeformedShape=show_pre_deformed)
+                showDeformed=show_deformed, deformedScale=deformed_scale, deformedActual=deformed_actual,
+                showNumber=show_number, textRotate=text_rotation_angle, maxMinKind=max_min_kind,
+                showLegend=show_legend, digitalCount=digital_count, textExponential=text_exponential,
+                showUndeformed=show_undeformed, isTimeHistory=is_time_history, timeKind=time_kind, timeTick=time_tick)
         except Exception as ex:
             raise Exception(ex)
 
     @staticmethod
-    def plot_composite_beam_force(file_path: str, stage_id: int = 1, load_case_name: str = "合计", show_increment: bool = False,
-                                  envelope_type: int = 1, mat_type: int = 0, component: int = 0,
+    def plot_composite_beam_force(file_path: str, stage_id: int = 1, case_name: str = "合计", show_increment: bool = False,
+                                  envelope_type: int = 1, mat_type: int = 1, component: int = 1,
                                   show_line_chart: bool = True, line_scale: float = 1.0, flip_plot: bool = True,
                                   show_deformed: bool = True, deformed_actual: bool = False, deformed_scale: float = 1.0,
-                                  show_number: bool = False, text_rotation: int = 0, max_min_kind: int = 0,
-                                  show_legend: bool = True, digital_count: int = 3, show_exponential: bool = True,
-                                  show_pre_deformed: bool = False, position: int = 0):
+                                  show_number: bool = False, text_rotation: int = 0, max_min_kind: int = 1,
+                                  show_legend: bool = True, digital_count: int = 3, text_exponential: bool = True,
+                                  show_undeformed: bool = False, position: int = 1):
         """
         绘制组合梁单元结果图并保存到指定文件
         Args:
             file_path: 保存路径名
             stage_id: -1-运营阶段  0-施工阶段包络 n-施工阶段号
-            load_case_name: 详细荷载工况名,参考桥通结果输出,例如： CQ:成桥(合计)
+            case_name: 详细荷载工况名,参考桥通结果输出,例如： CQ:成桥(合计)
             show_increment: 是否显示增量结果
             envelope_type: 施工阶段包络类型 1-最大 2-最小
-            mat_type: 材料类型 0-主材 1-辅材 2-主材+辅材
-            component: 分量编号 0-Fx 1-Fy 2-Fz 3-Mx 4-My 5-Mz
+            mat_type: 材料类型 1-主材 2-辅材 3-主材+辅材
+            component: 分量编号 1-Fx 2-Fy 3-Fz 4-Mx 5-My 6-Mz
             show_line_chart: 折线图选项卡开启
             line_scale:折线图比例
             flip_plot:反向绘制
@@ -723,44 +775,44 @@ class Odb:
             show_number: 数值选项卡开启
             text_rotation: 数值选项卡内文字旋转角度
             digital_count: 小数点位数
-            show_exponential: 指数显示开启
-            max_min_kind: 数值选项卡内最大最小值显示 -1-不显示最大最小值  0-显示最大值和最小值  1-最大绝对值 2-最大值 3-最小值
+            text_exponential: 指数显示开启
+            max_min_kind: 数值选项卡内最大最小值显示 0-不显示最大最小值  1-显示最大值和最小值  2-最大绝对值 3-最大值 4-最小值
             show_legend: 图例选项卡开启
-            show_pre_deformed: 显示变形前
-            position: 位置编号 0-始端 1-末端 2-绝对最大 4-全部
+            show_undeformed: 显示变形前
+            position: 位置编号 1-始端 2-末端 3-绝对最大 4-全部
         Example:
-            odb.plot_composite_beam_force(file_path=r"D:\\图片\\组合梁内力.png",mat_type=0,component=0,load_case_name="CQ:成桥(合计)",stage_id=-1)
+            odb.plot_composite_beam_force(file_path=r"D:\\图片\\组合梁内力.png",mat_type=0,component=1,case_name="CQ:成桥(合计)",stage_id=-1)
         Returns: 无
         """
         try:
             qt_model.PlotCompositeBeamForce(
-                filePath=file_path, stageId=stage_id, loadCaseName=load_case_name, showIncrementResult=show_increment,
+                filePath=file_path, stageId=stage_id, caseName=case_name, showIncrement=show_increment,
                 envelopeType=envelope_type, matType=mat_type, component=component,
                 showLineChart=show_line_chart, lineScale=line_scale, flipPlot=flip_plot,
-                showAsDeformedShape=show_deformed, deformedScale=deformed_scale, deformedActual=deformed_actual,
-                showNumber=show_number, textRotationAngle=text_rotation, maxMinValueKind=max_min_kind,
-                showLegend=show_legend, digitalCount=digital_count, showAsExponential=show_exponential,
-                showUndeformedShape=show_pre_deformed, position=position)
+                showDeformed=show_deformed, deformedScale=deformed_scale, deformedActual=deformed_actual,
+                showNumber=show_number, textRotate=text_rotation, maxMinKind=max_min_kind,
+                showLegend=show_legend, digitalCount=digital_count, textExponential=text_exponential,
+                showUndeformed=show_undeformed, position=position)
         except Exception as ex:
             raise Exception(ex)
 
     @staticmethod
-    def plot_beam_element_stress(file_path: str, stage_id: int = 1, load_case_name: str = "合计", show_increment: bool = False,
-                                 envelope_type: int = 1, component: int = 0,
+    def plot_beam_element_stress(file_path: str, stage_id: int = 1, case_name: str = "合计", show_increment: bool = False,
+                                 envelope_type: int = 1, component: int = 1,
                                  show_line_chart: bool = True, line_scale: float = 1.0, flip_plot: bool = True,
                                  show_deformed: bool = True, deformed_actual: bool = False, deformed_scale: float = 1.0,
-                                 show_number: bool = False, text_rotation: int = 0, max_min_kind: int = 0,
-                                 show_legend: bool = True, digital_count: int = 3, show_exponential: bool = True,
-                                 show_pre_deformed: bool = False, position: int = 0):
+                                 show_number: bool = False, text_rotation: int = 0, max_min_kind: int = 1,
+                                 show_legend: bool = True, digital_count: int = 3, text_exponential: bool = True,
+                                 show_undeformed: bool = False, position: int = 1):
         """
         绘制梁单元应力结果图并保存到指定文件
         Args:
             file_path: 保存路径名
             stage_id: -1-运营阶段  0-施工阶段包络 n-施工阶段号
-            load_case_name: 详细荷载工况名,参考桥通结果输出,例如： CQ:成桥(合计)
+            case_name: 详细荷载工况名,参考桥通结果输出,例如： CQ:成桥(合计)
             show_increment: 是否显示增量结果
             envelope_type: 施工阶段包络类型 1-最大 2-最小
-            component: 分量编号 0-轴力分量 1-Mz分量 2-My分量 3-组合包络 4-左上 5-右上 6-右下 7-左下
+            component: 分量编号 1-轴力 2-Mzx 3-My 4-组合包络 5-左上 6-右上 7-右下 8-左下
             show_line_chart: 折线图选项卡开启
             line_scale:折线图比例
             flip_plot:反向绘制
@@ -770,40 +822,40 @@ class Odb:
             show_number: 数值选项卡开启
             text_rotation: 数值选项卡内文字旋转角度
             digital_count: 小数点位数
-            show_exponential: 指数显示开启
-            max_min_kind: 数值选项卡内最大最小值显示 -1-不显示最大最小值  0-显示最大值和最小值  1-最大绝对值 2-最大值 3-最小值
+            text_exponential: 指数显示开启
+            max_min_kind: 数值选项卡内最大最小值显示 0-不显示最大最小值  1-显示最大值和最小值  2-最大绝对值 3-最大值 4-最小值
             show_legend: 图例选项卡开启
-            show_pre_deformed: 显示变形前
-            position: 位置编号 0-始端 1-末端 2-绝对最大 4-全部
+            show_undeformed: 显示变形前
+            position: 位置编号 1-始端 2-末端 3-绝对最大 4-全部
         Example:
-            odb.plot_beam_element_stress(file_path=r"D:\\图片\\梁应力.png",show_line_chart=False,component=0,load_case_name="CQ:成桥(合计)",stage_id=-1)
+            odb.plot_beam_element_stress(file_path=r"D:\\图片\\梁应力.png",show_line_chart=False,component=1,case_name="CQ:成桥(合计)",stage_id=-1)
         Returns: 无
         """
         try:
             qt_model.PlotBeamElementStress(
-                filePath=file_path, stageId=stage_id, loadCaseName=load_case_name, showIncrementResult=show_increment,
+                filePath=file_path, stageId=stage_id, caseName=case_name, showIncrement=show_increment,
                 envelopeType=envelope_type, component=component,
                 showLineChart=show_line_chart, lineScale=line_scale, flipPlot=flip_plot,
-                showAsDeformedShape=show_deformed, deformedScale=deformed_scale, deformedActual=deformed_actual,
-                showNumber=show_number, textRotationAngle=text_rotation, maxMinValueKind=max_min_kind,
-                showLegend=show_legend, digitalCount=digital_count, showAsExponential=show_exponential,
-                showUndeformedShape=show_pre_deformed, position=position)
+                showDeformed=show_deformed, deformedScale=deformed_scale, deformedActual=deformed_actual,
+                showNumber=show_number, textRotate=text_rotation, maxMinKind=max_min_kind,
+                showLegend=show_legend, digitalCount=digital_count, textExponential=text_exponential,
+                showUndeformed=show_undeformed, position=position)
         except Exception as ex:
             raise Exception(ex)
 
     @staticmethod
-    def plot_truss_element_stress(file_path: str, stage_id: int = 1, load_case_name: str = "合计", show_increment: bool = False, envelope_type: int = 1,
+    def plot_truss_element_stress(file_path: str, stage_id: int = 1, case_name: str = "合计", show_increment: bool = False, envelope_type: int = 1,
                                   show_line_chart: bool = True, line_scale: float = 1.0, flip_plot: bool = True,
                                   show_deformed: bool = True, deformed_actual: bool = False, deformed_scale: float = 1.0,
-                                  show_number: bool = False, text_rotation: int = 0, max_min_kind: int = 0,
-                                  show_legend: bool = True, digital_count: int = 3, show_exponential: bool = True,
-                                  show_pre_deformed: bool = False, position: int = 0):
+                                  show_number: bool = False, text_rotation: int = 0, max_min_kind: int = 1,
+                                  show_legend: bool = True, digital_count: int = 3, text_exponential: bool = True,
+                                  show_undeformed: bool = False, position: int = 1):
         """
         绘制杆单元结果图并保存到指定文件
         Args:
             file_path: 保存路径名
             stage_id: -1-运营阶段  0-施工阶段包络 n-施工阶段号
-            load_case_name: 详细荷载工况名,参考桥通结果输出,例如： CQ:成桥(合计)
+            case_name: 详细荷载工况名,参考桥通结果输出,例如： CQ:成桥(合计)
             show_increment: 是否显示增量结果
             envelope_type: 施工阶段包络类型 1-最大 2-最小
             show_line_chart: 折线图选项卡开启
@@ -815,44 +867,44 @@ class Odb:
             show_number: 数值选项卡开启
             text_rotation: 数值选项卡内文字旋转角度
             digital_count: 小数点位数
-            show_exponential: 指数显示开启
-            max_min_kind: 数值选项卡内最大最小值显示 -1-不显示最大最小值  0-显示最大值和最小值  1-最大绝对值 2-最大值 3-最小值
+            text_exponential: 指数显示开启
+            max_min_kind: 数值选项卡内最大最小值显示 0-不显示最大最小值  1-显示最大值和最小值  2-最大绝对值 3-最大值 4-最小值
             show_legend: 图例选项卡开启
-            show_pre_deformed: 显示变形前
-            position: 位置编号 0-始端 1-末端 2-绝对最大 4-全部
+            show_undeformed: 显示变形前
+            position: 位置编号 1-始端 2-末端 3-绝对最大 4-全部
         Example:
-            odb.plot_truss_element_stress(file_path=r"D:\\图片\\杆应力.png",load_case_name="CQ:成桥(合计)",stage_id=-1)
+            odb.plot_truss_element_stress(file_path=r"D:\\图片\\杆应力.png",case_name="CQ:成桥(合计)",stage_id=-1)
         Returns: 无
         """
         try:
             qt_model.PlotTrussElementStress(
-                filePath=file_path, stageId=stage_id, loadCaseName=load_case_name, showIncrementResult=show_increment, envelopeType=envelope_type,
+                filePath=file_path, stageId=stage_id, caseName=case_name, showIncrement=show_increment, envelopeType=envelope_type,
                 showLineChart=show_line_chart, lineScale=line_scale, flipPlot=flip_plot,
-                showAsDeformedShape=show_deformed, deformedScale=deformed_scale, deformedActual=deformed_actual,
-                showNumber=show_number, textRotationAngle=text_rotation, maxMinValueKind=max_min_kind,
-                showLegend=show_legend, digitalCount=digital_count, showAsExponential=show_exponential,
-                showUndeformedShape=show_pre_deformed, position=position)
+                showDeformed=show_deformed, deformedScale=deformed_scale, deformedActual=deformed_actual,
+                showNumber=show_number, textRotate=text_rotation, maxMinKind=max_min_kind,
+                showLegend=show_legend, digitalCount=digital_count, textExponential=text_exponential,
+                showUndeformed=show_undeformed, position=position)
         except Exception as ex:
             raise Exception(ex)
 
     @staticmethod
-    def plot_composite_beam_stress(file_path: str, stage_id: int = 1, load_case_name: str = "合计", show_increment: bool = False,
-                                   envelope_type: int = 1, mat_type: int = 0, component: int = 0,
+    def plot_composite_beam_stress(file_path: str, stage_id: int = 1, case_name: str = "合计", show_increment: bool = False,
+                                   envelope_type: int = 1, mat_type: int = 0, component: int = 1,
                                    show_line_chart: bool = True, line_scale: float = 1.0, flip_plot: bool = True,
                                    show_deformed: bool = True, deformed_actual: bool = False, deformed_scale: float = 1.0,
-                                   show_number: bool = False, text_rotation: int = 0, max_min_kind: int = 0,
-                                   show_legend: bool = True, digital_count: int = 3, show_exponential: bool = True,
-                                   show_pre_deformed: bool = False, position: int = 0):
+                                   show_number: bool = False, text_rotation: int = 0, max_min_kind: int = 1,
+                                   show_legend: bool = True, digital_count: int = 3, text_exponential: bool = True,
+                                   show_undeformed: bool = False, position: int = 1):
         """
         绘制组合梁单元结果图并保存到指定文件
         Args:
             file_path: 保存路径名
             stage_id: -1-运营阶段  0-施工阶段包络 n-施工阶段号
-            load_case_name: 详细荷载工况名,参考桥通结果输出,例如： CQ:成桥(合计)
+            case_name: 详细荷载工况名,参考桥通结果输出,例如： CQ:成桥(合计)
             show_increment: 是否显示增量结果
             envelope_type: 施工阶段包络类型 1-最大 2-最小
-            mat_type: 材料类型 0-主材 1-辅材
-            component: 分量编号 0-轴力分量 1-Mz分量 2-My分量 3-包络 4-左上 5-右上 6-左下 7-右下
+            mat_type: 材料类型 1-主材 2-辅材
+            component: 分量编号 1-轴力分量 2-Mz分量 3-My分量 4-包络 5-左上 6-右上 7-左下 8-右下
             show_line_chart: 折线图选项卡开启
             line_scale:折线图比例
             flip_plot:反向绘制
@@ -862,85 +914,86 @@ class Odb:
             show_number: 数值选项卡开启
             text_rotation: 数值选项卡内文字旋转角度
             digital_count: 小数点位数
-            show_exponential: 指数显示开启
-            max_min_kind: 数值选项卡内最大最小值显示 -1-不显示最大最小值  0-显示最大值和最小值  1-最大绝对值 2-最大值 3-最小值
+            text_exponential: 指数显示开启
+            max_min_kind: 数值选项卡内最大最小值显示 0-不显示最大最小值  1-显示最大值和最小值  2-最大绝对值 3-最大值 4-最小值
             show_legend: 图例选项卡开启
-            show_pre_deformed: 显示变形前
-            position: 位置编号 0-始端 1-末端 2-绝对最大 4-全部
+            show_undeformed: 显示变形前
+            position: 位置编号 1-始端 2-末端 3-绝对最大 4-全部
         Example:
-            odb.plot_composite_beam_stress(file_path=r"D:\\图片\\组合梁应力.png",component=0,load_case_name="CQ:成桥(合计)",stage_id=-1)
+            odb.plot_composite_beam_stress(file_path=r"D:\\图片\\组合梁应力.png",component=1,case_name="CQ:成桥(合计)",stage_id=-1)
         Returns: 无
         """
         try:
             qt_model.PlotCompositeBeamStress(
-                filePath=file_path, stageId=stage_id, loadCaseName=load_case_name, showIncrementResult=show_increment,
+                filePath=file_path, stageId=stage_id, caseName=case_name, showIncrement=show_increment,
                 envelopeType=envelope_type, matType=mat_type, component=component,
                 showLineChart=show_line_chart, lineScale=line_scale, flipPlot=flip_plot,
-                showAsDeformedShape=show_deformed, deformedScale=deformed_scale, deformedActual=deformed_actual,
-                showNumber=show_number, textRotationAngle=text_rotation, maxMinValueKind=max_min_kind,
-                showLegend=show_legend, digitalCount=digital_count, showAsExponential=show_exponential,
-                showUndeformedShape=show_pre_deformed, position=position)
+                showDeformed=show_deformed, deformedScale=deformed_scale, deformedActual=deformed_actual,
+                showNumber=show_number, textRotate=text_rotation, maxMinKind=max_min_kind,
+                showLegend=show_legend, digitalCount=digital_count, textExponential=text_exponential,
+                showUndeformed=show_undeformed, position=position)
         except Exception as ex:
             raise Exception(ex)
 
     @staticmethod
-    def plot_plate_element_stress(file_path: str, stage_id: int = 1, load_case_name: str = "合计", show_increment: bool = False,
-                                  envelope_type: int = 1, stress_kind: int = 0, component: int = 0,
-                                  show_number: bool = False, text_rotation_angle: int = 0, max_min_kind: int = 0,
+    def plot_plate_element_stress(file_path: str, stage_id: int = 1, case_name: str = "合计", show_increment: bool = False,
+                                  envelope_type: int = 1, stress_kind: int = 0, component: int = 1,
+                                  show_number: bool = False, text_rotation_angle: int = 0, max_min_kind: int = 1,
                                   show_deformed: bool = True, deformed_scale: float = 1.0, deformed_actual: bool = False,
-                                  show_legend: bool = True, digital_count: int = 3, show_exponential: bool = True,
-                                  show_pre_deformed: bool = False, position: int = 0):
+                                  show_legend: bool = True, digital_count: int = 3, text_exponential: bool = True,
+                                  show_undeformed: bool = False, position: int = 1):
         """
         绘制板单元结果图并保存到指定文件
         Args:
             file_path: 保存路径名
-            component: 分量编号 0-Fxx 1-Fyy 2-Fxy 3-Mxx 4-Myy 5-Mxy
-            stress_kind: 力类型 0-单元 1-节点平均
-            load_case_name: 详细荷载工况名
+            component: 分量编号 1-Fxx 2-Fyy 3-Fxy 4-Mxx 5-Myy 6-Mxy
+            stress_kind: 力类型 1-单元 2-节点平均
+            case_name: 详细荷载工况名
             stage_id: 阶段编号
             envelope_type: 包络类型
             show_number: 是否显示数值
             show_deformed: 是否显示变形形状
-            show_pre_deformed: 是否显示未变形形状
+            show_undeformed: 是否显示未变形形状
             deformed_actual: 是否显示实际变形
             deformed_scale: 变形比例
             show_legend: 是否显示图例
             text_rotation_angle: 数值选项卡内文字旋转角度
             digital_count: 小数点位数
-            show_exponential: 是否以指数形式显示
+            text_exponential: 是否以指数形式显示
             max_min_kind: 最大最小值显示类型
             show_increment: 是否显示增量结果
-            position: 位置 0-板顶 1-板底 2-绝对值最大
+            position: 位置 1-板顶 2-板底 3-绝对值最大
         Example:
-            odb.plot_plate_element_stress(file_path=r"D:\\图片\\板应力.png",component=0,load_case_name="CQ:成桥(合计)",stage_id=-1)
+            odb.plot_plate_element_stress(file_path=r"D:\\图片\\板应力.png",component=1,case_name="CQ:成桥(合计)",stage_id=-1)
         Returns: 无
         """
         try:
             qt_model.PlotPlateElementStress(
-                filePath=file_path, stageId=stage_id, loadCaseName=load_case_name, showIncrementResult=show_increment,
+                filePath=file_path, stageId=stage_id, caseName=case_name, showIncrement=show_increment,
                 envelopeType=envelope_type, stressKind=stress_kind, component=component,
-                showAsDeformedShape=show_deformed, deformedScale=deformed_scale, deformedActual=deformed_actual,
-                showNumber=show_number, textRotationAngle=text_rotation_angle, maxMinValueKind=max_min_kind,
-                showLegend=show_legend, digitalCount=digital_count, showAsExponential=show_exponential,
-                showUndeformedShape=show_pre_deformed, position=position)
+                showDeformed=show_deformed, deformedScale=deformed_scale, deformedActual=deformed_actual,
+                showNumber=show_number, textRotate=text_rotation_angle, maxMinKind=max_min_kind,
+                showLegend=show_legend, digitalCount=digital_count, textExponential=text_exponential,
+                showUndeformed=show_undeformed, position=position)
         except Exception as ex:
             raise Exception(ex)
 
     @staticmethod
-    def plot_vibration_mode(file_path: str = "", mode: int = 1, show_number: bool = True, text_rotation_angle: float = 0, max_min_kind: int = 0,
-                            show_legend: bool = True, digital_count: int = 3, show_exponential: bool = True,
-                            show_pre_deformed: bool = False):
+    def plot_vibration_mode(file_path: str = "", mode: int = 1, show_number: bool = True,
+                            text_rotation_angle: float = 0, max_min_kind: int = 1,
+                            show_legend: bool = True, digital_count: int = 3, text_exponential: bool = True,
+                            show_undeformed: bool = False):
         """
         绘制板单元结果图并保存到指定文件
         Args:
            file_path: 保存路径名
            mode: 模态号
            show_number: 是否显示数值
-           show_pre_deformed: 是否显示未变形形状
+           show_undeformed: 是否显示未变形形状
            show_legend: 是否显示图例
            text_rotation_angle: 数值选项卡内文字旋转角度
            digital_count: 小数点位数
-           show_exponential: 是否以指数形式显示
+           text_exponential: 是否以指数形式显示
            max_min_kind: 最大最小值显示类型
         Example:
            odb.plot_vibration_mode(file_path=r"D:\\图片\\自振模态.png",mode=1)
@@ -949,9 +1002,9 @@ class Odb:
         try:
             qt_model.PlotVibrationMode(
                 filePath=file_path, mode=mode,
-                showNumber=show_number, textRotationAngle=text_rotation_angle, maxMinValueKind=max_min_kind,
-                showLegend=show_legend, digitalCount=digital_count, showAsExponential=show_exponential,
-                showUndeformedShape=show_pre_deformed)
+                showNumber=show_number, textRotate=text_rotation_angle, maxMinKind=max_min_kind,
+                showLegend=show_legend, digitalCount=digital_count, textExponential=text_exponential,
+                showUndeformed=show_undeformed)
         except Exception as ex:
             raise Exception(ex)
 
@@ -969,12 +1022,12 @@ class Odb:
             tolerance:容许范围,默认为1
         Example:
             odb.get_element_by_point(0.5,0.5,0.5,tolerance=1)
-        Returns: json字符串,包含信息为list[int]
+        Returns: 包含信息为list[int]
         """
         try:
             qt_result = qt_model.GetElementsByPoint(x=x, y=y, z=z, tolerance=tolerance)
             result = list(qt_result)
-            return json.dumps(result)
+            return result
         except Exception as ex:
             raise Exception(ex)
 
@@ -986,12 +1039,12 @@ class Odb:
             name:材料名称
         Example:
             odb.get_element_by_material("材料1")
-        Returns: json字符串,包含信息为list[int]
+        Returns: 包含信息为list[int]
         """
         try:
             qt_result = qt_model.GetElementsByMaterial(name=name)
             result = list(qt_result)
-            return json.dumps(result)
+            return result
         except Exception as ex:
             raise Exception(ex)
 
@@ -1003,14 +1056,14 @@ class Odb:
             round_num: 判断精度，默认小数点后四位
         Example:
             odb.get_overlap_nodes()
-        Returns: json字符串,包含信息为list[list[int]]
+        Returns: 包含信息为list[list[int]]
         """
         try:
             result = []
             qt_result = qt_model.GetOverlapNodes(mathRound=round_num)
             for i in range(len(qt_result)):
                 result.append(list(qt_result[i]))
-            return json.dumps(result)
+            return result
         except Exception as ex:
             raise Exception(ex)
 
@@ -1021,14 +1074,14 @@ class Odb:
         Args:无
         Example:
             odb.get_overlap_elements()
-        Returns:  json字符串,包含信息为list[list[int]]
+        Returns:  包含信息为list[list[int]]
         """
         try:
             result = []
             qt_result = qt_model.GetOverlapElements()
             for i in range(len(qt_result)):
                 result.append(list(qt_result[i]))
-            return json.dumps(result)
+            return result
         except Exception as ex:
             raise Exception(ex)
 
@@ -1039,11 +1092,11 @@ class Odb:
         Args:无
         Example:
             odb.get_structure_group_names()
-        Returns: json字符串,包含信息为list[str]
+        Returns: 包含信息为list[str]
         """
         try:
             res_list = list(qt_model.GetStructureGroupNames())
-            return json.dumps(res_list)
+            return res_list
         except Exception as ex:
             raise Exception(ex)
 
@@ -1055,7 +1108,7 @@ class Odb:
         Example:
             odb.get_thickness_data(1)
         Returns:
-            json字符串,包含信息为dict
+            包含信息为dict
         """
         try:
             return qt_model.GetThicknessData(thick_id)
@@ -1069,14 +1122,14 @@ class Odb:
         Args:
         Example:
             odb.get_all_thickness_data()
-        Returns: json字符串,包含信息为list[dict]
+        Returns: 包含信息为list[dict]
         """
         try:
             sec_ids = qt_model.GetAllThicknessIds()
             res_list = []
             for item in sec_ids:
                 res_list.append(qt_model.GetThicknessData(item))
-            return json.dumps(res_list)
+            return res_list
         except Exception as ex:
             raise Exception(ex)
 
@@ -1087,14 +1140,14 @@ class Odb:
         Args:
         Example:
             odb.get_all_section_shape()
-        Returns: json字符串,包含信息为list[dict]
+        Returns: 包含信息为list[dict]
         """
         try:
             sec_ids = qt_model.GetAllSectionIds()
             res_list = []
             for item in sec_ids:
                 res_list.append(qt_model.GetSectionShape(item))
-            return json.dumps(res_list)
+            return res_list
         except Exception as ex:
             raise Exception(ex)
 
@@ -1107,7 +1160,7 @@ class Odb:
         Example:
             odb.get_section_shape(1)
         Returns:
-            json字符串,包含信息为dict
+            包含信息为dict
         """
         try:
             return qt_model.GetSectionShape(sec_id)
@@ -1121,14 +1174,14 @@ class Odb:
         Args: 无
         Example:
             odb.get_all_section_data()
-        Returns: json字符串,包含信息为list[dict]
+        Returns: 包含信息为list[dict]
         """
         try:
             ids = Odb.get_section_ids()
             res_list = []
             for item in ids:
                 res_list.append(qt_model.GetSectionInfo(item))
-            return json.dumps(res_list)
+            return res_list
         except Exception as ex:
             raise Exception(ex)
 
@@ -1140,7 +1193,7 @@ class Odb:
             sec_id: 目标截面编号
         Example:
             odb.get_section_data(1)
-        Returns: json字符串,包含信息为dict
+        Returns: 包含信息为dict
         """
         try:
             return qt_model.GetSectionInfo(sec_id)
@@ -1233,7 +1286,7 @@ class Odb:
             odb.get_node_data()     # 获取所有节点信息
             odb.get_node_data(ids=1)    # 获取单个节点信息
             odb.get_node_data(ids=[1,2])    # 获取多个节点信息
-        Returns:  json字符串,包含信息为list[dict] or dict
+        Returns:  包含信息为list[dict] or dict
         """
         try:
             if ids is None:
@@ -1243,7 +1296,7 @@ class Odb:
             res_list = []
             for item in node_list:
                 res_list.append(str(Node(item.Id, item.XCoor, item.YCoor, item.ZCoor)))
-            return json.dumps(res_list) if len(res_list) > 1 else res_list[0]
+            return res_list if len(res_list) > 1 else res_list[0]
         except Exception as ex:
             raise Exception(ex)
 
@@ -1256,7 +1309,7 @@ class Odb:
         Example:
             odb.get_element_data() # 获取所有单元结果
             odb.get_element_data(ids=1) # 获取指定编号单元信息
-        Returns:  json字符串,包含信息为list[dict] or dict
+        Returns:  包含信息为list[dict] or dict
         """
         try:
             item_list = []
@@ -1266,7 +1319,7 @@ class Odb:
                 item_list.extend(Odb.get_plate_element())
                 item_list.extend(Odb.get_cable_element())
                 item_list.extend(Odb.get_link_element())
-                return json.dumps(item_list)
+                return item_list
             if isinstance(ids, int):
                 target_ids.append(ids)
             else:
@@ -1281,7 +1334,7 @@ class Odb:
                     item_list.append(Odb.get_cable_element(item_id)[0])
                 if ele_type == "LINK":
                     item_list.append(Odb.get_link_element(item_id)[0])
-            return json.dumps(item_list) if len(item_list) > 1 else item_list[0]
+            return item_list if len(item_list) > 1 else item_list[0]
         except Exception as ex:
             raise Exception(ex)
 
@@ -1397,7 +1450,7 @@ class Odb:
         Args: 无
         Example:
             odb.get_material_data() # 获取所有材料信息
-        Returns: json字符串,包含信息为list[dict]
+        Returns: 包含信息为list[dict]
         """
         try:
             mat_list = []
@@ -1406,7 +1459,7 @@ class Odb:
             mat_list.extend(Odb.get_pre_stress_bar_material())
             mat_list.extend(Odb.get_steel_bar_material())
             mat_list.extend(Odb.get_user_define_material())
-            return json.dumps(mat_list)
+            return mat_list
         except Exception as ex:
             raise Exception(ex)
 
@@ -1529,11 +1582,11 @@ class Odb:
         Args:无
         Example:
             odb.get_boundary_group_names()
-        Returns: json字符串,包含信息为list[str]
+        Returns: 包含信息为list[str]
         """
         try:
             res_list = list(qt_model.GetBoundaryGroupNames())
-            return json.dumps(res_list)
+            return res_list
         except Exception as ex:
             raise Exception(ex)
 
@@ -1545,7 +1598,7 @@ class Odb:
              group_name:默认输出所有边界组信息
         Example:
             odb.get_general_support_data()
-        Returns: json字符串,包含信息为list[dict]
+        Returns: 包含信息为list[dict]
         """
         try:
             res_list = []
@@ -1560,7 +1613,7 @@ class Odb:
                                                        boundary_info=(data.IsFixedX, data.IsFixedY, data.IsFixedZ,
                                                                       data.IsFixedRx, data.IsFixedRy, data.IsFixedRZ),
                                                        group_name=group, node_system=int(data.NodalCoordinateSystem))))
-            return json.dumps(res_list)
+            return res_list
         except Exception as ex:
             raise Exception(ex)
 
@@ -1572,7 +1625,7 @@ class Odb:
             group_name:默认输出所有边界组信息
         Example:
             odb.get_elastic_link_data()
-        Returns: json字符串,包含信息为list[dict]或 dict
+        Returns: 包含信息为list[dict]或 dict
         """
         try:
             res_list = []
@@ -1587,7 +1640,7 @@ class Odb:
                                                     start_id=data.StartNode.Id, end_id=data.EndNode.Id, beta_angle=data.Beta,
                                                     boundary_info=(data.Kx, data.Ky, data.Kz, data.Krx, data.Kry, data.Krz),
                                                     group_name=group, dis_ratio=data.DistanceRatio, kx=data.Kx)))
-            return json.dumps(res_list) if len(res_list) > 1 else res_list[0]
+            return res_list if len(res_list) > 1 else res_list[0]
         except Exception as ex:
             raise Exception(ex)
 
@@ -1599,7 +1652,7 @@ class Odb:
             group_name:默认输出所有边界组信息
         Example:
             odb.get_elastic_support_data()
-        Returns: json字符串,包含信息为list[dict]或 dict
+        Returns: 包含信息为list[dict]或 dict
         """
         try:
             res_list = []
@@ -1613,7 +1666,7 @@ class Odb:
                     res_list.append(str(ElasticSupport(support_id=data.Id, node_id=data.Node.Id, support_type=int(data.Type) + 1,
                                                        boundary_info=(data.Kx, data.Ky, data.Kz, data.Krx, data.Kry, data.Krz),
                                                        group_name=group, node_system=int(data.NodalCoordinateSystem))))
-            return json.dumps(res_list) if len(res_list) > 1 else res_list[0]
+            return res_list if len(res_list) > 1 else res_list[0]
         except Exception as ex:
             raise Exception(ex)
 
@@ -1625,7 +1678,7 @@ class Odb:
             group_name:默认输出所有边界组信息
         Example:
             odb.get_master_slave_link_data()
-        Returns: json字符串,包含信息为list[dict]或 dict
+        Returns: 包含信息为list[dict]或 dict
         """
         try:
             res_list = []
@@ -1640,7 +1693,7 @@ class Odb:
                                                         boundary_info=(data.IsFixedX, data.IsFixedY, data.IsFixedZ,
                                                                        data.IsFixedRx, data.IsFixedRy, data.IsFixedRZ),
                                                         group_name=group)))
-            return json.dumps(res_list) if len(res_list) > 1 else res_list[0]
+            return res_list if len(res_list) > 1 else res_list[0]
         except Exception as ex:
             raise Exception(ex)
 
@@ -1651,7 +1704,7 @@ class Odb:
         Args:无
         Example:
             odb.get_node_local_axis_data()
-        Returns: json字符串,包含信息为list[dict]
+        Returns: 包含信息为list[dict]
         """
         try:
             res_list = []
@@ -1660,7 +1713,7 @@ class Odb:
                 for data in item_list:
                     res_list.append(str(NodalLocalAxis(data.Node.Id, (data.VectorX.X, data.VectorX.Y, data.VectorX.Z),
                                                        (data.VectorY.X, data.VectorY.Y, data.VectorY.Z))))
-            return json.dumps(res_list)
+            return res_list
         except Exception as ex:
             raise Exception(ex)
 
@@ -1672,7 +1725,7 @@ class Odb:
                group_name:默认输出所有边界组信息
            Example:
                odb.get_beam_constraint_data()
-           Returns: json字符串,包含信息为list[dict]或 dict
+           Returns: 包含信息为list[dict]或 dict
         """
         try:
             res_list = []
@@ -1688,7 +1741,7 @@ class Odb:
                     info_j = (
                         not data.IsJFreedX, not data.IsJFreedY, not data.IsJFreedZ, not data.IsJFreedRx, not data.IsJFreedRy, not data.IsJFreedRZ)
                     res_list.append(str(BeamConstraint(constraint_id=data.Id, beam_id=data.Beam.Id, info_i=info_i, info_j=info_j, group_name=group)))
-            return json.dumps(res_list) if len(res_list) > 1 else res_list[0]
+            return res_list if len(res_list) > 1 else res_list[0]
         except Exception as ex:
             raise Exception(ex)
 
@@ -1700,7 +1753,7 @@ class Odb:
              group_name:默认输出所有边界组信息
          Example:
              odb.get_constraint_equation_data()
-         Returns: json字符串,包含信息为list[dict]或 dict
+         Returns: 包含信息为list[dict]或 dict
          """
         try:
             res_list = []
@@ -1717,7 +1770,7 @@ class Odb:
                     res_list.append(
                         str(ConstraintEquation(data.Id, name=data.Name, sec_node=data.SecondaryNode.Id, sec_dof=int(data.SecondaryDof) + 1,
                                                master_info=master_info, group_name=group)))
-            return json.dumps(res_list) if len(res_list) > 1 else res_list[0]
+            return res_list if len(res_list) > 1 else res_list[0]
         except Exception as ex:
             raise Exception(ex)
 
@@ -1731,11 +1784,11 @@ class Odb:
         Args: 无
         Example:
             odb.get_stage_name()
-        Returns: json字符串,包含信息为list[int]
+        Returns: 包含信息为list[int]
         """
         try:
             res_list = list(qt_model.GetStageNames())
-            return json.dumps(res_list)
+            return res_list
         except Exception as ex:
             raise Exception(ex)
 
@@ -1747,11 +1800,11 @@ class Odb:
             stage_id: 施工阶段编号
         Example:
             odb.get_elements_of_stage(stage_id=1)
-        Returns: json字符串,包含信息为list[int]
+        Returns: 包含信息为list[int]
         """
         try:
             res_list = list(qt_model.GetElementIdsOfStage(stage_id))
-            return json.dumps(res_list)
+            return res_list
         except Exception as ex:
             raise Exception(ex)
 
@@ -1763,10 +1816,10 @@ class Odb:
             stage_id: 施工阶段编号
         Example:
             odb.get_nodes_of_stage(stage_id=1)
-        Returns: json字符串,包含信息为list[int]
+        Returns: 包含信息为list[int]
         """
         res_list = list(qt_model.GetNodeIdsOfStage(stage_id))
-        return json.dumps(res_list)
+        return res_list
 
     @staticmethod
     def get_groups_of_stage(stage_id: int):
@@ -1776,13 +1829,13 @@ class Odb:
             stage_id: 施工阶段编号
         Example:
             odb.get_groups_of_stage(stage_id=1)
-        Returns: json字符串,包含信息为dict
+        Returns: 包含信息为dict
         """
         try:
             res_dict = {"结构组": list(qt_model.GetStructtureGroupOfStage(stage_id)),
                         "边界组": list(qt_model.GetBoundaryGroupOfStage(stage_id)),
                         "荷载组": list(qt_model.GetLoadGroupOfStage(stage_id))}
-            return json.dumps(res_dict)
+            return res_dict
         except Exception as ex:
             raise Exception(ex)
 
@@ -1790,16 +1843,16 @@ class Odb:
 
     # region 荷载信息
     @staticmethod
-    def get_load_case_names():
+    def get_case_names():
         """
         获取荷载工况名
         Args: 无
         Example:
-            odb.get_load_case_names()
-        Returns: json字符串,包含信息为list[str]
+            odb.get_case_names()
+        Returns: 包含信息为list[str]
         """
-        res_list = list(qt_model.GetLoadCaseNames())
-        return json.dumps(res_list)
+        res_list = list(qt_model.GetcaseNames())
+        return res_list
 
     @staticmethod
     def get_pre_stress_load(case_name: str):
@@ -1809,7 +1862,7 @@ class Odb:
             case_name: 荷载工况名
         Example:
             odb.get_pre_stress_load(case_name="荷载工况1")
-        Returns: json字符串,包含信息为list[dict]
+        Returns: 包含信息为list[dict]
         """
         try:
             res_list = []
@@ -1817,7 +1870,7 @@ class Odb:
             for data in item_list:
                 res_list.append(str(PreStressLoad(case_name=case_name, tendon_name=data.Tendon.Name,
                                                   tension_type=int(data.TendonTensionType), force=data.TensionForce, group_name=data.LoadGroup.Name)))
-            return json.dumps(res_list)
+            return res_list
         except Exception as ex:
             raise Exception(ex)
 
@@ -1828,7 +1881,7 @@ class Odb:
         Args: 无
         Example:
             odb.get_node_mass_data()
-        Returns: json字符串,包含信息为list[dict]
+        Returns: 包含信息为list[dict]
         """
         try:
             res_list = []
@@ -1838,7 +1891,7 @@ class Odb:
                                                                        data.InertialMassMomentAlongX,
                                                                        data.InertialMassMomentAlongY,
                                                                        data.InertialMassMomentAlongZ))))
-            return json.dumps(res_list)
+            return res_list
         except Exception as ex:
             raise Exception(ex)
 
@@ -1850,7 +1903,7 @@ class Odb:
             case_name: 荷载工况名
         Example:
             odb.get_nodal_force_load(case_name="荷载工况1")
-        Returns: json字符串,包含信息为list[dict]
+        Returns: 包含信息为list[dict]
         """
         res_list = []
         item_list = qt_model.GetNodeForceLoadData(case_name)
@@ -1859,7 +1912,7 @@ class Odb:
             res_list.append(str(NodalForce(node_id=data.Node.Id, case_name=case_name,
                                            load_info=(load.ForceX, load.ForceY, load.ForceZ,
                                                       load.MomentX, load.MomentY, load.MomentZ), group_name=data.LoadGroup.Name)))
-        return json.dumps(res_list)
+        return res_list
 
     @staticmethod
     def get_nodal_displacement_load(case_name: str):
@@ -1869,7 +1922,7 @@ class Odb:
             case_name: 荷载工况名
         Example:
             odb.get_nodal_displacement_load(case_name="荷载工况1")
-        Returns: json字符串,包含信息为list[dict]
+        Returns: 包含信息为list[dict]
         """
         try:
             res_list = []
@@ -1879,7 +1932,7 @@ class Odb:
                 res_list.append(str(NodalForceDisplacement(node_id=data.Node.Id, case_name=case_name,
                                                            load_info=(load.DispX, load.DispY, load.DispZ,
                                                                       load.DispRx, load.DispRy, load.DispRz), group_name=data.LoadGroup.Name)))
-            return json.dumps(res_list)
+            return res_list
         except Exception as ex:
             raise Exception(ex)
 
@@ -1891,7 +1944,7 @@ class Odb:
             case_name: 荷载工况名
         Example:
             odb.get_beam_element_load(case_name="荷载工况1")
-        Returns: json字符串,包含信息为list[dict]
+        Returns: 包含信息为list[dict]
         """
         try:
             res_list = []
@@ -1909,7 +1962,7 @@ class Odb:
                 res_list.append(str(BeamElementLoad(item.ElementId, case_name, int(item.ElementLoadType) + 1, int(item.LoadCoordinateSystem),
                                                     list_x=[item.StartDistance, item.EndDistance], list_load=[item.StartForce, item.EndForce],
                                                     group_name=item.LoadGroup.Name, load_bias=load_bias, projected=item.IsProjection)))
-            return json.dumps(res_list)
+            return res_list
         except Exception as ex:
             raise Exception(ex)
 
@@ -1921,7 +1974,7 @@ class Odb:
             case_name: 荷载工况名
         Example:
             odb.get_beam_element_load(case_name="荷载工况1")
-        Returns: json字符串,包含信息为list[dict]
+        Returns: 包含信息为list[dict]
         """
         try:
             res_list = []
@@ -1940,7 +1993,7 @@ class Odb:
                 res_list.append(str(PlateElementLoad(element_id=item.ElementId, case_name=case_name, load_type=int(item.ElementLoadType) + 1,
                                                      load_place=0, coord_system=int(item.LoadCoordinateSystem) + 1,
                                                      group_name=item.LoadGroup.Name, load_list=[item.P1, item.P2, item.P3, item.P4], xy_list=None)))
-            return json.dumps(res_list)
+            return res_list
         except Exception as ex:
             raise Exception(ex)
 
@@ -1952,7 +2005,7 @@ class Odb:
             case_name: 荷载工况名
         Example:
             odb.get_initial_tension_load(case_name="荷载工况1")
-        Returns: json字符串,包含信息为list[dict]
+        Returns: 包含信息为list[dict]
         """
         try:
             res_list = []
@@ -1960,7 +2013,7 @@ class Odb:
             for item in item_list_load:
                 res_list.append(str(InitialTension(element_id=item.ElementId, case_name=case_name, group_name=item.LoadGroup.Name,
                                                    tension_type=int(item.CableTensionType), tension=item.Tension)))
-            return json.dumps(res_list)
+            return res_list
         except Exception as ex:
             raise Exception(ex)
 
@@ -1972,7 +2025,7 @@ class Odb:
             case_name: 荷载工况名
         Example:
             odb.get_cable_length_load(case_name="荷载工况1")
-        Returns: json字符串,包含信息为list[dict]
+        Returns: 包含信息为list[dict]
         """
         try:
             res_list = []
@@ -1980,7 +2033,7 @@ class Odb:
             for item in item_list_load:
                 res_list.append(str(CableLengthLoad(element_id=item.ElementId, case_name=case_name, group_name=item.LoadGroup.Name,
                                                     tension_type=int(item.CableTensionType), length=item.UnstressedLength)))
-            return json.dumps(res_list)
+            return res_list
         except Exception as ex:
             raise Exception(ex)
 
@@ -1991,7 +2044,7 @@ class Odb:
         Args: 无
         Example:
             odb.get_deviation_parameter()
-        Returns: json字符串,包含信息为list[dict]
+        Returns: 包含信息为list[dict]
         """
         try:
             res_list = []
@@ -2007,7 +2060,7 @@ class Odb:
                 res_list.append(str(DeviationParameter(item.Name, element_type=2,
                                                        parameters=[item.DisplacementDirectX, item.DisplacementDirectY, item.DisplacementDirectZ,
                                                                    item.RotationDirectX, item.RotationDirectY])))
-            return json.dumps(res_list)
+            return res_list
         except Exception as ex:
             raise Exception(ex)
 
@@ -2019,7 +2072,7 @@ class Odb:
             case_name:荷载工况名
         Example:
             odb.get_deviation_load(case_name="荷载工况1")
-        Returns: json字符串,包含信息为list[dict]
+        Returns: 包含信息为list[dict]
         """
         try:
             res_list = []
@@ -2033,7 +2086,7 @@ class Odb:
                 res_list.append(str(DeviationLoad(item.Element.Id, case_name=case_name,
                                                   parameters=[item.PlateDeviation[0].Name, item.PlateDeviation[0].Name,
                                                               item.PlateDeviation[2].Name, item.PlateDeviation[3].Name])))
-            return json.dumps(res_list)
+            return res_list
         except Exception as ex:
             raise Exception(ex)
     # endregion
