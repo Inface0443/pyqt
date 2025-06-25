@@ -441,74 +441,86 @@ class Odb:
 
     # endregion
 
-    # region 自振分析结果查看
+    # region 自振与屈曲分析结果表格
     @staticmethod
-    def get_vibration_node_displacement(node_id: (Union[int, List[int]]) = None, mode: int = 1):
+    def get_period_and_vibration_results():
         """
-        获取指定节点指定模态的振型向量
-        Args:
-            node_id: 节点号支持单个节点获取或节点列表获取
-            mode: 模态号
+        获取自振分析角频率和振型参与质量等结果
+        Args: 无
         Example:
-            odb.get_vibration_node_displacement(node_id=1,mode=1)
-        Returns: 包含信息为dict或list[dict]
+          odb.get_period_and_vibration_results()
+        Returns:list[dict]包含各模态周期和频率的列表
         """
         try:
-            bf_list = qt_model.GetVibrationNodeDisplacement(nodeIds=node_id, mode=mode)
+            bf_list = qt_model.GetPeriodAndVibrationResults()
+            list_res = []
+            for item in bf_list:
+                mode_factor = [item.ModeParticipationFactor.Dx, item.ModeParticipationFactor.Dy, item.ModeParticipationFactor.Dz,
+                               item.ModeParticipationFactor.Rx, item.ModeParticipationFactor.Ry, item.ModeParticipationFactor.Rz]
+                mode_mass = [item.ModeParticipationMass.Dx, item.ModeParticipationMass.Dy, item.ModeParticipationMass.Dz,
+                             item.ModeParticipationMass.Rx, item.ModeParticipationMass.Ry, item.ModeParticipationMass.Rz]
+                sum_mode_mass = [item.SumOfModeParticipationMass.Dx, item.SumOfModeParticipationMass.Dy, item.SumOfModeParticipationMass.Dz,
+                                 item.SumOfModeParticipationMass.Rx, item.SumOfModeParticipationMass.Ry, item.SumOfModeParticipationMass.Rz]
+                list_res.append(str(FreeVibrationResult(item.OrderId, item.AngularFrequency, mode_mass, sum_mode_mass, mode_factor)))
+            return list_res
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def get_vibration_modal_results(mode: int = 1):
+        """
+        获取自振分析振型向量
+        Args:
+            mode: 模态号. 默认为1
+        Example:
+            odb.get_vibration_modal_results(mode=1)
+        Returns:list[dict]包含该模态下节点位移向量列表
+        """
+        try:
+            bf_list = qt_model.GetVibrationModalResults(mode)
             list_res = []
             for item in bf_list:
                 displacements = [item.Displacement.Dx, item.Displacement.Dy, item.Displacement.Dz,
                                  item.Displacement.Rx, item.Displacement.Ry, item.Displacement.Rz]
                 list_res.append(str(NodeDisplacement(item.NodeId, displacements, item.Time)))
-            return list_res if len(list_res) > 1 else list_res[0]
         except Exception as ex:
             raise Exception(ex)
 
     @staticmethod
-    def get_period_and_frequency(mode: int = 1):
+    def get_buckling_eigenvalue():
         """
-        获取周期和频率
-        Args:
-            mode:模态号
+        获取屈曲分析特征值
+        Args: 无
         Example:
-            odb.get_period_and_frequency(mode=1)
-        Returns: 包含信息为dict
+            odb.get_buckling_eigenvalue()
+        Returns: list[dict]包含各模态下特征值
         """
         try:
-            res_dict = qt_model.GetPeriodAndFrequency(mode=mode)
-            return json.loads(res_dict)
+            bf_list = qt_model.GetBucklingEigenvalue()
+            list_res = []
+            for item in bf_list:
+                list_res.append(str(ElasticBucklingResult(item.OrderId, item.EigenValue)))
+            return list_res
         except Exception as ex:
             raise Exception(ex)
 
     @staticmethod
-    def get_participation_mass(mode: int = 1):
+    def get_buckling_modal_results(mode: int = 1):
         """
-        获取振型参与质量百分比
+        获取屈曲模态向量
         Args:
-            mode:模态号
+            mode:模态号. 默认为1
         Example:
-            odb.get_participation_mass(mode=1)
-        Returns: 包含信息为dict
+            odb.get_buckling_modal_results(mode=1)
+        Returns:list[dict]包含该模态下屈曲模态向量列表
         """
         try:
-            res_dict = qt_model.GetParticipationMass(mode=mode)
-            return json.loads(res_dict)
-        except Exception as ex:
-            raise Exception(ex)
-
-    @staticmethod
-    def get_participation_factor(mode: int = 1):
-        """
-        获取振型参与质量系数
-        Args:
-            mode:模态号
-        Example:
-            odb.get_participation_factor(mode=1)
-        Returns: 包含信息为dict
-        """
-        try:
-            res_dict = qt_model.GetParticipationFactor(mode=mode)
-            return json.loads(res_dict)
+            bf_list = qt_model.GetVibrationModalResults(mode)
+            list_res = []
+            for item in bf_list:
+                displacements = [item.Displacement.Dx, item.Displacement.Dy, item.Displacement.Dz,
+                                 item.Displacement.Rx, item.Displacement.Ry, item.Displacement.Rz]
+                list_res.append(str(NodeDisplacement(item.NodeId, displacements, item.Time)))
         except Exception as ex:
             raise Exception(ex)
 
@@ -706,7 +718,7 @@ class Odb:
     @staticmethod
     def plot_plate_element_force(file_path: str, stage_id: int = 1, case_name: str = "合计", show_increment: bool = False,
                                  envelope_type: int = 1, force_kind: int = 1, component: int = 1,
-                                 show_number: bool = False, text_rotation_angle: int = 0, max_min_kind: int = 1,
+                                 show_number: bool = False, text_rotate: int = 0, max_min_kind: int = 1,
                                  show_deformed: bool = True, deformed_scale: float = 1.0, deformed_actual: bool = False,
                                  show_legend: bool = True, digital_count: int = 3, text_exponential: bool = True,
                                  show_undeformed: bool = False, is_time_history: bool = True, time_kind: int = 1, time_tick: float = 1.0):
@@ -725,7 +737,7 @@ class Odb:
             deformed_actual: 是否显示实际变形
             deformed_scale: 变形比例
             show_legend: 是否显示图例
-            text_rotation_angle: 数值选项卡内文字旋转角度
+            text_rotate: 数值选项卡内文字旋转角度
             digital_count: 小数点位数
             text_exponential: 是否以指数形式显示
             max_min_kind: 最大最小值显示类型
@@ -742,7 +754,7 @@ class Odb:
                 filePath=file_path, stageId=stage_id, caseName=case_name, showIncrement=show_increment,
                 envelopeType=envelope_type, forceKind=force_kind, component=component,
                 showDeformed=show_deformed, deformedScale=deformed_scale, deformedActual=deformed_actual,
-                showNumber=show_number, textRotate=text_rotation_angle, maxMinKind=max_min_kind,
+                showNumber=show_number, textRotate=text_rotate, maxMinKind=max_min_kind,
                 showLegend=show_legend, digitalCount=digital_count, textExponential=text_exponential,
                 showUndeformed=show_undeformed, isTimeHistory=is_time_history, timeKind=time_kind, timeTick=time_tick)
         except Exception as ex:
@@ -938,7 +950,7 @@ class Odb:
     @staticmethod
     def plot_plate_element_stress(file_path: str, stage_id: int = 1, case_name: str = "合计", show_increment: bool = False,
                                   envelope_type: int = 1, stress_kind: int = 0, component: int = 1,
-                                  show_number: bool = False, text_rotation_angle: int = 0, max_min_kind: int = 1,
+                                  show_number: bool = False, text_rotate: int = 0, max_min_kind: int = 1,
                                   show_deformed: bool = True, deformed_scale: float = 1.0, deformed_actual: bool = False,
                                   show_legend: bool = True, digital_count: int = 3, text_exponential: bool = True,
                                   show_undeformed: bool = False, position: int = 1):
@@ -957,7 +969,7 @@ class Odb:
             deformed_actual: 是否显示实际变形
             deformed_scale: 变形比例
             show_legend: 是否显示图例
-            text_rotation_angle: 数值选项卡内文字旋转角度
+            text_rotate: 数值选项卡内文字旋转角度
             digital_count: 小数点位数
             text_exponential: 是否以指数形式显示
             max_min_kind: 最大最小值显示类型
@@ -972,39 +984,54 @@ class Odb:
                 filePath=file_path, stageId=stage_id, caseName=case_name, showIncrement=show_increment,
                 envelopeType=envelope_type, stressKind=stress_kind, component=component,
                 showDeformed=show_deformed, deformedScale=deformed_scale, deformedActual=deformed_actual,
-                showNumber=show_number, textRotate=text_rotation_angle, maxMinKind=max_min_kind,
+                showNumber=show_number, textRotate=text_rotate, maxMinKind=max_min_kind,
                 showLegend=show_legend, digitalCount=digital_count, textExponential=text_exponential,
                 showUndeformed=show_undeformed, position=position)
         except Exception as ex:
             raise Exception(ex)
 
     @staticmethod
-    def plot_vibration_mode(file_path: str = "", mode: int = 1, show_number: bool = True,
-                            text_rotation_angle: float = 0, max_min_kind: int = 1,
-                            show_legend: bool = True, digital_count: int = 3, text_exponential: bool = True,
-                            show_undeformed: bool = False):
+    def plot_modal_result(file_path: str = "", mode: int = 1, mode_kind: int = 1, show_number: bool = True,
+                          text_rotate: float = 0, max_min_kind: int = 1,
+                          show_legend: bool = True, digital_count: int = 3, text_exponential: bool = True,
+                          show_undeformed: bool = False):
         """
         绘制板单元结果图并保存到指定文件
         Args:
            file_path: 保存路径名
            mode: 模态号
+           mode_kind: 1-自振模态 2-屈曲模态
            show_number: 是否显示数值
            show_undeformed: 是否显示未变形形状
            show_legend: 是否显示图例
-           text_rotation_angle: 数值选项卡内文字旋转角度
+           text_rotate: 数值选项卡内文字旋转角度
            digital_count: 小数点位数
            text_exponential: 是否以指数形式显示
            max_min_kind: 最大最小值显示类型
         Example:
            odb.plot_vibration_mode(file_path=r"D:\\图片\\自振模态.png",mode=1)
+           odb.plot_vibration_mode(file_path=r"D:\\图片\\屈曲模态.png",mode=1,mode_kind=2)
         Returns: 无
         """
         try:
-            qt_model.PlotVibrationMode(
-                filePath=file_path, mode=mode,
-                showNumber=show_number, textRotate=text_rotation_angle, maxMinKind=max_min_kind,
-                showLegend=show_legend, digitalCount=digital_count, textExponential=text_exponential,
-                showUndeformed=show_undeformed)
+            qt_model.PlotModalResult(filePath=file_path, mode=mode, modeKind=mode_kind,
+                                     showNumber=show_number, textRotate=text_rotate, maxMinKind=max_min_kind,
+                                     showLegend=show_legend, digitalCount=digital_count, textExponential=text_exponential,
+                                     showUndeformed=show_undeformed)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def get_current_png() -> str:
+        """
+        获取当前窗口Base64格式(图形)字符串
+        Args: 无
+        Example:
+            odb.get_current_png()
+        Returns: Base64格式(图形)字符串
+        """
+        try:
+            return qt_model.GetCurrentPng()
         except Exception as ex:
             raise Exception(ex)
 

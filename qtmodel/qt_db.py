@@ -929,7 +929,7 @@ class NodeDisplacement:
     节点位移
     """
 
-    def __init__(self, node_id, displacements: list[float],time:float=0):
+    def __init__(self, node_id, displacements: list[float], time: float = 0):
         self.time = time
         self.node_id = node_id
         if len(displacements) == 6:
@@ -964,7 +964,7 @@ class SupportReaction:
     支座反力
     """
 
-    def __init__(self, node_id: int, force: list[float],time: float=0):
+    def __init__(self, node_id: int, force: list[float], time: float = 0):
         self.node_id = node_id
         self.time = time
         if len(force) == 6:
@@ -999,7 +999,7 @@ class BeamElementForce:
     梁单元内力
     """
 
-    def __init__(self, element_id: int, force_i: list[float], force_j: list[float],time:float=0):
+    def __init__(self, element_id: int, force_i: list[float], force_j: list[float], time: float = 0):
         """
         单元内力构造器
         Args:
@@ -1034,7 +1034,7 @@ class TrussElementForce:
     桁架单元内力
     """
 
-    def __init__(self, element_id: int, force_i: list[float], force_j: list[float],time: float=0):
+    def __init__(self, element_id: int, force_i: list[float], force_j: list[float], time: float = 0):
         """
         单元内力构造器
         Args:
@@ -1082,7 +1082,7 @@ class ShellElementForce:
     """
 
     def __init__(self, element_id: int, force_i: list[float], force_j: list[float],
-                 force_k: list[float], force_l: list[float],time:float=0):
+                 force_k: list[float], force_l: list[float], time: float = 0):
         """
         单元内力构造器
         Args:
@@ -1406,6 +1406,54 @@ class BeamStress:
             'smz_right': self.smz_right,
             'smy_top': self.smy_top,
             'smy_bot': self.smy_bot
+        }
+        return obj_dict
+
+    def __repr__(self):
+        return self.__str__()
+
+
+class FreeVibrationResult:
+    """
+    用于自振周期和频率结果输出
+    """
+
+    def __init__(self, mode: int, angel_frequency: float, participate_mass: list[float], sum_participate_mass: list[float],
+                 participate_factor: list[float]):
+        self.mode = mode
+        self.angel_frequency = angel_frequency
+        self.engineering_frequency = angel_frequency * 0.159
+        self.participate_factor = participate_factor
+        self.participate_mass = participate_mass
+        self.sum_participate_mass = sum_participate_mass
+
+    def __str__(self):
+        obj_dict = {
+            '模态号': self.mode,
+            '角频率': self.angel_frequency,
+            '工程频率': self.engineering_frequency,
+            '振型参与质量': self.participate_mass,
+            '合计参与质量': self.sum_participate_mass,
+            '振型参与系数': self.participate_factor,
+        }
+        return obj_dict
+
+    def __repr__(self):
+        return self.__str__()
+
+
+class ElasticBucklingResult:
+    """
+    用于弹性屈曲分析特征值结果
+    """
+    def __init__(self, mode: int, eigenvalue: float):
+        self.mode = mode
+        self.eigenvalue = eigenvalue
+
+    def __str__(self):
+        obj_dict = {
+            '模态号': self.mode,
+            '特征值': self.eigenvalue,
         }
         return obj_dict
 
