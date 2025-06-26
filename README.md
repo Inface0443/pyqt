@@ -1,4 +1,4 @@
-> 最新版本 V0.7.1 - 2025-06-25 
+> 最新版本 V0.7.1 - 2025-06-26 
 > pip install --upgrade qtmodel -i https://pypi.org/simple
 - 新增更新结构组接口 
 # 建模操作 
@@ -439,7 +439,7 @@ Returns: 无
 ### merge_nodes
 根据坐标信息和节点编号添加节点，默认自动识别编号
 > 参数:  
-> ids: 合并节点集合  默认全部节点  
+> ids: 合并节点集合,默认全部节点,支持列表和XtoYbyN形式字符串  
 > tolerance: 合并容许误差  
 ```Python
 # 示例代码
@@ -2017,7 +2017,7 @@ Returns: 无
 ### remove_spectrum_function
 删除反应谱函数
 > 参数:  
-> ids: 删除反应谱工况函数编号集合，默认为空时则按照名称删除  
+> ids: 删除反应谱工况函数编号集合支持XtoYbyN形式，默认为空时则按照名称删除  
 > name: 编号集合为空时则按照名称删除  
 ```Python
 # 示例代码
@@ -2038,12 +2038,14 @@ Returns: 无
 ### remove_time_history_function
 通过函数编号删除时程函数
 > 参数:  
-> ids: 删除时程函数编号集合，默认为空时则按照名称删除  
+> ids: 删除时程函数编号集合支持XtoYbyN形式，默认为空时则按照名称删除  
 > name: 编号集合为空时则按照名称删除  
 ```Python
 # 示例代码
 from qtmodel import *
 mdb.remove_time_history_function(ids=[1,2,3])
+mdb.remove_time_history_function(ids="1to3")
+mdb.remove_time_history_function(name="函数名")
 ```  
 Returns: 无
 ### remove_load_to_mass
@@ -2059,21 +2061,13 @@ Returns: 无
 ### remove_nodal_mass
 删除节点质量
 > 参数:  
-> node_id:节点号  
+> node_id:节点号,自动忽略不存在的节点质量  
 ```Python
 # 示例代码
 from qtmodel import *
 mdb.remove_nodal_mass(node_id=1)
 mdb.remove_nodal_mass(node_id=[1,2,3,4])
-```  
-Returns: 无
-### remove_all_nodal_mass
-删除所有节点质量
-> 参数:  
-```Python
-# 示例代码
-from qtmodel import *
-mdb.remove_all_nodal_mass()
+mdb.remove_nodal_mass(node_id="1to5")
 ```  
 Returns: 无
 ### remove_boundary_element_property
@@ -2099,7 +2093,7 @@ Returns: 无
 ### remove_nodal_dynamic_load
 删除节点动力荷载
 > 参数:  
-> ids:所删除的节点动力荷载编号  
+> ids:所删除的节点动力荷载编号且支持XtoYbyN形式字符串  
 ```Python
 # 示例代码
 from qtmodel import *
@@ -3038,6 +3032,7 @@ Returns: 无
 # 示例代码
 from qtmodel import *
 mdb.update_construction_stage_id(1,3)
+mdb.update_construction_stage_id([1,2,3],9)
 ```  
 Returns:无
 ### update_weight_stage
@@ -3220,8 +3215,8 @@ Returns: 无
 ### activate_structure
 激活指定阶段和单元,默认激活所有
 > 参数:  
-> node_ids: 节点集合  
-> element_ids: 单元集合  
+> node_ids: 节点集合支持XtoYbyN形式字符串  
+> element_ids: 单元集合支持XtoYbyN形式字符串  
 ```Python
 # 示例代码
 from qtmodel import *
@@ -3283,7 +3278,7 @@ Returns: 无
 ### get_reaction
 获取节点反力
 > 参数:  
-> node_id: 节点编号,支持整数或整数型列表  
+> ids: 节点编号,支持整数或整数型列表支持XtoYbyN形式字符串  
 > envelop_type: 施工阶段包络类型 1-最大 2-最小  
 > stage_id: 施工阶段号 -1-运营阶段  0-施工阶段包络 n-施工阶段号  
 > result_kind: 施工阶段数据的类型 1-合计 2-收缩徐变效应 3-预应力效应 4-恒载  
@@ -3293,15 +3288,16 @@ Returns: 无
 ```Python
 # 示例代码
 from qtmodel import *
-odb.get_reaction(node_id=1,stage_id=1)
-odb.get_reaction(node_id=[1,2,3],stage_id=1)
-odb.get_reaction(node_id=1,stage_id=-1,case_name="工况名")
+odb.get_reaction(ids=1,stage_id=1)
+odb.get_reaction(ids=[1,2,3],stage_id=1)
+odb.get_reaction(ids="1to3",stage_id=1)
+odb.get_reaction(ids=1,stage_id=-1,case_name="工况名")
 ```  
 Returns: 包含信息为list[dict] or dict
 ### get_deformation
 获取节点变形结果,支持单个节点和节点列表
 > 参数:  
-> node_id: 查询结果的节点号  
+> ids: 查询结果的节点号支持XtoYbyN形式字符串  
 > envelop_type: 施工阶段包络类型 1-最大 2-最小  
 > stage_id: 施工阶段号 -1-运营阶段  0-施工阶段包络 n-施工阶段号  
 > result_kind: 施工阶段数据的类型(1-合计 2-收缩徐变效应 3-预应力效应 4-恒载) 时程分析类型(1-位移 2-速度 3-加速度)  
@@ -3311,15 +3307,16 @@ Returns: 包含信息为list[dict] or dict
 ```Python
 # 示例代码
 from qtmodel import *
-odb.get_deformation(node_id=1,stage_id=1)
-odb.get_deformation(node_id=[1,2,3],stage_id=1)
-odb.get_deformation(node_id=1,stage_id=-1,case_name="工况名")
+odb.get_deformation(ids=1,stage_id=1)
+odb.get_deformation(ids=[1,2,3],stage_id=1)
+odb.get_deformation(ids="1to3",stage_id=1)
+odb.get_deformation(ids=1,stage_id=-1,case_name="工况名")
 ```  
-Returns: 包含信息为list[dict] or dict
+Returns: 多结果获取时返回list[dict] 单一结果获取时返回dict
 ### get_element_stress
 获取单元应力,支持单个单元和单元列表
 > 参数:  
-> element_id: 单元编号,支持整数或整数型列表  
+> ids: 单元编号,支持整数或整数型列表  
 > envelop_type:施工阶段包络类型 1-最大 2-最小 3-包络  
 > stage_id: 施工阶段号 -1-运营阶段  0-施工阶段包络 n-施工阶段号  
 > result_kind: 施工阶段数据的类型 1-合计 2-收缩徐变效应 3-预应力效应 4-恒载  
@@ -3328,15 +3325,15 @@ Returns: 包含信息为list[dict] or dict
 ```Python
 # 示例代码
 from qtmodel import *
-odb.get_element_stress(element_id=1,stage_id=1)
-odb.get_element_stress(element_id=[1,2,3],stage_id=1)
-odb.get_element_stress(element_id=1,stage_id=-1,case_name="工况名")
+odb.get_element_stress(ids=1,stage_id=1)
+odb.get_element_stress(ids=[1,2,3],stage_id=1)
+odb.get_element_stress(ids=1,stage_id=-1,case_name="工况名")
 ```  
 Returns: 包含信息为list[dict] or dict
 ### get_element_force
 获取单元内力,支持单个单元和单元列表
 > 参数:  
-> element_id: 单元编号  
+> ids: 单元编号支持整数或整数列表且支持XtoYbyN形式字符串  
 > stage_id: 施工阶段号 -1-运营阶段  0-施工阶段包络 n-施工阶段号  
 > envelop_type: 1-最大 2-最小 3-包络  
 > result_kind: 施工阶段数据的类型 1-合计 2-收缩徐变效应 3-预应力效应 4-恒载  
@@ -3347,15 +3344,15 @@ Returns: 包含信息为list[dict] or dict
 ```Python
 # 示例代码
 from qtmodel import *
-odb.get_element_force(element_id=1,stage_id=1)
-odb.get_element_force(element_id=[1,2,3],stage_id=1)
-odb.get_element_force(element_id=1,stage_id=-1,case_name="工况名")
+odb.get_element_force(ids=1,stage_id=1)
+odb.get_element_force(ids=[1,2,3],stage_id=1)
+odb.get_element_force(ids=1,stage_id=-1,case_name="工况名")
 ```  
 Returns: 包含信息为list[dict] or dict
 ### get_self_concurrent_reaction
 获取自并发反力
 > 参数:  
-> node_id:节点号  
+> node_id:单个节点号  
 > case_name:工况号  
 ```Python
 # 示例代码
@@ -3366,7 +3363,7 @@ Returns: 返回该节点并发反力值dict
 ### get_all_concurrent_reaction
 获取完全并发反力
 > 参数:  
-> node_id:节点号  
+> node_id:单个节点号  
 > case_name:工况号  
 ```Python
 # 示例代码
@@ -3377,14 +3374,57 @@ Returns: 包含信息为list[dict]
 ### get_concurrent_force
 获取单元并发内力
 > 参数:  
-> ele_id:单元号  
+> ids:单元号支持XtoYbyN形式字符串  
 > case_name:工况号  
 ```Python
 # 示例代码
 from qtmodel import *
-odb.get_concurrent_force(ele_id=1,case_name="工况1_Fx最大")
+odb.get_concurrent_force(ids=1,case_name="工况1_Fx最大")
+odb.get_concurrent_force(ids="1to19",case_name="工况1_Fx最大")
 ```  
 Returns: 包含信息为list[dict]
+### get_elastic_link_force
+获取弹性连接内力
+> 参数:  
+> ids: 弹性连接ID集合,支持整数和整数列表且支持XtoYbyN字符串  
+> result_kind: 施工阶段荷载类型1-合计 2-预应力 3-收缩徐变 4-恒载  
+> stage_id: -1为运营阶段 0-施工阶段包络 n-施工阶段  
+> envelop_type: 包络类型，1-最大 2-最小  
+> increment_type: 增量类型，1-全量 2-增量  
+> case_name: 工况名称，默认为空  
+```Python
+# 示例代码
+from qtmodel import *
+odb.get_elastic_link_force(ids=[1,2,3], result_kind=1, stage_id=1)
+```  
+Returns: 返回弹性连接内力列表list[dict] 或 dict(单一结果)
+### get_constrain_equation_force
+查询约束方程内力
+> 参数:  
+> ids: 约束方程ID列表支持整数和整数列表且支持XtoYbyN字符串  
+> result_kind: 施工阶段荷载类型1-合计 2-预应力 3-收缩徐变 4-恒载  
+> stage_id: -1为运营阶段 0-施工阶段包络 n-施工阶段  
+> envelop_type: 包络类型，1-最大 2-最小  
+> increment_type: 增量类型，1-全量 2-增量  
+> case_name: 工况名称  
+```Python
+# 示例代码
+from qtmodel import *
+odb.get_constrain_equation_force(ids=[1,2,3], result_kind=1, stage_id=1)
+```  
+Returns: 返回约束方程内力列表list[dict] 或 dict(单一结果)
+### get_cable_element_length
+查询无应力索长
+> 参数:  
+> ids: 索单元ID集合，支持整数和整数列表且支持XtoYbyN字符串  
+> stage_id: 施工阶段ID,默认为运营阶段  
+> increment_type: 增量类型，默认为1  
+```Python
+# 示例代码
+from qtmodel import *
+odb.get_cable_element_length(ids=[1,2,3], stage_id=1)
+```  
+Returns: 返回无应力索长列表list[dict] 或 dict(单一结果)
 ##  自振与屈曲分析结果表格
 ### get_period_and_vibration_results
 获取自振分析角频率和振型参与质量等结果
@@ -3908,6 +3948,7 @@ Returns: list[int]
 ### get_node_data
 获取节点信息 默认获取所有节点信息
 > 参数:  
+> ids:节点号集合支持XtoYbyN形式字符串  
 ```Python
 # 示例代码
 from qtmodel import *
@@ -3919,7 +3960,7 @@ Returns:  包含信息为list[dict] or dict
 ### get_element_data
 获取单元信息
 > 参数:  
-> ids:单元号,支持整数或整数型列表,默认为None时获取所有单元信息  
+> ids:单元号,支持整数或整数型列表且支持XtoYbyN形式字符串,默认为None时获取所有单元信息  
 ```Python
 # 示例代码
 from qtmodel import *
@@ -3940,43 +3981,43 @@ Returns: str
 ### get_beam_element
 获取梁单元信息
 > 参数:  
-> ids: 梁单元号,默认时获取所有梁单元  
+> ids: 梁单元号支持XtoYbyN形式字符串,默认时获取所有梁单元  
 ```Python
 # 示例代码
 from qtmodel import *
 odb.get_beam_element() # 获取所有单元信息
 ```  
-Returns:  list[str] 其中str为json格式
+Returns:  list[dict]
 ### get_plate_element
 获取板单元信息
 > 参数:  
-> ids: 板单元号,默认时获取所有板单元  
+> ids: 板单元号支持XtoYbyN形式字符串,默认时获取所有板单元  
 ```Python
 # 示例代码
 from qtmodel import *
 odb.get_plate_element() # 获取所有单元信息
 ```  
-Returns:  list[str] 其中str为json格式
+Returns:  list[dict]
 ### get_cable_element
 获取索单元信息
 > 参数:  
-> ids: 索单元号,默认时获取所有索单元  
+> ids: 索单元号支持XtoYbyN形式字符串,默认时获取所有索单元  
 ```Python
 # 示例代码
 from qtmodel import *
 odb.get_cable_element() # 获取所有单元信息
 ```  
-Returns:  list[str] 其中str为json格式
+Returns:  list[dict]
 ### get_link_element
 获取杆单元信息
 > 参数:  
-> ids: 杆单元号,默认时输出全部杆单元  
+> ids: 杆单元号集合支持XtoYbyN形式字符串,默认时输出全部杆单元  
 ```Python
 # 示例代码
 from qtmodel import *
 odb.get_link_element() # 获取所有单元信息
 ```  
-Returns:  list[str] 其中str为json格式
+Returns:  list[dict]
 ### get_material_data
 获取材料信息
 > 参数:  
@@ -3989,23 +4030,23 @@ Returns: 包含信息为list[dict]
 ### get_concrete_material
 获取混凝土材料信息
 > 参数:  
-> ids: 材料号,默认时输出全部材料  
+> ids: 材料号支持XtoYbyN形式字符串,默认时输出全部材料  
 ```Python
 # 示例代码
 from qtmodel import *
 odb.get_concrete_material() # 获取所有材料信息
 ```  
-Returns:  list[str] 其中str为json格式
+Returns:  list[dict]
 ### get_steel_plate_material
 获取钢材材料信息
 > 参数:  
-> ids: 材料号,默认时输出全部材料  
+> ids: 材料号支持XtoYbyN形式字符串,默认时输出全部材料  
 ```Python
 # 示例代码
 from qtmodel import *
 odb.get_steel_plate_material() # 获取所有钢材材料信息
 ```  
-Returns:  list[str] 其中str为json格式
+Returns:  list[dict]
 ### get_pre_stress_bar_material
 获取钢材材料信息
 > 参数:  
@@ -4015,7 +4056,7 @@ Returns:  list[str] 其中str为json格式
 from qtmodel import *
 odb.get_pre_stress_bar_material() # 获取所有预应力材料信息
 ```  
-Returns:  list[str] 其中str为json格式
+Returns:  list[dict]
 ### get_steel_bar_material
 获取钢筋材料信息
 > 参数:  
@@ -4025,17 +4066,18 @@ Returns:  list[str] 其中str为json格式
 from qtmodel import *
 odb.get_steel_bar_material() # 获取所有钢筋材料信息
 ```  
-Returns:  list[str] 其中str为json格式
+Returns:  list[dict]
 ### get_user_define_material
 获取自定义材料信息
 > 参数:  
-> ids: 材料号,默认时输出全部材料  
+> ids: 材料号支持XtoYbyN形式字符串,默认时输出全部材料  
 ```Python
 # 示例代码
 from qtmodel import *
 odb.get_user_define_material() # 获取所有自定义材料信息
+odb.get_user_define_material("1to10") # 获取所有自定义材料信息
 ```  
-Returns:  list[str] 其中str为json格式
+Returns:  list[dict]
 ##  获取模型边界信息
 ### get_boundary_group_names
 获取自边界组名称
