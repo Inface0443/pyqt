@@ -672,11 +672,11 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def merge_nodes(ids: Union[str, list[int]] = None, tolerance: float = 1e-4):
+    def merge_nodes(ids = None, tolerance: float = 1e-4):
         """
         根据坐标信息和节点编号添加节点，默认自动识别编号
         Args:
-             ids: 合并节点集合  默认全部节点
+             ids: 合并节点集合,默认全部节点,支持列表和XtoYbyN形式字符串
              tolerance: 合并容许误差
         Example:
             mdb.merge_nodes()
@@ -3241,11 +3241,11 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def remove_spectrum_function(ids: (Union[int, List[int]]) = None, name: str = "") -> None:
+    def remove_spectrum_function(ids = None, name: str = "") -> None:
         """
         删除反应谱函数
         Args:
-            ids: 删除反应谱工况函数编号集合，默认为空时则按照名称删除
+            ids: 删除反应谱工况函数编号集合支持XtoYbyN形式，默认为空时则按照名称删除
             name: 编号集合为空时则按照名称删除
         Example:
             mdb.remove_spectrum_function(name="工况名")
@@ -3272,14 +3272,16 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def remove_time_history_function(ids: (Union[int, List[int]]) = None, name: str = "") -> None:
+    def remove_time_history_function(ids = None, name: str = "") -> None:
         """
         通过函数编号删除时程函数
         Args:
-            ids: 删除时程函数编号集合，默认为空时则按照名称删除
+            ids: 删除时程函数编号集合支持XtoYbyN形式，默认为空时则按照名称删除
             name: 编号集合为空时则按照名称删除
         Example:
             mdb.remove_time_history_function(ids=[1,2,3])
+            mdb.remove_time_history_function(ids="1to3")
+            mdb.remove_time_history_function(name="函数名")
         Returns: 无
         """
         try:
@@ -3303,32 +3305,19 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def remove_nodal_mass(node_id: (Union[int, List[int]]) = -1):
+    def remove_nodal_mass(node_id = None):
         """
         删除节点质量
         Args:
-             node_id:节点号
+             node_id:节点号,自动忽略不存在的节点质量
         Example:
             mdb.remove_nodal_mass(node_id=1)
             mdb.remove_nodal_mass(node_id=[1,2,3,4])
+            mdb.remove_nodal_mass(node_id="1to5")
         Returns: 无
         """
         try:
             qt_model.RemoveNodalMass(nodeId=node_id)
-        except Exception as ex:
-            raise Exception(ex)
-
-    @staticmethod
-    def remove_all_nodal_mass() -> None:
-        """
-        删除所有节点质量
-        Args: 无
-        Example:
-            mdb.remove_all_nodal_mass()
-        Returns: 无
-        """
-        try:
-            qt_model.RemoveAllNodalMass()
         except Exception as ex:
             raise Exception(ex)
 
@@ -3363,11 +3352,11 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def remove_nodal_dynamic_load(ids: (Union[int, List[int]]) = None) -> None:
+    def remove_nodal_dynamic_load(ids= None) -> None:
         """
         删除节点动力荷载
         Args:
-            ids:所删除的节点动力荷载编号
+            ids:所删除的节点动力荷载编号且支持XtoYbyN形式字符串
         Example:
             mdb.remove_nodal_dynamic_load(ids=1)
             mdb.remove_nodal_dynamic_load(ids=[1,2,3,4])
@@ -4826,7 +4815,7 @@ class Mdb:
             raise Exception(f"更新施工阶段:{name}错误,{ex}")
 
     @staticmethod
-    def update_construction_stage_id(stage_id=1, target_id: int = 3):
+    def update_construction_stage_id(stage_id, target_id: int = 3):
         """
         更新部分施工阶段到指定编号位置之前，例如将1号施工阶段插入到3号之前即为1号与2号施工阶段互换
         Args:
@@ -4834,6 +4823,7 @@ class Mdb:
             target_id:目标施工阶段编号
         Example:
             mdb.update_construction_stage_id(1,3)
+            mdb.update_construction_stage_id([1,2,3],9)
         Returns:无
         """
         try:

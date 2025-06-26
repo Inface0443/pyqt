@@ -6,7 +6,8 @@ from typing import Union, List
 
 class Odb:
     """
-    获取模型计算结果和模型信息
+    获取模型计算结果和模型信息，目前结果仅支持字典类型输出
+    注意：使用外部调用post运行时可以通过print(json.dumps(result))来传递数据,post得到数据后可通过json.loads(result)解析
     """
 
     # region 视图控制
@@ -81,12 +82,12 @@ class Odb:
             raise Exception(ex)
 
     @staticmethod
-    def activate_structure(node_ids: list[int] = None, element_ids: list[int] = None):
+    def activate_structure(node_ids = None, element_ids = None):
         """
         激活指定阶段和单元,默认激活所有
         Args:
-            node_ids: 节点集合
-            element_ids: 单元集合
+            node_ids: 节点集合支持XtoYbyN形式字符串
+            element_ids: 单元集合支持XtoYbyN形式字符串
         Example:
            odb.activate_structure(node_ids=[1,2,3],element_ids=[1,2,3])
         Returns: 无
@@ -176,12 +177,12 @@ class Odb:
 
     # region 结果表格
     @staticmethod
-    def get_reaction(node_id, envelop_type=1, stage_id: int = 1, result_kind: int = 1,
+    def get_reaction(ids, envelop_type=1, stage_id: int = 1, result_kind: int = 1,
                      increment_type: int = 1, case_name="", is_time_history: bool = True):
         """
         获取节点反力
         Args:
-            node_id: 节点编号,支持整数或整数型列表
+            ids: 节点编号,支持整数或整数型列表支持XtoYbyN形式字符串
             envelop_type: 施工阶段包络类型 1-最大 2-最小
             stage_id: 施工阶段号 -1-运营阶段  0-施工阶段包络 n-施工阶段号
             result_kind: 施工阶段数据的类型 1-合计 2-收缩徐变效应 3-预应力效应 4-恒载
@@ -189,13 +190,14 @@ class Odb:
             case_name: 运营阶段所需荷载工况名
             is_time_history: 运营阶段所需荷载工况名是否为时程分析
         Example:
-            odb.get_reaction(node_id=1,stage_id=1)
-            odb.get_reaction(node_id=[1,2,3],stage_id=1)
-            odb.get_reaction(node_id=1,stage_id=-1,case_name="工况名")
+            odb.get_reaction(ids=1,stage_id=1)
+            odb.get_reaction(ids=[1,2,3],stage_id=1)
+            odb.get_reaction(ids="1to3",stage_id=1)
+            odb.get_reaction(ids=1,stage_id=-1,case_name="工况名")
         Returns: 包含信息为list[dict] or dict
         """
         try:
-            bs_list = qt_model.GetSupportReaction(nodeId=node_id, stageId=stage_id, envelopType=envelop_type, isTimeHistory=is_time_history,
+            bs_list = qt_model.GetSupportReaction(ids=ids, stageId=stage_id, envelopType=envelop_type, isTimeHistory=is_time_history,
                                                   resultKind=result_kind, incrementType=increment_type, caseName=case_name)
             list_res = []
             for item in bs_list:
@@ -206,13 +208,13 @@ class Odb:
             raise Exception(ex)
 
     @staticmethod
-    def get_deformation(node_id: (Union[int, List[int]]) = None, envelop_type=1,
+    def get_deformation(ids, envelop_type=1,
                         stage_id: int = 1, result_kind: int = 1, increment_type: int = 1,
                         case_name="", is_time_history: bool = True):
         """
         获取节点变形结果,支持单个节点和节点列表
         Args:
-            node_id: 查询结果的节点号
+            ids: 查询结果的节点号支持XtoYbyN形式字符串
             envelop_type: 施工阶段包络类型 1-最大 2-最小
             stage_id: 施工阶段号 -1-运营阶段  0-施工阶段包络 n-施工阶段号
             result_kind: 施工阶段数据的类型(1-合计 2-收缩徐变效应 3-预应力效应 4-恒载) 时程分析类型(1-位移 2-速度 3-加速度)
@@ -220,13 +222,14 @@ class Odb:
             case_name: 运营阶段所需荷载工况名
             is_time_history: 是否为时程分析
         Example:
-            odb.get_deformation(node_id=1,stage_id=1)
-            odb.get_deformation(node_id=[1,2,3],stage_id=1)
-            odb.get_deformation(node_id=1,stage_id=-1,case_name="工况名")
-        Returns: 包含信息为list[dict] or dict
+            odb.get_deformation(ids=1,stage_id=1)
+            odb.get_deformation(ids=[1,2,3],stage_id=1)
+            odb.get_deformation(ids="1to3",stage_id=1)
+            odb.get_deformation(ids=1,stage_id=-1,case_name="工况名")
+        Returns: 多结果获取时返回list[dict] 单一结果获取时返回dict
         """
         try:
-            bf_list = qt_model.GetNodeDisplacement(nodeIds=node_id, stageId=stage_id, envelopType=envelop_type, isTimeHistory=is_time_history,
+            bf_list = qt_model.GetNodeDisplacement(ids=ids, stageId=stage_id, envelopType=envelop_type, isTimeHistory=is_time_history,
                                                    resultKind=result_kind, incrementType=increment_type, caseName=case_name)
             list_res = []
             for item in bf_list:
@@ -238,25 +241,25 @@ class Odb:
             raise Exception(ex)
 
     @staticmethod
-    def get_element_stress(element_id: (Union[int, List[int]]) = 1, envelop_type: int = 1, stage_id: int = 1, result_kind: int = 1,
+    def get_element_stress(ids, envelop_type: int = 1, stage_id: int = 1, result_kind: int = 1,
                            increment_type: int = 1, case_name=""):
         """
         获取单元应力,支持单个单元和单元列表
         Args:
-            element_id: 单元编号,支持整数或整数型列表
+            ids: 单元编号,支持整数或整数型列表
             envelop_type:施工阶段包络类型 1-最大 2-最小 3-包络
             stage_id: 施工阶段号 -1-运营阶段  0-施工阶段包络 n-施工阶段号
             result_kind: 施工阶段数据的类型 1-合计 2-收缩徐变效应 3-预应力效应 4-恒载
             increment_type: 1-全量    2-增量
             case_name: 运营阶段所需荷载工况名
         Example:
-            odb.get_element_stress(element_id=1,stage_id=1)
-            odb.get_element_stress(element_id=[1,2,3],stage_id=1)
-            odb.get_element_stress(element_id=1,stage_id=-1,case_name="工况名")
+            odb.get_element_stress(ids=1,stage_id=1)
+            odb.get_element_stress(ids=[1,2,3],stage_id=1)
+            odb.get_element_stress(ids=1,stage_id=-1,case_name="工况名")
         Returns: 包含信息为list[dict] or dict
         """
         try:
-            bf_list = qt_model.GetElementStress(elementIds=element_id, stageId=stage_id, envelopType=envelop_type,
+            bf_list = qt_model.GetElementStress(ids=ids, stageId=stage_id, envelopType=envelop_type,
                                                 resultKind=result_kind, incrementType=increment_type, caseName=case_name)
             list_res = []
             for item in bf_list:
@@ -288,7 +291,7 @@ class Odb:
                                  item.StressI2[6], item.StressI2[7], item.StressI2[8]]
                     stress_j2 = [item.StressJ2[0], item.StressJ2[1], item.StressJ2[2], item.StressJ2[3], item.StressJ2[4], item.StressJ2[5],
                                  item.StressJ2[6], item.StressJ2[7], item.StressJ2[8]]
-                    list_res.append(str(CompositeBeamStress(element_id, stress_i, stress_j, stress_i2, stress_j2)))
+                    list_res.append(str(CompositeBeamStress(item.ElementId, stress_i, stress_j, stress_i2, stress_j2)))
                 else:
                     raise TypeError(f"操作错误,不存在{item.ElementType}类型")
             return list_res if len(list_res) > 1 else list_res[0]
@@ -296,13 +299,13 @@ class Odb:
             raise Exception(ex)
 
     @staticmethod
-    def get_element_force(element_id, stage_id: int = 1, envelop_type: int = 1,
+    def get_element_force(ids, stage_id: int = 1, envelop_type: int = 1,
                           result_kind: int = 1, increment_type: int = 1, case_name="",
                           is_time_history: bool = False, is_boundary_element: bool = False):
         """
         获取单元内力,支持单个单元和单元列表
         Args:
-            element_id: 单元编号
+            ids: 单元编号支持整数或整数列表且支持XtoYbyN形式字符串
             stage_id: 施工阶段号 -1-运营阶段  0-施工阶段包络 n-施工阶段号
             envelop_type: 1-最大 2-最小 3-包络
             result_kind: 施工阶段数据的类型 1-合计 2-收缩徐变效应 3-预应力效应 4-恒载
@@ -311,15 +314,13 @@ class Odb:
             is_time_history: 是否为时程分析
             is_boundary_element: 是否为时程分析边界单元连接
         Example:
-            odb.get_element_force(element_id=1,stage_id=1)
-            odb.get_element_force(element_id=[1,2,3],stage_id=1)
-            odb.get_element_force(element_id=1,stage_id=-1,case_name="工况名")
+            odb.get_element_force(ids=1,stage_id=1)
+            odb.get_element_force(ids=[1,2,3],stage_id=1)
+            odb.get_element_force(ids=1,stage_id=-1,case_name="工况名")
         Returns: 包含信息为list[dict] or dict
         """
         try:
-            if type(element_id) != int and type(element_id) != list:
-                raise TypeError("类型错误,element_id仅支持 int和 list[int]")
-            bf_list = qt_model.GetElementForce(elementIds=element_id, stageId=stage_id, envelopeType=envelop_type,
+            bf_list = qt_model.GetElementForce(ids=ids, stageId=stage_id, envelopeType=envelop_type,
                                                resultKind=result_kind, increamentType=increment_type, caseName=case_name,
                                                isTimeHistory=is_time_history, isBoundaryElement=is_boundary_element)
             list_res = []
@@ -363,7 +364,7 @@ class Odb:
         """
         获取自并发反力
         Args:
-          node_id:节点号
+          node_id:单个节点号
           case_name:工况号
         Example:
           odb.get_self_concurrent_reaction(node_id=1,case_name="工况1_Fx最大")
@@ -381,7 +382,7 @@ class Odb:
         """
         获取完全并发反力
         Args:
-          node_id:节点号
+          node_id:单个节点号
           case_name:工况号
         Example:
           odb.get_all_concurrent_reaction(node_id=1,case_name="工况1_Fx最大")
@@ -398,18 +399,19 @@ class Odb:
             raise Exception(ex)
 
     @staticmethod
-    def get_concurrent_force(ele_id: (Union[int, List[int]]) = None, case_name: str = ""):
+    def get_concurrent_force(ids= None, case_name: str = ""):
         """
         获取单元并发内力
         Args:
-          ele_id:单元号
+          ids:单元号支持XtoYbyN形式字符串
           case_name:工况号
         Example:
-          odb.get_concurrent_force(ele_id=1,case_name="工况1_Fx最大")
+          odb.get_concurrent_force(ids=1,case_name="工况1_Fx最大")
+          odb.get_concurrent_force(ids="1to19",case_name="工况1_Fx最大")
         Returns: 包含信息为list[dict]
         """
         try:
-            res_dict = qt_model.GetConcurrentElementForce(eleId=ele_id, caseName=case_name)
+            res_dict = qt_model.GetConcurrentElementForce(ids=ids, caseName=case_name)
             list_res = []
             for item in res_dict:
                 if item.ElementType == "BEAM":
@@ -436,6 +438,80 @@ class Odb:
                     list_res.append(str(CompositeElementForce(item.ElementId, all_force_i, all_force_j, shear_force,
                                                               main_force_i, main_force_j, sub_force_i, sub_force_j, is_composite)))
             return list_res
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def get_elastic_link_force(ids, result_kind=1, stage_id=-1, envelop_type=0, increment_type=1, case_name=""):
+        """
+        获取弹性连接内力
+        Args:
+            ids: 弹性连接ID集合,支持整数和整数列表且支持XtoYbyN字符串
+            result_kind: 施工阶段荷载类型1-合计 2-预应力 3-收缩徐变 4-恒载
+            stage_id: -1为运营阶段 0-施工阶段包络 n-施工阶段
+            envelop_type: 包络类型，1-最大 2-最小
+            increment_type: 增量类型，1-全量 2-增量
+            case_name: 工况名称，默认为空
+        Example:
+            odb.get_elastic_link_force(ids=[1,2,3], result_kind=1, stage_id=1)
+        Returns: 返回弹性连接内力列表list[dict] 或 dict(单一结果)
+        """
+        try:
+            bf_list= qt_model.GetElasticLinkForce(ids=ids,resultKind=result_kind,stageId=stage_id,
+                envelopType=envelop_type,incrementType=increment_type,caseName=case_name)
+            list_res = []
+            for item in bf_list:
+                force = [item.Force.Dx, item.Force.Dy, item.Force.Dz,item.Force.Rx, item.Force.Ry, item.Force.Rz]
+                list_res.append(str(ElasticLinkForce(item.NodeId, force)))
+            return list_res if len(list_res) > 1 else list_res[0]
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def get_constrain_equation_force(ids, result_kind=1, stage_id=1, envelop_type=0, increment_type=1, case_name=""):
+        """
+        查询约束方程内力
+        Args:
+            ids: 约束方程ID列表支持整数和整数列表且支持XtoYbyN字符串
+            result_kind: 施工阶段荷载类型1-合计 2-预应力 3-收缩徐变 4-恒载
+            stage_id: -1为运营阶段 0-施工阶段包络 n-施工阶段
+            envelop_type: 包络类型，1-最大 2-最小
+            increment_type: 增量类型，1-全量 2-增量
+            case_name: 工况名称
+        Example:
+            odb.get_constrain_equation_force(ids=[1,2,3], result_kind=1, stage_id=1)
+        Returns: 返回约束方程内力列表list[dict] 或 dict(单一结果)
+        """
+        try:
+            bf_list= qt_model.GetConstrainEquationForce(ids=ids,resultKind=result_kind, stageId=stage_id,
+                                                        envelopType=envelop_type,incrementType=increment_type,caseName=case_name)
+            list_res = []
+            for item in bf_list:
+                force = [item.Force.Dx, item.Force.Dy, item.Force.Dz, item.Force.Rx, item.Force.Ry, item.Force.Rz]
+                list_res.append(str(ConstrainEquationForce(item.NodeId, force)))
+            return list_res if len(list_res) > 1 else list_res[0]
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def get_cable_element_length(ids, stage_id=-1, increment_type=1):
+        """
+        查询无应力索长
+        Args:
+            ids: 索单元ID集合，支持整数和整数列表且支持XtoYbyN字符串
+            stage_id: 施工阶段ID,默认为运营阶段
+            increment_type: 增量类型，默认为1
+        Example:
+            odb.get_cable_element_length(ids=[1,2,3], stage_id=1)
+        Returns: 返回无应力索长列表list[dict] 或 dict(单一结果)
+        """
+        try:
+            bf_list= qt_model.GetCableElementLength(ids=ids,stageId=stage_id,incrementType=increment_type)
+            list_res = []
+            for item in bf_list:
+                list_res.append(str(CableLengthResult(item.ElementId, item.UnstressedLength,item.CosAXi,item.CosAYi,item.CosAZi,
+                                                      item.CosAXj,item.CosAYj,item.CosAZj,item.Dx,item.Dy,item.Dz)))
+            return list_res if len(list_res) > 1 else list_res[0]
         except Exception as ex:
             raise Exception(ex)
 
@@ -1308,7 +1384,8 @@ class Odb:
     def get_node_data(ids=None):
         """
         获取节点信息 默认获取所有节点信息
-        Args: 无
+        Args:
+            ids:节点号集合支持XtoYbyN形式字符串
         Example:
             odb.get_node_data()     # 获取所有节点信息
             odb.get_node_data(ids=1)    # 获取单个节点信息
@@ -1328,11 +1405,11 @@ class Odb:
             raise Exception(ex)
 
     @staticmethod
-    def get_element_data(ids: (Union[int, List[int]]) = None):
+    def get_element_data(ids = None):
         """
         获取单元信息
         Args:
-            ids:单元号,支持整数或整数型列表,默认为None时获取所有单元信息
+            ids:单元号,支持整数或整数型列表且支持XtoYbyN形式字符串,默认为None时获取所有单元信息
         Example:
             odb.get_element_data() # 获取所有单元结果
             odb.get_element_data(ids=1) # 获取指定编号单元信息
@@ -1385,10 +1462,10 @@ class Odb:
         """
         获取梁单元信息
         Args:
-            ids: 梁单元号,默认时获取所有梁单元
+            ids: 梁单元号支持XtoYbyN形式字符串,默认时获取所有梁单元
         Example:
             odb.get_beam_element() # 获取所有单元信息
-        Returns:  list[str] 其中str为json格式
+        Returns:  list[dict]
         """
         try:
             res_list = []
@@ -1407,10 +1484,10 @@ class Odb:
         """
         获取板单元信息
         Args:
-            ids: 板单元号,默认时获取所有板单元
+            ids: 板单元号支持XtoYbyN形式字符串,默认时获取所有板单元
         Example:
             odb.get_plate_element() # 获取所有单元信息
-        Returns:  list[str] 其中str为json格式
+        Returns:  list[dict]
         """
         try:
             res_list = []
@@ -1430,10 +1507,10 @@ class Odb:
         """
         获取索单元信息
         Args:
-            ids: 索单元号,默认时获取所有索单元
+            ids: 索单元号支持XtoYbyN形式字符串,默认时获取所有索单元
         Example:
             odb.get_cable_element() # 获取所有单元信息
-        Returns:  list[str] 其中str为json格式
+        Returns:  list[dict]
         """
         try:
             res_list = []
@@ -1453,10 +1530,10 @@ class Odb:
         """
         获取杆单元信息
         Args:
-            ids: 杆单元号,默认时输出全部杆单元
+            ids: 杆单元号集合支持XtoYbyN形式字符串,默认时输出全部杆单元
         Example:
             odb.get_link_element() # 获取所有单元信息
-        Returns:  list[str] 其中str为json格式
+        Returns:  list[dict]
         """
         try:
             res_list = []
@@ -1495,10 +1572,10 @@ class Odb:
         """
         获取混凝土材料信息
         Args:
-            ids: 材料号,默认时输出全部材料
+            ids: 材料号支持XtoYbyN形式字符串,默认时输出全部材料
         Example:
             odb.get_concrete_material() # 获取所有材料信息
-        Returns:  list[str] 其中str为json格式
+        Returns:  list[dict]
         """
         try:
             res_list = []
@@ -1518,10 +1595,10 @@ class Odb:
         """
         获取钢材材料信息
         Args:
-            ids: 材料号,默认时输出全部材料
+            ids: 材料号支持XtoYbyN形式字符串,默认时输出全部材料
         Example:
             odb.get_steel_plate_material() # 获取所有钢材材料信息
-        Returns:  list[str] 其中str为json格式
+        Returns:  list[dict]
         """
         try:
             res_list = []
@@ -1544,7 +1621,7 @@ class Odb:
             ids: 材料号,默认时输出全部材料
         Example:
             odb.get_pre_stress_bar_material() # 获取所有预应力材料信息
-        Returns:  list[str] 其中str为json格式
+        Returns:  list[dict]
         """
         try:
             res_list = []
@@ -1566,7 +1643,7 @@ class Odb:
             ids: 材料号,默认时输出全部材料
         Example:
             odb.get_steel_bar_material() # 获取所有钢筋材料信息
-        Returns:  list[str] 其中str为json格式
+        Returns:  list[dict]
         """
         res_list = []
         item_list = qt_model.GetSteelBarMaterialData(ids)
@@ -1582,10 +1659,11 @@ class Odb:
         """
         获取自定义材料信息
         Args:
-            ids: 材料号,默认时输出全部材料
+            ids: 材料号支持XtoYbyN形式字符串,默认时输出全部材料
         Example:
             odb.get_user_define_material() # 获取所有自定义材料信息
-        Returns:  list[str] 其中str为json格式
+            odb.get_user_define_material("1to10") # 获取所有自定义材料信息
+        Returns:  list[dict]
         """
         try:
             res_list = []

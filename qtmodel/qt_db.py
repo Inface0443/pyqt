@@ -1413,6 +1413,120 @@ class BeamStress:
         return self.__str__()
 
 
+class ElasticLinkForce:
+    """
+    弹性连接内力
+    """
+
+    def __init__(self, link_id: int, force: list[float]):
+        """
+        弹性连接内力构造器
+        Args:
+            link_id: 弹性连接id
+            force: 弹性连接内力 [Fx,Fy,Fz,Mx,My,Mz]
+        """
+        self.link_id = link_id
+        if len(force) == 6:
+            self.force = Force(*force)
+        else:
+            raise ValueError("操作错误:  'force' 列表有误")
+
+    def __str__(self):
+        obj_dict = {
+            'link_id': self.link_id,
+            'force': self.force.__str__(),
+        }
+        return obj_dict
+
+    def __repr__(self):
+        return self.__str__()
+
+
+class ConstrainEquationForce:
+    """
+    约束方程内力
+    """
+
+    def __init__(self, equation_id: int, force: list[float]):
+        """
+        约束方程内力构造器
+        Args:
+            equation_id: 约束方程id
+            force: 约束方程内力 [Fx,Fy,Fz,Mx,My,Mz]
+        """
+        self.equation_id = equation_id
+        if len(force) == 6:
+            self.force = Force(*force)
+        else:
+            raise ValueError("操作错误:  'force' 列表有误")
+
+    def __str__(self):
+        obj_dict = {
+            'equation_id': self.equation_id,
+            'force': self.force.__str__(),
+        }
+        return obj_dict
+
+    def __repr__(self):
+        return self.__str__()
+
+
+class CableLengthResult:
+    """
+    用于存储无应力索长及相关几何信息
+    """
+
+    def __init__(self, element_id: int, unstressed_length: float,
+                 cos_a_xi: float = 0, cos_a_yi: float = 0, cos_a_zi: float = 0,
+                 cos_a_xj: float = 0, cos_a_yj: float = 0, cos_a_zj: float = 0,
+                 dx: float = 0, dy: float = 0, dz: float = 0):
+        """
+        构造函数
+        Args:
+            element_id: 单元号
+            unstressed_length: 无应力索长
+            cos_a_xi: 索I端沿着x坐标的余弦
+            cos_a_yi: 索I端沿着y坐标的余弦
+            cos_a_zi: 索I端沿着z坐标的余弦
+            cos_a_xj: 索J端沿着x坐标的余弦
+            cos_a_yj: 索J端沿着y坐标的余弦
+            cos_a_zj: 索J端沿着z坐标的余弦
+            dx: 索JI端沿x坐标距离
+            dy: 索JI端沿y坐标距离
+            dz: 索JI端沿z坐标距离
+        """
+        self.element_id = element_id
+        self.unstressed_length = unstressed_length
+        self.cos_a_xi = cos_a_xi
+        self.cos_a_yi = cos_a_yi
+        self.cos_a_zi = cos_a_zi
+        self.cos_a_xj = cos_a_xj
+        self.cos_a_yj = cos_a_yj
+        self.cos_a_zj = cos_a_zj
+        self.dx = dx
+        self.dy = dy
+        self.dz = dz
+
+    def __str__(self):
+        obj_dict = {
+            'element_id': self.element_id,
+            'unstressed_length': self.unstressed_length,
+            'cos_a_xi': self.cos_a_xi,
+            'cos_a_yi': self.cos_a_yi,
+            'cos_a_zi': self.cos_a_zi,
+            'cos_a_xj': self.cos_a_xj,
+            'cos_a_yj': self.cos_a_yj,
+            'cos_a_zj': self.cos_a_zj,
+            'dx': self.dx,
+            'dy': self.dy,
+            'dz': self.dz
+        }
+        return str(obj_dict)
+
+    def __repr__(self):
+        return self.__str__()
+
+
 class FreeVibrationResult:
     """
     用于自振周期和频率结果输出
@@ -1429,12 +1543,12 @@ class FreeVibrationResult:
 
     def __str__(self):
         obj_dict = {
-            '模态号': self.mode,
-            '角频率': self.angel_frequency,
-            '工程频率': self.engineering_frequency,
-            '振型参与质量': self.participate_mass,
-            '合计参与质量': self.sum_participate_mass,
-            '振型参与系数': self.participate_factor,
+            'mode': self.mode,
+            'angel_frequency': self.angel_frequency,
+            'engineering_frequency': self.engineering_frequency,
+            'participate_mass': self.participate_mass,
+            'sum_participate_mass': self.sum_participate_mass,
+            'participate_factor': self.participate_factor,
         }
         return obj_dict
 
@@ -1446,14 +1560,15 @@ class ElasticBucklingResult:
     """
     用于弹性屈曲分析特征值结果
     """
+
     def __init__(self, mode: int, eigenvalue: float):
         self.mode = mode
         self.eigenvalue = eigenvalue
 
     def __str__(self):
         obj_dict = {
-            '模态号': self.mode,
-            '特征值': self.eigenvalue,
+            'mode': self.mode,
+            'eigenvalue': self.eigenvalue,
         }
         return obj_dict
 
