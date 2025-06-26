@@ -446,7 +446,7 @@ class Mdb:
 
     @staticmethod
     def update_bulking_setting(do_analysis: bool = True,mode_count:int=3,stage_id:int=-1,calculate_kind:int=1,
-                              stressed:bool=True, constant_loads:list[str]=None,variable_loads:list[str]=None):
+                              stressed:bool=True, constant_cases:list[str]=None,variable_cases:list[str]=None):
         """
         更新屈曲分析设置
         Args:
@@ -455,15 +455,15 @@ class Mdb:
             stage_id: 指定施工阶段号(默认选取最后一个施工阶段)
             calculate_kind: 1-计为不变荷载 2-计为可变荷载
             stressed:是否指定施工阶段末的受力状态
-            constant_loads: 不变荷载工况名称集合
-            variable_loads: 可变荷载工况名称集合(必要参数)
+            constant_cases: 不变荷载工况名称集合
+            variable_cases: 可变荷载工况名称集合(必要参数)
         Example:
-            mdb.update_bulking_setting(do_analysis=True,mode_count=3,variable_loads=["工况1","工况2"])
+            mdb.update_bulking_setting(do_analysis=True,mode_count=3,variable_cases=["工况1","工况2"])
         Returns: 无
         """
         try:
             qt_model.UpdateBulkingSetting(doAnalysis=do_analysis, modeCount=mode_count, stageId=stage_id,stressed=stressed,
-                                          calculateKind=calculate_kind,constantLoads=constant_loads,variableLoads=variable_loads)
+                                          calculateKind=calculate_kind,constantCases=constant_cases,variableCases=variable_cases)
         except Exception as ex:
             raise Exception(ex)
     # endregion
@@ -2759,17 +2759,18 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def update_load_to_mass(data_list: list[tuple[str, float]] = None):
+    def update_load_to_mass(name:str="",factor:float=1):
         """
         更新荷载转为质量
         Args:
-            data_list:荷载工况和系数列表[("工况1",1.2),("工况2",1.3)...]
+            name:荷载工况名称
+            factor:荷载工况系数
         Example:
-            mdb.update_load_to_mass(data_list=[("工况1",1.2),("工况2",1.3)])
+            mdb.update_load_to_mass(name="工况1"，factor=1)
         Returns: 无
         """
         try:
-            qt_model.UpdateLoadToMass(dataList=data_list)
+            qt_model.UpdateLoadToMass(name=name,factor=factor)
         except Exception as ex:
             raise Exception(ex)
 
@@ -2812,7 +2813,7 @@ class Mdb:
         Returns: 无
         """
         try:
-            qt_model.AddBoundaryElementProperty(index=index, name=name, type=kind,
+            qt_model.AddBoundaryElementProperty(index=index, name=name, kind=kind,
                                                 isDx=info_x is not None, isDy=info_y is not None, isDz=info_z is not None,
                                                 infoX=info_x, infoY=info_y, infoZ=info_z,
                                                 weight=weight, pinStiffness=pin_stiffness, pinYield=pin_yield, description=description)
@@ -2830,7 +2831,7 @@ class Mdb:
             node_i: 起始节点
             node_j: 终止节点
             beta: 角度
-            node_system: 参考坐标系0-整体 1-单元
+            node_system: 参考坐标系0-单元 1-整体
             group_name: 边界组名
         Example:
             mdb.add_boundary_element_link(property_name="边界单元特性",node_i=1,node_j=2,group_name="边界组1")
@@ -2872,7 +2873,7 @@ class Mdb:
                 nodeId=node_id,
                 caseName=case_name,
                 functionName=function_name,
-                direction=force_type,
+                forceType=force_type,
                 factor=factor,
                 time=time
             )
@@ -3004,7 +3005,7 @@ class Mdb:
         Returns: 无
         """
         try:
-            qt_model.UpdateBoundaryElementProperty(name=name, newName=new_name, type=kind,
+            qt_model.UpdateBoundaryElementProperty(name=name, newName=new_name, kind=kind,
                                                    infoX=info_x, infoY=info_y, infoZ=info_z, isDx=info_x is not None, isDy=info_y is not None,
                                                    isDz=info_z is not None,
                                                    weight=weight, pinStiffness=pin_stiffness, pinYield=pin_yield, description=description)
@@ -3117,7 +3118,7 @@ class Mdb:
         """
         更新节点动力荷载
         Args:
-            index: 荷载编号
+            index: 待修改荷载编号
             node_id: 节点号
             case_name: 时程工况名
             function_name: 函数名称
@@ -3160,7 +3161,7 @@ class Mdb:
         """
         try:
             qt_model.UpdateGroundMotion(
-                id=index,
+                index=index,
                 caseName=case_name,
                 infoX=info_x,
                 infoY=info_y,
@@ -3348,6 +3349,21 @@ class Mdb:
         """
         try:
             qt_model.RemoveBoundaryElementLink(ids=ids)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def remove_ground_motion(name: str) -> None:
+        """
+        删除地面加速度
+        Args:
+            name: 工况名称
+        Example:
+            mdb.remove_ground_motion("时程工况名")
+        Returns: 无
+        """
+        try:
+            qt_model.RemoveGroundMotion(name=name)
         except Exception as ex:
             raise Exception(ex)
 
