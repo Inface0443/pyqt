@@ -3757,7 +3757,7 @@ odb.plot_plate_element_stress(file_path=r"D:\\图片\\板应力.png",component=1
 ```  
 Returns: 无
 ### plot_modal_result
-绘制板单元结果图并保存到指定文件
+绘制模态结果，可选择自振模态和屈曲模态结果
 > 参数:  
 > file_path: 保存路径名  
 > mode: 模态号  
@@ -3772,8 +3772,8 @@ Returns: 无
 ```Python
 # 示例代码
 from qtmodel import *
-odb.plot_vibration_mode(file_path=r"D:\\图片\\自振模态.png",mode=1)
-odb.plot_vibration_mode(file_path=r"D:\\图片\\屈曲模态.png",mode=1,mode_kind=2)
+odb.plot_modal_result(file_path=r"D:\\图片\\自振模态.png",mode=1)
+odb.plot_modal_result(file_path=r"D:\\图片\\屈曲模态.png",mode=1,mode_kind=2)
 ```  
 Returns: 无
 ### get_current_png

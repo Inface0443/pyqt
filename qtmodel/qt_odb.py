@@ -1072,7 +1072,7 @@ class Odb:
                           show_legend: bool = True, digital_count: int = 3, text_exponential: bool = True,
                           show_undeformed: bool = False):
         """
-        绘制板单元结果图并保存到指定文件
+        绘制模态结果，可选择自振模态和屈曲模态结果
         Args:
            file_path: 保存路径名
            mode: 模态号
@@ -1085,8 +1085,8 @@ class Odb:
            text_exponential: 是否以指数形式显示
            max_min_kind: 最大最小值显示类型
         Example:
-           odb.plot_vibration_mode(file_path=r"D:\\图片\\自振模态.png",mode=1)
-           odb.plot_vibration_mode(file_path=r"D:\\图片\\屈曲模态.png",mode=1,mode_kind=2)
+           odb.plot_modal_result(file_path=r"D:\\图片\\自振模态.png",mode=1)
+           odb.plot_modal_result(file_path=r"D:\\图片\\屈曲模态.png",mode=1,mode_kind=2)
         Returns: 无
         """
         try:
