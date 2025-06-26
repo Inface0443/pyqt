@@ -297,12 +297,12 @@ Returns: 无
 > stage_id: 指定施工阶段号(默认选取最后一个施工阶段)  
 > calculate_kind: 1-计为不变荷载 2-计为可变荷载  
 > stressed:是否指定施工阶段末的受力状态  
-> constant_loads: 不变荷载工况名称集合  
-> variable_loads: 可变荷载工况名称集合(必要参数)  
+> constant_cases: 不变荷载工况名称集合  
+> variable_cases: 可变荷载工况名称集合(必要参数)  
 ```Python
 # 示例代码
 from qtmodel import *
-mdb.update_bulking_setting(do_analysis=True,mode_count=3,variable_loads=["工况1","工况2"])
+mdb.update_bulking_setting(do_analysis=True,mode_count=3,variable_cases=["工况1","工况2"])
 ```  
 Returns: 无
 ##  结构组操作
@@ -1752,11 +1752,12 @@ Returns: 无
 ### update_load_to_mass
 更新荷载转为质量
 > 参数:  
-> data_list:荷载工况和系数列表[("工况1",1.2),("工况2",1.3)...]  
+> name:荷载工况名称  
+> factor:荷载工况系数  
 ```Python
 # 示例代码
 from qtmodel import *
-mdb.update_load_to_mass(data_list=[("工况1",1.2),("工况2",1.3)])
+mdb.update_load_to_mass(name="工况1",factor=1)
 ```  
 Returns: 无
 ### update_nodal_mass
@@ -1798,7 +1799,7 @@ Returns: 无
 > node_i: 起始节点  
 > node_j: 终止节点  
 > beta: 角度  
-> node_system: 参考坐标系0-整体 1-单元  
+> node_system: 参考坐标系0-单元 1-整体  
 > group_name: 边界组名  
 ```Python
 # 示例代码
@@ -1946,7 +1947,7 @@ Returns: 无
 ### update_nodal_dynamic_load
 更新节点动力荷载
 > 参数:  
-> index: 荷载编号  
+> index: 待修改荷载编号  
 > node_id: 节点号  
 > case_name: 时程工况名  
 > function_name: 函数名称  
@@ -2088,6 +2089,16 @@ Returns: 无
 from qtmodel import *
 mdb.remove_boundary_element_link(ids=1)
 mdb.remove_boundary_element_link(ids=[1,2,3,4])
+```  
+Returns: 无
+### remove_ground_motion
+删除地面加速度
+> 参数:  
+> name: 工况名称  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.remove_ground_motion("时程工况名")
 ```  
 Returns: 无
 ### remove_nodal_dynamic_load

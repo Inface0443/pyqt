@@ -2766,7 +2766,7 @@ class Mdb:
             name:荷载工况名称
             factor:荷载工况系数
         Example:
-            mdb.update_load_to_mass(name="工况1"，factor=1)
+            mdb.update_load_to_mass(name="工况1",factor=1)
         Returns: 无
         """
         try:
