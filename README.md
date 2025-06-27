@@ -489,7 +489,7 @@ Returns: 无
 ### update_local_orientation
 反转杆系单元局部方向
 > 参数:  
-> ele_id: 杆系单元编号  
+> element_id: 杆系单元编号  
 ```Python
 # 示例代码
 from qtmodel import *
@@ -630,7 +630,7 @@ Returns: 无
 ### renumber_elements
 单元编号重排序，默认按1升序重排所有节点
 > 参数:  
-> ele_ids:被修改单元号  
+> element_ids:被修改单元号  
 > new_ids:新单元号  
 ```Python
 # 示例代码
@@ -1140,6 +1140,34 @@ mdb.add_elements_to_tapper_section_group("变截面组1",ids="1to6")
 ```  
 Returns:无
 ##  边界操作
+### add_effective_width
+添加有效宽度系数
+> 参数:  
+> element_ids:边界单元号支持整形和整形列表且支持XtoYbyN形式  
+> factor_i:I端截面Iy折减系数  
+> factor_j:J端截面Iy折减系数  
+> dz_i:I端截面形心变换量  
+> dz_j:J端截面形心变换量  
+> group_name:边界组名  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.add_effective_width(element_ids=[1,2,3,4],factor_i=0.1,factor_j=0.1,dz_i=0.1,dz_j=0.1)
+mdb.add_effective_width(element_ids="1to4",factor_i=0.1,factor_j=0.1,dz_i=0.1,dz_j=0.1)
+```  
+Returns: 无
+### remove_effective_width
+删除有效宽度系数
+> 参数:  
+> element_ids:边界单元号支持整形和整形列表且支持XtoYbyN形式  
+> group_name:边界组名  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.remove_effective_width(element_ids=[1,2,3,4],group_name="边界组1")
+mdb.remove_effective_width(element_ids="1to4",group_name="边界组1")
+```  
+Returns: 无
 ### add_boundary_group
 新建边界组
 > 参数:  
@@ -1186,13 +1214,13 @@ Returns: 无
 > 参数:  
 > remove_id:节点号 or 单元号  or 从节点号  
 > kind:边界类型  ["一般支承", "弹性支承","一般弹性支承", "主从约束", "一般/受拉/受压/刚性弹性连接", "约束方程", "梁端约束"]  
-> group:边界所处边界组名  
+> group_name:边界所处边界组名  
 > extra_name:删除弹性连接或约束方程时额外标识,约束方程名或指定删除弹性连接节点类型 I/J  
 ```Python
 # 示例代码
 from qtmodel import *
-mdb.remove_boundary(remove_id=11, kind="一般弹性连接",group="边界组1", extra_name="J")
-mdb.remove_boundary(remove_id=12, kind="约束方程",group="边界组1", extra_name="约束方程名")
+mdb.remove_boundary(remove_id=11, kind="一般弹性连接",group_name="边界组1", extra_name="J")
+mdb.remove_boundary(remove_id=12, kind="约束方程",group_name="边界组1", extra_name="约束方程名")
 ```  
 Returns: 无
 ### add_general_elastic_support_property
@@ -1289,7 +1317,7 @@ mdb.add_elastic_link(link_type=3,start_id=1,end_id=2,kx=1e6)
 ```  
 Returns: 无
 ### add_master_slave_links
-添加主从约束
+批量添加主从约束，不指定编号默认为最大编号加1
 > 参数:  
 > node_ids:主节点号和从节点号，主节点号位于首位  
 > boundary_info:边界信息 [X,Y,Z,Rx,Ry,Rz] ture-固定 false-自由  
@@ -3083,14 +3111,14 @@ Returns: 无
 > 参数:  
 > name:名称  
 > sec_id:截面号  
-> ele_id:单元号，支持整型和整型列表,支持XtoYbyN形式字符串  
+> element_id:单元号，支持整型和整型列表,支持XtoYbyN形式字符串  
 > stage_name:结合阶段名  
 > age:材龄  
 > weight_type:辅材计自重方式 0-由主材承担  1-由整体承担 2-不计辅材自重  
 ```Python
 # 示例代码
 from qtmodel import *
-mdb.add_section_connection_stage(name="联合阶段",sec_id=1,ele_id=[2,3,4,5],stage_name="施工阶段1")
+mdb.add_section_connection_stage(name="联合阶段",sec_id=1,element_id=[2,3,4,5],stage_name="施工阶段1")
 ```  
 Returns:无
 ### update_section_connection_stage
@@ -3099,15 +3127,15 @@ Returns:无
 > name:名称  
 > new_name:新名称  
 > sec_id:截面号  
-> ele_id:单元号，支持整型和整型列表且支持XtoYbyN形式字符串  
+> element_id:单元号，支持整型和整型列表且支持XtoYbyN形式字符串  
 > stage_name:结合阶段名  
 > age:材龄  
 > weight_type:辅材计自重方式 0-由主材承担  1-由整体承担 2-不计辅材自重  
 ```Python
 # 示例代码
 from qtmodel import *
-mdb.update_section_connection_stage(name="联合阶段",sec_id=1,ele_id=[2,3,4,5],stage_name="施工阶段1")
-mdb.update_section_connection_stage(name="联合阶段",sec_id=1,ele_id="2to5",stage_name="施工阶段1")
+mdb.update_section_connection_stage(name="联合阶段",sec_id=1,element_id=[2,3,4,5],stage_name="施工阶段1")
+mdb.update_section_connection_stage(name="联合阶段",sec_id=1,element_id="2to5",stage_name="施工阶段1")
 ```  
 Returns:无
 ### remove_section_connection_stage
@@ -3123,7 +3151,7 @@ Returns:无
 ### add_element_to_connection_stage
 添加单元到施工阶段联合截面
 > 参数:  
-> ele_id:单元号，支持整型和整型列表且支持XtoYbyN形式字符串  
+> element_id:单元号，支持整型和整型列表且支持XtoYbyN形式字符串  
 > name:联合阶段名  
 ```Python
 # 示例代码

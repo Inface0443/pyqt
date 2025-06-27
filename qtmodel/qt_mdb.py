@@ -223,8 +223,8 @@ class Mdb:
 
     # region 分析设置
     @staticmethod
-    def update_general_setting(project: str = "",company: str = "",designer: str = "",reviewer: str = "",
-                               date_time: str = "",gravity: float = 9.8,temperature: float = 0,description: str = "") -> None:
+    def update_general_setting(project: str = "", company: str = "", designer: str = "", reviewer: str = "",
+                               date_time: str = "", gravity: float = 9.8, temperature: float = 0, description: str = "") -> None:
         """
         更新总体设置
         Args:
@@ -241,8 +241,8 @@ class Mdb:
         Returns: 无
         """
         try:
-            qt_model.update_general_setting(project=project,company=company,designer=designer,reviewer=reviewer,
-                                date_time=date_time,gravity=gravity,temperature=temperature,description=description)
+            qt_model.update_general_setting(project=project, company=company, designer=designer, reviewer=reviewer,
+                                            date_time=date_time, gravity=gravity, temperature=temperature, description=description)
         except Exception as ex:
             raise Exception(ex)
 
@@ -445,8 +445,8 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def update_bulking_setting(do_analysis: bool = True,mode_count:int=3,stage_id:int=-1,calculate_kind:int=1,
-                              stressed:bool=True, constant_cases:list[str]=None,variable_cases:list[str]=None):
+    def update_bulking_setting(do_analysis: bool = True, mode_count: int = 3, stage_id: int = -1, calculate_kind: int = 1,
+                               stressed: bool = True, constant_cases: list[str] = None, variable_cases: list[str] = None):
         """
         更新屈曲分析设置
         Args:
@@ -462,10 +462,11 @@ class Mdb:
         Returns: 无
         """
         try:
-            qt_model.UpdateBulkingSetting(doAnalysis=do_analysis, modeCount=mode_count, stageId=stage_id,stressed=stressed,
-                                          calculateKind=calculate_kind,constantCases=constant_cases,variableCases=variable_cases)
+            qt_model.UpdateBulkingSetting(doAnalysis=do_analysis, modeCount=mode_count, stageId=stage_id, stressed=stressed,
+                                          calculateKind=calculate_kind, constantCases=constant_cases, variableCases=variable_cases)
         except Exception as ex:
             raise Exception(ex)
+
     # endregion
 
     # region 结构组操作
@@ -672,7 +673,7 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def merge_nodes(ids = None, tolerance: float = 1e-4):
+    def merge_nodes(ids=None, tolerance: float = 1e-4):
         """
         根据坐标信息和节点编号添加节点，默认自动识别编号
         Args:
@@ -752,17 +753,17 @@ class Mdb:
 
     # region 单元操作
     @staticmethod
-    def update_local_orientation(ele_id: int):
+    def update_local_orientation(element_id: int):
         """
         反转杆系单元局部方向
         Args:
-            ele_id: 杆系单元编号
+            element_id: 杆系单元编号
         Example:
             mdb.update_local_orientation(1)
         Returns: 无
         """
         try:
-            qt_model.UpdateLocalOrientation(elementId=ele_id)
+            qt_model.UpdateLocalOrientation(elementId=element_id)
         except Exception as ex:
             raise Exception(ex)
 
@@ -975,11 +976,11 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def renumber_elements(ele_ids: list[int] = None, new_ids: list[int] = None):
+    def renumber_elements(element_ids: list[int] = None, new_ids: list[int] = None):
         """
         单元编号重排序，默认按1升序重排所有节点
         Args:
-            ele_ids:被修改单元号
+            element_ids:被修改单元号
             new_ids:新单元号
         Example:
             mdb.renumber_elements()
@@ -987,7 +988,7 @@ class Mdb:
         Returns: 无
         """
         try:
-            qt_model.RenumberElements(elementIds=ele_ids, newIds=new_ids)
+            qt_model.RenumberElements(elementIds=element_ids, newIds=new_ids)
         except Exception as ex:
             raise Exception(ex)
 
@@ -1475,14 +1476,31 @@ class Mdb:
 
     # region 截面操作
     @staticmethod
-    def add_section(index: int = -1, name: str = "", sec_type: str = "矩形", sec_info: list[float] = None,
-                    symmetry: bool = True, charm_info: list[str] = None, sec_right: list[float] = None,
-                    charm_right: list[str] = None, box_num: int = 3, box_height: float = 2,
-                    mat_combine: list[float] = None, rib_info: dict[str, list[float]] = None,
-                    rib_place: list[tuple[int, int, float, str, int, str]] = None,
-                    loop_segments: list[dict] = None, sec_lines: list[tuple[float, float, float, float, float]] = None,
-                    secondary_loop_segments: list[dict] = None, sec_property: list[float] = None,
-                    bias_type: str = "中心", center_type: str = "质心", shear_consider: bool = True, bias_x: float = 0, bias_y: float = 0):
+    def add_section(
+            index: int = -1,
+            name: str = "",
+            sec_type: str = "矩形",
+            sec_info: list[float] = None,
+            symmetry: bool = True,
+            charm_info: list[str] = None,
+            sec_right: list[float] = None,
+            charm_right: list[str] = None,
+            box_num: int = 3,
+            box_height: float = 2,
+            box_other_info:list[dict]=None,
+            box_other_right:list[dict]=None,
+            mat_combine: list[float] = None,
+            rib_info: dict[str, list[float]] = None,
+            rib_place: list[tuple[int, int, float, str, int, str]] = None,
+            loop_segments: list[dict] = None,
+            sec_lines: list[tuple[float, float, float, float, float]] = None,
+            secondary_loop_segments: list[dict] = None,
+            sec_property: list[float] = None,
+            bias_type: str = "中心",
+            center_type: str = "质心",
+            shear_consider: bool = True,
+            bias_x: float = 0,
+            bias_y: float = 0):
         """
         添加单一截面信息,如果截面存在则自动覆盖
         Args:
@@ -1496,6 +1514,8 @@ class Mdb:
             charm_right:混凝土截面右半倒角信息 (对称时可忽略，仅混凝土箱梁截面需要)
             box_num: 混凝土箱室数 (仅混凝土箱梁截面需要)
             box_height: 混凝土箱梁梁高 (仅混凝土箱梁截面需要)
+            box_other_info: 混凝土箱梁额外信息(键包括"i1" "B0" "B4" "T4" 值为列表)
+            box_other_right: 混凝土箱梁额外信息(对称时可忽略，键包括"i1" "B0" "B4" "T4" 值为列表)
             mat_combine: 组合截面材料信息 (仅组合材料需要) [弹性模量比s/c、密度比s/c、钢材泊松比、混凝土泊松比、热膨胀系数比s/c]
             rib_info:肋板信息
             rib_place:肋板位置 list[tuple[布置具体部位,参考点0-下/左,距参考点间距,肋板名，加劲肋位置0-上/左 1-下/右 2-两侧,加劲肋名]]
@@ -1688,7 +1708,7 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def add_tapper_section_group(ids = None, name: str = "", factor_w: float = 1.0, factor_h: float = 1.0,
+    def add_tapper_section_group(ids=None, name: str = "", factor_w: float = 1.0, factor_h: float = 1.0,
                                  ref_w: int = 0, ref_h: int = 0, dis_w: float = 0, dis_h: float = 0):
         """
         添加变截面组
@@ -1851,6 +1871,44 @@ class Mdb:
 
     # region 边界操作
     @staticmethod
+    def add_effective_width(element_ids, factor_i: float, factor_j: float, dz_i: float, dz_j: float, group_name: str = "默认边界组"):
+        """
+        添加有效宽度系数
+        Args:
+           element_ids:边界单元号支持整形和整形列表且支持XtoYbyN形式
+           factor_i:I端截面Iy折减系数
+           factor_j:J端截面Iy折减系数
+           dz_i:I端截面形心变换量
+           dz_j:J端截面形心变换量
+           group_name:边界组名
+        Example:
+           mdb.add_effective_width(element_ids=[1,2,3,4],factor_i=0.1,factor_j=0.1,dz_i=0.1,dz_j=0.1)
+           mdb.add_effective_width(element_ids="1to4",factor_i=0.1,factor_j=0.1,dz_i=0.1,dz_j=0.1)
+        Returns: 无
+        """
+        try:
+            qt_model.AddEffectiveWidth(elementIds=element_ids, factorI=factor_i, factorJ=factor_j, dzI=dz_i, dzJ=dz_j, groupName=group_name)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def remove_effective_width(element_ids, group_name: str = "默认边界组"):
+        """
+        删除有效宽度系数
+        Args:
+           element_ids:边界单元号支持整形和整形列表且支持XtoYbyN形式
+           group_name:边界组名
+        Example:
+           mdb.remove_effective_width(element_ids=[1,2,3,4],group_name="边界组1")
+           mdb.remove_effective_width(element_ids="1to4",group_name="边界组1")
+        Returns: 无
+        """
+        try:
+            qt_model.RemoveEffectiveWidth(elementIds=element_ids, groupName=group_name)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
     def add_boundary_group(name: str = ""):
         """
         新建边界组
@@ -1915,21 +1973,21 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def remove_boundary(remove_id: int, kind: str, group: str = "默认边界组", extra_name="I"):
+    def remove_boundary(remove_id: int, kind: str, group_name: str = "默认边界组", extra_name="I"):
         """
         根据节点号删除一般支撑、弹性支承/根据弹性连接I或J端(需指定)节点号删除弹性连接/根据单元号删除梁端约束/根据从节点号和约束方程名删除约束方程/根据从节点号删除主从约束
         Args:
             remove_id:节点号 or 单元号  or 从节点号
             kind:边界类型  ["一般支承", "弹性支承","一般弹性支承", "主从约束", "一般/受拉/受压/刚性弹性连接", "约束方程", "梁端约束"]
-            group:边界所处边界组名
+            group_name:边界所处边界组名
             extra_name:删除弹性连接或约束方程时额外标识,约束方程名或指定删除弹性连接节点类型 I/J
         Example:
-            mdb.remove_boundary(remove_id=11, kind="一般弹性连接",group="边界组1", extra_name="J")
-            mdb.remove_boundary(remove_id=12, kind="约束方程",group="边界组1", extra_name="约束方程名")
+            mdb.remove_boundary(remove_id=11, kind="一般弹性连接",group_name="边界组1", extra_name="J")
+            mdb.remove_boundary(remove_id=12, kind="约束方程",group_name="边界组1", extra_name="约束方程名")
         Returns: 无
         """
         try:
-            qt_model.RemoveBoundary(removeId=remove_id, kind=kind, group=group, extraName=extra_name)
+            qt_model.RemoveBoundary(removeId=remove_id, kind=kind, group=group_name, extraName=extra_name)
         except Exception as ex:
             raise Exception(ex)
 
@@ -2075,7 +2133,7 @@ class Mdb:
     @staticmethod
     def add_master_slave_links(node_ids: list[tuple[int, int]] = None, boundary_info: list[bool] = None, group_name: str = "默认边界组"):
         """
-        添加主从约束
+        批量添加主从约束，不指定编号默认为最大编号加1
         Args:
              node_ids:主节点号和从节点号，主节点号位于首位
              boundary_info:边界信息 [X,Y,Z,Rx,Ry,Rz] ture-固定 false-自由
@@ -2759,7 +2817,7 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def update_load_to_mass(name:str="",factor:float=1):
+    def update_load_to_mass(name: str = "", factor: float = 1):
         """
         更新荷载转为质量
         Args:
@@ -2770,7 +2828,7 @@ class Mdb:
         Returns: 无
         """
         try:
-            qt_model.UpdateLoadToMass(name=name,factor=factor)
+            qt_model.UpdateLoadToMass(name=name, factor=factor)
         except Exception as ex:
             raise Exception(ex)
 
@@ -3242,7 +3300,7 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def remove_spectrum_function(ids = None, name: str = "") -> None:
+    def remove_spectrum_function(ids=None, name: str = "") -> None:
         """
         删除反应谱函数
         Args:
@@ -3273,7 +3331,7 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def remove_time_history_function(ids = None, name: str = "") -> None:
+    def remove_time_history_function(ids=None, name: str = "") -> None:
         """
         通过函数编号删除时程函数
         Args:
@@ -3306,7 +3364,7 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def remove_nodal_mass(node_id = None):
+    def remove_nodal_mass(node_id=None):
         """
         删除节点质量
         Args:
@@ -3337,7 +3395,7 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def remove_boundary_element_link(ids = None) -> None:
+    def remove_boundary_element_link(ids=None) -> None:
         """
         删除边界单元连接
         Args:
@@ -3368,7 +3426,7 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def remove_nodal_dynamic_load(ids= None) -> None:
+    def remove_nodal_dynamic_load(ids=None) -> None:
         """
         删除节点动力荷载
         Args:
@@ -3643,7 +3701,7 @@ class Mdb:
             raise Exception(f"修改钢束:{name}失败,{ex}")
 
     @staticmethod
-    def update_element_component_type(ids = None, component_type: int = 2):
+    def update_element_component_type(ids=None, component_type: int = 2):
         """
         赋予单元构件类型
         Args:
@@ -3940,7 +3998,7 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def add_beam_section_temperature(element_id = 1, case_name: str = "", code_index: int = 1,
+    def add_beam_section_temperature(element_id=1, case_name: str = "", code_index: int = 1,
                                      sec_type: int = 1, t1: float = 0, t2: float = 0, t3: float = 0,
                                      thick: float = 0, group_name: str = "默认荷载组"):
         """
@@ -4898,28 +4956,28 @@ class Mdb:
             raise Exception(f"删除施工阶段自重:{name}错误,{ex}")
 
     @staticmethod
-    def add_section_connection_stage(name: str, sec_id: int, ele_id=None, stage_name="", age: float = 0,
+    def add_section_connection_stage(name: str, sec_id: int, element_id=None, stage_name="", age: float = 0,
                                      weight_type: int = 0):
         """
         添加施工阶段联合截面
         Args:
             name:名称
             sec_id:截面号
-            ele_id:单元号，支持整型和整型列表,支持XtoYbyN形式字符串
+            element_id:单元号，支持整型和整型列表,支持XtoYbyN形式字符串
             stage_name:结合阶段名
             age:材龄
             weight_type:辅材计自重方式 0-由主材承担  1-由整体承担 2-不计辅材自重
         Example:
-            mdb.add_section_connection_stage(name="联合阶段",sec_id=1,ele_id=[2,3,4,5],stage_name="施工阶段1")
+            mdb.add_section_connection_stage(name="联合阶段",sec_id=1,element_id=[2,3,4,5],stage_name="施工阶段1")
         Returns:无
         """
         try:
-            qt_model.AddSectionConnectionStage(name=name, secId=sec_id, elementIds=ele_id, stageName=stage_name, age=age, weightType=weight_type)
+            qt_model.AddSectionConnectionStage(name=name, secId=sec_id, elementIds=element_id, stageName=stage_name, age=age, weightType=weight_type)
         except Exception as ex:
             raise Exception(f"添加施工阶段联合截面失败:{name}错误,{ex}")
 
     @staticmethod
-    def update_section_connection_stage(name: str, new_name="", sec_id: int = 1, ele_id=None,
+    def update_section_connection_stage(name: str, new_name="", sec_id: int = 1, element_id=None,
                                         stage_name="", age: float = 0, weight_type: int = 0):
         """
         更新施工阶段联合截面
@@ -4927,17 +4985,17 @@ class Mdb:
             name:名称
             new_name:新名称
             sec_id:截面号
-            ele_id:单元号，支持整型和整型列表且支持XtoYbyN形式字符串
+            element_id:单元号，支持整型和整型列表且支持XtoYbyN形式字符串
             stage_name:结合阶段名
             age:材龄
             weight_type:辅材计自重方式 0-由主材承担  1-由整体承担 2-不计辅材自重
         Example:
-            mdb.update_section_connection_stage(name="联合阶段",sec_id=1,ele_id=[2,3,4,5],stage_name="施工阶段1")
-            mdb.update_section_connection_stage(name="联合阶段",sec_id=1,ele_id="2to5",stage_name="施工阶段1")
+            mdb.update_section_connection_stage(name="联合阶段",sec_id=1,element_id=[2,3,4,5],stage_name="施工阶段1")
+            mdb.update_section_connection_stage(name="联合阶段",sec_id=1,element_id="2to5",stage_name="施工阶段1")
         Returns:无
         """
         try:
-            qt_model.UpdateSectionConnectionStage(name=name, newName=new_name, secId=sec_id, elementIds=ele_id,
+            qt_model.UpdateSectionConnectionStage(name=name, newName=new_name, secId=sec_id, elementIds=element_id,
                                                   stageName=stage_name, age=age, weightType=weight_type)
         except Exception as ex:
             raise Exception(f"更新施工阶段联合截面失败:{name}错误,{ex}")
@@ -4958,18 +5016,18 @@ class Mdb:
             raise Exception(f"删除施工阶段联合截面失败:{name}错误,{ex}")
 
     @staticmethod
-    def add_element_to_connection_stage(ele_id, name: str):
+    def add_element_to_connection_stage(element_id, name: str):
         """
         添加单元到施工阶段联合截面
         Args:
-            ele_id:单元号，支持整型和整型列表且支持XtoYbyN形式字符串
+            element_id:单元号，支持整型和整型列表且支持XtoYbyN形式字符串
             name:联合阶段名
         Example:
             mdb.add_element_to_connection_stage([1,2,3,4],"联合阶段")
         Returns:无
         """
         try:
-            qt_model.AddElementToConnectionStage(elementIds=ele_id, name=name)
+            qt_model.AddElementToConnectionStage(elementIds=element_id, name=name)
         except Exception as ex:
             raise Exception(f"添加单元到施工阶段联合截面失败:{name}错误,{ex}")
 
