@@ -1894,7 +1894,7 @@ class Mdb:
         """
         try:
             if name != "":
-                qt_model.RemoveBoundaryGroup(name)
+                qt_model.RemoveBoundaryGroup(name=name)
             else:
                 qt_model.RemoveAllBoundaryGroup()
         except Exception as ex:
@@ -1915,21 +1915,21 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def remove_boundary(remove_id: int, bd_type: str, group: str = "默认边界组", extra_name="I"):
+    def remove_boundary(remove_id: int, kind: str, group: str = "默认边界组", extra_name="I"):
         """
         根据节点号删除一般支撑、弹性支承/根据弹性连接I或J端(需指定)节点号删除弹性连接/根据单元号删除梁端约束/根据从节点号和约束方程名删除约束方程/根据从节点号删除主从约束
         Args:
             remove_id:节点号 or 单元号  or 从节点号
-            bd_type:边界类型  ["一般支承", "弹性支承","一般弹性支承", "主从约束", "一般/受拉/受压/刚性弹性连接", "约束方程", "梁端约束"]
+            kind:边界类型  ["一般支承", "弹性支承","一般弹性支承", "主从约束", "一般/受拉/受压/刚性弹性连接", "约束方程", "梁端约束"]
             group:边界所处边界组名
             extra_name:删除弹性连接或约束方程时额外标识,约束方程名或指定删除弹性连接节点类型 I/J
         Example:
-            mdb.remove_boundary(remove_id=11, bd_type="一般弹性连接",group="边界组1", extra_name="J")
-            mdb.remove_boundary(remove_id=12, bd_type="约束方程",group="边界组1", extra_name="约束方程名")
+            mdb.remove_boundary(remove_id=11, kind="一般弹性连接",group="边界组1", extra_name="J")
+            mdb.remove_boundary(remove_id=12, kind="约束方程",group="边界组1", extra_name="约束方程名")
         Returns: 无
         """
         try:
-            qt_model.RemoveBoundary(controlId=remove_id, type=bd_type, group=group, extraName=extra_name)
+            qt_model.RemoveBoundary(removeId=remove_id, kind=kind, group=group, extraName=extra_name)
         except Exception as ex:
             raise Exception(ex)
 
@@ -1986,7 +1986,7 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def add_general_elastic_support(node_id=1, property_name: str = "", group_name: str = "默认边界组"):
+    def add_general_elastic_support(node_id=None, property_name: str = "", group_name: str = "默认边界组"):
         """
         添加一般弹性支承特性
         Args:
@@ -1998,7 +1998,7 @@ class Mdb:
         Returns: 无
         """
         try:
-            qt_model.AddGeneralElasticSupport(nodeIds=node_id, propertyName=property_name, groupName=group_name)
+            qt_model.AddGeneralElasticSupport(nodeId=node_id, propertyName=property_name, groupName=group_name)
         except Exception as ex:
             raise Exception(ex)
 
@@ -2067,7 +2067,7 @@ class Mdb:
         Returns: 无
         """
         try:
-            qt_model.AddElasticLink(id=index, linkType=link_type, startId=start_id, endId=end_id, beta=beta_angle,
+            qt_model.AddElasticLink(index=index, linkType=link_type, startId=start_id, endId=end_id, beta=beta_angle,
                                     boundaryInfo=boundary_info, groupName=group_name, disRatio=dis_ratio, kDx=kx)
         except Exception as ex:
             raise Exception(ex)
