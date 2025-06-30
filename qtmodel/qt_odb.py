@@ -1,7 +1,6 @@
 import json
 from __main__ import qt_model
 from .qt_db import *
-from typing import Union, List
 
 
 class Odb:
@@ -82,7 +81,7 @@ class Odb:
             raise Exception(ex)
 
     @staticmethod
-    def activate_structure(node_ids = None, element_ids = None):
+    def activate_structure(node_ids=None, element_ids=None):
         """
         激活指定阶段和单元,默认激活所有
         Args:
@@ -399,7 +398,7 @@ class Odb:
             raise Exception(ex)
 
     @staticmethod
-    def get_concurrent_force(ids= None, case_name: str = ""):
+    def get_concurrent_force(ids=None, case_name: str = ""):
         """
         获取单元并发内力
         Args:
@@ -457,11 +456,11 @@ class Odb:
         Returns: 返回弹性连接内力列表list[dict] 或 dict(单一结果)
         """
         try:
-            bf_list= qt_model.GetElasticLinkForce(ids=ids,resultKind=result_kind,stageId=stage_id,
-                envelopType=envelop_type,incrementType=increment_type,caseName=case_name)
+            bf_list = qt_model.GetElasticLinkForce(ids=ids, resultKind=result_kind, stageId=stage_id,
+                                                   envelopType=envelop_type, incrementType=increment_type, caseName=case_name)
             list_res = []
             for item in bf_list:
-                force = [item.Force.Dx, item.Force.Dy, item.Force.Dz,item.Force.Rx, item.Force.Ry, item.Force.Rz]
+                force = [item.Force.Dx, item.Force.Dy, item.Force.Dz, item.Force.Rx, item.Force.Ry, item.Force.Rz]
                 list_res.append(str(ElasticLinkForce(item.NodeId, force)))
             return list_res if len(list_res) > 1 else list_res[0]
         except Exception as ex:
@@ -483,8 +482,8 @@ class Odb:
         Returns: 返回约束方程内力列表list[dict] 或 dict(单一结果)
         """
         try:
-            bf_list= qt_model.GetConstrainEquationForce(ids=ids,resultKind=result_kind, stageId=stage_id,
-                                                        envelopType=envelop_type,incrementType=increment_type,caseName=case_name)
+            bf_list = qt_model.GetConstrainEquationForce(ids=ids, resultKind=result_kind, stageId=stage_id,
+                                                         envelopType=envelop_type, incrementType=increment_type, caseName=case_name)
             list_res = []
             for item in bf_list:
                 force = [item.Force.Dx, item.Force.Dy, item.Force.Dz, item.Force.Rx, item.Force.Ry, item.Force.Rz]
@@ -506,11 +505,11 @@ class Odb:
         Returns: 返回无应力索长列表list[dict] 或 dict(单一结果)
         """
         try:
-            bf_list= qt_model.GetCableElementLength(ids=ids,stageId=stage_id,incrementType=increment_type)
+            bf_list = qt_model.GetCableElementLength(ids=ids, stageId=stage_id, incrementType=increment_type)
             list_res = []
             for item in bf_list:
-                list_res.append(str(CableLengthResult(item.ElementId, item.UnstressedLength,item.CosAXi,item.CosAYi,item.CosAZi,
-                                                      item.CosAXj,item.CosAYj,item.CosAZj,item.Dx,item.Dy,item.Dz)))
+                list_res.append(str(CableLengthResult(item.ElementId, item.UnstressedLength, item.CosAXi, item.CosAYi, item.CosAZi,
+                                                      item.CosAXj, item.CosAYj, item.CosAZj, item.Dx, item.Dy, item.Dz)))
             return list_res if len(list_res) > 1 else list_res[0]
         except Exception as ex:
             raise Exception(ex)
@@ -1405,7 +1404,7 @@ class Odb:
             raise Exception(ex)
 
     @staticmethod
-    def get_element_data(ids = None):
+    def get_element_data(ids=None):
         """
         获取单元信息
         Args:
@@ -1443,17 +1442,17 @@ class Odb:
             raise Exception(ex)
 
     @staticmethod
-    def get_element_type(ele_id: int) -> str:
+    def get_element_type(element_id: int) -> str:
         """
         获取单元类型
         Args:
-            ele_id: 单元号
+            element_id: 单元号
         Example:
-            odb.get_element_type(ele_id=1) # 获取1号单元类型
+            odb.get_element_type(element_id=1) # 获取1号单元类型
         Returns: str
         """
         try:
-            return qt_model.GetElementType(ele_id)
+            return qt_model.GetElementType(element_id)
         except Exception as ex:
             raise Exception(ex)
 
@@ -1730,7 +1729,7 @@ class Odb:
             group_name:默认输出所有边界组信息
         Example:
             odb.get_elastic_link_data()
-        Returns: 包含信息为list[dict]或 dict
+        Returns: 包含信息为list[dict]
         """
         try:
             res_list = []
@@ -1745,7 +1744,7 @@ class Odb:
                                                     start_id=data.StartNode.Id, end_id=data.EndNode.Id, beta_angle=data.Beta,
                                                     boundary_info=(data.Kx, data.Ky, data.Kz, data.Krx, data.Kry, data.Krz),
                                                     group_name=group, dis_ratio=data.DistanceRatio, kx=data.Kx)))
-            return res_list if len(res_list) > 1 else res_list[0]
+            return res_list
         except Exception as ex:
             raise Exception(ex)
 
@@ -1757,7 +1756,7 @@ class Odb:
             group_name:默认输出所有边界组信息
         Example:
             odb.get_elastic_support_data()
-        Returns: 包含信息为list[dict]或 dict
+        Returns: 包含信息为list[dict]
         """
         try:
             res_list = []
@@ -1771,7 +1770,7 @@ class Odb:
                     res_list.append(str(ElasticSupport(support_id=data.Id, node_id=data.Node.Id, support_type=int(data.Type) + 1,
                                                        boundary_info=(data.Kx, data.Ky, data.Kz, data.Krx, data.Kry, data.Krz),
                                                        group_name=group, node_system=int(data.NodalCoordinateSystem))))
-            return res_list if len(res_list) > 1 else res_list[0]
+            return res_list
         except Exception as ex:
             raise Exception(ex)
 
@@ -1783,7 +1782,7 @@ class Odb:
             group_name:默认输出所有边界组信息
         Example:
             odb.get_master_slave_link_data()
-        Returns: 包含信息为list[dict]或 dict
+        Returns: 包含信息为list[dict]
         """
         try:
             res_list = []
@@ -1798,7 +1797,7 @@ class Odb:
                                                         boundary_info=(data.IsFixedX, data.IsFixedY, data.IsFixedZ,
                                                                        data.IsFixedRx, data.IsFixedRy, data.IsFixedRZ),
                                                         group_name=group)))
-            return res_list if len(res_list) > 1 else res_list[0]
+            return res_list
         except Exception as ex:
             raise Exception(ex)
 
@@ -1846,7 +1845,7 @@ class Odb:
                     info_j = (
                         not data.IsJFreedX, not data.IsJFreedY, not data.IsJFreedZ, not data.IsJFreedRx, not data.IsJFreedRy, not data.IsJFreedRZ)
                     res_list.append(str(BeamConstraint(constraint_id=data.Id, beam_id=data.Beam.Id, info_i=info_i, info_j=info_j, group_name=group)))
-            return res_list if len(res_list) > 1 else res_list[0]
+            return res_list
         except Exception as ex:
             raise Exception(ex)
 
@@ -1858,7 +1857,7 @@ class Odb:
              group_name:默认输出所有边界组信息
          Example:
              odb.get_constraint_equation_data()
-         Returns: 包含信息为list[dict]或 dict
+         Returns: 包含信息为list[dict]
          """
         try:
             res_list = []
@@ -1875,7 +1874,33 @@ class Odb:
                     res_list.append(
                         str(ConstraintEquation(data.Id, name=data.Name, sec_node=data.SecondaryNode.Id, sec_dof=int(data.SecondaryDof) + 1,
                                                master_info=master_info, group_name=group)))
-            return res_list if len(res_list) > 1 else res_list[0]
+            return res_list
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def get_effective_width(group_name: str = None):
+        """
+        获取有效宽度数据
+        Args:
+            group_name:边界组
+        Example:
+            odb.get_effective_width(group_name="边界组1")
+        Returns:  list[dict]
+        """
+        try:
+            res_list = []
+            if group_name is None:
+                group_names = Odb.get_boundary_group_names()
+            else:
+                group_names = [group_name]
+            for group in group_names:
+                item_list = qt_model.GetEffectiveWidthFactorData(groupName=group_name)
+                for item in item_list:
+                    res_list.append(str(EffectiveWidth(index=item.Id, element_id=item.Element.Id, iy_i=item.Iy_I, iy_j=item.Iy_J,
+                                                       factor_i=item.IyFactor_I, factor_j=item.IyFactor_J,
+                                                       dz_i=item.CentroidZ_I, dz_j=item.CentroidZ_J, group_name=group)))
+            return res_list
         except Exception as ex:
             raise Exception(ex)
 

@@ -1,43 +1,6 @@
 import math
 
 
-class DataHelper:
-    @staticmethod
-    def parsing(str_list: list[str]) -> list[int]:
-        """
-        将字符串转为列表
-        Args:
-            str_list:字符串列表，1to10by2形式
-        Return:
-            list[int]
-        """
-        res_list = []
-        for s in str_list:
-            if 'by' in s:
-                # 确保有 'to'
-                if 'to' not in s:
-                    raise ValueError("If 'by' is present, 'to' must also be present.")
-                # 解析 'to' 和 'by'
-                to_index = s.index('to')
-                by_index = s.index('by')
-
-                start = int(s[:to_index])
-                end = int(s[to_index + 2:by_index])
-                step = int(s[by_index + 2:])
-                res_list.extend(list(range(start, end + 1, step)))
-            # 检查是否有 'to'
-            elif 'to' in s:
-                to_index = s.index('to')
-                start = int(s[:to_index])
-                end = int(s[to_index + 2:])
-
-                res_list.extend(list(range(start, end + 1)))
-            # 如果只有数字
-            else:
-                res_list.extend([int(s)])
-        return res_list
-
-
 class Node:
     def __init__(self, node_id: int, x: float, y: float, z: float):
         """
@@ -1569,6 +1532,41 @@ class ElasticBucklingResult:
         obj_dict = {
             'mode': self.mode,
             'eigenvalue': self.eigenvalue,
+        }
+        return obj_dict
+
+    def __repr__(self):
+        return self.__str__()
+
+
+class EffectiveWidth:
+    """
+    用于获取当前有效宽度数据
+    """
+
+    def __init__(self, index: int, element_id: int, iy_i: float, iy_j: float,
+                 factor_i: float, factor_j: float, dz_i: float, dz_j: float, group_name: str):
+        self.index = index
+        self.element_id = element_id
+        self.iy_i = iy_i  # 考虑剪力滞效应后截面Iy
+        self.iy_j = iy_j
+        self.factor_i = factor_i  # I端截面Iy折减系数
+        self.factor_j = factor_j  # J端截面Iy折减系数
+        self.dz_i = dz_i  # I端截面形心变换量
+        self.dz_j = dz_j  # J端截面形心变换量
+        self.group_name = group_name  # 边界组名
+
+    def __str__(self):
+        obj_dict = {
+            'index': self.index,
+            'element_id': self.element_id,
+            'iy_i': self.iy_i,
+            'iy_j': self.iy_j,
+            'factor_i': self.factor_i,
+            'factor_j': self.factor_j,
+            'dz_i': self.dz_i,
+            'dz_j': self.dz_j,
+            'group_name': self.group_name,
         }
         return obj_dict
 

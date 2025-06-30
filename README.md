@@ -1,6 +1,6 @@
-> 最新版本 V0.9.1 - 2025-06-30 
+> 最新版本 V0.9.2 - 2025-06-30 
 > pip install --upgrade qtmodel -i https://pypi.org/simple
-- 新增更新结构组接口 
+- 新增获取有效宽度接口 
 # 建模操作 
 ##  建模助手
 ### create_cantilever_bridge
@@ -3998,11 +3998,11 @@ Returns:  包含信息为list[dict] or dict
 ### get_element_type
 获取单元类型
 > 参数:  
-> ele_id: 单元号  
+> element_id: 单元号  
 ```Python
 # 示例代码
 from qtmodel import *
-odb.get_element_type(ele_id=1) # 获取1号单元类型
+odb.get_element_type(element_id=1) # 获取1号单元类型
 ```  
 Returns: str
 ### get_beam_element
@@ -4103,6 +4103,16 @@ Returns:  list[dict]
 from qtmodel import *
 odb.get_user_define_material() # 获取所有自定义材料信息
 odb.get_user_define_material("1to10") # 获取所有自定义材料信息
+```  
+Returns:  list[dict]
+### get_effective_width
+获取有效宽度数据
+> 参数:  
+> group_name:边界组  
+```Python
+# 示例代码
+from qtmodel import *
+odb.get_effective_width(group_name="边界组1")
 ```  
 Returns:  list[dict]
 ##  获取模型边界信息
