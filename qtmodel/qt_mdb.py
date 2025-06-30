@@ -1487,8 +1487,8 @@ class Mdb:
             charm_right: list[str] = None,
             box_num: int = 3,
             box_height: float = 2,
-            box_other_info:list[dict]=None,
-            box_other_right:list[dict]=None,
+            box_other_info:dict[str, list[float]]=None,
+            box_other_right:dict[str, list[float]]=None,
             mat_combine: list[float] = None,
             rib_info: dict[str, list[float]] = None,
             rib_place: list[tuple[int, int, float, str, int, str]] = None,
@@ -5036,16 +5036,17 @@ class Mdb:
 
     # region 荷载组合操作
     @staticmethod
-    def add_load_combine(name: str = "", combine_type: int = 1, describe: str = "", combine_info: list[tuple[str, str, float]] = None):
+    def add_load_combine(index:int = -1, name: str = "", combine_type: int = 1, describe: str = "", combine_info: list[tuple[str, str, float]] = None):
         """
         添加荷载组合
         Args:
+            index:荷载组合编号,默认自动识别为最大编号加1
             name:荷载组合名
             combine_type:荷载组合类型 1-叠加  2-判别  3-包络 4-SRss 5-AbsSum
             describe:描述
             combine_info:荷载组合信息 [(荷载工况类型,工况名,系数)...] 工况类型如下
                 _"ST"-静力荷载工况  "CS"-施工阶段荷载工况  "CB"-荷载组合
-                _"MV"-移动荷载工况  "SM"-沉降荷载工况_ "RS"-反应谱工况
+                _"MV"-移动荷载工况  "SM"-沉降荷载工况_ "RS"-反应谱工况 "TH"-时程分析
         Example:
             mdb.add_load_combine(name="荷载组合1",combine_type=1,describe="无",combine_info=[("CS","合计值",1),("CS","恒载",1)])
         Returns: 无
@@ -5053,49 +5054,23 @@ class Mdb:
         try:
             if combine_info is None:
                 combine_info = []
-            qt_model.AddLoadCombine(name=name, loadCombineType=combine_type, describe=describe, caseAndFactor=combine_info)
+            qt_model.AddLoadCombine(index=index, name=name, loadCombineType=combine_type, describe=describe, caseAndFactor=combine_info)
         except Exception as ex:
             raise Exception(ex)
 
     @staticmethod
-    def update_load_combine(name: str = "", new_name: str = "", combine_type: int = 1, describe: str = "",
-                            combine_info: list[tuple[str, str, float]] = None):
-        """
-        更新荷载组合
-        Args:
-            name:荷载组合名
-            new_name:新荷载组合名，默认不修改
-            combine_type:荷载组合类型 (1-叠加  2-判别  3-包络)
-            describe:描述
-            combine_info:荷载组合信息 [(荷载工况类型,工况名,系数)...] 工况类型如下
-                _"ST"-静力荷载工况  "CS"-施工阶段荷载工况  "CB"-荷载组合
-                _"MV"-移动荷载工况  "SM"-沉降荷载工况
-        Example:
-            mdb.update_load_combine(name="荷载组合1",combine_type=1,describe="无",combine_info=[("CS","合计值",1),("CS","恒载",1)])
-        Returns: 无
-        """
-        try:
-            if combine_info is None:
-                combine_info = []
-            qt_model.UpdateLoadCombine(name=name, newName=new_name, loadCombineType=combine_type, describe=describe, caseAndFactor=combine_info)
-        except Exception as ex:
-            raise Exception(ex)
-
-    @staticmethod
-    def remove_load_combine(name: str = ""):
+    def remove_load_combine(index :int = -1,name: str = ""):
         """
         删除荷载组合
         Args:
-             name:指定删除荷载组合名，默认时则删除所有荷载组合
+            index: 默认时则按照name删除荷载组合
+            name:指定删除荷载组合名
         Example:
             mdb.remove_load_combine(name="荷载组合1")
         Returns: 无
         """
         try:
-            if name != "":
-                qt_model.DeleteLoadCombine(name=name)
-            else:
-                qt_model.DeleteAllLoadCombine()
+            qt_model.RemoveLoadCombine(index=index,name=name)
         except Exception as ex:
             raise Exception(ex)
 
