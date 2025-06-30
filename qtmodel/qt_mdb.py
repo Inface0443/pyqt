@@ -1487,8 +1487,8 @@ class Mdb:
             charm_right: list[str] = None,
             box_num: int = 3,
             box_height: float = 2,
-            box_other_info:dict[str, list[float]]=None,
-            box_other_right:dict[str, list[float]]=None,
+            box_other_info: dict[str, list[float]] = None,
+            box_other_right: dict[str, list[float]] = None,
             mat_combine: list[float] = None,
             rib_info: dict[str, list[float]] = None,
             rib_place: list[tuple[int, int, float, str, int, str]] = None,
@@ -1548,7 +1548,7 @@ class Mdb:
                                     symmetry=symmetry, boxNum=box_num, boxHeight=box_height, charmRight=charm_right, secRight=sec_right,
                                     biasType=bias_type, centerType=center_type, shearConsider=shear_consider,
                                     biasX=bias_x, biasY=bias_y, secProperty=sec_property,
-                                    boxOtherInfo=box_other_info,boxOtherRight=box_other_right)
+                                    boxOtherInfo=box_other_info, boxOtherRight=box_other_right)
             elif sec_type == "工字钢梁" or sec_type == "箱型钢梁":
                 qt_model.AddSection(id=index, name=name, secType=sec_type, secInfo=sec_info,
                                     ribInfo=rib_info, ribPlace=rib_place, biasType=bias_type, centerType=center_type,
@@ -2740,6 +2740,52 @@ class Mdb:
     # endregion
 
     # region 动力荷载操作
+    @staticmethod
+    def add_vehicle_dynamic_load(node_ids=None, function_name: str = "", case_name: str = "", kind: int = 1,
+                                 speed_kmh: float = 120, braking: bool = False, braking_a: float = 0.8,
+                                 braking_d: float = 0, time: float = 0, direction: int = 6, gap: float = 14,
+                                 factor: float = 1, vehicle_info_kn: list[float] = None) -> None:
+        """
+        添加列车动力荷载
+        Args:
+            node_ids: 节点纵列节点编号集合，支持XtoYbyN形式字符串
+            function_name: 函数名
+            case_name: 工况名
+            kind: 类型 1-ZK型车辆 2-动车组
+            speed_kmh: 列车速度(km/h)
+            braking: 是否考虑制动
+            braking_a: 制动加速度(m/s²)
+            braking_d: 制动时车头位置(m)
+            time: 上桥时间(s)
+            direction: 荷载方向 1-X 2-Y 3-Z 4-负X 5-负Y 6-负Z
+            gap: 加载间距(m)
+            factor: 放大系数
+            vehicle_info_kn: 车辆参数,参数为空时则选取界面默认值,注意单位输入单位为KN
+                ZK型车辆: [dW1,dW2,P1,P2,P3,P4,dD1,dD2,D1,D2,D3,LoadLength]
+                动力组: [L1,L2,L3,P,N]
+        Example:
+            mdb.add_vehicle_dynamic_load("1to100",function_name="时程函数名",case_name="时程工况名",kind=1,speed_kmh=120,time=10)
+            mdb.add_vehicle_dynamic_load([1,2,3,4,5,6,7],function_name="时程函数名",case_name="时程工况名",kind=1,speed_kmh=120,time=10)
+        Returns:无
+        """
+        try:
+            qt_model.AddVehicleDynamicLoad(
+                nodeIds=node_ids,
+                functionName=function_name,
+                caseName=case_name,
+                kind=kind,
+                speedKmh=speed_kmh,
+                braking=braking,
+                brakingA=braking_a,
+                brakingD=braking_d,
+                time=time,
+                direction=direction,
+                gap=gap,
+                factor=factor,
+                vehicleInfoKn=vehicle_info_kn)
+        except Exception as ex:
+            raise Exception(ex)
+
     @staticmethod
     def add_load_to_mass(name: str, factor: float = 1):
         """
@@ -5036,7 +5082,8 @@ class Mdb:
 
     # region 荷载组合操作
     @staticmethod
-    def add_load_combine(index:int = -1, name: str = "", combine_type: int = 1, describe: str = "", combine_info: list[tuple[str, str, float]] = None):
+    def add_load_combine(index: int = -1, name: str = "", combine_type: int = 1, describe: str = "",
+                         combine_info: list[tuple[str, str, float]] = None):
         """
         添加荷载组合
         Args:
@@ -5059,7 +5106,7 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def remove_load_combine(index :int = -1,name: str = ""):
+    def remove_load_combine(index: int = -1, name: str = ""):
         """
         删除荷载组合
         Args:
@@ -5070,7 +5117,7 @@ class Mdb:
         Returns: 无
         """
         try:
-            qt_model.RemoveLoadCombine(index=index,name=name)
+            qt_model.RemoveLoadCombine(index=index, name=name)
         except Exception as ex:
             raise Exception(ex)
 

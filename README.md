@@ -1,6 +1,6 @@
-> 最新版本 V0.9.2 - 2025-06-30 
+> 最新版本 V0.9.3 - 2025-06-30 
 > pip install --upgrade qtmodel -i https://pypi.org/simple
-- 新增获取有效宽度接口 
+- 新增更新结构组接口 
 # 建模操作 
 ##  建模助手
 ### create_cantilever_bridge
@@ -1728,6 +1728,31 @@ mdb.remove_live_load_case(index=1)
 ```  
 Returns: 无
 ##  动力荷载操作
+### add_vehicle_dynamic_load
+添加列车动力荷载
+> 参数:  
+> node_ids: 节点纵列节点编号集合，支持XtoYbyN形式字符串  
+> function_name: 函数名  
+> case_name: 工况名  
+> kind: 类型 1-ZK型车辆 2-动车组  
+> speed_kmh: 列车速度(km/h)  
+> braking: 是否考虑制动  
+> braking_a: 制动加速度(m/s²)  
+> braking_d: 制动时车头位置(m)  
+> time: 上桥时间(s)  
+> direction: 荷载方向 1-X 2-Y 3-Z 4-负X 5-负Y 6-负Z  
+> gap: 加载间距(m)  
+> factor: 放大系数  
+> vehicle_info_kn: 车辆参数,参数为空时则选取界面默认值,注意单位输入单位为KN  
+> ZK型车辆: [dW1,dW2,P1,P2,P3,P4,dD1,dD2,D1,D2,D3,LoadLength]  
+> 动力组: [L1,L2,L3,P,N]  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.add_vehicle_dynamic_load("1to100",function_name="时程函数名",case_name="时程工况名",kind=1,speed_kmh=120,time=10)
+mdb.add_vehicle_dynamic_load([1,2,3,4,5,6,7],function_name="时程函数名",case_name="时程工况名",kind=1,speed_kmh=120,time=10)
+```  
+Returns:无
 ### add_load_to_mass
 添加荷载转为质量
 > 参数:  
@@ -4105,16 +4130,6 @@ odb.get_user_define_material() # 获取所有自定义材料信息
 odb.get_user_define_material("1to10") # 获取所有自定义材料信息
 ```  
 Returns:  list[dict]
-### get_effective_width
-获取有效宽度数据
-> 参数:  
-> group_name:边界组  
-```Python
-# 示例代码
-from qtmodel import *
-odb.get_effective_width(group_name="边界组1")
-```  
-Returns:  list[dict]
 ##  获取模型边界信息
 ### get_boundary_group_names
 获取自边界组名称
@@ -4144,7 +4159,7 @@ Returns: 包含信息为list[dict]
 from qtmodel import *
 odb.get_elastic_link_data()
 ```  
-Returns: 包含信息为list[dict]或 dict
+Returns: 包含信息为list[dict]
 ### get_elastic_support_data
 获取弹性支承信息
 > 参数:  
@@ -4154,7 +4169,7 @@ Returns: 包含信息为list[dict]或 dict
 from qtmodel import *
 odb.get_elastic_support_data()
 ```  
-Returns: 包含信息为list[dict]或 dict
+Returns: 包含信息为list[dict]
 ### get_master_slave_link_data
 获取主从连接信息
 > 参数:  
@@ -4164,7 +4179,7 @@ Returns: 包含信息为list[dict]或 dict
 from qtmodel import *
 odb.get_master_slave_link_data()
 ```  
-Returns: 包含信息为list[dict]或 dict
+Returns: 包含信息为list[dict]
 ### get_node_local_axis_data
 获取节点坐标信息
 > 参数:  
@@ -4193,7 +4208,17 @@ Returns: 包含信息为list[dict]或 dict
 from qtmodel import *
 odb.get_constraint_equation_data()
 ```  
-Returns: 包含信息为list[dict]或 dict
+Returns: 包含信息为list[dict]
+### get_effective_width
+获取有效宽度数据
+> 参数:  
+> group_name:边界组  
+```Python
+# 示例代码
+from qtmodel import *
+odb.get_effective_width(group_name="边界组1")
+```  
+Returns:  list[dict]
 ##  获取施工阶段信息
 ### get_stage_name
 获取所有施工阶段名称
