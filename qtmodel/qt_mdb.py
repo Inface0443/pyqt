@@ -223,7 +223,7 @@ class Mdb:
 
     # region 分析设置
     @staticmethod
-    def update_general_setting(project: str = "", company: str = "", designer: str = "", reviewer: str = "",
+    def update_project_setting(project: str = "", company: str = "", designer: str = "", reviewer: str = "",
                                date_time: str = "", gravity: float = 9.8, temperature: float = 0, description: str = "") -> None:
         """
         更新总体设置
@@ -237,12 +237,12 @@ class Mdb:
             temperature: 设计温度 (摄氏度)
             description: 说明
         Example:
-           mdb.update_general_setting(project="项目名",gravity=9.8,temperature=20)
+           mdb.update_project_setting(project="项目名",gravity=9.8,temperature=20)
         Returns: 无
         """
         try:
-            qt_model.update_general_setting(project=project, company=company, designer=designer, reviewer=reviewer,
-                                            date_time=date_time, gravity=gravity, temperature=temperature, description=description)
+            qt_model.UpdateProjectSetting(project=project, company=company, designer=designer, reviewer=reviewer,
+                                            dateTime=date_time, gravity=gravity, temperature=temperature, description=description)
         except Exception as ex:
             raise Exception(ex)
 

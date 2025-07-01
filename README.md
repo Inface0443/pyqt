@@ -1,4 +1,4 @@
-> 最新版本 V0.9.3 - 2025-06-30 
+> 最新版本 V0.9.4 - 2025-07-01 
 > pip install --upgrade qtmodel -i https://pypi.org/simple
 - 新增更新结构组接口 
 # 建模操作 
@@ -141,7 +141,7 @@ mdb.export_file(file_path="a.mct")
 ```  
 Returns: 无
 ##  分析设置
-### update_general_setting
+### update_project_setting
 更新总体设置
 > 参数:  
 > project: 项目名  
@@ -155,7 +155,7 @@ Returns: 无
 ```Python
 # 示例代码
 from qtmodel import *
-mdb.update_general_setting(project="项目名",gravity=9.8,temperature=20)
+mdb.update_project_setting(project="项目名",gravity=9.8,temperature=20)
 ```  
 Returns: 无
 ### update_global_setting
