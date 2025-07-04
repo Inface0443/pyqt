@@ -1,4 +1,4 @@
-> 最新版本 V0.9.4 - 2025-07-01 
+> 最新版本 V0.9.5 - 2025-07-04 
 > pip install --upgrade qtmodel -i https://pypi.org/simple
 - 新增更新结构组接口 
 # 建模操作 
@@ -3215,6 +3215,16 @@ mdb.remove_load_combine(name="荷载组合1")
 ```  
 Returns: 无
 # 视图与结果提取 
+### display_info
+显示字典并打印
+> 参数:  
+> dict_info:是否打开节点号显示  
+```Python
+# 示例代码
+from qtmodel import *
+odb.display_info(Node(1,1,2,3))
+```  
+Returns: 无
 ##  视图控制
 ### display_node_id
 设置节点号显示

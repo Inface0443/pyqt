@@ -222,6 +222,7 @@ class ElasticSupport:
             support_type:支承类型 1-线性  2-受拉  3-受压
             boundary_info:边界信息 受拉和受压时列表长度为1  线性时列表长度为6
             group_name:边界组
+            node_system:0-整体坐标 1-节点坐标
         """
         self.support_id = support_id
         self.node_id = node_id
