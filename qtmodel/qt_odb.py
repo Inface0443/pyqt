@@ -14,7 +14,7 @@ class Odb:
         """
         显示字典并打印
         Args:
-            dict_info:是否打开节点号显示
+            dict_info:需要传输的数据
         Example:
             odb.display_info(Node(1,1,2,3))
         Returns: 无

@@ -3218,7 +3218,7 @@ Returns: 无
 ### display_info
 显示字典并打印
 > 参数:  
-> dict_info:是否打开节点号显示  
+> dict_info:需要传输的数据  
 ```Python
 # 示例代码
 from qtmodel import *
