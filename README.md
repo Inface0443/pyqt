@@ -1,4 +1,4 @@
-> 最新版本 V0.9.5 - 2025-07-04 
+> 最新版本 V0.9.6 - 2025-07-11 
 > pip install --upgrade qtmodel -i https://pypi.org/simple
 - 新增更新结构组接口 
 # 建模操作 
@@ -3222,7 +3222,7 @@ Returns: 无
 ```Python
 # 示例代码
 from qtmodel import *
-odb.display_info(Node(1,1,2,3))
+odb.display_info(Node(1,1,2,3).__str__())
 ```  
 Returns: 无
 ##  视图控制
@@ -3534,7 +3534,7 @@ Returns:list[dict]包含该模态下屈曲模态向量列表
 > stage_id: -1-运营阶段  0-施工阶段包络 n-施工阶段号  
 > case_name: 详细荷载工况名,参考桥通结果输出,例如： CQ:成桥(合计)  
 > show_increment: 是否显示增量结果  
-> envelope_type: 施工阶段包络类型 1-最大 2-最小  
+> envelop_type: 施工阶段包络类型 1-最大 2-最小  
 > component: 分量编号 1-Fx 2-Fy 3-Fz 4-Fxyz 5-Mx 6-My 7-Mz 8-Mxyz  
 > show_number: 数值选项卡开启  
 > show_legend: 图例选项卡开启  
@@ -3559,7 +3559,7 @@ Returns: 无
 > stage_id: -1-运营阶段  0-施工阶段包络 n-施工阶段号  
 > case_name: 详细荷载工况名,参考桥通结果输出,例如： CQ:成桥(合计)  
 > show_increment: 是否显示增量结果  
-> envelope_type: 施工阶段包络类型 1-最大 2-最小  
+> envelop_type: 施工阶段包络类型 1-最大 2-最小  
 > component: 分量编号 1-Dx 2-Dy 3-Dz 4-Rx 5-Ry 6-Rz 7-Dxy 8-Dyz 9-Dxz 10-Dxyz  
 > show_deformed: 变形选项卡开启  
 > deformed_scale:变形比例  
@@ -3588,7 +3588,7 @@ Returns: 无
 > stage_id: -1-运营阶段  0-施工阶段包络 n-施工阶段号  
 > case_name: 详细荷载工况名,参考桥通结果输出,例如： CQ:成桥(合计)  
 > show_increment: 是否显示增量结果  
-> envelope_type: 施工阶段包络类型 1-最大 2-最小  
+> envelop_type: 施工阶段包络类型 1-最大 2-最小  
 > component: 分量编号 1-Dx 2-Dy 3-Dz 4-Rx 5-Ry 6-Rz 7-Dxy 8-Dyz 9-Dxz 10-Dxyz  
 > show_line_chart: 折线图选项卡开启  
 > line_scale:折线图比例  
@@ -3620,7 +3620,7 @@ Returns: 无
 > stage_id: -1-运营阶段  0-施工阶段包络 n-施工阶段号  
 > case_name: 详细荷载工况名,参考桥通结果输出,例如： CQ:成桥(合计)  
 > show_increment: 是否显示增量结果  
-> envelope_type: 施工阶段包络类型 1-最大 2-最小  
+> envelop_type: 施工阶段包络类型 1-最大 2-最小  
 > component: 分量编号 0-N 1-Fx 2-Fy 3-Fz  
 > show_line_chart: 折线图选项卡开启  
 > line_scale:折线图比例  
@@ -3653,7 +3653,7 @@ Returns: 无
 > force_kind: 内力选项 1-单元 2-节点平均  
 > case_name: 详细荷载工况名  
 > stage_id: 阶段编号  
-> envelope_type: 包络类型  
+> envelop_type: 包络类型  
 > show_number: 是否显示数值  
 > show_deformed: 是否显示变形形状  
 > show_undeformed: 是否显示未变形形状  
@@ -3681,7 +3681,7 @@ Returns: 无
 > stage_id: -1-运营阶段  0-施工阶段包络 n-施工阶段号  
 > case_name: 详细荷载工况名,参考桥通结果输出,例如： CQ:成桥(合计)  
 > show_increment: 是否显示增量结果  
-> envelope_type: 施工阶段包络类型 1-最大 2-最小  
+> envelop_type: 施工阶段包络类型 1-最大 2-最小  
 > mat_type: 材料类型 1-主材 2-辅材 3-主材+辅材  
 > component: 分量编号 1-Fx 2-Fy 3-Fz 4-Mx 5-My 6-Mz  
 > show_line_chart: 折线图选项卡开启  
@@ -3711,7 +3711,7 @@ Returns: 无
 > stage_id: -1-运营阶段  0-施工阶段包络 n-施工阶段号  
 > case_name: 详细荷载工况名,参考桥通结果输出,例如： CQ:成桥(合计)  
 > show_increment: 是否显示增量结果  
-> envelope_type: 施工阶段包络类型 1-最大 2-最小  
+> envelop_type: 施工阶段包络类型 1-最大 2-最小  
 > component: 分量编号 1-轴力 2-Mzx 3-My 4-组合包络 5-左上 6-右上 7-右下 8-左下  
 > show_line_chart: 折线图选项卡开启  
 > line_scale:折线图比例  
@@ -3740,7 +3740,7 @@ Returns: 无
 > stage_id: -1-运营阶段  0-施工阶段包络 n-施工阶段号  
 > case_name: 详细荷载工况名,参考桥通结果输出,例如： CQ:成桥(合计)  
 > show_increment: 是否显示增量结果  
-> envelope_type: 施工阶段包络类型 1-最大 2-最小  
+> envelop_type: 施工阶段包络类型 1-最大 2-最小  
 > show_line_chart: 折线图选项卡开启  
 > line_scale:折线图比例  
 > flip_plot:反向绘制  
@@ -3768,7 +3768,7 @@ Returns: 无
 > stage_id: -1-运营阶段  0-施工阶段包络 n-施工阶段号  
 > case_name: 详细荷载工况名,参考桥通结果输出,例如： CQ:成桥(合计)  
 > show_increment: 是否显示增量结果  
-> envelope_type: 施工阶段包络类型 1-最大 2-最小  
+> envelop_type: 施工阶段包络类型 1-最大 2-最小  
 > mat_type: 材料类型 1-主材 2-辅材  
 > component: 分量编号 1-轴力分量 2-Mz分量 3-My分量 4-包络 5-左上 6-右上 7-左下 8-右下  
 > show_line_chart: 折线图选项卡开启  
@@ -3799,7 +3799,7 @@ Returns: 无
 > stress_kind: 力类型 1-单元 2-节点平均  
 > case_name: 详细荷载工况名  
 > stage_id: 阶段编号  
-> envelope_type: 包络类型  
+> envelop_type: 包络类型  
 > show_number: 是否显示数值  
 > show_deformed: 是否显示变形形状  
 > show_undeformed: 是否显示未变形形状  

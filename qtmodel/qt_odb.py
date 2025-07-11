@@ -16,7 +16,7 @@ class Odb:
         Args:
             dict_info:需要传输的数据
         Example:
-            odb.display_info(Node(1,1,2,3))
+            odb.display_info(Node(1,1,2,3).__str__())
         Returns: 无
         """
         print(json.dumps(dict_info))
@@ -331,7 +331,7 @@ class Odb:
         Returns: 包含信息为list[dict] or dict
         """
         try:
-            bf_list = qt_model.GetElementForce(ids=ids, stageId=stage_id, envelopeType=envelop_type,
+            bf_list = qt_model.GetElementForce(ids=ids, stageId=stage_id, envelopType=envelop_type,
                                                resultKind=result_kind, increamentType=increment_type, caseName=case_name,
                                                isTimeHistory=is_time_history, isBoundaryElement=is_boundary_element)
             list_res = []
@@ -616,7 +616,7 @@ class Odb:
     # region 绘制模型结果
     @staticmethod
     def plot_reaction_result(file_path: str, stage_id: int = 1, case_name: str = "", show_increment: bool = False,
-                             envelope_type: int = 1, component: int = 1,
+                             envelop_type: int = 1, component: int = 1,
                              show_number: bool = True, text_rotation=0, max_min_kind: int = -1,
                              show_legend: bool = True, digital_count=3, text_exponential: bool = True, arrow_scale: float = 1,
                              is_time_history: bool = True, time_kind: int = 1, time_tick: float = 1.0):
@@ -627,7 +627,7 @@ class Odb:
             stage_id: -1-运营阶段  0-施工阶段包络 n-施工阶段号
             case_name: 详细荷载工况名,参考桥通结果输出,例如： CQ:成桥(合计)
             show_increment: 是否显示增量结果
-            envelope_type: 施工阶段包络类型 1-最大 2-最小
+            envelop_type: 施工阶段包络类型 1-最大 2-最小
             component: 分量编号 1-Fx 2-Fy 3-Fz 4-Fxyz 5-Mx 6-My 7-Mz 8-Mxyz
             show_number: 数值选项卡开启
             show_legend: 图例选项卡开启
@@ -645,7 +645,7 @@ class Odb:
         """
         try:
             qt_model.PlotReactionResult(filePath=file_path, stageId=stage_id, caseName=case_name, showIncrement=show_increment,
-                                        envelopeType=envelope_type, component=component,
+                                        envelopType=envelop_type, component=component,
                                         showNumber=show_number, textRotate=text_rotation, maxMinKind=max_min_kind,
                                         showLegend=show_legend, digitalCount=digital_count,
                                         textExponential=text_exponential, arrowScale=arrow_scale,
@@ -655,7 +655,7 @@ class Odb:
 
     @staticmethod
     def plot_displacement_result(file_path: str, stage_id: int = 1, case_name: str = "", show_increment: bool = False,
-                                 envelope_type: int = 1, component: int = 1,
+                                 envelop_type: int = 1, component: int = 1,
                                  show_deformed: bool = True, deformed_scale: float = 1.0, deformed_actual: bool = False,
                                  show_number: bool = True, text_rotation=0, max_min_kind: int = 1,
                                  show_legend: bool = True, digital_count=3, text_exponential: bool = True, show_undeformed: bool = True,
@@ -667,7 +667,7 @@ class Odb:
             stage_id: -1-运营阶段  0-施工阶段包络 n-施工阶段号
             case_name: 详细荷载工况名,参考桥通结果输出,例如： CQ:成桥(合计)
             show_increment: 是否显示增量结果
-            envelope_type: 施工阶段包络类型 1-最大 2-最小
+            envelop_type: 施工阶段包络类型 1-最大 2-最小
             component: 分量编号 1-Dx 2-Dy 3-Dz 4-Rx 5-Ry 6-Rz 7-Dxy 8-Dyz 9-Dxz 10-Dxyz
             show_deformed: 变形选项卡开启
             deformed_scale:变形比例
@@ -689,7 +689,7 @@ class Odb:
         """
         try:
             qt_model.PlotDisplacementResult(filePath=file_path, stageId=stage_id, caseName=case_name, showIncrement=show_increment,
-                                            envelopeType=envelope_type, component=component,
+                                            envelopType=envelop_type, component=component,
                                             showDeformed=show_deformed, deformedScale=deformed_scale, deformedActual=deformed_actual,
                                             showNumber=show_number, textRotate=text_rotation, digitalCount=digital_count,
                                             textExponential=text_exponential, maxMinKind=max_min_kind,
@@ -700,7 +700,7 @@ class Odb:
 
     @staticmethod
     def plot_beam_element_force(file_path: str, stage_id: int = 1, case_name: str = "合计", show_increment: bool = False,
-                                envelope_type: int = 1, component: int = 1,
+                                envelop_type: int = 1, component: int = 1,
                                 show_line_chart: bool = True, line_scale: float = 1.0, flip_plot: bool = True,
                                 show_deformed: bool = True, deformed_actual: bool = False, deformed_scale: float = 1.0,
                                 show_number: bool = False, text_rotation: int = 0, max_min_kind: int = 1,
@@ -714,7 +714,7 @@ class Odb:
             stage_id: -1-运营阶段  0-施工阶段包络 n-施工阶段号
             case_name: 详细荷载工况名,参考桥通结果输出,例如： CQ:成桥(合计)
             show_increment: 是否显示增量结果
-            envelope_type: 施工阶段包络类型 1-最大 2-最小
+            envelop_type: 施工阶段包络类型 1-最大 2-最小
             component: 分量编号 1-Dx 2-Dy 3-Dz 4-Rx 5-Ry 6-Rz 7-Dxy 8-Dyz 9-Dxz 10-Dxyz
             show_line_chart: 折线图选项卡开启
             line_scale:折线图比例
@@ -740,7 +740,7 @@ class Odb:
         try:
             qt_model.PlotBeamElementForce(
                 filePath=file_path, stageId=stage_id, caseName=case_name, showIncrement=show_increment,
-                envelopeType=envelope_type, component=component,
+                envelopType=envelop_type, component=component,
                 showLineChart=show_line_chart, lineScale=line_scale, flipPlot=flip_plot,
                 showDeformed=show_deformed, deformedScale=deformed_scale, deformedActual=deformed_actual,
                 showNumber=show_number, textRotate=text_rotation, maxMinKind=max_min_kind,
@@ -752,7 +752,7 @@ class Odb:
 
     @staticmethod
     def plot_truss_element_force(file_path: str, stage_id: int = 1, case_name: str = "合计", show_increment: bool = False,
-                                 envelope_type: int = 1, component: int = 1,
+                                 envelop_type: int = 1, component: int = 1,
                                  show_line_chart: bool = True, line_scale: float = 1.0, flip_plot: bool = True,
                                  show_deformed: bool = True, deformed_actual: bool = False, deformed_scale: float = 1.0,
                                  show_number: bool = False, text_rotation: int = 0, max_min_kind: int = 1,
@@ -766,7 +766,7 @@ class Odb:
             stage_id: -1-运营阶段  0-施工阶段包络 n-施工阶段号
             case_name: 详细荷载工况名,参考桥通结果输出,例如： CQ:成桥(合计)
             show_increment: 是否显示增量结果
-            envelope_type: 施工阶段包络类型 1-最大 2-最小
+            envelop_type: 施工阶段包络类型 1-最大 2-最小
             component: 分量编号 0-N 1-Fx 2-Fy 3-Fz
             show_line_chart: 折线图选项卡开启
             line_scale:折线图比例
@@ -792,7 +792,7 @@ class Odb:
         try:
             qt_model.PlotTrussElementForce(
                 filePath=file_path, stageId=stage_id, caseName=case_name, showIncrement=show_increment,
-                envelopeType=envelope_type, component=component,
+                envelopType=envelop_type, component=component,
                 showLineChart=show_line_chart, lineScale=line_scale, flipPlot=flip_plot,
                 showDeformed=show_deformed, deformedScale=deformed_scale, deformedActual=deformed_actual,
                 showNumber=show_number, textRotate=text_rotation, maxMinKind=max_min_kind,
@@ -804,7 +804,7 @@ class Odb:
 
     @staticmethod
     def plot_plate_element_force(file_path: str, stage_id: int = 1, case_name: str = "合计", show_increment: bool = False,
-                                 envelope_type: int = 1, force_kind: int = 1, component: int = 1,
+                                 envelop_type: int = 1, force_kind: int = 1, component: int = 1,
                                  show_number: bool = False, text_rotate: int = 0, max_min_kind: int = 1,
                                  show_deformed: bool = True, deformed_scale: float = 1.0, deformed_actual: bool = False,
                                  show_legend: bool = True, digital_count: int = 3, text_exponential: bool = True,
@@ -817,7 +817,7 @@ class Odb:
             force_kind: 内力选项 1-单元 2-节点平均
             case_name: 详细荷载工况名
             stage_id: 阶段编号
-            envelope_type: 包络类型
+            envelop_type: 包络类型
             show_number: 是否显示数值
             show_deformed: 是否显示变形形状
             show_undeformed: 是否显示未变形形状
@@ -839,7 +839,7 @@ class Odb:
         try:
             qt_model.PlotPlateElementForce(
                 filePath=file_path, stageId=stage_id, caseName=case_name, showIncrement=show_increment,
-                envelopeType=envelope_type, forceKind=force_kind, component=component,
+                envelopType=envelop_type, forceKind=force_kind, component=component,
                 showDeformed=show_deformed, deformedScale=deformed_scale, deformedActual=deformed_actual,
                 showNumber=show_number, textRotate=text_rotate, maxMinKind=max_min_kind,
                 showLegend=show_legend, digitalCount=digital_count, textExponential=text_exponential,
@@ -849,7 +849,7 @@ class Odb:
 
     @staticmethod
     def plot_composite_beam_force(file_path: str, stage_id: int = 1, case_name: str = "合计", show_increment: bool = False,
-                                  envelope_type: int = 1, mat_type: int = 1, component: int = 1,
+                                  envelop_type: int = 1, mat_type: int = 1, component: int = 1,
                                   show_line_chart: bool = True, line_scale: float = 1.0, flip_plot: bool = True,
                                   show_deformed: bool = True, deformed_actual: bool = False, deformed_scale: float = 1.0,
                                   show_number: bool = False, text_rotation: int = 0, max_min_kind: int = 1,
@@ -862,7 +862,7 @@ class Odb:
             stage_id: -1-运营阶段  0-施工阶段包络 n-施工阶段号
             case_name: 详细荷载工况名,参考桥通结果输出,例如： CQ:成桥(合计)
             show_increment: 是否显示增量结果
-            envelope_type: 施工阶段包络类型 1-最大 2-最小
+            envelop_type: 施工阶段包络类型 1-最大 2-最小
             mat_type: 材料类型 1-主材 2-辅材 3-主材+辅材
             component: 分量编号 1-Fx 2-Fy 3-Fz 4-Mx 5-My 6-Mz
             show_line_chart: 折线图选项卡开启
@@ -886,7 +886,7 @@ class Odb:
         try:
             qt_model.PlotCompositeBeamForce(
                 filePath=file_path, stageId=stage_id, caseName=case_name, showIncrement=show_increment,
-                envelopeType=envelope_type, matType=mat_type, component=component,
+                envelopType=envelop_type, matType=mat_type, component=component,
                 showLineChart=show_line_chart, lineScale=line_scale, flipPlot=flip_plot,
                 showDeformed=show_deformed, deformedScale=deformed_scale, deformedActual=deformed_actual,
                 showNumber=show_number, textRotate=text_rotation, maxMinKind=max_min_kind,
@@ -897,7 +897,7 @@ class Odb:
 
     @staticmethod
     def plot_beam_element_stress(file_path: str, stage_id: int = 1, case_name: str = "合计", show_increment: bool = False,
-                                 envelope_type: int = 1, component: int = 1,
+                                 envelop_type: int = 1, component: int = 1,
                                  show_line_chart: bool = True, line_scale: float = 1.0, flip_plot: bool = True,
                                  show_deformed: bool = True, deformed_actual: bool = False, deformed_scale: float = 1.0,
                                  show_number: bool = False, text_rotation: int = 0, max_min_kind: int = 1,
@@ -910,7 +910,7 @@ class Odb:
             stage_id: -1-运营阶段  0-施工阶段包络 n-施工阶段号
             case_name: 详细荷载工况名,参考桥通结果输出,例如： CQ:成桥(合计)
             show_increment: 是否显示增量结果
-            envelope_type: 施工阶段包络类型 1-最大 2-最小
+            envelop_type: 施工阶段包络类型 1-最大 2-最小
             component: 分量编号 1-轴力 2-Mzx 3-My 4-组合包络 5-左上 6-右上 7-右下 8-左下
             show_line_chart: 折线图选项卡开启
             line_scale:折线图比例
@@ -933,7 +933,7 @@ class Odb:
         try:
             qt_model.PlotBeamElementStress(
                 filePath=file_path, stageId=stage_id, caseName=case_name, showIncrement=show_increment,
-                envelopeType=envelope_type, component=component,
+                envelopType=envelop_type, component=component,
                 showLineChart=show_line_chart, lineScale=line_scale, flipPlot=flip_plot,
                 showDeformed=show_deformed, deformedScale=deformed_scale, deformedActual=deformed_actual,
                 showNumber=show_number, textRotate=text_rotation, maxMinKind=max_min_kind,
@@ -943,7 +943,7 @@ class Odb:
             raise Exception(ex)
 
     @staticmethod
-    def plot_truss_element_stress(file_path: str, stage_id: int = 1, case_name: str = "合计", show_increment: bool = False, envelope_type: int = 1,
+    def plot_truss_element_stress(file_path: str, stage_id: int = 1, case_name: str = "合计", show_increment: bool = False, envelop_type: int = 1,
                                   show_line_chart: bool = True, line_scale: float = 1.0, flip_plot: bool = True,
                                   show_deformed: bool = True, deformed_actual: bool = False, deformed_scale: float = 1.0,
                                   show_number: bool = False, text_rotation: int = 0, max_min_kind: int = 1,
@@ -956,7 +956,7 @@ class Odb:
             stage_id: -1-运营阶段  0-施工阶段包络 n-施工阶段号
             case_name: 详细荷载工况名,参考桥通结果输出,例如： CQ:成桥(合计)
             show_increment: 是否显示增量结果
-            envelope_type: 施工阶段包络类型 1-最大 2-最小
+            envelop_type: 施工阶段包络类型 1-最大 2-最小
             show_line_chart: 折线图选项卡开启
             line_scale:折线图比例
             flip_plot:反向绘制
@@ -977,7 +977,7 @@ class Odb:
         """
         try:
             qt_model.PlotTrussElementStress(
-                filePath=file_path, stageId=stage_id, caseName=case_name, showIncrement=show_increment, envelopeType=envelope_type,
+                filePath=file_path, stageId=stage_id, caseName=case_name, showIncrement=show_increment, envelopType=envelop_type,
                 showLineChart=show_line_chart, lineScale=line_scale, flipPlot=flip_plot,
                 showDeformed=show_deformed, deformedScale=deformed_scale, deformedActual=deformed_actual,
                 showNumber=show_number, textRotate=text_rotation, maxMinKind=max_min_kind,
@@ -988,7 +988,7 @@ class Odb:
 
     @staticmethod
     def plot_composite_beam_stress(file_path: str, stage_id: int = 1, case_name: str = "合计", show_increment: bool = False,
-                                   envelope_type: int = 1, mat_type: int = 0, component: int = 1,
+                                   envelop_type: int = 1, mat_type: int = 0, component: int = 1,
                                    show_line_chart: bool = True, line_scale: float = 1.0, flip_plot: bool = True,
                                    show_deformed: bool = True, deformed_actual: bool = False, deformed_scale: float = 1.0,
                                    show_number: bool = False, text_rotation: int = 0, max_min_kind: int = 1,
@@ -1001,7 +1001,7 @@ class Odb:
             stage_id: -1-运营阶段  0-施工阶段包络 n-施工阶段号
             case_name: 详细荷载工况名,参考桥通结果输出,例如： CQ:成桥(合计)
             show_increment: 是否显示增量结果
-            envelope_type: 施工阶段包络类型 1-最大 2-最小
+            envelop_type: 施工阶段包络类型 1-最大 2-最小
             mat_type: 材料类型 1-主材 2-辅材
             component: 分量编号 1-轴力分量 2-Mz分量 3-My分量 4-包络 5-左上 6-右上 7-左下 8-右下
             show_line_chart: 折线图选项卡开启
@@ -1025,7 +1025,7 @@ class Odb:
         try:
             qt_model.PlotCompositeBeamStress(
                 filePath=file_path, stageId=stage_id, caseName=case_name, showIncrement=show_increment,
-                envelopeType=envelope_type, matType=mat_type, component=component,
+                envelopType=envelop_type, matType=mat_type, component=component,
                 showLineChart=show_line_chart, lineScale=line_scale, flipPlot=flip_plot,
                 showDeformed=show_deformed, deformedScale=deformed_scale, deformedActual=deformed_actual,
                 showNumber=show_number, textRotate=text_rotation, maxMinKind=max_min_kind,
@@ -1036,7 +1036,7 @@ class Odb:
 
     @staticmethod
     def plot_plate_element_stress(file_path: str, stage_id: int = 1, case_name: str = "合计", show_increment: bool = False,
-                                  envelope_type: int = 1, stress_kind: int = 0, component: int = 1,
+                                  envelop_type: int = 1, stress_kind: int = 0, component: int = 1,
                                   show_number: bool = False, text_rotate: int = 0, max_min_kind: int = 1,
                                   show_deformed: bool = True, deformed_scale: float = 1.0, deformed_actual: bool = False,
                                   show_legend: bool = True, digital_count: int = 3, text_exponential: bool = True,
@@ -1049,7 +1049,7 @@ class Odb:
             stress_kind: 力类型 1-单元 2-节点平均
             case_name: 详细荷载工况名
             stage_id: 阶段编号
-            envelope_type: 包络类型
+            envelop_type: 包络类型
             show_number: 是否显示数值
             show_deformed: 是否显示变形形状
             show_undeformed: 是否显示未变形形状
@@ -1069,7 +1069,7 @@ class Odb:
         try:
             qt_model.PlotPlateElementStress(
                 filePath=file_path, stageId=stage_id, caseName=case_name, showIncrement=show_increment,
-                envelopeType=envelope_type, stressKind=stress_kind, component=component,
+                envelopType=envelop_type, stressKind=stress_kind, component=component,
                 showDeformed=show_deformed, deformedScale=deformed_scale, deformedActual=deformed_actual,
                 showNumber=show_number, textRotate=text_rotate, maxMinKind=max_min_kind,
                 showLegend=show_legend, digitalCount=digital_count, textExponential=text_exponential,
