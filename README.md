@@ -1,4 +1,4 @@
-> 最新版本 V0.9.6 - 2025-07-11 
+> 最新版本 V0.9.7 - 2025-07-14 
 > pip install --upgrade qtmodel -i https://pypi.org/simple
 - 新增更新结构组接口 
 # 建模操作 
@@ -3057,6 +3057,8 @@ Returns: 无
 > _时间 0-开始 1-结束  
 > temp_loads:临时荷载信息 [荷载组1，荷载组2,..]  
 > index:施工阶段插入位置,从0开始,默认添加到最后  
+> tendon_cancel_loss:钝化预应力单元后预应力损失  
+> constraint_cancel_type:钝化梁端约束释放计算方法1-变形法 2-无应力法  
 ```Python
 # 示例代码
 from qtmodel import *
@@ -3082,6 +3084,8 @@ Returns: 无
 > delete_loads:钝化荷载组信息 [(荷载组1,时间),...]  
 > _时间 0-开始 1-结束  
 > temp_loads:临时荷载信息 [荷载组1，荷载组2,..]  
+> tendon_cancel_loss:钝化预应力单元后预应力损失  
+> constraint_cancel_type:钝化梁端约束释放计算方法1-变形法 2-无应力法  
 ```Python
 # 示例代码
 from qtmodel import *
@@ -3186,6 +3190,23 @@ from qtmodel import *
 mdb.add_element_to_connection_stage([1,2,3,4],"联合阶段")
 ```  
 Returns:无
+### merge_all_stages
+合并当前所有施工阶段
+> 参数:  
+> name: 阶段名称  
+> setting_type: 安装方式 1-变形法安装 2-无应力安装，默认为1  
+> weight_type: 自重类型 -1-其他结构考虑 0-不计自重 1-本阶段，默认为1  
+> age: 加载龄期，默认为5  
+> boundary_type: 边界类型 0-变形前 1-变形后，默认为0  
+> load_type: 荷载类型 0-开始 1-结束，默认为0  
+> tendon_cancel_loss: 钝化预应力单元后预应力损失率，默认为0  
+> constraint_cancel_type: 钝化梁端约束释放计算方法 1-变形法 2-无应力法，默认为1  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.merge_all_stages(name="合并阶段", setting_type=1, weight_type=1, age=5)
+```  
+Returns: 无
 ##  荷载组合操作
 ### add_load_combine
 添加荷载组合

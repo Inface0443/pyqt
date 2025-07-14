@@ -242,7 +242,7 @@ class Mdb:
         """
         try:
             qt_model.UpdateProjectSetting(project=project, company=company, designer=designer, reviewer=reviewer,
-                                            dateTime=date_time, gravity=gravity, temperature=temperature, description=description)
+                                          dateTime=date_time, gravity=gravity, temperature=temperature, description=description)
         except Exception as ex:
             raise Exception(ex)
 
@@ -4864,7 +4864,9 @@ class Mdb:
                                delete_boundaries: list[str] = None,
                                active_loads: list[tuple[str, int]] = None,
                                delete_loads: list[tuple[str, int]] = None,
-                               temp_loads: list[str] = None, index=-1):
+                               temp_loads: list[str] = None, index=-1,
+                               tendon_cancel_loss: float = 0,
+                               constraint_cancel_type: int = 2):
         """
         添加施工阶段信息
         Args:
@@ -4883,6 +4885,8 @@ class Mdb:
                                _时间 0-开始 1-结束
            temp_loads:临时荷载信息 [荷载组1，荷载组2,..]
            index:施工阶段插入位置,从0开始,默认添加到最后
+           tendon_cancel_loss:钝化预应力单元后预应力损失
+           constraint_cancel_type:钝化梁端约束释放计算方法1-变形法 2-无应力法
         Example:
            mdb.add_construction_stage(name="施工阶段1",duration=5,active_structures=[("结构组1",5,1,1),("结构组2",5,1,1)],
                 active_boundaries=[("默认边界组",1)],active_loads=[("默认荷载组1",0)])
@@ -4891,7 +4895,8 @@ class Mdb:
         try:
             qt_model.AddConstructionStage(name=name, duration=duration, activeStructures=active_structures, inActiveStructures=delete_structures,
                                           activeBoundaries=active_boundaries, inActiveBoundaries=delete_boundaries, activeLoads=active_loads,
-                                          inActiveLoads=delete_loads, tempLoads=temp_loads, id=index)
+                                          inActiveLoads=delete_loads, tempLoads=temp_loads, id=index,
+                                          tendonCancelLoss=tendon_cancel_loss, constrainCancelType=constraint_cancel_type)
         except Exception as ex:
             raise Exception(f"添加施工阶段:{name}错误,{ex}")
 
@@ -4903,7 +4908,9 @@ class Mdb:
                                   delete_boundaries: list[str] = None,
                                   active_loads: list[tuple[str, int]] = None,
                                   delete_loads: list[tuple[str, int]] = None,
-                                  temp_loads: list[str] = None):
+                                  temp_loads: list[str] = None,
+                                  tendon_cancel_loss: float = 0,
+                                  constraint_cancel_type: int = 2):
         """
         添加施工阶段信息
         Args:
@@ -4922,6 +4929,8 @@ class Mdb:
            delete_loads:钝化荷载组信息 [(荷载组1,时间),...]
                                _时间 0-开始 1-结束
            temp_loads:临时荷载信息 [荷载组1，荷载组2,..]
+           tendon_cancel_loss:钝化预应力单元后预应力损失
+           constraint_cancel_type:钝化梁端约束释放计算方法1-变形法 2-无应力法
         Example:
            mdb.update_construction_stage(name="施工阶段1",duration=5,active_structures=[("结构组1",5,1,1),("结构组2",5,1,1)],
                active_boundaries=[("默认边界组",1)],active_loads=[("默认荷载组1",0)])
@@ -4931,7 +4940,8 @@ class Mdb:
             qt_model.UpdateConstructionStage(name=name, newName=new_name, duration=duration, activeStructures=active_structures,
                                              inActiveStructures=delete_structures,
                                              activeBoundaries=active_boundaries, inActiveBoundaries=delete_boundaries, activeLoads=active_loads,
-                                             inActiveLoads=delete_loads, tempLoads=temp_loads)
+                                             inActiveLoads=delete_loads, tempLoads=temp_loads,
+                                             tendonCancelLoss=tendon_cancel_loss, constrainCancelType=constraint_cancel_type)
         except Exception as ex:
             raise Exception(f"更新施工阶段:{name}错误,{ex}")
 
@@ -5077,6 +5087,39 @@ class Mdb:
             qt_model.AddElementToConnectionStage(elementIds=element_id, name=name)
         except Exception as ex:
             raise Exception(f"添加单元到施工阶段联合截面失败:{name}错误,{ex}")
+
+    @staticmethod
+    def merge_all_stages(name: str = "一次成桥", setting_type: int = 1, weight_type: int = 1, age: float = 5,
+                         boundary_type: int = 0, load_type: int = 0, tendon_cancel_loss: float = 0,
+                         constraint_cancel_type: int = 1) -> None:
+        """
+        合并当前所有施工阶段
+        Args:
+            name: 阶段名称
+            setting_type: 安装方式 1-变形法安装 2-无应力安装，默认为1
+            weight_type: 自重类型 -1-其他结构考虑 0-不计自重 1-本阶段，默认为1
+            age: 加载龄期，默认为5
+            boundary_type: 边界类型 0-变形前 1-变形后，默认为0
+            load_type: 荷载类型 0-开始 1-结束，默认为0
+            tendon_cancel_loss: 钝化预应力单元后预应力损失率，默认为0
+            constraint_cancel_type: 钝化梁端约束释放计算方法 1-变形法 2-无应力法，默认为1
+        Example:
+            mdb.merge_all_stages(name="合并阶段", setting_type=1, weight_type=1, age=5)
+        Returns: 无
+        """
+        try:
+            qt_model.MergeAllStages(
+                name=name,
+                settingType=setting_type,
+                weightType=weight_type,
+                age=age,
+                boundaryType=boundary_type,
+                loadType=load_type,
+                tendonCancelLoss=tendon_cancel_loss,
+                constraintCancelType=constraint_cancel_type
+            )
+        except Exception as ex:
+            raise Exception(ex)
 
     # endregion
 

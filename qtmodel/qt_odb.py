@@ -189,7 +189,7 @@ class Odb:
     # region 结果表格
     @staticmethod
     def get_reaction(ids, envelop_type=1, stage_id: int = 1, result_kind: int = 1,
-                     increment_type: int = 1, case_name="", is_time_history: bool = True):
+                     increment_type: int = 1, case_name="", is_time_history: bool = False):
         """
         获取节点反力
         Args:
@@ -221,7 +221,7 @@ class Odb:
     @staticmethod
     def get_deformation(ids, envelop_type=1,
                         stage_id: int = 1, result_kind: int = 1, increment_type: int = 1,
-                        case_name="", is_time_history: bool = True):
+                        case_name="", is_time_history: bool = False):
         """
         获取节点变形结果,支持单个节点和节点列表
         Args:
@@ -619,7 +619,7 @@ class Odb:
                              envelop_type: int = 1, component: int = 1,
                              show_number: bool = True, text_rotation=0, max_min_kind: int = -1,
                              show_legend: bool = True, digital_count=3, text_exponential: bool = True, arrow_scale: float = 1,
-                             is_time_history: bool = True, time_kind: int = 1, time_tick: float = 1.0):
+                             is_time_history: bool = False, time_kind: int = 1, time_tick: float = 1.0):
         """
         保存结果图片到指定文件甲
         Args:
@@ -659,7 +659,7 @@ class Odb:
                                  show_deformed: bool = True, deformed_scale: float = 1.0, deformed_actual: bool = False,
                                  show_number: bool = True, text_rotation=0, max_min_kind: int = 1,
                                  show_legend: bool = True, digital_count=3, text_exponential: bool = True, show_undeformed: bool = True,
-                                 is_time_history: bool = True, deform_kind: int = 1, time_kind: int = 1, time_tick: float = 1.0):
+                                 is_time_history: bool = False, deform_kind: int = 1, time_kind: int = 1, time_tick: float = 1.0):
         """
         保存结果图片到指定文件甲
         Args:
@@ -706,7 +706,7 @@ class Odb:
                                 show_number: bool = False, text_rotation: int = 0, max_min_kind: int = 1,
                                 show_legend: bool = True, digital_count: int = 3, text_exponential: bool = True,
                                 show_undeformed: bool = False, position: int = 1,
-                                is_time_history: bool = True, time_kind: int = 1, time_tick: float = 1.0):
+                                is_time_history: bool = False, time_kind: int = 1, time_tick: float = 1.0):
         """
         绘制梁单元结果图并保存到指定文件
         Args:
@@ -758,7 +758,7 @@ class Odb:
                                  show_number: bool = False, text_rotation: int = 0, max_min_kind: int = 1,
                                  show_legend: bool = True, digital_count: int = 3, text_exponential: bool = True,
                                  show_undeformed: bool = False, position: int = 1,
-                                 is_time_history: bool = True, time_kind: int = 1, time_tick: float = 1.0):
+                                 is_time_history: bool = False, time_kind: int = 1, time_tick: float = 1.0):
         """
         绘制杆单元结果图并保存到指定文件
         Args:
@@ -808,7 +808,7 @@ class Odb:
                                  show_number: bool = False, text_rotate: int = 0, max_min_kind: int = 1,
                                  show_deformed: bool = True, deformed_scale: float = 1.0, deformed_actual: bool = False,
                                  show_legend: bool = True, digital_count: int = 3, text_exponential: bool = True,
-                                 show_undeformed: bool = False, is_time_history: bool = True, time_kind: int = 1, time_tick: float = 1.0):
+                                 show_undeformed: bool = False, is_time_history: bool = False, time_kind: int = 1, time_tick: float = 1.0):
         """
         绘制板单元结果图并保存到指定文件
         Args:
