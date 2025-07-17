@@ -1586,26 +1586,6 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def update_single_section(index: int, new_id: int = -1, name: str = "", sec_type: str = "矩形", sec_data: dict = None):
-        """
-        以字典形式添加单一截面
-        Args:
-            index:截面编号
-            new_id:新截面编号，默认不修改截面编号
-            name:截面名称
-            sec_type:截面类型
-            sec_data:截面信息字典，键值参考添加add_section方法参数
-        Example:
-            mdb.update_single_section(index=1,name="变截面1",sec_type="矩形",
-                sec_data={"sec_info":[1,2],"bias_type":"中心"})
-        Returns: 无
-        """
-        try:
-            qt_model.UpdateSingleSection(id=index, newId=new_id, name=name, secType=sec_type, secDict=sec_data)
-        except Exception as ex:
-            raise Exception(ex)
-
-    @staticmethod
     def add_tapper_section(index: int, name: str = "", sec_type: str = "矩形", sec_begin: dict = None, sec_end: dict = None,
                            shear_consider: bool = True, sec_normalize: bool = False):
         """
@@ -1627,6 +1607,104 @@ class Mdb:
         try:
             qt_model.AddTapperSection(id=index, name=name, secType=sec_type, secBegin=sec_begin, secEnd=sec_end,
                                       shearConsider=shear_consider, secNormalize=sec_normalize)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def add_tapper_section_from_group(name: str = ""):
+        """
+        将变截面组转为变截面
+        Args:
+            name: 变截面组名，默认则转化全部变截面组
+        Example:
+            mdb.add_tapper_section_from_group()
+            mdb.add_tapper_section_from_group("变截面组1")
+        Returns: 无
+        """
+        try:
+            qt_model.AddTapperSectionFromGroup(name=name)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def add_tapper_section_by_id(index: int = -1, name: str = "", begin_id: int = 1, end_id: int = 1,
+                                 shear_consider: bool = True, sec_normalize: bool = False):
+        """
+        添加变截面,需先建立单一截面
+        Args:
+            index:截面编号
+            name:截面名称
+            begin_id:截面始端编号
+            end_id:截面末端编号
+            shear_consider:考虑剪切变形
+            sec_normalize: 开启变截面线圈和线宽自适应排序 (避免两端截面绘制顺序导致的渲染和计算失效)
+        Example:
+            mdb.add_tapper_section_by_id(name="变截面1",begin_id=1,end_id=2)
+        Returns: 无
+        """
+        try:
+            qt_model.AddTapperSectionById(id=index, name=name, beginId=begin_id, endId=end_id,
+                                          considerShear=shear_consider, secNormalize=sec_normalize)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def add_elements_to_tapper_section_group(name: str, ids=None):
+        """
+        删除变截面组，默认删除所有变截面组
+        Args:
+          name:变截面组名称
+          ids:新增单元编号
+        Example:
+          mdb.add_elements_to_tapper_section_group("变截面组1",ids=[1,2,3,4,5,6])
+          mdb.add_elements_to_tapper_section_group("变截面组1",ids="1to6")
+        Returns:无
+        """
+        try:
+            qt_model.AddElementToTapperSectionGroup(name=name, elementIds=ids)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def add_tapper_section_group(ids=None, name: str = "", factor_w: float = 1.0, factor_h: float = 1.0,
+                                 ref_w: int = 0, ref_h: int = 0, dis_w: float = 0, dis_h: float = 0):
+        """
+        添加变截面组
+        Args:
+             ids:变截面组单元号,支持XtoYbyN类型字符串
+             name: 变截面组名
+             factor_w: 宽度方向变化阶数 线性(1.0) 非线性(!=1.0)
+             factor_h: 高度方向变化阶数 线性(1.0) 非线性(!=1.0)
+             ref_w: 宽度方向参考点 0-i 1-j
+             ref_h: 高度方向参考点 0-i 1-j
+             dis_w: 宽度方向距离
+             dis_h: 高度方向距离
+        Example:
+            mdb.add_tapper_section_group(ids=[1,2,3,4],name="变截面组1")
+        Returns: 无
+        """
+        try:
+            qt_model.AddTapperSectionGroup(ids=ids, name=name, factorW=factor_w, factorH=factor_h, w=ref_w, h=ref_h, disW=dis_w, disH=dis_h)
+        except Exception as ex:
+            raise Exception(f"添加变截面组:{name}失败,{ex}")
+
+    @staticmethod
+    def update_single_section(index: int, new_id: int = -1, name: str = "", sec_type: str = "矩形", sec_data: dict = None):
+        """
+        以字典形式添加单一截面
+        Args:
+            index:截面编号
+            new_id:新截面编号，默认不修改截面编号
+            name:截面名称
+            sec_type:截面类型
+            sec_data:截面信息字典，键值参考添加add_section方法参数
+        Example:
+            mdb.update_single_section(index=1,name="变截面1",sec_type="矩形",
+                sec_data={"sec_info":[1,2],"bias_type":"中心"})
+        Returns: 无
+        """
+        try:
+            qt_model.UpdateSingleSection(id=index, newId=new_id, name=name, secType=sec_type, secDict=sec_data)
         except Exception as ex:
             raise Exception(ex)
 
@@ -1655,81 +1733,6 @@ class Mdb:
                                          shearConsider=shear_consider, secNormalize=sec_normalize)
         except Exception as ex:
             raise Exception(ex)
-
-    @staticmethod
-    def add_tapper_section_by_id(index: int = -1, name: str = "", begin_id: int = 1, end_id: int = 1,
-                                 shear_consider: bool = True, sec_normalize: bool = False):
-        """
-        添加变截面,需先建立单一截面
-        Args:
-            index:截面编号
-            name:截面名称
-            begin_id:截面始端编号
-            end_id:截面末端编号
-            shear_consider:考虑剪切变形
-            sec_normalize: 开启变截面线圈和线宽自适应排序 (避免两端截面绘制顺序导致的渲染和计算失效)
-        Example:
-            mdb.add_tapper_section_by_id(name="变截面1",begin_id=1,end_id=2)
-        Returns: 无
-        """
-        try:
-            qt_model.AddTapperSectionById(id=index, name=name, beginId=begin_id, endId=end_id,
-                                          considerShear=shear_consider, secNormalize=sec_normalize)
-        except Exception as ex:
-            raise Exception(ex)
-
-    @staticmethod
-    def remove_all_section():
-        """
-        删除全部截面信息
-        Args: 无
-        Example:
-          mdb.remove_all_section()
-        Returns: 无
-        """
-        try:
-            qt_model.RemoveAllSection()
-        except Exception as ex:
-            raise Exception(ex)
-
-    @staticmethod
-    def remove_section(index=None):
-        """
-        删除截面信息
-        Args:
-            index: 截面编号
-        Example:
-            mdb.remove_section(1)
-            mdb.remove_section("1to100")
-        Returns: 无
-        """
-        try:
-            qt_model.RemoveSection(ids=index)
-        except Exception as ex:
-            raise Exception(ex)
-
-    @staticmethod
-    def add_tapper_section_group(ids=None, name: str = "", factor_w: float = 1.0, factor_h: float = 1.0,
-                                 ref_w: int = 0, ref_h: int = 0, dis_w: float = 0, dis_h: float = 0):
-        """
-        添加变截面组
-        Args:
-             ids:变截面组单元号,支持XtoYbyN类型字符串
-             name: 变截面组名
-             factor_w: 宽度方向变化阶数 线性(1.0) 非线性(!=1.0)
-             factor_h: 高度方向变化阶数 线性(1.0) 非线性(!=1.0)
-             ref_w: 宽度方向参考点 0-i 1-j
-             ref_h: 高度方向参考点 0-i 1-j
-             dis_w: 宽度方向距离
-             dis_h: 高度方向距离
-        Example:
-            mdb.add_tapper_section_group(ids=[1,2,3,4],name="变截面组1")
-        Returns: 无
-        """
-        try:
-            qt_model.AddTapperSectionGroup(ids=ids, name=name, factorW=factor_w, factorH=factor_h, w=ref_w, h=ref_h, disW=dis_w, disH=dis_h)
-        except Exception as ex:
-            raise Exception(f"添加变截面组:{name}失败,{ex}")
 
     @staticmethod
     def update_tapper_section_group(name: str, new_name="", ids=None, factor_w: float = 1.0, factor_h: float = 1.0,
@@ -1787,6 +1790,20 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
+    def update_all_section_property():
+        """
+        更新所有截面特性
+        Args: 无
+        Example:
+            mdb.update_all_section_property()
+        Returns: 无
+        """
+        try:
+            qt_model.UpdateAllSectionProperty()
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
     def update_section_property(index: int, sec_property: list[float], side_i: bool = True):
         """
         更新截面特性
@@ -1800,22 +1817,6 @@ class Mdb:
         """
         try:
             qt_model.UpdateSectionProperty(id=index, property=sec_property, sideI=side_i)
-        except Exception as ex:
-            raise Exception(ex)
-
-    @staticmethod
-    def add_tapper_section_from_group(name: str = ""):
-        """
-        将变截面组转为变截面
-        Args:
-            name: 变截面组名，默认则转化全部变截面组
-        Example:
-            mdb.add_tapper_section_from_group()
-            mdb.add_tapper_section_from_group("变截面组1")
-        Returns: 无
-        """
-        try:
-            qt_model.AddTapperSectionFromGroup(name=name)
         except Exception as ex:
             raise Exception(ex)
 
@@ -1852,19 +1853,32 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def add_elements_to_tapper_section_group(name: str, ids=None):
+    def remove_all_section():
         """
-        删除变截面组，默认删除所有变截面组
-        Args:
-          name:变截面组名称
-          ids:新增单元编号
+        删除全部截面信息
+        Args: 无
         Example:
-          mdb.add_elements_to_tapper_section_group("变截面组1",ids=[1,2,3,4,5,6])
-          mdb.add_elements_to_tapper_section_group("变截面组1",ids="1to6")
-        Returns:无
+          mdb.remove_all_section()
+        Returns: 无
         """
         try:
-            qt_model.AddElementToTapperSectionGroup(name=name, elementIds=ids)
+            qt_model.RemoveAllSection()
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def remove_section(index=None):
+        """
+        删除截面信息
+        Args:
+            index: 截面编号
+        Example:
+            mdb.remove_section(1)
+            mdb.remove_section("1to100")
+        Returns: 无
+        """
+        try:
+            qt_model.RemoveSection(ids=index)
         except Exception as ex:
             raise Exception(ex)
 
@@ -2864,39 +2878,6 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def update_load_to_mass(name: str = "", factor: float = 1):
-        """
-        更新荷载转为质量
-        Args:
-            name:荷载工况名称
-            factor:荷载工况系数
-        Example:
-            mdb.update_load_to_mass(name="工况1",factor=1)
-        Returns: 无
-        """
-        try:
-            qt_model.UpdateLoadToMass(name=name, factor=factor)
-        except Exception as ex:
-            raise Exception(ex)
-
-    @staticmethod
-    def update_nodal_mass(node_id: int, new_node_id: int = -1, mass_info: tuple[float, float, float, float] = None):
-        """
-        更新节点质量
-        Args:
-            node_id:节点编号
-            new_node_id:新节点编号，默认不改变节点
-            mass_info:[m,rmX,rmY,rmZ]
-        Example:
-            mdb.add_nodal_mass(node_id=1,mass_info=(100,0,0,0))
-        Returns: 无
-        """
-        try:
-            qt_model.UpdateLoadToMass(nodeId=node_id, newNodeId=new_node_id, massInfo=mass_info)
-        except Exception as ex:
-            raise Exception(ex)
-
-    @staticmethod
     def add_boundary_element_property(index: int = -1, name: str = "", kind: str = "钩",
                                       info_x: list[float] = None, info_y: list[float] = None, info_z: list[float] = None,
                                       weight: float = 0, pin_stiffness: float = 0, pin_yield: float = 0, description: str = ""):
@@ -3084,6 +3065,39 @@ class Mdb:
                 kind=kind,
                 functionInfo=function_info
             )
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def update_load_to_mass(name: str = "", factor: float = 1):
+        """
+        更新荷载转为质量
+        Args:
+            name:荷载工况名称
+            factor:荷载工况系数
+        Example:
+            mdb.update_load_to_mass(name="工况1",factor=1)
+        Returns: 无
+        """
+        try:
+            qt_model.UpdateLoadToMass(name=name, factor=factor)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def update_nodal_mass(node_id: int, new_node_id: int = -1, mass_info: tuple[float, float, float, float] = None):
+        """
+        更新节点质量
+        Args:
+            node_id:节点编号
+            new_node_id:新节点编号，默认不改变节点
+            mass_info:[m,rmX,rmY,rmZ]
+        Example:
+            mdb.add_nodal_mass(node_id=1,mass_info=(100,0,0,0))
+        Returns: 无
+        """
+        try:
+            qt_model.UpdateLoadToMass(nodeId=node_id, newNodeId=new_node_id, massInfo=mass_info)
         except Exception as ex:
             raise Exception(ex)
 
@@ -3508,24 +3522,6 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def remove_tendon_group(name: str = ""):
-        """
-        按照钢束组名称或钢束组编号删除钢束组，两参数均为默认时删除所有钢束组
-        Args:
-             name:钢束组名称,默认自动识别 (可选参数)
-        Example:
-            mdb.remove_tendon_group(name="钢束组1")
-        Returns: 无
-        """
-        try:
-            if name != "":
-                qt_model.RemoveTendonGroup(name=name)
-            else:
-                qt_model.RemoveAllStructureGroup()
-        except Exception as ex:
-            raise Exception(ex)
-
-    @staticmethod
     def add_tendon_property(name: str = "", tendon_type: int = 0, material_name: str = "", duct_type: int = 1,
                             steel_type: int = 1, steel_detail: list[float] = None, loos_detail: tuple[int, int, int] = None,
                             slip_info: tuple[float, float] = None):
@@ -3561,52 +3557,6 @@ class Mdb:
                                        ductType=duct_type, steelType=steel_type, steelDetail=steel_detail,
                                        loosDetail=loos_detail, slipInfo=slip_info)
 
-        except Exception as ex:
-            raise Exception(ex)
-
-    @staticmethod
-    def update_tendon_property_material(name: str, material_name: str):
-        """
-        更新钢束特性材料
-        Args:
-            name:钢束特性名
-            material_name:材料名
-        Example:
-            mdb.update_tendon_property_material("特性1",material_name="材料1")
-        Returns:无
-        """
-        try:
-            qt_model.UpdateTendonPropertyMaterial(name=name, material_name=material_name)
-        except Exception as ex:
-            raise Exception(ex)
-
-    @staticmethod
-    def update_tendon_property(name: str, new_name: str = "", tendon_type: int = 0, material_name: str = "", duct_type: int = 1,
-                               steel_type: int = 1, steel_detail: list[float] = None, loos_detail: tuple[int, int, int] = None,
-                               slip_info: tuple[float, float] = None):
-        """
-        更新钢束特性
-        Args:
-            name:钢束特性名
-            new_name:新钢束特性名,默认不修改
-            tendon_type: 0-PRE 1-POST
-            material_name: 钢材材料名
-            duct_type: 1-金属波纹管  2-塑料波纹管  3-铁皮管  4-钢管  5-抽芯成型
-            steel_type: 1-钢绞线  2-螺纹钢筋
-            steel_detail: 钢束详细信息
-                _钢绞线[钢束面积,孔道直径,摩阻系数,偏差系数]
-                _螺纹钢筋[钢筋直径,钢束面积,孔道直径,摩阻系数,偏差系数,张拉方式(1-一次张拉 2-超张拉)]
-            loos_detail: 松弛信息[规范(1-公规 2-铁规),张拉(1-一次张拉 2-超张拉),松弛(1-一般松弛 2-低松弛)] (仅钢绞线需要,默认为[1,1,1])
-            slip_info: 滑移信息[始端距离,末端距离] 默认为[0.006, 0.006]
-        Example:
-            mdb.update_tendon_property(name="钢束1",tendon_type=0,material_name="材料1",duct_type=1,steel_type=1,
-                                    steel_detail=[0.00014,0.10,0.25,0.0015],loos_detail=(1,1,1))
-        Returns:无
-        """
-        try:
-            qt_model.UpdateTendonProperty(name=name, newName=new_name, tendonType=tendon_type, materialName=material_name,
-                                          ductType=duct_type, steelType=steel_type, steelDetail=steel_detail,
-                                          loosDetail=loos_detail, slipInfo=slip_info)
         except Exception as ex:
             raise Exception(ex)
 
@@ -3701,6 +3651,52 @@ class Mdb:
             raise Exception(f"添加二维钢束:{name}失败,{ex}")
 
     @staticmethod
+    def update_tendon_property_material(name: str, material_name: str):
+        """
+        更新钢束特性材料
+        Args:
+            name:钢束特性名
+            material_name:材料名
+        Example:
+            mdb.update_tendon_property_material("特性1",material_name="材料1")
+        Returns:无
+        """
+        try:
+            qt_model.UpdateTendonPropertyMaterial(name=name, material_name=material_name)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def update_tendon_property(name: str, new_name: str = "", tendon_type: int = 0, material_name: str = "", duct_type: int = 1,
+                               steel_type: int = 1, steel_detail: list[float] = None, loos_detail: tuple[int, int, int] = None,
+                               slip_info: tuple[float, float] = None):
+        """
+        更新钢束特性
+        Args:
+            name:钢束特性名
+            new_name:新钢束特性名,默认不修改
+            tendon_type: 0-PRE 1-POST
+            material_name: 钢材材料名
+            duct_type: 1-金属波纹管  2-塑料波纹管  3-铁皮管  4-钢管  5-抽芯成型
+            steel_type: 1-钢绞线  2-螺纹钢筋
+            steel_detail: 钢束详细信息
+                _钢绞线[钢束面积,孔道直径,摩阻系数,偏差系数]
+                _螺纹钢筋[钢筋直径,钢束面积,孔道直径,摩阻系数,偏差系数,张拉方式(1-一次张拉 2-超张拉)]
+            loos_detail: 松弛信息[规范(1-公规 2-铁规),张拉(1-一次张拉 2-超张拉),松弛(1-一般松弛 2-低松弛)] (仅钢绞线需要,默认为[1,1,1])
+            slip_info: 滑移信息[始端距离,末端距离] 默认为[0.006, 0.006]
+        Example:
+            mdb.update_tendon_property(name="钢束1",tendon_type=0,material_name="材料1",duct_type=1,steel_type=1,
+                                    steel_detail=[0.00014,0.10,0.25,0.0015],loos_detail=(1,1,1))
+        Returns:无
+        """
+        try:
+            qt_model.UpdateTendonProperty(name=name, newName=new_name, tendonType=tendon_type, materialName=material_name,
+                                          ductType=duct_type, steelType=steel_type, steelDetail=steel_detail,
+                                          loosDetail=loos_detail, slipInfo=slip_info)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
     def update_tendon(name: str, new_name: str = "", tendon_2d: bool = True, property_name: str = "", group_name: str = "默认钢束组",
                       num: int = 1, line_type: int = 1, symmetry: int = 2, control_points: list = None,
                       control_points_lateral: list[tuple[float, float, float]] = None,
@@ -3764,6 +3760,22 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
+    def update_tendon_group(name: str, new_name: str = ""):
+        """
+        更新钢束组名
+        Args:
+            name:原钢束组名
+            new_name:新钢束组名
+        Example:
+            mdb.update_tendon_group("钢束组1","钢束组2")
+        Returns: 无
+        """
+        try:
+            qt_model.UpdateTendonGroup(name=name, newName=new_name)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
     def remove_tendon(name: str = "", index: int = -1):
         """
         按照名称或编号删除钢束,默认时删除所有钢束
@@ -3811,42 +3823,6 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def update_tendon_group(name: str, new_name: str = ""):
-        """
-        更新钢束组名
-        Args:
-            name:原钢束组名
-            new_name:新钢束组名
-        Example:
-            mdb.update_tendon_group("钢束组1","钢束组2")
-        Returns: 无
-        """
-        try:
-            qt_model.UpdateTendonGroup(name=name, newName=new_name)
-        except Exception as ex:
-            raise Exception(ex)
-
-    @staticmethod
-    def add_pre_stress(case_name: str = "", tendon_name: (Union[str, List[str]]) = "", tension_type: int = 2,
-                       force: float = 1395000, group_name: str = "默认荷载组"):
-        """
-        添加预应力
-        Args:
-             case_name:荷载工况名
-             tendon_name:钢束名,支持钢束名或钢束名列表
-             tension_type:预应力类型 (0-始端 1-末端 2-两端)
-             force:预应力
-             group_name:边界组
-        Example:
-            mdb.add_pre_stress(case_name="荷载工况名",tendon_name="钢束1",force=1390000)
-        Returns: 无
-        """
-        try:
-            qt_model.AddPreStress(caseName=case_name, tendonName=tendon_name, preType=tension_type, force=force, groupName=group_name)
-        except Exception as ex:
-            raise Exception(ex)
-
-    @staticmethod
     def remove_pre_stress(tendon_name: str = ""):
         """
         删除预应力
@@ -3859,6 +3835,24 @@ class Mdb:
         """
         try:
             qt_model.RemovePreStress(tendonName=tendon_name)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def remove_tendon_group(name: str = ""):
+        """
+        按照钢束组名称或钢束组编号删除钢束组，两参数均为默认时删除所有钢束组
+        Args:
+             name:钢束组名称,默认自动识别 (可选参数)
+        Example:
+            mdb.remove_tendon_group(name="钢束组1")
+        Returns: 无
+        """
+        try:
+            if name != "":
+                qt_model.RemoveTendonGroup(name=name)
+            else:
+                qt_model.RemoveAllStructureGroup()
         except Exception as ex:
             raise Exception(ex)
 
@@ -3890,47 +3884,6 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def update_deviation_parameter(name: str = "", new_name: str = "", element_type: int = 1, parameters: list[float] = None):
-        """
-        添加制造误差
-        Args:
-            name:名称
-            new_name:新名称，默认不修改名称
-            element_type:单元类型  1-梁单元  2-板单元
-            parameters:参数列表
-                 _梁杆单元为[轴向,I端X向转角,I端Y向转角,I端Z向转角,J端X向转角,J端Y向转角,J端Z向转角]
-                _板单元为[X向位移,Y向位移,Z向位移,X向转角,Y向转角]
-        Example:
-            mdb.update_deviation_parameter(name="梁端制造误差",element_type=1,parameters=[1,0,0,0,0,0,0])
-            mdb.update_deviation_parameter(name="板端制造误差",element_type=1,parameters=[1,0,0,0,0])
-        Returns: 无
-        """
-        try:
-            if parameters is None:
-                raise Exception("操作错误，制造误差信息不能为空")
-            if len(parameters) != 5 and len(parameters) != 7:
-                raise Exception("操作错误，误差列表有误")
-            qt_model.UpdateDeviationParameter(name=name, newName=new_name, elementType=element_type, parameterInfo=parameters)
-        except Exception as ex:
-            raise Exception(ex)
-
-    @staticmethod
-    def remove_deviation_parameter(name: str, para_type: int = 1):
-        """
-        删除指定制造偏差参数
-        Args:
-            name:制造偏差参数名
-            para_type:制造偏差类型 1-梁单元  2-板单元
-        Example:
-            mdb.remove_deviation_parameter(name="参数1",para_type=1)
-        Returns: 无
-        """
-        try:
-            qt_model.RemoveDeviationParameter(name=name, paraType=para_type)
-        except Exception as ex:
-            raise Exception(ex)
-
-    @staticmethod
     def add_deviation_load(element_id, case_name: str = "",
                            parameters: (Union[str, List[str]]) = None, group_name: str = "默认荷载组"):
         """
@@ -3955,19 +3908,23 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def remove_deviation_load(element_id, case_name: str, group_name: str = "默认荷载组"):
+    def add_custom_temperature(element_id, case_name: str = "", group_name: str = "默认荷载组",
+                               orientation: int = 1, temperature_data: List[tuple[int, float, float]] = None):
         """
-        删除指定制造偏差荷载
+        添加梁自定义温度
         Args:
             element_id:单元编号，支持数或列表且支持XtoYbyN形式字符串
             case_name:荷载工况名
-            group_name: 荷载组
+            group_name:指定荷载组,后续升级开放指定荷载组删除功能
+            orientation: 1-局部坐标z 2-局部坐标y
+            temperature_data:自定义数据[(参考位置1-顶 2-底,高度,温度)...]
         Example:
-            mdb.remove_deviation_load(case_name="工况1",element_id=1,group_name="荷载组1")
+            mdb.add_custom_temperature(case_name="荷载工况1",element_id=1,orientation=1,temperature_data=[(1,1,20),(1,2,10)])
         Returns: 无
         """
         try:
-            qt_model.RemoveDeviationLoad(caseName=case_name, elementId=element_id, groupName=group_name)
+            qt_model.AddCustomTemperature(caseName=case_name, elementId=element_id, groupName=group_name, orientation=orientation,
+                                          temperatureData=temperature_data)
         except Exception as ex:
             raise Exception(ex)
 
@@ -3986,22 +3943,6 @@ class Mdb:
         """
         try:
             qt_model.AddElementTemperature(elementId=element_id, caseName=case_name, temperature=temperature, groupName=group_name)
-        except Exception as ex:
-            raise Exception(ex)
-
-    @staticmethod
-    def remove_element_temperature(element_id, case_name: str):
-        """
-        删除指定单元温度
-        Args:
-            element_id:单元编号，支持数或列表且支持XtoYbyN形式字符串
-            case_name:荷载工况名
-        Example:
-            mdb.remove_element_temperature(case_name="荷载工况1",element_id=1)
-        Returns: 无
-        """
-        try:
-            qt_model.RemoveElementTemperature(caseName=case_name, elementId=element_id)
         except Exception as ex:
             raise Exception(ex)
 
@@ -4025,22 +3966,6 @@ class Mdb:
         try:
             qt_model.AddGradientTemperature(elementId=element_id, caseName=case_name, temperature=temperature,
                                             sectionOriental=section_oriental, elementType=element_type, groupName=group_name)
-        except Exception as ex:
-            raise Exception(ex)
-
-    @staticmethod
-    def remove_gradient_temperature(element_id, case_name: str):
-        """
-        删除梁或板单元梯度温度
-        Args:
-            element_id:单元编号，支持数或列表且支持XtoYbyN形式字符串
-            case_name:荷载工况名
-        Example:
-            mdb.remove_gradient_temperature(case_name="工况1",element_id=1)
-        Returns: 无
-        """
-        try:
-            qt_model.RemoveGradientTemperature(caseName=case_name, elementId=element_id)
         except Exception as ex:
             raise Exception(ex)
 
@@ -4072,22 +3997,6 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def remove_beam_section_temperature(element_id, case_name: str):
-        """
-        删除指定梁或板单元梁截面温度
-        Args:
-            case_name:荷载工况名
-            element_id:单元编号，支持数或列表且支持XtoYbyN形式字符串
-        Example:
-            mdb.remove_beam_section_temperature(case_name="工况1",element_id=1)
-        Returns: 无
-        """
-        try:
-            qt_model.RemoveBeamSectionTemperature(caseName=case_name, elementId=element_id)
-        except Exception as ex:
-            raise Exception(ex)
-
-    @staticmethod
     def add_index_temperature(element_id=None, case_name: str = "", temperature: float = 0, index: float = 1,
                               group_name: str = "默认荷载组"):
         """
@@ -4104,22 +4013,6 @@ class Mdb:
         """
         try:
             qt_model.AddIndexTemperature(elementId=element_id, caseName=case_name, temperature=temperature, index=index, groupName=group_name)
-        except Exception as ex:
-            raise Exception(ex)
-
-    @staticmethod
-    def remove_index_temperature(element_id, case_name: str):
-        """
-        删除梁单元指数温度且支持XtoYbyN形式字符串
-        Args:
-            element_id:单元编号，支持数或列表且支持XtoYbyN形式字符串
-            case_name:荷载工况名
-        Example:
-            mdb.remove_index_temperature(case_name="工况1",element_id=1)
-        Returns: 无
-        """
-        try:
-            qt_model.RemoveIndexTemperature(caseName=case_name, elementId=element_id)
         except Exception as ex:
             raise Exception(ex)
 
@@ -4143,6 +4036,80 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
+    def update_deviation_parameter(name: str = "", new_name: str = "", element_type: int = 1, parameters: list[float] = None):
+        """
+        添加制造误差
+        Args:
+            name:名称
+            new_name:新名称，默认不修改名称
+            element_type:单元类型  1-梁单元  2-板单元
+            parameters:参数列表
+                 _梁杆单元为[轴向,I端X向转角,I端Y向转角,I端Z向转角,J端X向转角,J端Y向转角,J端Z向转角]
+                _板单元为[X向位移,Y向位移,Z向位移,X向转角,Y向转角]
+        Example:
+            mdb.update_deviation_parameter(name="梁端制造误差",element_type=1,parameters=[1,0,0,0,0,0,0])
+            mdb.update_deviation_parameter(name="板端制造误差",element_type=1,parameters=[1,0,0,0,0])
+        Returns: 无
+        """
+        try:
+            if parameters is None:
+                raise Exception("操作错误，制造误差信息不能为空")
+            if len(parameters) != 5 and len(parameters) != 7:
+                raise Exception("操作错误，误差列表有误")
+            qt_model.UpdateDeviationParameter(name=name, newName=new_name, elementType=element_type, parameterInfo=parameters)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def remove_element_temperature(element_id, case_name: str):
+        """
+        删除指定单元温度
+        Args:
+            element_id:单元编号，支持数或列表且支持XtoYbyN形式字符串
+            case_name:荷载工况名
+        Example:
+            mdb.remove_element_temperature(case_name="荷载工况1",element_id=1)
+        Returns: 无
+        """
+        try:
+            qt_model.RemoveElementTemperature(caseName=case_name, elementId=element_id)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def remove_deviation_parameter(name: str, para_type: int = 1):
+        """
+        删除指定制造偏差参数
+        Args:
+            name:制造偏差参数名
+            para_type:制造偏差类型 1-梁单元  2-板单元
+        Example:
+            mdb.remove_deviation_parameter(name="参数1",para_type=1)
+        Returns: 无
+        """
+        try:
+            qt_model.RemoveDeviationParameter(name=name, paraType=para_type)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def remove_deviation_load(element_id, case_name: str, group_name: str = "默认荷载组"):
+        """
+        删除指定制造偏差荷载
+        Args:
+            element_id:单元编号，支持数或列表且支持XtoYbyN形式字符串
+            case_name:荷载工况名
+            group_name: 荷载组
+        Example:
+            mdb.remove_deviation_load(case_name="工况1",element_id=1,group_name="荷载组1")
+        Returns: 无
+        """
+        try:
+            qt_model.RemoveDeviationLoad(caseName=case_name, elementId=element_id, groupName=group_name)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
     def remove_top_plate_temperature(element_id, case_name: str):
         """
         删除梁单元顶板温度
@@ -4159,23 +4126,34 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def add_custom_temperature(element_id, case_name: str = "", group_name: str = "默认荷载组",
-                               orientation: int = 1, temperature_data: List[tuple[int, float, float]] = None):
+    def remove_beam_section_temperature(element_id, case_name: str):
         """
-        添加梁自定义温度
+        删除指定梁或板单元梁截面温度
         Args:
-            element_id:单元编号，支持数或列表且支持XtoYbyN形式字符串
             case_name:荷载工况名
-            group_name:指定荷载组,后续升级开放指定荷载组删除功能
-            orientation: 1-局部坐标z 2-局部坐标y
-            temperature_data:自定义数据[(参考位置1-顶 2-底,高度,温度)...]
+            element_id:单元编号，支持数或列表且支持XtoYbyN形式字符串
         Example:
-            mdb.add_custom_temperature(case_name="荷载工况1",element_id=1,orientation=1,temperature_data=[(1,1,20),(1,2,10)])
+            mdb.remove_beam_section_temperature(case_name="工况1",element_id=1)
         Returns: 无
         """
         try:
-            qt_model.AddCustomTemperature(caseName=case_name, elementId=element_id, groupName=group_name, orientation=orientation,
-                                          temperatureData=temperature_data)
+            qt_model.RemoveBeamSectionTemperature(caseName=case_name, elementId=element_id)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def remove_gradient_temperature(element_id, case_name: str):
+        """
+        删除梁或板单元梯度温度
+        Args:
+            element_id:单元编号，支持数或列表且支持XtoYbyN形式字符串
+            case_name:荷载工况名
+        Example:
+            mdb.remove_gradient_temperature(case_name="工况1",element_id=1)
+        Returns: 无
+        """
+        try:
+            qt_model.RemoveGradientTemperature(caseName=case_name, elementId=element_id)
         except Exception as ex:
             raise Exception(ex)
 
@@ -4192,6 +4170,22 @@ class Mdb:
         """
         try:
             qt_model.RemoveCustomTemperature(caseName=case_name, elementId=element_id)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def remove_index_temperature(element_id, case_name: str):
+        """
+        删除梁单元指数温度且支持XtoYbyN形式字符串
+        Args:
+            element_id:单元编号，支持数或列表且支持XtoYbyN形式字符串
+            case_name:荷载工况名
+        Example:
+            mdb.remove_index_temperature(case_name="工况1",element_id=1)
+        Returns: 无
+        """
+        try:
+            qt_model.RemoveIndexTemperature(caseName=case_name, elementId=element_id)
         except Exception as ex:
             raise Exception(ex)
 
@@ -4221,23 +4215,6 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def remove_nodal_force(node_id, case_name: str = "", group_name="默认荷载组"):
-        """
-        删除节点荷载
-        Args:
-             node_id:节点编号且支持XtoYbyN形式字符串
-             case_name:荷载工况名
-             group_name:指定荷载组
-        Example:
-            mdb.remove_nodal_force(case_name="荷载工况1",node_id=1,group_name="默认荷载组")
-        Returns: 无
-        """
-        try:
-            qt_model.RemoveNodalForce(caseName=case_name, nodeId=node_id, groupName=group_name)
-        except Exception as ex:
-            raise Exception(ex)
-
-    @staticmethod
     def add_node_displacement(node_id, case_name: str = "",
                               load_info: tuple[float, float, float, float, float, float] = None,
                               group_name: str = "默认荷载组"):
@@ -4257,23 +4234,6 @@ class Mdb:
             if load_info is None or len(load_info) != 6:
                 raise Exception("操作错误，节点位移列表信息不能为空，且其长度必须为6")
             qt_model.AddNodeDisplacement(caseName=case_name, nodeId=node_id, loadInfo=load_info, groupName=group_name)
-        except Exception as ex:
-            raise Exception(ex)
-
-    @staticmethod
-    def remove_nodal_displacement(node_id, case_name: str = "", group_name="默认荷载组"):
-        """
-        删除节点位移荷载
-        Args:
-            node_id:节点编号,支持数或列表且支持XtoYbyN形式字符串
-            case_name:荷载工况名
-            group_name:指定荷载组
-        Example:
-            mdb.remove_nodal_displacement(case_name="荷载工况1",node_id=1,group_name="默认荷载组")
-        Returns: 无
-        """
-        try:
-            qt_model.RemoveNodalDisplacement(caseName=case_name, nodeId=node_id, groupName=group_name)
         except Exception as ex:
             raise Exception(ex)
 
@@ -4308,20 +4268,22 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def remove_beam_element_load(element_id, case_name: str = "", load_type: int = 1, group_name="默认荷载组"):
+    def add_pre_stress(case_name: str = "", tendon_name: (Union[str, List[str]]) = "", tension_type: int = 2,
+                       force: float = 1395000, group_name: str = "默认荷载组"):
         """
-        删除梁单元荷载
+        添加预应力
         Args:
-            element_id:单元号支持数或列表且支持XtoYbyN形式字符串
-            case_name:荷载工况名
-            load_type:荷载类型 (1-集中力   2-集中弯矩  3-分布力   4-分布弯矩)
-            group_name:荷载组名称
+             case_name:荷载工况名
+             tendon_name:钢束名,支持钢束名或钢束名列表
+             tension_type:预应力类型 (0-始端 1-末端 2-两端)
+             force:预应力
+             group_name:边界组
         Example:
-            mdb.remove_beam_element_load(case_name="工况1",element_id=1,load_type=1,group_name="默认荷载组")
+            mdb.add_pre_stress(case_name="荷载工况名",tendon_name="钢束1",force=1390000)
         Returns: 无
         """
         try:
-            qt_model.RemoveBeamElementLoad(elementId=element_id, caseName=case_name, loadType=load_type, grouName=group_name)
+            qt_model.AddPreStress(caseName=case_name, tendonName=tendon_name, preType=tension_type, force=force, groupName=group_name)
         except Exception as ex:
             raise Exception(ex)
 
@@ -4349,23 +4311,6 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def remove_initial_tension_load(element_id, case_name: str, group_name: str = "默认荷载组"):
-        """
-        删除初始拉力
-        Args:
-            element_id:单元编号支持数或列表且支持XtoYbyN形式字符串
-            case_name:荷载工况名
-            group_name:荷载组名
-        Example:
-            mdb.remove_initial_tension_load(element_id=1,case_name="工况1",group_name="默认荷载组")
-        Returns: 无
-        """
-        try:
-            qt_model.RemoveInitialTensionLoad(elementId=element_id, caseName=case_name, groupName=group_name)
-        except Exception as ex:
-            raise Exception(ex)
-
-    @staticmethod
     def add_cable_length_load(element_id, case_name: str = "", group_name: str = "默认荷载组", length: float = 0,
                               tension_type: int = 1):
         """
@@ -4382,23 +4327,6 @@ class Mdb:
         """
         try:
             qt_model.AddCableLengthLoad(elementId=element_id, caseName=case_name, groupName=group_name, length=length, tensionType=tension_type)
-        except Exception as ex:
-            raise Exception(ex)
-
-    @staticmethod
-    def remove_cable_length_load(element_id, case_name: str, group_name: str = "默认荷载组"):
-        """
-        删除索长张拉
-        Args:
-            element_id:单元号支持数或列表且支持XtoYbyN形式字符串
-            case_name:荷载工况名
-            group_name:荷载组名
-        Example:
-            mdb.remove_cable_length_load(case_name="工况1",element_id=1, group_name= "默认荷载组")
-        Returns: 无
-        """
-        try:
-            qt_model.RemoveCableLengthLoad(elementId=element_id, caseName=case_name, groupName=group_name)
         except Exception as ex:
             raise Exception(ex)
 
@@ -4433,24 +4361,6 @@ class Mdb:
                     load_type = load_type + 2
                 qt_model.AddPlateElementLoad(elementId=element_id, caseName=case_name, loadType=load_type, loadPosition=load_place,
                                              distanceList=list_xy, coordSystem=coord_system, groupName=group_name, loads=list_load)
-        except Exception as ex:
-            raise Exception(ex)
-
-    @staticmethod
-    def remove_plate_element_load(element_id, case_name: str, load_type: int, group_name="默认荷载组"):
-        """
-        删除指定荷载工况下指定单元的板单元荷载
-        Args:
-            element_id:单元编号，支持数或列表且支持XtoYbyN形式字符串
-            case_name:荷载工况名
-            load_type: 板单元类型 1集中力   2-集中弯矩  3-分布线力  4-分布线弯矩  5-分布面力  6-分布面弯矩
-            group_name:荷载组名
-        Example:
-            mdb.remove_plate_element_load(case_name="工况1",element_id=1,load_type=1,group_name="默认荷载组")
-        Returns: 无
-        """
-        try:
-            qt_model.RemovePlateElementLoad(elementId=element_id, caseName=case_name, loadType=load_type, groupName=group_name)
         except Exception as ex:
             raise Exception(ex)
 
@@ -4535,6 +4445,110 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
+    def remove_nodal_force(node_id, case_name: str = "", group_name="默认荷载组"):
+        """
+        删除节点荷载
+        Args:
+             node_id:节点编号且支持XtoYbyN形式字符串
+             case_name:荷载工况名
+             group_name:指定荷载组
+        Example:
+            mdb.remove_nodal_force(case_name="荷载工况1",node_id=1,group_name="默认荷载组")
+        Returns: 无
+        """
+        try:
+            qt_model.RemoveNodalForce(caseName=case_name, nodeId=node_id, groupName=group_name)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def remove_nodal_displacement(node_id, case_name: str = "", group_name="默认荷载组"):
+        """
+        删除节点位移荷载
+        Args:
+            node_id:节点编号,支持数或列表且支持XtoYbyN形式字符串
+            case_name:荷载工况名
+            group_name:指定荷载组
+        Example:
+            mdb.remove_nodal_displacement(case_name="荷载工况1",node_id=1,group_name="默认荷载组")
+        Returns: 无
+        """
+        try:
+            qt_model.RemoveNodalDisplacement(caseName=case_name, nodeId=node_id, groupName=group_name)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def remove_initial_tension_load(element_id, case_name: str, group_name: str = "默认荷载组"):
+        """
+        删除初始拉力
+        Args:
+            element_id:单元编号支持数或列表且支持XtoYbyN形式字符串
+            case_name:荷载工况名
+            group_name:荷载组名
+        Example:
+            mdb.remove_initial_tension_load(element_id=1,case_name="工况1",group_name="默认荷载组")
+        Returns: 无
+        """
+        try:
+            qt_model.RemoveInitialTensionLoad(elementId=element_id, caseName=case_name, groupName=group_name)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def remove_beam_element_load(element_id, case_name: str = "", load_type: int = 1, group_name="默认荷载组"):
+        """
+        删除梁单元荷载
+        Args:
+            element_id:单元号支持数或列表且支持XtoYbyN形式字符串
+            case_name:荷载工况名
+            load_type:荷载类型 (1-集中力   2-集中弯矩  3-分布力   4-分布弯矩)
+            group_name:荷载组名称
+        Example:
+            mdb.remove_beam_element_load(case_name="工况1",element_id=1,load_type=1,group_name="默认荷载组")
+        Returns: 无
+        """
+        try:
+            qt_model.RemoveBeamElementLoad(elementId=element_id, caseName=case_name, loadType=load_type, grouName=group_name)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def remove_plate_element_load(element_id, case_name: str, load_type: int, group_name="默认荷载组"):
+        """
+        删除指定荷载工况下指定单元的板单元荷载
+        Args:
+            element_id:单元编号，支持数或列表且支持XtoYbyN形式字符串
+            case_name:荷载工况名
+            load_type: 板单元类型 1集中力   2-集中弯矩  3-分布线力  4-分布线弯矩  5-分布面力  6-分布面弯矩
+            group_name:荷载组名
+        Example:
+            mdb.remove_plate_element_load(case_name="工况1",element_id=1,load_type=1,group_name="默认荷载组")
+        Returns: 无
+        """
+        try:
+            qt_model.RemovePlateElementLoad(elementId=element_id, caseName=case_name, loadType=load_type, groupName=group_name)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def remove_cable_length_load(element_id, case_name: str, group_name: str = "默认荷载组"):
+        """
+        删除索长张拉
+        Args:
+            element_id:单元号支持数或列表且支持XtoYbyN形式字符串
+            case_name:荷载工况名
+            group_name:荷载组名
+        Example:
+            mdb.remove_cable_length_load(case_name="工况1",element_id=1, group_name= "默认荷载组")
+        Returns: 无
+        """
+        try:
+            qt_model.RemoveCableLengthLoad(elementId=element_id, caseName=case_name, groupName=group_name)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
     def remove_plane_load(index: int = -1):
         """
         根据荷载编号删除分配面荷载
@@ -4586,6 +4600,144 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
+    def add_sink_case(name: str, sink_groups: (Union[str, List[str]]) = None):
+        """
+        添加沉降工况
+        Args:
+            name:荷载工况名
+            sink_groups:沉降组名，支持字符串或列表
+        Example:
+            mdb.add_sink_case(name="沉降工况1",sink_groups=["沉降1","沉降2"])
+        Returns: 无
+        """
+        try:
+            qt_model.AddSinkCase(name=name, sinkGroups=sink_groups)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def add_concurrent_reaction(names: (Union[str, List[str]])):
+        """
+        添加并发反力组
+        Args:
+             names: 结构组名称集合
+        Example:
+            mdb.add_concurrent_reaction(names=["默认结构组"])
+        Returns: 无
+        """
+        try:
+            if names is None:
+                raise Exception("操作错误，添加并发反力组时结构组名称不能为空")
+            qt_model.AddConcurrentReaction(names=names)
+
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def add_concurrent_force(names: (Union[str, List[str]])):
+        """
+        创建并发内力组
+        Args:
+            names: 结构组名称集合
+        Example:
+            mdb.add_concurrent_force(names=["默认结构组"])
+        Returns: 无
+        """
+        try:
+            qt_model.AddConcurrentForce(names=names)
+
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def add_load_case(name: str = "", case_type: str = "施工阶段荷载"):
+        """
+        添加荷载工况
+        Args:
+            name:工况名
+            case_type:荷载工况类型
+            _"施工阶段荷载", "恒载", "活载", "制动力", "风荷载","体系温度荷载","梯度温度荷载",
+            _"长轨伸缩挠曲力荷载", "脱轨荷载", "船舶撞击荷载","汽车撞击荷载","长轨断轨力荷载", "用户定义荷载"
+        Example:
+            mdb.add_load_case(name="工况1",case_type="施工阶段荷载")
+        Returns: 无
+        """
+        try:
+            qt_model.AddLoadCase(name=name, loadCaseType=case_type)
+
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def add_load_group(name: str = ""):
+        """
+        根据荷载组名称添加荷载组
+        Args:
+             name: 荷载组名称
+        Example:
+            mdb.add_load_group(name="荷载组1")
+        Returns: 无
+        """
+        try:
+            if name != "":
+                qt_model.AddLoadGroup(name=name)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def update_load_case(name: str, new_name: str = "", case_type: str = "施工阶段荷载"):
+        """
+        添加荷载工况
+        Args:
+           name:工况名
+           new_name:新工况名
+           case_type:荷载工况类型
+           _"施工阶段荷载", "恒载", "活载", "制动力", "风荷载","体系温度荷载","梯度温度荷载",
+           _"长轨伸缩挠曲力荷载", "脱轨荷载", "船舶撞击荷载","汽车撞击荷载","长轨断轨力荷载", "用户定义荷载"
+        Example:
+           mdb.add_load_case(name="工况1",case_type="施工阶段荷载")
+        Returns: 无
+        """
+        try:
+            qt_model.UpdateLoadCase(name=name, newName=new_name, loadCaseType=case_type)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def update_load_group(name: str, new_name: str = ""):
+        """
+        根据荷载组名称添加荷载组
+        Args:
+           name: 荷载组名称
+           new_name: 荷载组名称
+        Example:
+          mdb.update_load_group(name="荷载组1",new_name="荷载组2")
+        Returns: 无
+        """
+        try:
+            if name != "":
+                qt_model.UpdateLoadGroup(name=name, newName=new_name)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def update_sink_case(name: str, new_name: str = "", sink_groups: (Union[str, List[str]]) = None):
+        """
+        添加沉降工况
+        Args:
+            name:荷载工况名
+            new_name: 新沉降组名,默认不修改
+            sink_groups:沉降组名，支持字符串或列表
+        Example:
+            mdb.update_sink_case(name="沉降工况1",sink_groups=["沉降1","沉降2"])
+        Returns: 无
+        """
+        try:
+            qt_model.UpdateSinkCase(name=name, newName=new_name, sinkGroups=sink_groups)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
     def update_sink_group(name: str = "", new_name: str = "", sink: float = 0.1, node_ids: (Union[int, List[int]]) = None):
         """
         添加沉降组
@@ -4624,39 +4776,6 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def add_sink_case(name: str, sink_groups: (Union[str, List[str]]) = None):
-        """
-        添加沉降工况
-        Args:
-            name:荷载工况名
-            sink_groups:沉降组名，支持字符串或列表
-        Example:
-            mdb.add_sink_case(name="沉降工况1",sink_groups=["沉降1","沉降2"])
-        Returns: 无
-        """
-        try:
-            qt_model.AddSinkCase(name=name, sinkGroups=sink_groups)
-        except Exception as ex:
-            raise Exception(ex)
-
-    @staticmethod
-    def update_sink_case(name: str, new_name: str = "", sink_groups: (Union[str, List[str]]) = None):
-        """
-        添加沉降工况
-        Args:
-            name:荷载工况名
-            new_name: 新沉降组名,默认不修改
-            sink_groups:沉降组名，支持字符串或列表
-        Example:
-            mdb.update_sink_case(name="沉降工况1",sink_groups=["沉降1","沉降2"])
-        Returns: 无
-        """
-        try:
-            qt_model.UpdateSinkCase(name=name, newName=new_name, sinkGroups=sink_groups)
-        except Exception as ex:
-            raise Exception(ex)
-
-    @staticmethod
     def remove_sink_case(name=""):
         """
         按照名称删除沉降工况,不输入名称时默认删除所有沉降工况
@@ -4677,19 +4796,20 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def add_concurrent_reaction(names: (Union[str, List[str]])):
+    def remove_load_group(name: str = ""):
         """
-        添加并发反力组
+        根据荷载组名称删除荷载组,参数为默认时删除所有荷载组
         Args:
-             names: 结构组名称集合
+             name: 荷载组名称
         Example:
-            mdb.add_concurrent_reaction(names=["默认结构组"])
+            mdb.remove_load_group(name="荷载组1")
         Returns: 无
         """
         try:
-            if names is None:
-                raise Exception("操作错误，添加并发反力组时结构组名称不能为空")
-            qt_model.AddConcurrentReaction(names=names)
+            if name != "":
+                qt_model.RemoveLoadGroup(name=name)
+            else:
+                qt_model.RemoveAllLoadGroup()
 
         except Exception as ex:
             raise Exception(ex)
@@ -4710,22 +4830,6 @@ class Mdb:
             raise Exception(ex)
 
     @staticmethod
-    def add_concurrent_force(names: (Union[str, List[str]])):
-        """
-        创建并发内力组
-        Args:
-            names: 结构组名称集合
-        Example:
-            mdb.add_concurrent_force(names=["默认结构组"])
-        Returns: 无
-        """
-        try:
-            qt_model.AddConcurrentForce(names=names)
-
-        except Exception as ex:
-            raise Exception(ex)
-
-    @staticmethod
     def remove_concurrent_force():
         """
         删除所有并发内力组
@@ -4736,25 +4840,6 @@ class Mdb:
         """
         try:
             qt_model.RemoveConcurrentForce()
-
-        except Exception as ex:
-            raise Exception(ex)
-
-    @staticmethod
-    def add_load_case(name: str = "", case_type: str = "施工阶段荷载"):
-        """
-        添加荷载工况
-        Args:
-            name:工况名
-            case_type:荷载工况类型
-            _"施工阶段荷载", "恒载", "活载", "制动力", "风荷载","体系温度荷载","梯度温度荷载",
-            _"长轨伸缩挠曲力荷载", "脱轨荷载", "船舶撞击荷载","汽车撞击荷载","长轨断轨力荷载", "用户定义荷载"
-        Example:
-            mdb.add_load_case(name="工况1",case_type="施工阶段荷载")
-        Returns: 无
-        """
-        try:
-            qt_model.AddLoadCase(name=name, loadCaseType=case_type)
 
         except Exception as ex:
             raise Exception(ex)
@@ -4779,77 +4864,6 @@ class Mdb:
                 qt_model.RemoveLoadCase(id=index)
             else:
                 qt_model.RemoveAllLoadCase()
-        except Exception as ex:
-            raise Exception(ex)
-
-    @staticmethod
-    def update_load_case(name: str, new_name: str = "", case_type: str = "施工阶段荷载"):
-        """
-        添加荷载工况
-        Args:
-           name:工况名
-           new_name:新工况名
-           case_type:荷载工况类型
-           _"施工阶段荷载", "恒载", "活载", "制动力", "风荷载","体系温度荷载","梯度温度荷载",
-           _"长轨伸缩挠曲力荷载", "脱轨荷载", "船舶撞击荷载","汽车撞击荷载","长轨断轨力荷载", "用户定义荷载"
-        Example:
-           mdb.add_load_case(name="工况1",case_type="施工阶段荷载")
-        Returns: 无
-        """
-        try:
-            qt_model.UpdateLoadCase(name=name, newName=new_name, loadCaseType=case_type)
-        except Exception as ex:
-            raise Exception(ex)
-
-    @staticmethod
-    def add_load_group(name: str = ""):
-        """
-        根据荷载组名称添加荷载组
-        Args:
-             name: 荷载组名称
-        Example:
-            mdb.add_load_group(name="荷载组1")
-        Returns: 无
-        """
-        try:
-            if name != "":
-                qt_model.AddLoadGroup(name=name)
-        except Exception as ex:
-            raise Exception(ex)
-
-    @staticmethod
-    def remove_load_group(name: str = ""):
-        """
-        根据荷载组名称删除荷载组,参数为默认时删除所有荷载组
-        Args:
-             name: 荷载组名称
-        Example:
-            mdb.remove_load_group(name="荷载组1")
-        Returns: 无
-        """
-        try:
-            if name != "":
-                qt_model.RemoveLoadGroup(name=name)
-            else:
-                qt_model.RemoveAllLoadGroup()
-
-        except Exception as ex:
-            raise Exception(ex)
-
-    @staticmethod
-    def update_load_group(name: str, new_name: str = ""):
-        """
-        根据荷载组名称添加荷载组
-        Args:
-           name: 荷载组名称
-           new_name: 荷载组名称
-        Example:
-          mdb.update_load_group(name="荷载组1",new_name="荷载组2")
-        Returns: 无
-        """
-        try:
-            if name != "":
-                qt_model.UpdateLoadGroup(name=name, newName=new_name)
         except Exception as ex:
             raise Exception(ex)
 
@@ -4899,6 +4913,43 @@ class Mdb:
                                           tendonCancelLoss=tendon_cancel_loss, constrainCancelType=constraint_cancel_type)
         except Exception as ex:
             raise Exception(f"添加施工阶段:{name}错误,{ex}")
+
+    @staticmethod
+    def add_section_connection_stage(name: str, sec_id: int, element_id=None, stage_name="", age: float = 0,
+                                     weight_type: int = 0):
+        """
+        添加施工阶段联合截面
+        Args:
+            name:名称
+            sec_id:截面号
+            element_id:单元号，支持整型和整型列表,支持XtoYbyN形式字符串
+            stage_name:结合阶段名
+            age:材龄
+            weight_type:辅材计自重方式 0-由主材承担  1-由整体承担 2-不计辅材自重
+        Example:
+            mdb.add_section_connection_stage(name="联合阶段",sec_id=1,element_id=[2,3,4,5],stage_name="施工阶段1")
+        Returns:无
+        """
+        try:
+            qt_model.AddSectionConnectionStage(name=name, secId=sec_id, elementIds=element_id, stageName=stage_name, age=age, weightType=weight_type)
+        except Exception as ex:
+            raise Exception(f"添加施工阶段联合截面失败:{name}错误,{ex}")
+
+    @staticmethod
+    def add_element_to_connection_stage(element_id, name: str):
+        """
+        添加单元到施工阶段联合截面
+        Args:
+            element_id:单元号，支持整型和整型列表且支持XtoYbyN形式字符串
+            name:联合阶段名
+        Example:
+            mdb.add_element_to_connection_stage([1,2,3,4],"联合阶段")
+        Returns:无
+        """
+        try:
+            qt_model.AddElementToConnectionStage(elementIds=element_id, name=name)
+        except Exception as ex:
+            raise Exception(f"添加单元到施工阶段联合截面失败:{name}错误,{ex}")
 
     @staticmethod
     def update_construction_stage(name: str = "", new_name="", duration: int = 0,
@@ -4995,45 +5046,6 @@ class Mdb:
             raise Exception(f"操作错误,{ex}")
 
     @staticmethod
-    def remove_construction_stage(name: str = ""):
-        """
-        按照施工阶段名删除施工阶段,默认删除所有施工阶段
-        Args:
-            name:所删除施工阶段名称
-        Example:
-            mdb.remove_construction_stage(name="施工阶段1")
-        Returns: 无
-        """
-        try:
-            if name == "":
-                qt_model.RemoveAllConstructionStage()
-            else:
-                qt_model.RemoveConstructionStage(name=name)
-        except Exception as ex:
-            raise Exception(f"删除施工阶段自重:{name}错误,{ex}")
-
-    @staticmethod
-    def add_section_connection_stage(name: str, sec_id: int, element_id=None, stage_name="", age: float = 0,
-                                     weight_type: int = 0):
-        """
-        添加施工阶段联合截面
-        Args:
-            name:名称
-            sec_id:截面号
-            element_id:单元号，支持整型和整型列表,支持XtoYbyN形式字符串
-            stage_name:结合阶段名
-            age:材龄
-            weight_type:辅材计自重方式 0-由主材承担  1-由整体承担 2-不计辅材自重
-        Example:
-            mdb.add_section_connection_stage(name="联合阶段",sec_id=1,element_id=[2,3,4,5],stage_name="施工阶段1")
-        Returns:无
-        """
-        try:
-            qt_model.AddSectionConnectionStage(name=name, secId=sec_id, elementIds=element_id, stageName=stage_name, age=age, weightType=weight_type)
-        except Exception as ex:
-            raise Exception(f"添加施工阶段联合截面失败:{name}错误,{ex}")
-
-    @staticmethod
     def update_section_connection_stage(name: str, new_name="", sec_id: int = 1, element_id=None,
                                         stage_name="", age: float = 0, weight_type: int = 0):
         """
@@ -5073,20 +5085,22 @@ class Mdb:
             raise Exception(f"删除施工阶段联合截面失败:{name}错误,{ex}")
 
     @staticmethod
-    def add_element_to_connection_stage(element_id, name: str):
+    def remove_construction_stage(name: str = ""):
         """
-        添加单元到施工阶段联合截面
+        按照施工阶段名删除施工阶段,默认删除所有施工阶段
         Args:
-            element_id:单元号，支持整型和整型列表且支持XtoYbyN形式字符串
-            name:联合阶段名
+            name:所删除施工阶段名称
         Example:
-            mdb.add_element_to_connection_stage([1,2,3,4],"联合阶段")
-        Returns:无
+            mdb.remove_construction_stage(name="施工阶段1")
+        Returns: 无
         """
         try:
-            qt_model.AddElementToConnectionStage(elementIds=element_id, name=name)
+            if name == "":
+                qt_model.RemoveAllConstructionStage()
+            else:
+                qt_model.RemoveConstructionStage(name=name)
         except Exception as ex:
-            raise Exception(f"添加单元到施工阶段联合截面失败:{name}错误,{ex}")
+            raise Exception(f"删除施工阶段自重:{name}错误,{ex}")
 
     @staticmethod
     def merge_all_stages(name: str = "一次成桥", setting_type: int = 1, weight_type: int = 1, age: float = 5,

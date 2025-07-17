@@ -1,4 +1,4 @@
-> 最新版本 V0.9.8 - 2025-07-17
+> 最新版本 V0.9.8 - 2025-07-17 
 > pip install --upgrade qtmodel -i https://pypi.org/simple
 - 新增更新结构组接口 
 # 建模操作 
@@ -945,21 +945,6 @@ mdb.add_single_section(index=1,name="变截面1",sec_type="矩形",
 sec_data={"sec_info":[1,2],"bias_type":"中心"})
 ```  
 Returns: 无
-### update_single_section
-以字典形式添加单一截面
-> 参数:  
-> index:截面编号  
-> new_id:新截面编号，默认不修改截面编号  
-> name:截面名称  
-> sec_type:截面类型  
-> sec_data:截面信息字典，键值参考添加add_section方法参数  
-```Python
-# 示例代码
-from qtmodel import *
-mdb.update_single_section(index=1,name="变截面1",sec_type="矩形",
-sec_data={"sec_info":[1,2],"bias_type":"中心"})
-```  
-Returns: 无
 ### add_tapper_section
 添加变截面,字典参数参考单一截面,如果截面存在则自动覆盖
 > 参数:  
@@ -976,6 +961,76 @@ from qtmodel import *
 mdb.add_tapper_section(index=1,name="变截面1",sec_type="矩形",
 sec_begin={"sec_info":[1,2],"bias_type":"中心"},
 sec_end={"sec_info":[2,2],"bias_type":"中心"})
+```  
+Returns: 无
+### add_tapper_section_from_group
+将变截面组转为变截面
+> 参数:  
+> name: 变截面组名，默认则转化全部变截面组  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.add_tapper_section_from_group()
+mdb.add_tapper_section_from_group("变截面组1")
+```  
+Returns: 无
+### add_tapper_section_by_id
+添加变截面,需先建立单一截面
+> 参数:  
+> index:截面编号  
+> name:截面名称  
+> begin_id:截面始端编号  
+> end_id:截面末端编号  
+> shear_consider:考虑剪切变形  
+> sec_normalize: 开启变截面线圈和线宽自适应排序 (避免两端截面绘制顺序导致的渲染和计算失效)  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.add_tapper_section_by_id(name="变截面1",begin_id=1,end_id=2)
+```  
+Returns: 无
+### add_elements_to_tapper_section_group
+删除变截面组，默认删除所有变截面组
+> 参数:  
+> name:变截面组名称  
+> ids:新增单元编号  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.add_elements_to_tapper_section_group("变截面组1",ids=[1,2,3,4,5,6])
+mdb.add_elements_to_tapper_section_group("变截面组1",ids="1to6")
+```  
+Returns:无
+### add_tapper_section_group
+添加变截面组
+> 参数:  
+> ids:变截面组单元号,支持XtoYbyN类型字符串  
+> name: 变截面组名  
+> factor_w: 宽度方向变化阶数 线性(1.0) 非线性(!=1.0)  
+> factor_h: 高度方向变化阶数 线性(1.0) 非线性(!=1.0)  
+> ref_w: 宽度方向参考点 0-i 1-j  
+> ref_h: 高度方向参考点 0-i 1-j  
+> dis_w: 宽度方向距离  
+> dis_h: 高度方向距离  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.add_tapper_section_group(ids=[1,2,3,4],name="变截面组1")
+```  
+Returns: 无
+### update_single_section
+以字典形式添加单一截面
+> 参数:  
+> index:截面编号  
+> new_id:新截面编号，默认不修改截面编号  
+> name:截面名称  
+> sec_type:截面类型  
+> sec_data:截面信息字典，键值参考添加add_section方法参数  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.update_single_section(index=1,name="变截面1",sec_type="矩形",
+sec_data={"sec_info":[1,2],"bias_type":"中心"})
 ```  
 Returns: 无
 ### update_tapper_section
@@ -995,58 +1050,6 @@ from qtmodel import *
 mdb.add_tapper_section(index=1,name="变截面1",sec_type="矩形",
 sec_begin={"sec_info":[1,2],"bias_type":"中心"},
 sec_end={"sec_info":[2,2],"bias_type":"中心"})
-```  
-Returns: 无
-### add_tapper_section_by_id
-添加变截面,需先建立单一截面
-> 参数:  
-> index:截面编号  
-> name:截面名称  
-> begin_id:截面始端编号  
-> end_id:截面末端编号  
-> shear_consider:考虑剪切变形  
-> sec_normalize: 开启变截面线圈和线宽自适应排序 (避免两端截面绘制顺序导致的渲染和计算失效)  
-```Python
-# 示例代码
-from qtmodel import *
-mdb.add_tapper_section_by_id(name="变截面1",begin_id=1,end_id=2)
-```  
-Returns: 无
-### remove_all_section
-删除全部截面信息
-> 参数:  
-```Python
-# 示例代码
-from qtmodel import *
-mdb.remove_all_section()
-```  
-Returns: 无
-### remove_section
-删除截面信息
-> 参数:  
-> index: 截面编号  
-```Python
-# 示例代码
-from qtmodel import *
-mdb.remove_section(1)
-mdb.remove_section("1to100")
-```  
-Returns: 无
-### add_tapper_section_group
-添加变截面组
-> 参数:  
-> ids:变截面组单元号,支持XtoYbyN类型字符串  
-> name: 变截面组名  
-> factor_w: 宽度方向变化阶数 线性(1.0) 非线性(!=1.0)  
-> factor_h: 高度方向变化阶数 线性(1.0) 非线性(!=1.0)  
-> ref_w: 宽度方向参考点 0-i 1-j  
-> ref_h: 高度方向参考点 0-i 1-j  
-> dis_w: 宽度方向距离  
-> dis_h: 高度方向距离  
-```Python
-# 示例代码
-from qtmodel import *
-mdb.add_tapper_section_group(ids=[1,2,3,4],name="变截面组1")
 ```  
 Returns: 无
 ### update_tapper_section_group
@@ -1084,6 +1087,15 @@ mdb.update_section_bias(index=1,bias_type="中上",center_type="几何中心")
 mdb.update_section_bias(index=1,bias_type="自定义",bias_point=[0.1,0.2])
 ```  
 Returns: 无
+### update_all_section_property
+更新所有截面特性
+> 参数:  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.update_all_section_property()
+```  
+Returns: 无
 ### update_section_property
 更新截面特性
 > 参数:  
@@ -1094,17 +1106,6 @@ Returns: 无
 # 示例代码
 from qtmodel import *
 mdb.update_section_property(index=1,sec_property=[i for i in range(1,27)])
-```  
-Returns: 无
-### add_tapper_section_from_group
-将变截面组转为变截面
-> 参数:  
-> name: 变截面组名，默认则转化全部变截面组  
-```Python
-# 示例代码
-from qtmodel import *
-mdb.add_tapper_section_from_group()
-mdb.add_tapper_section_from_group("变截面组1")
 ```  
 Returns: 无
 ### update_section_id
@@ -1129,18 +1130,26 @@ mdb.remove_tapper_section_group()
 mdb.remove_tapper_section_group("变截面组1")
 ```  
 Returns:无
-### add_elements_to_tapper_section_group
-删除变截面组，默认删除所有变截面组
+### remove_all_section
+删除全部截面信息
 > 参数:  
-> name:变截面组名称  
-> ids:新增单元编号  
 ```Python
 # 示例代码
 from qtmodel import *
-mdb.add_elements_to_tapper_section_group("变截面组1",ids=[1,2,3,4,5,6])
-mdb.add_elements_to_tapper_section_group("变截面组1",ids="1to6")
+mdb.remove_all_section()
 ```  
-Returns:无
+Returns: 无
+### remove_section
+删除截面信息
+> 参数:  
+> index: 截面编号  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.remove_section(1)
+mdb.remove_section("1to100")
+```  
+Returns: 无
 ##  边界操作
 ### add_effective_width
 添加有效宽度系数
@@ -1804,29 +1813,6 @@ from qtmodel import *
 mdb.add_spectrum_case(name="反应谱工况",info_x=("函数1",1.0))
 ```  
 Returns: 无
-### update_load_to_mass
-更新荷载转为质量
-> 参数:  
-> name:荷载工况名称  
-> factor:荷载工况系数  
-```Python
-# 示例代码
-from qtmodel import *
-mdb.update_load_to_mass(name="工况1",factor=1)
-```  
-Returns: 无
-### update_nodal_mass
-更新节点质量
-> 参数:  
-> node_id:节点编号  
-> new_node_id:新节点编号，默认不改变节点  
-> mass_info:[m,rmX,rmY,rmZ]  
-```Python
-# 示例代码
-from qtmodel import *
-mdb.add_nodal_mass(node_id=1,mass_info=(100,0,0,0))
-```  
-Returns: 无
 ### add_boundary_element_property
 添加边界单元特性
 > 参数:  
@@ -1925,6 +1911,29 @@ Returns: 无
 # 示例代码
 from qtmodel import *
 mdb.add_time_history_function(name="时程函数1",factor=1,function_info=[(0,0),(0.02,0.1),[0.04,0.3]])
+```  
+Returns: 无
+### update_load_to_mass
+更新荷载转为质量
+> 参数:  
+> name:荷载工况名称  
+> factor:荷载工况系数  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.update_load_to_mass(name="工况1",factor=1)
+```  
+Returns: 无
+### update_nodal_mass
+更新节点质量
+> 参数:  
+> node_id:节点编号  
+> new_node_id:新节点编号，默认不改变节点  
+> mass_info:[m,rmX,rmY,rmZ]  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.add_nodal_mass(node_id=1,mass_info=(100,0,0,0))
 ```  
 Returns: 无
 ### update_boundary_element_property
@@ -2179,16 +2188,6 @@ from qtmodel import *
 mdb.add_tendon_group(name="钢束组1")
 ```  
 Returns: 无
-### remove_tendon_group
-按照钢束组名称或钢束组编号删除钢束组，两参数均为默认时删除所有钢束组
-> 参数:  
-> name:钢束组名称,默认自动识别 (可选参数)  
-```Python
-# 示例代码
-from qtmodel import *
-mdb.remove_tendon_group(name="钢束组1")
-```  
-Returns: 无
 ### add_tendon_property
 添加钢束特性
 > 参数:  
@@ -2212,38 +2211,6 @@ mdb.add_tendon_property(name="钢束1",tendon_type=0,material_name="预应力材
 steel_detail=[0.00014,0.10,0.25,0.0015],loos_detail=(1,1,1))
 ```  
 Returns: 无
-### update_tendon_property_material
-更新钢束特性材料
-> 参数:  
-> name:钢束特性名  
-> material_name:材料名  
-```Python
-# 示例代码
-from qtmodel import *
-mdb.update_tendon_property_material("特性1",material_name="材料1")
-```  
-Returns:无
-### update_tendon_property
-更新钢束特性
-> 参数:  
-> name:钢束特性名  
-> new_name:新钢束特性名,默认不修改  
-> tendon_type: 0-PRE 1-POST  
-> material_name: 钢材材料名  
-> duct_type: 1-金属波纹管  2-塑料波纹管  3-铁皮管  4-钢管  5-抽芯成型  
-> steel_type: 1-钢绞线  2-螺纹钢筋  
-> steel_detail: 钢束详细信息  
-> _钢绞线[钢束面积,孔道直径,摩阻系数,偏差系数]  
-> _螺纹钢筋[钢筋直径,钢束面积,孔道直径,摩阻系数,偏差系数,张拉方式(1-一次张拉 2-超张拉)]  
-> loos_detail: 松弛信息[规范(1-公规 2-铁规),张拉(1-一次张拉 2-超张拉),松弛(1-一般松弛 2-低松弛)] (仅钢绞线需要,默认为[1,1,1])  
-> slip_info: 滑移信息[始端距离,末端距离] 默认为[0.006, 0.006]  
-```Python
-# 示例代码
-from qtmodel import *
-mdb.update_tendon_property(name="钢束1",tendon_type=0,material_name="材料1",duct_type=1,steel_type=1,
-steel_detail=[0.00014,0.10,0.25,0.0015],loos_detail=(1,1,1))
-```  
-Returns:无
 ### add_tendon_3d
 添加三维钢束
 > 参数:  
@@ -2294,6 +2261,38 @@ mdb.add_tendon_2d(name="BB1",property_name="22-15",num=2,position_type=2,
 control_points=[(0,-1,0),(10,-1,0)],point_insert=(1,1,1),track_group="轨迹线结构组1")
 ```  
 Returns: 无
+### update_tendon_property_material
+更新钢束特性材料
+> 参数:  
+> name:钢束特性名  
+> material_name:材料名  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.update_tendon_property_material("特性1",material_name="材料1")
+```  
+Returns:无
+### update_tendon_property
+更新钢束特性
+> 参数:  
+> name:钢束特性名  
+> new_name:新钢束特性名,默认不修改  
+> tendon_type: 0-PRE 1-POST  
+> material_name: 钢材材料名  
+> duct_type: 1-金属波纹管  2-塑料波纹管  3-铁皮管  4-钢管  5-抽芯成型  
+> steel_type: 1-钢绞线  2-螺纹钢筋  
+> steel_detail: 钢束详细信息  
+> _钢绞线[钢束面积,孔道直径,摩阻系数,偏差系数]  
+> _螺纹钢筋[钢筋直径,钢束面积,孔道直径,摩阻系数,偏差系数,张拉方式(1-一次张拉 2-超张拉)]  
+> loos_detail: 松弛信息[规范(1-公规 2-铁规),张拉(1-一次张拉 2-超张拉),松弛(1-一般松弛 2-低松弛)] (仅钢绞线需要,默认为[1,1,1])  
+> slip_info: 滑移信息[始端距离,末端距离] 默认为[0.006, 0.006]  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.update_tendon_property(name="钢束1",tendon_type=0,material_name="材料1",duct_type=1,steel_type=1,
+steel_detail=[0.00014,0.10,0.25,0.0015],loos_detail=(1,1,1))
+```  
+Returns:无
 ### update_tendon
 添加三维钢束
 > 参数:  
@@ -2333,6 +2332,17 @@ from qtmodel import *
 mdb.update_element_component_type(ids=[1,2,3,4],component_type=2)
 ```  
 Returns: 无
+### update_tendon_group
+更新钢束组名
+> 参数:  
+> name:原钢束组名  
+> new_name:新钢束组名  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.update_tendon_group("钢束组1","钢束组2")
+```  
+Returns: 无
 ### remove_tendon
 按照名称或编号删除钢束,默认时删除所有钢束
 > 参数:  
@@ -2359,31 +2369,6 @@ mdb.remove_tendon_property(index=1)
 mdb.remove_tendon_property()
 ```  
 Returns: 无
-### update_tendon_group
-更新钢束组名
-> 参数:  
-> name:原钢束组名  
-> new_name:新钢束组名  
-```Python
-# 示例代码
-from qtmodel import *
-mdb.update_tendon_group("钢束组1","钢束组2")
-```  
-Returns: 无
-### add_pre_stress
-添加预应力
-> 参数:  
-> case_name:荷载工况名  
-> tendon_name:钢束名,支持钢束名或钢束名列表  
-> tension_type:预应力类型 (0-始端 1-末端 2-两端)  
-> force:预应力  
-> group_name:边界组  
-```Python
-# 示例代码
-from qtmodel import *
-mdb.add_pre_stress(case_name="荷载工况名",tendon_name="钢束1",force=1390000)
-```  
-Returns: 无
 ### remove_pre_stress
 删除预应力
 > 参数:  
@@ -2393,6 +2378,16 @@ Returns: 无
 from qtmodel import *
 mdb.remove_pre_stress(tendon_name="钢束1")
 mdb.remove_pre_stress()
+```  
+Returns: 无
+### remove_tendon_group
+按照钢束组名称或钢束组编号删除钢束组，两参数均为默认时删除所有钢束组
+> 参数:  
+> name:钢束组名称,默认自动识别 (可选参数)  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.remove_tendon_group(name="钢束组1")
 ```  
 Returns: 无
 ##  温度与制造偏差荷载
@@ -2411,33 +2406,6 @@ mdb.add_deviation_parameter(name="梁端制造误差",element_type=1,parameters=
 mdb.add_deviation_parameter(name="板端制造误差",element_type=1,parameters=[1,0,0,0,0])
 ```  
 Returns: 无
-### update_deviation_parameter
-添加制造误差
-> 参数:  
-> name:名称  
-> new_name:新名称，默认不修改名称  
-> element_type:单元类型  1-梁单元  2-板单元  
-> parameters:参数列表  
-> _梁杆单元为[轴向,I端X向转角,I端Y向转角,I端Z向转角,J端X向转角,J端Y向转角,J端Z向转角]  
-> _板单元为[X向位移,Y向位移,Z向位移,X向转角,Y向转角]  
-```Python
-# 示例代码
-from qtmodel import *
-mdb.update_deviation_parameter(name="梁端制造误差",element_type=1,parameters=[1,0,0,0,0,0,0])
-mdb.update_deviation_parameter(name="板端制造误差",element_type=1,parameters=[1,0,0,0,0])
-```  
-Returns: 无
-### remove_deviation_parameter
-删除指定制造偏差参数
-> 参数:  
-> name:制造偏差参数名  
-> para_type:制造偏差类型 1-梁单元  2-板单元  
-```Python
-# 示例代码
-from qtmodel import *
-mdb.remove_deviation_parameter(name="参数1",para_type=1)
-```  
-Returns: 无
 ### add_deviation_load
 添加制造误差荷载
 > 参数:  
@@ -2454,16 +2422,18 @@ mdb.add_deviation_load(element_id=1,case_name="工况1",parameters="梁端误差
 mdb.add_deviation_load(element_id=2,case_name="工况1",parameters=["板端误差1","板端误差2","板端误差3","板端误差4"])
 ```  
 Returns: 无
-### remove_deviation_load
-删除指定制造偏差荷载
+### add_custom_temperature
+添加梁自定义温度
 > 参数:  
 > element_id:单元编号，支持数或列表且支持XtoYbyN形式字符串  
 > case_name:荷载工况名  
-> group_name: 荷载组  
+> group_name:指定荷载组,后续升级开放指定荷载组删除功能  
+> orientation: 1-局部坐标z 2-局部坐标y  
+> temperature_data:自定义数据[(参考位置1-顶 2-底,高度,温度)...]  
 ```Python
 # 示例代码
 from qtmodel import *
-mdb.remove_deviation_load(case_name="工况1",element_id=1,group_name="荷载组1")
+mdb.add_custom_temperature(case_name="荷载工况1",element_id=1,orientation=1,temperature_data=[(1,1,20),(1,2,10)])
 ```  
 Returns: 无
 ### add_element_temperature
@@ -2479,17 +2449,6 @@ from qtmodel import *
 mdb.add_element_temperature(element_id=1,case_name="自重",temperature=1,group_name="默认荷载组")
 ```  
 Returns: 无
-### remove_element_temperature
-删除指定单元温度
-> 参数:  
-> element_id:单元编号，支持数或列表且支持XtoYbyN形式字符串  
-> case_name:荷载工况名  
-```Python
-# 示例代码
-from qtmodel import *
-mdb.remove_element_temperature(case_name="荷载工况1",element_id=1)
-```  
-Returns: 无
 ### add_gradient_temperature
 添加梯度温度
 ```Python
@@ -2497,17 +2456,6 @@ Returns: 无
 from qtmodel import *
 mdb.add_gradient_temperature(element_id=1,case_name="荷载工况1",group_name="荷载组名1",temperature=10)
 mdb.add_gradient_temperature(element_id=2,case_name="荷载工况2",group_name="荷载组名2",temperature=10,element_type=2)
-```  
-Returns: 无
-### remove_gradient_temperature
-删除梁或板单元梯度温度
-> 参数:  
-> element_id:单元编号，支持数或列表且支持XtoYbyN形式字符串  
-> case_name:荷载工况名  
-```Python
-# 示例代码
-from qtmodel import *
-mdb.remove_gradient_temperature(case_name="工况1",element_id=1)
 ```  
 Returns: 无
 ### add_beam_section_temperature
@@ -2528,17 +2476,6 @@ from qtmodel import *
 mdb.add_beam_section_temperature(element_id=1,case_name="工况1",code_index=1,sec_type=1,t1=-4.2,t2=-1)
 ```  
 Returns: 无
-### remove_beam_section_temperature
-删除指定梁或板单元梁截面温度
-> 参数:  
-> case_name:荷载工况名  
-> element_id:单元编号，支持数或列表且支持XtoYbyN形式字符串  
-```Python
-# 示例代码
-from qtmodel import *
-mdb.remove_beam_section_temperature(case_name="工况1",element_id=1)
-```  
-Returns: 无
 ### add_index_temperature
 添加指数温度
 > 参数:  
@@ -2551,17 +2488,6 @@ Returns: 无
 # 示例代码
 from qtmodel import *
 mdb.add_index_temperature(element_id=1,case_name="工况1",temperature=20,index=2)
-```  
-Returns: 无
-### remove_index_temperature
-删除梁单元指数温度且支持XtoYbyN形式字符串
-> 参数:  
-> element_id:单元编号，支持数或列表且支持XtoYbyN形式字符串  
-> case_name:荷载工况名  
-```Python
-# 示例代码
-from qtmodel import *
-mdb.remove_index_temperature(case_name="工况1",element_id=1)
 ```  
 Returns: 无
 ### add_top_plate_temperature
@@ -2577,6 +2503,56 @@ from qtmodel import *
 mdb.add_top_plate_temperature(element_id=1,case_name="工况1",temperature=40,group_name="默认荷载组")
 ```  
 Returns: 无
+### update_deviation_parameter
+添加制造误差
+> 参数:  
+> name:名称  
+> new_name:新名称，默认不修改名称  
+> element_type:单元类型  1-梁单元  2-板单元  
+> parameters:参数列表  
+> _梁杆单元为[轴向,I端X向转角,I端Y向转角,I端Z向转角,J端X向转角,J端Y向转角,J端Z向转角]  
+> _板单元为[X向位移,Y向位移,Z向位移,X向转角,Y向转角]  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.update_deviation_parameter(name="梁端制造误差",element_type=1,parameters=[1,0,0,0,0,0,0])
+mdb.update_deviation_parameter(name="板端制造误差",element_type=1,parameters=[1,0,0,0,0])
+```  
+Returns: 无
+### remove_element_temperature
+删除指定单元温度
+> 参数:  
+> element_id:单元编号，支持数或列表且支持XtoYbyN形式字符串  
+> case_name:荷载工况名  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.remove_element_temperature(case_name="荷载工况1",element_id=1)
+```  
+Returns: 无
+### remove_deviation_parameter
+删除指定制造偏差参数
+> 参数:  
+> name:制造偏差参数名  
+> para_type:制造偏差类型 1-梁单元  2-板单元  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.remove_deviation_parameter(name="参数1",para_type=1)
+```  
+Returns: 无
+### remove_deviation_load
+删除指定制造偏差荷载
+> 参数:  
+> element_id:单元编号，支持数或列表且支持XtoYbyN形式字符串  
+> case_name:荷载工况名  
+> group_name: 荷载组  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.remove_deviation_load(case_name="工况1",element_id=1,group_name="荷载组1")
+```  
+Returns: 无
 ### remove_top_plate_temperature
 删除梁单元顶板温度
 > 参数:  
@@ -2588,18 +2564,26 @@ from qtmodel import *
 mdb.remove_top_plate_temperature(case_name="荷载工况1",element_id=1)
 ```  
 Returns: 无
-### add_custom_temperature
-添加梁自定义温度
+### remove_beam_section_temperature
+删除指定梁或板单元梁截面温度
 > 参数:  
-> element_id:单元编号，支持数或列表且支持XtoYbyN形式字符串  
 > case_name:荷载工况名  
-> group_name:指定荷载组,后续升级开放指定荷载组删除功能  
-> orientation: 1-局部坐标z 2-局部坐标y  
-> temperature_data:自定义数据[(参考位置1-顶 2-底,高度,温度)...]  
+> element_id:单元编号，支持数或列表且支持XtoYbyN形式字符串  
 ```Python
 # 示例代码
 from qtmodel import *
-mdb.add_custom_temperature(case_name="荷载工况1",element_id=1,orientation=1,temperature_data=[(1,1,20),(1,2,10)])
+mdb.remove_beam_section_temperature(case_name="工况1",element_id=1)
+```  
+Returns: 无
+### remove_gradient_temperature
+删除梁或板单元梯度温度
+> 参数:  
+> element_id:单元编号，支持数或列表且支持XtoYbyN形式字符串  
+> case_name:荷载工况名  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.remove_gradient_temperature(case_name="工况1",element_id=1)
 ```  
 Returns: 无
 ### remove_custom_temperature
@@ -2611,6 +2595,17 @@ Returns: 无
 # 示例代码
 from qtmodel import *
 mdb.remove_custom_temperature(case_name="工况1",element_id=1)
+```  
+Returns: 无
+### remove_index_temperature
+删除梁单元指数温度且支持XtoYbyN形式字符串
+> 参数:  
+> element_id:单元编号，支持数或列表且支持XtoYbyN形式字符串  
+> case_name:荷载工况名  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.remove_index_temperature(case_name="工况1",element_id=1)
 ```  
 Returns: 无
 ##  静力荷载操作
@@ -2628,18 +2623,6 @@ mdb.add_nodal_force(node_id=1,case_name="荷载工况1",load_info=[1,1,1,1,1,1],
 mdb.add_nodal_force(node_id="1to100",case_name="荷载工况1",load_info=[1,1,1,1,1,1],group_name="默认结构组")
 ```  
 Returns: 无
-### remove_nodal_force
-删除节点荷载
-> 参数:  
-> node_id:节点编号且支持XtoYbyN形式字符串  
-> case_name:荷载工况名  
-> group_name:指定荷载组  
-```Python
-# 示例代码
-from qtmodel import *
-mdb.remove_nodal_force(case_name="荷载工况1",node_id=1,group_name="默认荷载组")
-```  
-Returns: 无
 ### add_node_displacement
 添加节点位移
 > 参数:  
@@ -2652,18 +2635,6 @@ Returns: 无
 from qtmodel import *
 mdb.add_node_displacement(case_name="荷载工况1",node_id=1,load_info=(1,0,0,0,0,0),group_name="默认荷载组")
 mdb.add_node_displacement(case_name="荷载工况1",node_id=[1,2,3],load_info=(1,0,0,0,0,0),group_name="默认荷载组")
-```  
-Returns: 无
-### remove_nodal_displacement
-删除节点位移荷载
-> 参数:  
-> node_id:节点编号,支持数或列表且支持XtoYbyN形式字符串  
-> case_name:荷载工况名  
-> group_name:指定荷载组  
-```Python
-# 示例代码
-from qtmodel import *
-mdb.remove_nodal_displacement(case_name="荷载工况1",node_id=1,group_name="默认荷载组")
 ```  
 Returns: 无
 ### add_beam_element_load
@@ -2686,17 +2657,18 @@ mdb.add_beam_element_load(element_id=1,case_name="荷载工况1",load_type=1,lis
 mdb.add_beam_element_load(element_id="1to100",case_name="荷载工况1",load_type=3,list_x=[0.4,0.8],list_load=[100,200])
 ```  
 Returns: 无
-### remove_beam_element_load
-删除梁单元荷载
+### add_pre_stress
+添加预应力
 > 参数:  
-> element_id:单元号支持数或列表且支持XtoYbyN形式字符串  
 > case_name:荷载工况名  
-> load_type:荷载类型 (1-集中力   2-集中弯矩  3-分布力   4-分布弯矩)  
-> group_name:荷载组名称  
+> tendon_name:钢束名,支持钢束名或钢束名列表  
+> tension_type:预应力类型 (0-始端 1-末端 2-两端)  
+> force:预应力  
+> group_name:边界组  
 ```Python
 # 示例代码
 from qtmodel import *
-mdb.remove_beam_element_load(case_name="工况1",element_id=1,load_type=1,group_name="默认荷载组")
+mdb.add_pre_stress(case_name="荷载工况名",tendon_name="钢束1",force=1390000)
 ```  
 Returns: 无
 ### add_initial_tension_load
@@ -2715,18 +2687,6 @@ from qtmodel import *
 mdb.add_initial_tension_load(element_id=1,case_name="工况1",tension=100,tension_type=1)
 ```  
 Returns: 无
-### remove_initial_tension_load
-删除初始拉力
-> 参数:  
-> element_id:单元编号支持数或列表且支持XtoYbyN形式字符串  
-> case_name:荷载工况名  
-> group_name:荷载组名  
-```Python
-# 示例代码
-from qtmodel import *
-mdb.remove_initial_tension_load(element_id=1,case_name="工况1",group_name="默认荷载组")
-```  
-Returns: 无
 ### add_cable_length_load
 添加索长张拉
 > 参数:  
@@ -2739,18 +2699,6 @@ Returns: 无
 # 示例代码
 from qtmodel import *
 mdb.add_cable_length_load(element_id=1,case_name="工况1",length=1,tension_type=1)
-```  
-Returns: 无
-### remove_cable_length_load
-删除索长张拉
-> 参数:  
-> element_id:单元号支持数或列表且支持XtoYbyN形式字符串  
-> case_name:荷载工况名  
-> group_name:荷载组名  
-```Python
-# 示例代码
-from qtmodel import *
-mdb.remove_cable_length_load(case_name="工况1",element_id=1, group_name= "默认荷载组")
 ```  
 Returns: 无
 ### add_plate_element_load
@@ -2768,19 +2716,6 @@ Returns: 无
 # 示例代码
 from qtmodel import *
 mdb.add_plate_element_load(element_id=1,case_name="工况1",load_type=1,group_name="默认荷载组",list_load=[1000],list_xy=(0.2,0.5))
-```  
-Returns: 无
-### remove_plate_element_load
-删除指定荷载工况下指定单元的板单元荷载
-> 参数:  
-> element_id:单元编号，支持数或列表且支持XtoYbyN形式字符串  
-> case_name:荷载工况名  
-> load_type: 板单元类型 1集中力   2-集中弯矩  3-分布线力  4-分布线弯矩  5-分布面力  6-分布面弯矩  
-> group_name:荷载组名  
-```Python
-# 示例代码
-from qtmodel import *
-mdb.remove_plate_element_load(case_name="工况1",element_id=1,load_type=1,group_name="默认荷载组")
 ```  
 Returns: 无
 ### add_distribute_plane_load_type
@@ -2837,6 +2772,80 @@ mdb.update_distribute_plane_load_type(name="荷载类型1",load_type=1,point_lis
 mdb.update_distribute_plane_load_type(name="荷载类型2",load_type=2,point_list=[[1,0],[1,1]],load=10)
 ```  
 Returns: 无
+### remove_nodal_force
+删除节点荷载
+> 参数:  
+> node_id:节点编号且支持XtoYbyN形式字符串  
+> case_name:荷载工况名  
+> group_name:指定荷载组  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.remove_nodal_force(case_name="荷载工况1",node_id=1,group_name="默认荷载组")
+```  
+Returns: 无
+### remove_nodal_displacement
+删除节点位移荷载
+> 参数:  
+> node_id:节点编号,支持数或列表且支持XtoYbyN形式字符串  
+> case_name:荷载工况名  
+> group_name:指定荷载组  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.remove_nodal_displacement(case_name="荷载工况1",node_id=1,group_name="默认荷载组")
+```  
+Returns: 无
+### remove_initial_tension_load
+删除初始拉力
+> 参数:  
+> element_id:单元编号支持数或列表且支持XtoYbyN形式字符串  
+> case_name:荷载工况名  
+> group_name:荷载组名  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.remove_initial_tension_load(element_id=1,case_name="工况1",group_name="默认荷载组")
+```  
+Returns: 无
+### remove_beam_element_load
+删除梁单元荷载
+> 参数:  
+> element_id:单元号支持数或列表且支持XtoYbyN形式字符串  
+> case_name:荷载工况名  
+> load_type:荷载类型 (1-集中力   2-集中弯矩  3-分布力   4-分布弯矩)  
+> group_name:荷载组名称  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.remove_beam_element_load(case_name="工况1",element_id=1,load_type=1,group_name="默认荷载组")
+```  
+Returns: 无
+### remove_plate_element_load
+删除指定荷载工况下指定单元的板单元荷载
+> 参数:  
+> element_id:单元编号，支持数或列表且支持XtoYbyN形式字符串  
+> case_name:荷载工况名  
+> load_type: 板单元类型 1集中力   2-集中弯矩  3-分布线力  4-分布线弯矩  5-分布面力  6-分布面弯矩  
+> group_name:荷载组名  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.remove_plate_element_load(case_name="工况1",element_id=1,load_type=1,group_name="默认荷载组")
+```  
+Returns: 无
+### remove_cable_length_load
+删除索长张拉
+> 参数:  
+> element_id:单元号支持数或列表且支持XtoYbyN形式字符串  
+> case_name:荷载工况名  
+> group_name:荷载组名  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.remove_cable_length_load(case_name="工况1",element_id=1, group_name= "默认荷载组")
+```  
+Returns: 无
 ### remove_plane_load
 根据荷载编号删除分配面荷载
 > 参数:  
@@ -2871,6 +2880,97 @@ from qtmodel import *
 mdb.add_sink_group(name="沉降1",sink=0.1,node_ids=[1,2,3])
 ```  
 Returns: 无
+### add_sink_case
+添加沉降工况
+> 参数:  
+> name:荷载工况名  
+> sink_groups:沉降组名，支持字符串或列表  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.add_sink_case(name="沉降工况1",sink_groups=["沉降1","沉降2"])
+```  
+Returns: 无
+### add_concurrent_reaction
+添加并发反力组
+> 参数:  
+> names: 结构组名称集合  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.add_concurrent_reaction(names=["默认结构组"])
+```  
+Returns: 无
+### add_concurrent_force
+创建并发内力组
+> 参数:  
+> names: 结构组名称集合  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.add_concurrent_force(names=["默认结构组"])
+```  
+Returns: 无
+### add_load_case
+添加荷载工况
+> 参数:  
+> name:工况名  
+> case_type:荷载工况类型  
+> _"施工阶段荷载", "恒载", "活载", "制动力", "风荷载","体系温度荷载","梯度温度荷载",  
+> _"长轨伸缩挠曲力荷载", "脱轨荷载", "船舶撞击荷载","汽车撞击荷载","长轨断轨力荷载", "用户定义荷载"  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.add_load_case(name="工况1",case_type="施工阶段荷载")
+```  
+Returns: 无
+### add_load_group
+根据荷载组名称添加荷载组
+> 参数:  
+> name: 荷载组名称  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.add_load_group(name="荷载组1")
+```  
+Returns: 无
+### update_load_case
+添加荷载工况
+> 参数:  
+> name:工况名  
+> new_name:新工况名  
+> case_type:荷载工况类型  
+> _"施工阶段荷载", "恒载", "活载", "制动力", "风荷载","体系温度荷载","梯度温度荷载",  
+> _"长轨伸缩挠曲力荷载", "脱轨荷载", "船舶撞击荷载","汽车撞击荷载","长轨断轨力荷载", "用户定义荷载"  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.add_load_case(name="工况1",case_type="施工阶段荷载")
+```  
+Returns: 无
+### update_load_group
+根据荷载组名称添加荷载组
+> 参数:  
+> name: 荷载组名称  
+> new_name: 荷载组名称  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.update_load_group(name="荷载组1",new_name="荷载组2")
+```  
+Returns: 无
+### update_sink_case
+添加沉降工况
+> 参数:  
+> name:荷载工况名  
+> new_name: 新沉降组名,默认不修改  
+> sink_groups:沉降组名，支持字符串或列表  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.update_sink_case(name="沉降工况1",sink_groups=["沉降1","沉降2"])
+```  
+Returns: 无
 ### update_sink_group
 添加沉降组
 > 参数:  
@@ -2895,29 +2995,6 @@ mdb.remove_sink_group()
 mdb.remove_sink_group(name="沉降1")
 ```  
 Returns: 无
-### add_sink_case
-添加沉降工况
-> 参数:  
-> name:荷载工况名  
-> sink_groups:沉降组名，支持字符串或列表  
-```Python
-# 示例代码
-from qtmodel import *
-mdb.add_sink_case(name="沉降工况1",sink_groups=["沉降1","沉降2"])
-```  
-Returns: 无
-### update_sink_case
-添加沉降工况
-> 参数:  
-> name:荷载工况名  
-> new_name: 新沉降组名,默认不修改  
-> sink_groups:沉降组名，支持字符串或列表  
-```Python
-# 示例代码
-from qtmodel import *
-mdb.update_sink_case(name="沉降工况1",sink_groups=["沉降1","沉降2"])
-```  
-Returns: 无
 ### remove_sink_case
 按照名称删除沉降工况,不输入名称时默认删除所有沉降工况
 > 参数:  
@@ -2929,14 +3006,14 @@ mdb.remove_sink_case()
 mdb.remove_sink_case(name="沉降1")
 ```  
 Returns: 无
-### add_concurrent_reaction
-添加并发反力组
+### remove_load_group
+根据荷载组名称删除荷载组,参数为默认时删除所有荷载组
 > 参数:  
-> names: 结构组名称集合  
+> name: 荷载组名称  
 ```Python
 # 示例代码
 from qtmodel import *
-mdb.add_concurrent_reaction(names=["默认结构组"])
+mdb.remove_load_group(name="荷载组1")
 ```  
 Returns: 无
 ### remove_concurrent_reaction
@@ -2948,16 +3025,6 @@ from qtmodel import *
 mdb.remove_concurrent_reaction()
 ```  
 Returns: 无
-### add_concurrent_force
-创建并发内力组
-> 参数:  
-> names: 结构组名称集合  
-```Python
-# 示例代码
-from qtmodel import *
-mdb.add_concurrent_force(names=["默认结构组"])
-```  
-Returns: 无
 ### remove_concurrent_force
 删除所有并发内力组
 > 参数:  
@@ -2965,19 +3032,6 @@ Returns: 无
 # 示例代码
 from qtmodel import *
 mdb.remove_concurrent_force()
-```  
-Returns: 无
-### add_load_case
-添加荷载工况
-> 参数:  
-> name:工况名  
-> case_type:荷载工况类型  
-> _"施工阶段荷载", "恒载", "活载", "制动力", "风荷载","体系温度荷载","梯度温度荷载",  
-> _"长轨伸缩挠曲力荷载", "脱轨荷载", "船舶撞击荷载","汽车撞击荷载","长轨断轨力荷载", "用户定义荷载"  
-```Python
-# 示例代码
-from qtmodel import *
-mdb.add_load_case(name="工况1",case_type="施工阶段荷载")
 ```  
 Returns: 无
 ### remove_load_case
@@ -2991,51 +3045,6 @@ from qtmodel import *
 mdb.remove_load_case(index=1)
 mdb.remove_load_case(name="工况1")
 mdb.remove_load_case()
-```  
-Returns: 无
-### update_load_case
-添加荷载工况
-> 参数:  
-> name:工况名  
-> new_name:新工况名  
-> case_type:荷载工况类型  
-> _"施工阶段荷载", "恒载", "活载", "制动力", "风荷载","体系温度荷载","梯度温度荷载",  
-> _"长轨伸缩挠曲力荷载", "脱轨荷载", "船舶撞击荷载","汽车撞击荷载","长轨断轨力荷载", "用户定义荷载"  
-```Python
-# 示例代码
-from qtmodel import *
-mdb.add_load_case(name="工况1",case_type="施工阶段荷载")
-```  
-Returns: 无
-### add_load_group
-根据荷载组名称添加荷载组
-> 参数:  
-> name: 荷载组名称  
-```Python
-# 示例代码
-from qtmodel import *
-mdb.add_load_group(name="荷载组1")
-```  
-Returns: 无
-### remove_load_group
-根据荷载组名称删除荷载组,参数为默认时删除所有荷载组
-> 参数:  
-> name: 荷载组名称  
-```Python
-# 示例代码
-from qtmodel import *
-mdb.remove_load_group(name="荷载组1")
-```  
-Returns: 无
-### update_load_group
-根据荷载组名称添加荷载组
-> 参数:  
-> name: 荷载组名称  
-> new_name: 荷载组名称  
-```Python
-# 示例代码
-from qtmodel import *
-mdb.update_load_group(name="荷载组1",new_name="荷载组2")
 ```  
 Returns: 无
 ##  施工阶段操作
@@ -3066,6 +3075,32 @@ mdb.add_construction_stage(name="施工阶段1",duration=5,active_structures=[("
 active_boundaries=[("默认边界组",1)],active_loads=[("默认荷载组1",0)])
 ```  
 Returns: 无
+### add_section_connection_stage
+添加施工阶段联合截面
+> 参数:  
+> name:名称  
+> sec_id:截面号  
+> element_id:单元号，支持整型和整型列表,支持XtoYbyN形式字符串  
+> stage_name:结合阶段名  
+> age:材龄  
+> weight_type:辅材计自重方式 0-由主材承担  1-由整体承担 2-不计辅材自重  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.add_section_connection_stage(name="联合阶段",sec_id=1,element_id=[2,3,4,5],stage_name="施工阶段1")
+```  
+Returns:无
+### add_element_to_connection_stage
+添加单元到施工阶段联合截面
+> 参数:  
+> element_id:单元号，支持整型和整型列表且支持XtoYbyN形式字符串  
+> name:联合阶段名  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.add_element_to_connection_stage([1,2,3,4],"联合阶段")
+```  
+Returns:无
 ### update_construction_stage
 添加施工阶段信息
 > 参数:  
@@ -3127,31 +3162,6 @@ from qtmodel import *
 mdb.update_all_stage_setting_type(setting_type=1)
 ```  
 Returns: 无
-### remove_construction_stage
-按照施工阶段名删除施工阶段,默认删除所有施工阶段
-> 参数:  
-> name:所删除施工阶段名称  
-```Python
-# 示例代码
-from qtmodel import *
-mdb.remove_construction_stage(name="施工阶段1")
-```  
-Returns: 无
-### add_section_connection_stage
-添加施工阶段联合截面
-> 参数:  
-> name:名称  
-> sec_id:截面号  
-> element_id:单元号，支持整型和整型列表,支持XtoYbyN形式字符串  
-> stage_name:结合阶段名  
-> age:材龄  
-> weight_type:辅材计自重方式 0-由主材承担  1-由整体承担 2-不计辅材自重  
-```Python
-# 示例代码
-from qtmodel import *
-mdb.add_section_connection_stage(name="联合阶段",sec_id=1,element_id=[2,3,4,5],stage_name="施工阶段1")
-```  
-Returns:无
 ### update_section_connection_stage
 更新施工阶段联合截面
 > 参数:  
@@ -3179,17 +3189,16 @@ from qtmodel import *
 mdb.remove_section_connection_stage(name="联合阶段")
 ```  
 Returns:无
-### add_element_to_connection_stage
-添加单元到施工阶段联合截面
+### remove_construction_stage
+按照施工阶段名删除施工阶段,默认删除所有施工阶段
 > 参数:  
-> element_id:单元号，支持整型和整型列表且支持XtoYbyN形式字符串  
-> name:联合阶段名  
+> name:所删除施工阶段名称  
 ```Python
 # 示例代码
 from qtmodel import *
-mdb.add_element_to_connection_stage([1,2,3,4],"联合阶段")
+mdb.remove_construction_stage(name="施工阶段1")
 ```  
-Returns:无
+Returns: 无
 ### merge_all_stages
 合并当前所有施工阶段
 > 参数:  
