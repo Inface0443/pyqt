@@ -688,7 +688,7 @@ class Odb:
         Returns: 无
         """
         try:
-            qt_model.PlotDisplacementResult(filePath=file_path, stageId=stage_id, caseName=case_name, showIncrement=show_increment,
+            qt_model.PlotDeformationResult(filePath=file_path, stageId=stage_id, caseName=case_name, showIncrement=show_increment,
                                             envelopType=envelop_type, component=component,
                                             showDeformed=show_deformed, deformedScale=deformed_scale, deformedActual=deformed_actual,
                                             showNumber=show_number, textRotate=text_rotation, digitalCount=digital_count,
