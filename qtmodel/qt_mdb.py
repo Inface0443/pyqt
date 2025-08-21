@@ -3971,18 +3971,19 @@ class Mdb:
 
     @staticmethod
     def add_beam_section_temperature(element_id=1, case_name: str = "", code_index: int = 1,
-                                     sec_type: int = 1, t1: float = 0, t2: float = 0, t3: float = 0,
+                                     sec_type: int = 1, t1: float = 0, t2: float = 0, t3: float = 0,t4: float = 0,
                                      thick: float = 0, group_name: str = "默认荷载组"):
         """
         添加梁截面温度
         Args:
             element_id:单元编号，支持整数或整数型列表且支持XtoYbyN形式字符串
             case_name:荷载工况名
-            code_index:规范编号  (1-公路规范2015  2-美规2017)
+            code_index:规范编号  (1-公路规范2015  2-美规2017 3-BS5400)
             sec_type:截面类型(1-混凝土 2-组合梁)
             t1:温度1
             t2:温度2
             t3:温度3
+            t4:温度3
             thick:厚度
             group_name:荷载组名
         Example:
@@ -3991,8 +3992,8 @@ class Mdb:
         """
         try:
             qt_model.AddBeamSectionTemperature(elementId=element_id, caseName=case_name, codeIndex=code_index,
-                                               sectionType=sec_type, temperature1=t1, temperature2=t2,
-                                               temperature3=t3, groupName=group_name, thickness=thick)
+                                               sectionType=sec_type, t1=t1, t2=t2,
+                                               t3=t3, t4=t4,groupName=group_name, thick=thick)
         except Exception as ex:
             raise Exception(ex)
 

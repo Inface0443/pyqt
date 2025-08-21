@@ -1,4 +1,4 @@
-> 最新版本 V0.9.8 - 2025-07-17 
+> 最新版本 V0.9.9 - 2025-08-21 
 > pip install --upgrade qtmodel -i https://pypi.org/simple
 - 新增更新结构组接口 
 # 建模操作 
@@ -2463,11 +2463,12 @@ Returns: 无
 > 参数:  
 > element_id:单元编号，支持整数或整数型列表且支持XtoYbyN形式字符串  
 > case_name:荷载工况名  
-> code_index:规范编号  (1-公路规范2015  2-美规2017)  
+> code_index:规范编号  (1-公路规范2015  2-美规2017 3-BS5400)  
 > sec_type:截面类型(1-混凝土 2-组合梁)  
 > t1:温度1  
 > t2:温度2  
 > t3:温度3  
+> t4:温度3  
 > thick:厚度  
 > group_name:荷载组名  
 ```Python
