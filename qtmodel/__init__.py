@@ -1,5 +1,2 @@
-from .qt_mdb import *
-from .qt_odb import *
-
-mdb = Mdb
-odb = Odb
+from .mdb import mdb, Mdb
+from .odb import odb, Odb

@@ -1,0 +1,197 @@
+from .data_helper import MdbDataHelper
+from ..core.qt_server import QtServer
+
+
+class MdbTendon:
+    # region 钢束操作
+    @staticmethod
+    def add_tendon_group(name: str = ""):
+        """
+        按照名称添加钢束组，添加时可指定钢束组id
+        Args:
+            name: 钢束组名称
+        Example:
+            mdb.add_tendon_group(name="钢束组1")
+        Returns: 无
+        """
+        try:
+            s = "*TDNGROUP\r\n" + f"{name}\r\n"
+            print(s)
+            QtServer.post_command(s, "QDAT")
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def add_tendon_property(name: str = "", tendon_type: int = 0, material_name: str = "", duct_type: int = 1,
+                            steel_type: int = 1, steel_detail: list[float] = None,
+                            loos_detail: tuple[int, int, int] = None,
+                            slip_info: tuple[float, float] = None):
+        """
+        添加钢束特性
+        Args:
+             name:钢束特性名
+             tendon_type: 0-PRE 1-POST
+             material_name: 钢材材料所属名称
+             duct_type: 1-金属波纹管  2-塑料波纹管  3-铁皮管  4-钢管  5-抽芯成型
+             steel_type: 1-钢绞线  2-螺纹钢筋
+             steel_detail: 钢束详细信息
+                _钢绞线[钢束面积,孔道直径,摩阻系数,偏差系数]_
+                _螺纹钢筋[钢筋直径,钢束面积,孔道直径,摩阻系数,偏差系数,张拉方式(1-一次张拉 2-超张拉)]_
+             loos_detail: 松弛信息[规范,张拉,松弛] (仅钢绞线需要,默认为[1,1,1])
+                _规范:1-公规 2-铁规_
+                _张拉方式:1-一次张拉 2-超张拉_
+                _松弛类型：1-一般松弛 2-低松弛_
+             slip_info: 滑移信息[始端距离,末端距离] 默认为[0.006, 0.006]
+        Example:
+            mdb.add_tendon_property(name="钢束1",tendon_type=0,material_name="预应力材料",duct_type=1,steel_type=1,
+                                    steel_detail=[0.00014,0.10,0.25,0.0015],loos_detail=(1,1,1))
+        Returns: 无
+        """
+        try:
+            if steel_detail is None:
+                raise Exception("操作错误，钢束特性信息不能为空")
+            if loos_detail is None:
+                loos_detail = (1, 1, 1)
+            if slip_info is None:
+                slip_info = (0.006, 0.006)
+            s = "*TDN-PROPERTY\r\n" + f"{name},{tendon_type},{material_name},{duct_type},"
+            if steel_type == 1:
+                s += "钢绞线," + ",".join(f"{steel:g}" for steel in steel_detail)
+                s += "," + ",".join(f"{loos}" for loos in loos_detail)
+            elif steel_type == 2:
+                s += "螺纹钢筋," + ",".join(f"{steel:g}" for steel in steel_detail)
+            s += f",{slip_info[0]:g},{slip_info[1]:g}\r\n"
+            print(s)
+            QtServer.post_command(s, "QDAT")
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def add_tendon_3d(name: str, property_name: str = "", group_name: str = "默认钢束组",
+                      num: int = 1, line_type: int = 1, position_type=1,
+                      control_points: list[tuple[float, float, float, float]] = None,
+                      point_insert: tuple[float, float, float] = None,
+                      tendon_direction: tuple[float, float, float] = None,
+                      rotation_angle: float = 0, track_group: str = "默认结构组", projection: bool = True):
+        """
+        添加三维钢束
+        Args:
+             name:钢束名称
+             property_name:钢束特性名称
+             group_name:默认钢束组
+             num:根数
+             line_type:1-导线点  2-折线点
+             position_type: 定位方式 1-直线  2-轨迹线
+             control_points: 控制点信息[(x1,y1,z1,r1),(x2,y2,z2,r2)....]
+             point_insert: 定位方式 (直线时为插入点坐标[x,y,z]  轨迹线时[插入端(1-I 2-J),插入方向(1-ij 2-ji),插入单元id])
+             tendon_direction:直线钢束X方向向量  默认为x轴即[1,0,0] (轨迹线不用赋值)
+             rotation_angle:绕钢束旋转角度
+             track_group:轨迹线结构组名  (直线时不用赋值)
+             projection:直线钢束投影 (默认为true)
+        Example:
+            mdb.add_tendon_3d("BB1",property_name="22-15",num=2,position_type=1,
+                    control_points=[(0,0,-1,0),(10,0,-1,0)],point_insert=(0,0,0))
+            mdb.add_tendon_3d("BB1",property_name="22-15",num=2,position_type=2,
+                    control_points=[(0,0,-1,0),(10,0,-1,0)],point_insert=(1,1,1),track_group="轨迹线结构组1")
+        Returns: 无
+        """
+        try:
+            if tendon_direction is None:
+                tendon_direction = (1, 0, 0)
+            if control_points is None:
+                raise Exception("操作错误，钢束形状控制点不能为空")
+            if point_insert is None or len(point_insert) != 3:
+                raise Exception("操作错误，钢束插入点信息不能为空且长度必须为3")
+            prj_str = "YES" if projection else "NO"
+            s = "*TDN-PROFILE\r\n" + f"NAME={name},{property_name},{group_name},{num},{line_type},"
+            if position_type == 1:
+                s += "STRAIGHT,2,3D\r\n"
+                s += f"({','.join(f'{x}' for x in point_insert)}),({','.join(f'{x:g}' for x in tendon_direction)}),{rotation_angle:g},{prj_str}\r\n"
+            elif position_type == 2:
+                s += "TRACK,2,3D\r\n"
+                s += f"{track_group},{point_insert[0]},{point_insert[2]},{point_insert[1]},{rotation_angle:g}\r\n"
+            s += ",".join(f"({','.join(f'{v:g}' for v in point)})" for point in control_points) + "\r\n"
+            print(s)
+            QtServer.post_command(s, "QDAT")
+        except Exception as ex:
+            raise Exception(f"添加三维钢束:{name}失败,{ex}")
+
+    @staticmethod
+    def add_tendon_2d(name: str, property_name: str = "", group_name: str = "默认钢束组",
+                      num: int = 1, line_type: int = 1, position_type: int = 1,
+                      symmetry: int = 2, control_points: list[tuple[float, float, float]] = None,
+                      control_points_lateral: list[tuple[float, float, float]] = None,
+                      point_insert: tuple[float, float, float] = None,
+                      tendon_direction: tuple[float, float, float] = None,
+                      rotation_angle: float = 0, track_group: str = "默认结构组", projection: bool = True):
+        """
+        添加三维钢束
+        Args:
+             name:钢束名称
+             property_name:钢束特性名称
+             group_name:默认钢束组
+             num:根数
+             line_type:1-导线点  2-折线点
+             position_type: 定位方式 1-直线  2-轨迹线
+             symmetry: 对称点 0-左端点 1-右端点 2-不对称
+             control_points: 控制点信息[(x1,z1,r1),(x2,z2,r2)....] 三维[(x1,y1,z1,r1),(x2,y2,z2,r2)....]
+             control_points_lateral: 控制点横弯信息[(x1,y1,r1),(x2,y2,r2)....]，无横弯时不必输入
+             point_insert: 定位方式 (直线时为插入点坐标[x,y,z]  轨迹线时[插入端(1-I 2-J),插入方向(1-ij 2-ji),插入单元id])
+             tendon_direction:直线钢束X方向向量  默认为x轴即[1,0,0] (轨迹线不用赋值)
+             rotation_angle:绕钢束旋转角度
+             track_group:轨迹线结构组名  (直线时不用赋值)
+             projection:直线钢束投影 (默认为true)
+        Example:
+            mdb.add_tendon_2d(name="BB1",property_name="22-15",num=2,position_type=1,
+                    control_points=[(0,-1,0),(10,-1,0)],point_insert=(0,0,0))
+            mdb.add_tendon_2d(name="BB1",property_name="22-15",num=2,position_type=2,
+                    control_points=[(0,-1,0),(10,-1,0)],point_insert=(1,1,1),track_group="轨迹线结构组1")
+        Returns: 无
+        """
+        try:
+            if tendon_direction is None:
+                tendon_direction = (1, 0, 0)
+            if control_points is None:
+                raise Exception("操作错误，钢束形状控制点不能为空")
+            if point_insert is None or len(point_insert) != 3:
+                raise Exception("操作错误，钢束插入点信息不能为空且长度必须为3")
+            prj_str = "YES" if projection else "NO"
+            s = "*TDN-PROFILE\r\n" + f"NAME={name},{property_name},{group_name},{num},{line_type},"
+            if position_type == 1:
+                s += f"STRAIGHT,{symmetry},2D\r\n"
+                s += f"({','.join(f'{x}' for x in point_insert)}),({','.join(f'{x:g}' for x in tendon_direction)}),{rotation_angle:g},{prj_str}\r\n"
+            elif position_type == 2:
+                s += f"TRACK,{symmetry},2D\r\n"
+                s += f"{track_group},{point_insert[0]},{point_insert[2]},{point_insert[1]},{rotation_angle:g}\r\n"
+            s += "Z=" + ",".join(f"({','.join(f'{v}' for v in point)})" for point in control_points) + "\r\n"
+            if control_points_lateral is not None:
+                s += "Y=" + ",".join(
+                    f"({','.join(f'{y:g}' for y in point)})" for point in control_points_lateral) + "\r\n"
+            print(s)
+            QtServer.post_command(s, "QDAT")
+        except Exception as ex:
+            raise Exception(f"添加二维钢束:{name}失败,{ex}")
+
+    @staticmethod
+    def add_tendon_elements(ids):
+        """
+        添加预应力单元
+        Args:
+             ids:单元编号支持数或列表且支持XtoYbyN形式字符串
+        Example:
+            mdb.add_tendon_elements(ids=[1,2,4,6])
+        Returns: 无
+        """
+        try:
+            if ids is None:
+                elem_str = ""
+            elif isinstance(ids, list):
+                elem_str = MdbDataHelper.parse_int_list_to_str(ids)
+            else:
+                elem_str = str(ids)
+            s = "*PSELEMENT\r\n" + f"{elem_str}\r\n"
+            print(s)
+            QtServer.post_command(s, "QDAT")
+        except Exception as ec:
+            raise Exception(ec)
+    # endregion
