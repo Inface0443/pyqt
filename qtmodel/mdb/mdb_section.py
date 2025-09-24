@@ -1,4 +1,5 @@
 import json
+from typing import Union
 
 from .data_helper import MdbDataHelper
 from ..core.qt_server import QtServer
@@ -104,7 +105,7 @@ class MdbSection:
                 loop_segments,
                 sec_lines,
                 secondary_loop_segments)
-            print(s)
+            # print(s)
             QtServer.post_command(s, "QDAT")
         except Exception as ex:
             raise Exception(f"添加截面:{name}失败，{ex}")
@@ -133,14 +134,14 @@ class MdbSection:
                 bias = f"{bias_x:g},{bias_y:g}"
             else:
                 bias = f"{center_type},{bias_type}"
-            sec_property: list[float] | None = sec_data.get("sec_property", None)
+            sec_property: Union[list[float], None]  = sec_data.get("sec_property", None)
             s = ""
             if sec_property is not None:
                 s += "*SEC-PROPERTY\r\n" + f"ID={index},{name},1,{'YES' if shear_consider else 'NO'},{bias}\r\n"
                 s += ",".join(f"{x:g}" for x in sec_property) + "\r\n"
             s += "*SEC-INFO\r\n" + f"ID={index},{name},{sec_type},{'YES' if shear_consider else 'NO'},{bias}\r\n"
             s = MdbDataHelper.get_str_by_data(s, sec_type, sec_data)
-            print(s)
+            # print(s)
             QtServer.post_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
@@ -170,12 +171,12 @@ class MdbSection:
             center_type_i = sec_begin.get("center_type", "质心")
             bias_x_i = sec_begin.get("bias_x", 0)
             bias_y_i = sec_begin.get("bias_y", 0)
-            sec_property_i: list[float] | None = sec_begin.get("sec_property", None)
+            sec_property_i: Union[list[float], None]  = sec_begin.get("sec_property", None)
             bias_type_j = sec_end.get("bias_type", "中心")
             center_type_j = sec_end.get("center_type", "质心")
             bias_x_j = sec_end.get("bias_x", 0)
             bias_y_j = sec_end.get("bias_y", 0)
-            sec_property_j: list[float] | None = sec_end.get("sec_property", None)
+            sec_property_j: Union[list[float], None]  = sec_end.get("sec_property", None)
 
             if (bias_x_i, bias_y_i) != (0, 0):
                 bias1 = f"{bias_x_i:g},{bias_y_i:g}"
@@ -201,7 +202,7 @@ class MdbSection:
             s += "J=\r\n"
             s = MdbDataHelper.get_str_by_data(s, sec_type, sec_end)
 
-            print(s)
+            # print(s)
             QtServer.post_command(s, "QDAT")
             if sec_normalize:
                 params = {
@@ -277,7 +278,7 @@ class MdbSection:
                 id_str = str(ids)
             if parameter_info is None:
                 s = "*TSGROUP\r\n" + f"{name},{id_str},{factor_w:g},{ref_w},{dis_w:g},{factor_h:g},{ref_h},{dis_h:g}\r\n"
-                print(s)
+                # print(s)
                 QtServer.post_command(s, "QDAT")
             if parameter_info is not None:
                 s = "*PARA-TSGROUP\r\n" + f"NAME={name},{id_str}\r\n"

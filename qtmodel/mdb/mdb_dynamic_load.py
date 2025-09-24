@@ -19,7 +19,7 @@ class MdbDynamicLoad:
         """
         try:
             s = "*LOADTOMASS\r\n" + f"{name},{factor}\r\n"
-            print(s)
+            # print(s)
             QtServer.post_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
@@ -43,7 +43,7 @@ class MdbDynamicLoad:
             else:
                 node_str = str(node_id)
             s = "*NODALMASS\r\n" + f"{node_str},{mass_info[0]:g},{mass_info[1]:g},{mass_info[2]:g},{mass_info[3]:g}\r\n"
-            print(s)
+            # print(s)
             QtServer.post_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
@@ -66,7 +66,7 @@ class MdbDynamicLoad:
             s = "*SPFUNC\r\n" + f"NAME={name},{factor:g},{kind}\r\n"
             if function_info is not None:
                 s += ",".join(f"{time:g},{y:g}" for time,y in function_info) + "\r\n"
-            print(s)
+            # print(s)
             QtServer.post_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
@@ -97,7 +97,7 @@ class MdbDynamicLoad:
                 s += f"Y={info_y[0]},{info_y[1]:g}\r\n"
             if info_z is not None:
                 s += f"Z={info_z[0]},{info_z[1]:g}\r\n"
-            print(s)
+            # print(s)
             QtServer.post_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
@@ -131,7 +131,7 @@ class MdbDynamicLoad:
             #     s += "Y=" + ",".join(f"{y:g}" for y in info_y) + "\r\n"
             # if info_z is not None:
             #     s += "Z=" + ",".join(f"{z:g}" for z in info_z) + "\r\n"
-            # print(s)
+            # # print(s)
             # QtServer.post_command(s, "QDAT")
             params = {
                 "version": QtServer.QT_VERSION,
@@ -170,7 +170,7 @@ class MdbDynamicLoad:
         """
         try:
             s = "*BDLINK\r\n" + f"{index},{property_name},{node_i},{node_j},{beta},{node_system},{group_name}\r\n"
-            print(s)
+            # print(s)
             QtServer.post_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
@@ -194,7 +194,7 @@ class MdbDynamicLoad:
         """
         try:
             # s = "*DMCLOAD\r\n" + f"{node_id},{case_name},{function_name},{force_type},{factor},{time}\r\n"
-            # print(s)
+            # # print(s)
             # QtServer.post_command(s, "QDAT")
             params = {
                 "version": QtServer.QT_VERSION,  # 版本控制
@@ -233,7 +233,7 @@ class MdbDynamicLoad:
                 s += f"Y={info_y[0]},{info_y[1]:g},{info_y[2]:g}\r\n"
             if info_z is not None:
                 s += f"Z={info_z[0]},{info_z[1]:g},{info_z[2]:g}\r\n"
-            print(s)
+            # print(s)
             QtServer.post_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
@@ -281,7 +281,7 @@ class MdbDynamicLoad:
             #     s += f"DAMPING={single_damping[0]:g},{single_damping[1]:g},{single_damping[2]:g},{single_damping[3]:g}\r\n"
             # elif  damp_type == 2:
             #     s += "DAMPING=" + ",".join(f"{m1},{t1:g},{t2:g},{d:g}" for m1,t1,t2,d in group_damping) + "\r\n"
-            # print(s)
+            # # print(s)
             # QtServer.post_command(s, "QDAT")
             params = {
                 "version": QtServer.QT_VERSION,  # 版本控制
@@ -320,7 +320,7 @@ class MdbDynamicLoad:
             s = "*THFUNC\r\n" + f"NAME={name},{factor},{kind}\r\n"
             if function_info is not None:
                 s += ",".join(f"{time:g},{y:g}" for time,y in function_info) + "\r\n"
-            print(s)
+            # print(s)
             QtServer.post_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)

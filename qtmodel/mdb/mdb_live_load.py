@@ -1,9 +1,7 @@
 import json
-
 from ..core.qt_server import QtServer
 from typing import Union, List
 from .data_helper import MdbDataHelper
-import re
 
 
 class MdbLiveLoad:
@@ -46,7 +44,7 @@ class MdbLiveLoad:
                     s += f",{','.join('YES' if x else 'NO' for x in calc_fatigue[:3])}\r\n"
             elif standard_code in (2, 3, 4, 5, 7):
                 s += "\r\n"
-            print(s)
+            # print(s)
             QtServer.post_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
@@ -98,7 +96,7 @@ class MdbLiveLoad:
                     s += f"{wheelbase:g},{min_dis:g}," + ",".join(f"({pi},{di})" for pi, di in zip(p, dis)) + "\r\n"
                 else:
                     raise Exception("操作错误，P和D列表长度不一致")
-            print(s)
+            # print(s)
             QtServer.post_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
@@ -143,7 +141,7 @@ class MdbLiveLoad:
         """
         try:
             s = "*INF-PLANE\r\n" + f"{name}," + ",".join(tandem_names) + "\r\n"
-            print(s)
+            # print(s)
             QtServer.post_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
@@ -168,7 +166,7 @@ class MdbLiveLoad:
         try:
             opt_str = "YES" if optimize else "NO"
             s = "*LANE-LINE\r\n" + f"{name},{influence_name},{tandem_name},{offset:g},{lane_width:g},{opt_str},{direction}\r\n"
-            print(s)
+            # print(s)
             QtServer.post_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
@@ -205,7 +203,7 @@ class MdbLiveLoad:
             else:
                 s += f"YES,{special_code}\r\n"
             s += "\r\n".join((f"{veh_name},{coeff:g}," + ",".join(lanes)) for veh_name, coeff, lanes in sub_case)
-            print(s)
+            # print(s)
             QtServer.post_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
@@ -230,7 +228,7 @@ class MdbLiveLoad:
         try:
             s = "*LIVE-REDUCTION\r\n" + f"NAME={name},1,{code_index},{longitude_factor:g},{impact_factor:g},{frequency:g}\r\n" + ",".join(
                 f"{x:g}" for x in cross_factors) + "\r\n"
-            print(s)
+            # print(s)
             QtServer.post_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
@@ -264,7 +262,7 @@ class MdbLiveLoad:
             calc_str = "YES" if calc_fatigue else "NO"
             s = "*LIVE-REDUCTION\r\n" + f"NAME={name},2,{code_index},{calc_str},{line_count},{longitude_factor:g},{impact_factor:g},{fatigue_factor:g},{bridge_kind},{fill_thick:g},{rise:g},{calc_length}\r\n"
             s += ",".join(f"{x:g}" for x in cross_factors) + "\r\n"
-            print(s)
+            # print(s)
             QtServer.post_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
@@ -287,7 +285,7 @@ class MdbLiveLoad:
         try:
             s = "*LIVE-REDUCTION\r\n" + f"NAME={name},3,0,{longitude_factor:g},{impact_factor:g}\r\n" + ",".join(
                 f"{x:g}" for x in cross_factors) + "\r\n"
-            print(s)
+            # print(s)
             QtServer.post_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)

@@ -33,7 +33,7 @@ class MdbBoundary:
             else:
                 id_str = str(element_ids)
             s = "*EFCFACTOR\r\n" + f"{id_str},{factor_i},{factor_j},{dz_i},{dz_j},{group_name}\r\n"
-            print(s)
+            # print(s)
             QtServer.post_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
@@ -50,7 +50,7 @@ class MdbBoundary:
         """
         try:
             s = "*BNDRGROUP\r\n" + f"{name}\r\n"
-            print(s)
+            # print(s)
             QtServer.post_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
@@ -70,7 +70,7 @@ class MdbBoundary:
             raise Exception("添加一般弹性支承失败,矩阵参数有误(数据需按列输入至列表)")
         try:
             s = "*GSPRTYPE\r\n" + f"{name}," + ",".join(f"{x:g}" for x in data_matrix) + "\r\n"
-            print(s)
+            # print(s)
             QtServer.post_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
@@ -93,7 +93,7 @@ class MdbBoundary:
             else:
                 id_str = str(node_id)
             s = "*GSPRING\r\n" + f"{id_str},{property_name},{group_name}\r\n"
-            print(s)
+            # print(s)
             QtServer.post_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
@@ -120,7 +120,7 @@ class MdbBoundary:
             else:
                 id_str = str(node_id)
             s = "*GSUPPORT\r\n" + f"{id_str}," + "".join(str(int(x)) for x in boundary_info) + f",{group_name}\r\n"
-            print(s)
+            # print(s)
             QtServer.post_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
@@ -153,7 +153,7 @@ class MdbBoundary:
                 raise Exception("操作错误，要求输入弹性支承边界信息长度为2")
             else:
                 s += f"{support_type},{group_name}," + ",".join(f"{x:g}" for x in boundary_info) + "\r\n"
-            print(s)
+            # print(s)
             QtServer.post_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
@@ -194,7 +194,7 @@ class MdbBoundary:
             #     s += "\r\n"
             # elif link_type in (3,4):
             #     s += f",{kx:g}" + "\r\n"
-            # print(s)
+            # # print(s)
             # QtServer.post_command(s, "QDAT")
             params = {
                 "version": QtServer.QT_VERSION,  # 版本控制
@@ -237,7 +237,7 @@ class MdbBoundary:
             for master_id, slave_ids in master_slave_dict.items():
                 ids_str = MdbDataHelper.parse_int_list_to_str(slave_ids)
                 s += f"{master_id},{ids_str}," + "".join(str(int(x)) for x in boundary_info) + f",{group_name}\r\n"
-            print(s)
+            # print(s)
             QtServer.post_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
@@ -264,7 +264,7 @@ class MdbBoundary:
                 id_str = str(slave_id)
             s = "*MSLINK\r\n" + f"{master_id},{id_str}," + "".join(
                 str(int(x)) for x in boundary_info) + f",{group_name}\r\n"
-            print(s)
+            # print(s)
             QtServer.post_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
@@ -290,7 +290,7 @@ class MdbBoundary:
                 raise Exception("操作错误，要求输入J端约束列表长度为6")
             s = "*RESTRAINTS\r\n" + f"{beam_id}," + "".join(str(int(x)) for x in info_i) + "," + "".join(
                 str(int(y)) for y in info_j) + f",{group_name}\r\n"
-            print(s)
+            # print(s)
             QtServer.post_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
@@ -313,7 +313,7 @@ class MdbBoundary:
         try:
             s = "*EQUATION\r\n" + f"{name},{group_name},{sec_node},{sec_dof}," + ",".join(
                 f"{tuples}" for tuples in master_info) + "\r\n"
-            print(s)
+            # print(s)
             QtServer.post_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
@@ -342,7 +342,7 @@ class MdbBoundary:
             elif input_type == 2:
                 tran_info = MdbDataHelper.convert_three_points_to_vectors(coord_info)
             s += f"V1({','.join(f'{axis:g}' for axis in tran_info[0])}),V2({','.join(f'{axis:g}' for axis in tran_info[1])})\r\n"
-            print(s)
+            # print(s)
             QtServer.post_command(s, "QDAT")
         except Exception as ex:
             pass

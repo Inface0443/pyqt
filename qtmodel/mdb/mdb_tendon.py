@@ -16,7 +16,7 @@ class MdbTendon:
         """
         try:
             s = "*TDNGROUP\r\n" + f"{name}\r\n"
-            print(s)
+            # print(s)
             QtServer.post_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
@@ -61,7 +61,7 @@ class MdbTendon:
             elif steel_type == 2:
                 s += "螺纹钢筋," + ",".join(f"{steel:g}" for steel in steel_detail)
             s += f",{slip_info[0]:g},{slip_info[1]:g}\r\n"
-            print(s)
+            # print(s)
             QtServer.post_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
@@ -111,7 +111,7 @@ class MdbTendon:
                 s += "TRACK,2,3D\r\n"
                 s += f"{track_group},{point_insert[0]},{point_insert[2]},{point_insert[1]},{rotation_angle:g}\r\n"
             s += ",".join(f"({','.join(f'{v:g}' for v in point)})" for point in control_points) + "\r\n"
-            print(s)
+            # print(s)
             QtServer.post_command(s, "QDAT")
         except Exception as ex:
             raise Exception(f"添加三维钢束:{name}失败,{ex}")
@@ -167,7 +167,7 @@ class MdbTendon:
             if control_points_lateral is not None:
                 s += "Y=" + ",".join(
                     f"({','.join(f'{y:g}' for y in point)})" for point in control_points_lateral) + "\r\n"
-            print(s)
+            # print(s)
             QtServer.post_command(s, "QDAT")
         except Exception as ex:
             raise Exception(f"添加二维钢束:{name}失败,{ex}")
@@ -179,7 +179,7 @@ class MdbTendon:
         Args:
              ids:单元编号支持数或列表且支持XtoYbyN形式字符串
         Example:
-            mdb.add_tendon_elements(ids=[1,2,4,6])
+            mdb.add_tendon_elements(element_id=[1,2,4,6])
         Returns: 无
         """
         try:
@@ -190,7 +190,7 @@ class MdbTendon:
             else:
                 elem_str = str(ids)
             s = "*PSELEMENT\r\n" + f"{elem_str}\r\n"
-            print(s)
+            # print(s)
             QtServer.post_command(s, "QDAT")
         except Exception as ec:
             raise Exception(ec)

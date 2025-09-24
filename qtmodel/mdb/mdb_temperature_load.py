@@ -25,8 +25,8 @@ class MdbTemperatureLoad:
                 raise Exception("操作错误，制造误差信息不能为空")
             if len(parameters) != 7 and len(parameters) != 5 :
                 raise Exception("操作错误，制造误差信息数量有误，请核查数据")
-            s = "*DEVPARAM\r\n" + f"{name},{",".join(f"{x:g}" for x in parameters)}" + "\r\n"
-            print(s)
+            s = "*DEVPARAM\r\n" + f"{name},{','.join(f'{x:g}' for x in parameters)}" + "\r\n"
+            # print(s)
             QtServer.post_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
@@ -62,7 +62,7 @@ class MdbTemperatureLoad:
                 s += f"{parameters}\r\n"
             elif isinstance(parameters, list):
                 s += ",".join(f"{s}" for s in parameters) + "\r\n"
-            print(s)
+            # print(s)
             QtServer.post_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
@@ -91,7 +91,7 @@ class MdbTemperatureLoad:
                 id_str = str(element_id)
             s = "*USER-TEMP\r\n" + f"{id_str},{case_name},{group_name},{orientation},"
             s += ",".join(f"({','.join(f'{x:g}' for x in data)})" for data in temperature_data) + "\r\n"
-            print(s)
+            # print(s)
             QtServer.post_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
@@ -118,7 +118,7 @@ class MdbTemperatureLoad:
             else:
                 id_str = str(element_id)
             s = "*ELE-TEMP\r\n" + f"{id_str},{case_name},{group_name},{temperature:g}\r\n"
-            print(s)
+            # print(s)
             QtServer.post_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
@@ -137,7 +137,7 @@ class MdbTemperatureLoad:
         """
         try:
             s = "*SYSTEM-TEMP\r\n" + f"{case_name},{group_name},{temperature:g}\r\n"
-            print(s)
+            # print(s)
             QtServer.post_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
@@ -171,7 +171,7 @@ class MdbTemperatureLoad:
                 s = "*BEAMGRD-TEMP\r\n" + f"{id_str},{case_name},{group_name},{section_oriental},{temperature:g}" + "\r\n"
             elif element_type == 2:  # 2-板单元
                 s = "*PLATEGRD-TEMP\r\n" + f"{id_str},{case_name},{group_name},{temperature:g}" + "\r\n"
-            print(s)
+            # print(s)
             QtServer.post_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
@@ -205,7 +205,7 @@ class MdbTemperatureLoad:
             else:
                 id_str = str(element_id)
             s = "*SEC-TEMP\r\n" + f"{id_str},{case_name},{group_name},{code_index},{sec_type},{t1:g},{t2:g},{t3:g},{t4:g},{thick:g}" + "\r\n"
-            print(s)
+            # print(s)
             QtServer.post_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
@@ -234,7 +234,7 @@ class MdbTemperatureLoad:
                 id_str = str(element_id)
             tem_dir = 1  # 目前仅支持截面高度方向温度加载
             s = "*INDEX-TEMP\r\n" + f"{id_str},{case_name},{group_name},{tem_dir},{temperature:g},{index:g}" + "\r\n"
-            print(s)
+            # print(s)
             QtServer.post_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
@@ -261,7 +261,7 @@ class MdbTemperatureLoad:
             else:
                 id_str = str(element_id)
             s = "*TOPPLATE-TEMP\r\n" + f"{id_str},{case_name},{group_name},{temperature:g}" + "\r\n"
-            print(s)
+            # print(s)
             QtServer.post_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)

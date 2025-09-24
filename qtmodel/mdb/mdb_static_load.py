@@ -32,7 +32,7 @@ class MdbStaticLoad:
                 node_str = str(node_id)
             s = "*NODALLOAD\r\n" + f"{node_str},{case_name},{group_name}," + ",".join(
                 f"{x:g}" for x in load_info) + "\r\n"
-            print(s)
+            # print(s)
             QtServer.post_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
@@ -64,7 +64,7 @@ class MdbStaticLoad:
                 node_str = str(node_id)
             s = "*NODALDISP\r\n" + f"{node_str},{case_name},{group_name}," + ",".join(
                 f"{x:g}" for x in load_info) + "\r\n"
-            print(s)
+            # print(s)
             QtServer.post_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
@@ -127,7 +127,7 @@ class MdbStaticLoad:
             #     s += ",".join(f"{x:g}" for x in list_x) + "," + ",".join(f"{load:g}" for load in list_load)
             # bias_str = "YES" if load_bias[0] else "NO"
             # s += f",{bias_str},{load_bias[1]},{load_bias[2]},{load_bias[3]:g}\r\n"
-            # print(s)
+            # # print(s)
             # QtServer.post_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
@@ -155,7 +155,7 @@ class MdbStaticLoad:
                 tend_list = tendon_name
             s = "*PRESTRESS\r\n" + "\r\n".join(
                 f"{tend},{case_name},{group_name},{tension_type},{force}" for tend in tend_list) + "\r\n"
-            print(s)
+            # print(s)
             QtServer.post_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
@@ -185,7 +185,7 @@ class MdbStaticLoad:
             else:
                 elem_str = str(element_id)
             s = "*INITTENSION\r\n" + f"{elem_str},{case_name},{group_name},{tension:g},{tension_type},{application_type},{stiffness:g}\r\n"
-            print(s)
+            # print(s)
             QtServer.post_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
@@ -213,7 +213,7 @@ class MdbStaticLoad:
             else:
                 elem_str = str(element_id)
             s = "*CABLELENLOAD\r\n" + f"{elem_str},{case_name},{group_name},{length},{tension_type}\r\n"
-            print(s)
+            # print(s)
             QtServer.post_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
@@ -259,7 +259,7 @@ class MdbStaticLoad:
                 s += f"{load_type},{coord_system},{list_load[0]:g},{list_load[1]:g},{list_load[2]:g},{list_load[3]:g}\r\n"
             else:
                 raise Exception("操作错误，板单元暂不支持该类型荷载")
-            print(s)
+            # print(s)
             QtServer.post_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)

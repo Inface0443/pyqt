@@ -305,8 +305,9 @@ class MdbDataHelper:
         """
         将整形、列表、XtoYbyZ 统一解析为 int 列表
         """
+        ids = []
         if data is None:
-            ids = []
+            return ids
         elif isinstance(data, int):
             ids = [data]
         elif isinstance(data, list):

@@ -38,7 +38,7 @@ class MdbAnalysisSetting:
             for key, val in mapping.items():
                 if val:  # 字符串不为空
                     s += f"{key}={val}\r\n"
-            print(s)
+            # print(s)
             QtServer.post_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
@@ -57,7 +57,7 @@ class MdbAnalysisSetting:
         """
         try:
             s = "*GLB-SET\r\n" + f"{solver_type},{calculation_type},{thread_count}\r\n"
-            print(s)
+            # print(s)
             QtServer.post_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
@@ -95,7 +95,7 @@ class MdbAnalysisSetting:
             s = "*CS-SET\r\n" + f"{do_str},{toend_str},{other_stage_name},{analysis_type},{creep_str},{cable_tension_position},{comp_str}\r\n"
             s += f"{shrink_creep_type},{creep_load_type},"
             s += f"{'YES' if sub_step_info[0] else 'NO'},{','.join(f'{x:g}' for x in sub_step_info[1:])}\r\n" if sub_step_info else "\r\n"
-            print(s)
+            # print(s)
             QtServer.post_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
@@ -163,7 +163,7 @@ class MdbAnalysisSetting:
                     lines.append(MdbDataHelper.live_load_set_line(code, calc_type, groups))
 
             s = "".join(lines)
-            print(s)
+            # print(s)
             QtServer.post_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
@@ -188,7 +188,7 @@ class MdbAnalysisSetting:
         """
         try:
             s = "*NON-SET\r\n" + f"{non_linear_type},{non_linear_method},{max_loading_steps},{max_iteration_times},{accuracy_of_displacement:g},{accuracy_of_force:g}\r\n"
-            print(s)
+            # print(s)
             QtServer.post_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
@@ -217,7 +217,7 @@ class MdbAnalysisSetting:
                 s += f"SM={','.join(sink_load_cases)}\r\n"
             if live_load_cases is not None:
                 s += f"MV={','.join(live_load_cases)}\r\n"
-            print(s)
+            # print(s)
             QtServer.post_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
@@ -238,7 +238,7 @@ class MdbAnalysisSetting:
         """
         try:
             s = "*VB-SET\r\n" + f"{'YES' if do_analysis else 'NO'},{method},{matrix_type},{mode_num}\r\n"
-            print(s)
+            # print(s)
             QtServer.post_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
@@ -262,7 +262,7 @@ class MdbAnalysisSetting:
                 if isinstance(damping_ratio, float):
                     damping_ratio = [damping_ratio]
                 s = "*RS-SET\r\n" + f"{kind},{'YES' if by_mode else 'NO'},{','.join(f'{x:g}' for x in damping_ratio)}\r\n"
-                print(s)
+                # print(s)
                 QtServer.post_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
@@ -287,7 +287,7 @@ class MdbAnalysisSetting:
                 else:
                     s += "\r\n"
                 QtServer.post_command(s, "QDAT")
-                print(s)
+                # print(s)
                 QtServer.post_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
@@ -320,7 +320,7 @@ class MdbAnalysisSetting:
                     s += f"VL={','.join(variable_cases)}\r\n"
                 if constant_cases is not None:
                     s += f"CL={','.join(constant_cases)}\r\n"
-                print(s)
+                # print(s)
                 QtServer.post_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)

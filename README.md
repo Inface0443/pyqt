@@ -1,4 +1,4 @@
-> 最新版本 V1.1.1 - 2025-09-24 
+> 最新版本 V1.1.2 - 2025-09-24 
 > pip install --upgrade qtmodel -i https://pypi.org/simple
 - 新增更新结构组接口 
 # 建模操作 
@@ -614,7 +614,7 @@ Returns: 无
 ```Python
 # 示例代码
 from qtmodel import *
-mdb.add_tendon_elements(ids=[1,2,4,6])
+mdb.add_tendon_elements(element_id=[1,2,4,6])
 ```  
 Returns: 无
 ##  静力荷载操作

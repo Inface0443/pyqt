@@ -2,7 +2,7 @@ import json
 
 from ..core.qt_server import QtServer
 from .data_helper import MdbDataHelper
-from typing import Union, List
+from typing import Union
 
 class MdbStructure:
     """
@@ -32,7 +32,7 @@ class MdbStructure:
             #     QtServer.MERGE_STR += s
             # else:
             #     QtServer.post_command(s,"QDAT")
-            # print(s)
+            # # print(s)
             params = {
                 "version": QtServer.QT_VERSION,  # 版本控制
                 "node_data": node_data,
@@ -81,7 +81,7 @@ class MdbStructure:
                 s += f"{index},{ele_type},{mat_id},{sec_id},{beta_angle},{node_ids[0]},{node_ids[1]},{initial_type},{initial_value:g}" + "\r\n"
             elif ele_type == 4: # 4-板
                 s += f"{index},{ele_type},{mat_id},{sec_id},{beta_angle},{node_ids[0]},{node_ids[1]},{node_ids[2]},{node_ids[3]},{plate_type}" + "\r\n"
-            print(s)
+            # print(s)
             if QtServer.QT_MERGE:
                 QtServer.MERGE_STR += s  # 开启合并发送时需要调用update_model生效
             else:
@@ -108,7 +108,7 @@ class MdbStructure:
         """
         try:
             s = "*ELEMENT\r\n" + "\r\n".join(",".join(str(x) for x in row) for row in ele_data) + "\r\n"
-            print(s)
+            # print(s)
             QtServer.post_command(s,"QDAT")
         except Exception as ex:
             raise Exception(ex)
@@ -146,7 +146,7 @@ class MdbStructure:
                 elem_str = str(element_ids)
 
             s = "*STRGROUP\r\n" + f"{name},{node_str},{elem_str}" + "\r\n"
-            print(s)
+            # print(s)
             QtServer.post_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)

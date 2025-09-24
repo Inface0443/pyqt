@@ -47,20 +47,20 @@ class MdbConstructionStage:
             s = "*STAGE\r\n"
             s += f"ID={index},{name},{duration},{tendon_cancel_loss:g},{constraint_cancel_type}\r\n"
             if active_structures is not None:
-                s += f"AELEM={','.join(f'{','.join(f'{x:g}' if isinstance(x, (int, float)) else str(x) for x in row)}' for row in active_structures)}" + "\r\n"
+                s += f"AELEM={','.join(','.join(str(x) if not isinstance(x, (int, float)) else f'{x:g}' for x in row) for row in active_structures)}\r\n"
             if delete_structures is not None:
-                s += f"DELEM={','.join(f'{x}' for x in delete_structures)}\r\n"
+                s += f"DELEM={','.join(map(str, delete_structures))}\r\n"
             if active_boundaries is not None:
-                s += f"ABNDR={','.join(f'{','.join(f'{x}' for x in row)}' for row in active_boundaries)}" + "\r\n"
+                s += f"ABNDR={','.join(','.join(map(str, row)) for row in active_boundaries)}\r\n"
             if delete_boundaries is not None:
-                s += f"DBNDR={','.join(f'{x}' for x in delete_boundaries)}\r\n"
+                s += f"DBNDR={','.join(map(str, delete_boundaries))}\r\n"
             if active_loads is not None:
-                s += f"ALOAD={','.join(f'{','.join(f'{x}' for x in row)}' for row in active_loads)}" + "\r\n"
+                s += f"ALOAD={','.join(','.join(map(str, row)) for row in active_loads)}\r\n"
             if delete_loads is not None:
-                s += f"DLOAD={','.join(f'{','.join(f'{x}' for x in row)}' for row in delete_loads)}" + "\r\n"
+                s += f"DLOAD={','.join(','.join(map(str, row)) for row in delete_loads)}\r\n"
             if temp_loads is not None:
-                s += f"TEPLOAD={str.join(',', temp_loads)}" + "\r\n"
-            print(s)
+                s += f"TEPLOAD={','.join(map(str, temp_loads))}\r\n"
+            # print(s)
             QtServer.post_command(s, "QDAT")
         except Exception as ex:
             raise Exception(f"添加施工阶段:{name}错误,{ex}")
@@ -91,7 +91,7 @@ class MdbConstructionStage:
             # s = "*LOADCOMB\r\n" + f"NAME={name},{combine_type},{describe}\r\n"
             # s += "\r\n".join(f'{','.join(f'{x:g}' if isinstance(x, float) else str(x) for x in row)}' for row in
             #                  combine_info) + "\r\n"
-            # print(s)
+            # # print(s)
             # QtServer.post_command(s, "QDAT")
             params = {
                 "version": QtServer.QT_VERSION,  # 版本控制
@@ -121,7 +121,7 @@ class MdbConstructionStage:
         try:
             # 创建参数字典
             params = {
-                "version":QtServer.QT_VERSION, # 版本控制
+                "version": QtServer.QT_VERSION,  # 版本控制
                 "name": name,
                 "structure_group_name": structure_group_name,
                 "weight_stage_id": weight_stage_id,
@@ -131,6 +131,7 @@ class MdbConstructionStage:
             QtServer.get_command(header="UPDATE-WEIGHT-STAGE", command=json_string)
         except Exception as ex:
             raise Exception(ex)
+
     # endregion
 
     # region 荷载工况操作
@@ -156,7 +157,7 @@ class MdbConstructionStage:
             else:
                 id_str = str(node_ids)
             s = "*SINK-GROUP\r\n" + f"{name},{sink:g},{id_str}\r\n"
-            print(s)
+            # print(s)
             QtServer.post_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
@@ -176,7 +177,7 @@ class MdbConstructionStage:
             if isinstance(sink_groups, str):
                 sink_groups = [sink_groups]
             s = "*SINK-CASE\r\n" + f"{name},{','.join(sink_groups)}\r\n"
-            print(s)
+            # print(s)
             QtServer.post_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
@@ -197,7 +198,7 @@ class MdbConstructionStage:
             if isinstance(names, str):
                 names = [names]
             s = "*CCT-REACT\r\n" + ",".join(names) + "\r\n"
-            print(s)
+            # print(s)
             QtServer.post_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
@@ -216,7 +217,7 @@ class MdbConstructionStage:
             if isinstance(names, str):
                 names = [names]
             s = "*CCT-FORCE\r\n" + ",".join(names) + "\r\n"
-            print(s)
+            # print(s)
             QtServer.post_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
@@ -236,7 +237,7 @@ class MdbConstructionStage:
         """
         try:
             s = "*LOADCASE\r\n" + f"{name},{case_type}\r\n"
-            print(s)
+            # print(s)
             QtServer.post_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
@@ -254,7 +255,7 @@ class MdbConstructionStage:
         try:
             if name != "":
                 s = "*LOADGROUP\r\n" + f"{name}\r\n"
-                print(s)
+                # print(s)
             else:
                 s = ""
             QtServer.post_command(s, "QDAT")
@@ -262,5 +263,3 @@ class MdbConstructionStage:
             raise Exception(ex)
 
     # endregion
-
-

@@ -1,6 +1,3 @@
-import json
-
-from .data_helper import MdbDataHelper
 from ..core.qt_server import QtServer
 
 
@@ -67,7 +64,7 @@ class MdbProperty:
                 if not composite_info or len(composite_info) != 2:
                     raise Exception("操作错误,组合材料composite_info数据无效!")
                 s += f"{index},{name},{mat_type},{composite_info[0]},{composite_info[1]}\r\n"
-            print(s)
+            # print(s)
             QtServer.post_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
@@ -127,7 +124,7 @@ class MdbProperty:
             elif code_index == 1000:  # 自定义收缩徐变
                 s += f"{index},{name},{code_index},{shrink_data}," + ",".join(
                     str(x) for pair in creep_data for x in pair) + "\r\n"
-            print(s)
+            # print(s)
             QtServer.post_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
@@ -147,7 +144,7 @@ class MdbProperty:
         try:
             s = "*CREEPFCT\r\n" + f"Name={name},{scale_factor:g}\r\n" + ",".join(
                 f"{x:g},{y:g}" for x, y in creep_data) + "\r\n"
-            print(s)
+            # print(s)
             QtServer.post_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
@@ -168,7 +165,7 @@ class MdbProperty:
         try:
             s = "*SHRINKFCT\r\n" + f"Name={name},{scale_factor:g}\r\n" + ",".join(
                 f"{x:g},{y:g}" for x, y in shrink_data) + "\r\n"
-            print(s)
+            # print(s)
             QtServer.post_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
@@ -214,7 +211,7 @@ class MdbProperty:
                 else:
                     type_l = {4: "T,", 5: "U,"}.get(len(rib_l), "")
                     s += f"YES,{dist_l},{type_l}" + ",".join(f"{x:g}" for x in rib_l) + "\r\n"
-            print(s)
+            # print(s)
             QtServer.post_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
