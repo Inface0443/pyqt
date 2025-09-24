@@ -1,4 +1,4 @@
-> 最新版本 V1.0.0 - 2025-09-24 
+> 最新版本 V1.1.1 - 2025-09-24 
 > pip install --upgrade qtmodel -i https://pypi.org/simple
 - 新增更新结构组接口 
 # 建模操作 
@@ -1311,7 +1311,7 @@ Returns: 无
 > 参数:  
 > do_analysis: 是否进行分析  
 > to_end_stage: 是否计算至最终阶段  
-> other_stage_name: 计算至其他阶段时ID  
+> other_stage_name: 计算至其他阶段时名称  
 > analysis_type: 分析类型 (0-线性 1-非线性 2-部分非线性)  
 > do_creep_analysis: 是否进行徐变分析  
 > cable_tension_position: 索力张力位置 (0-I端 1-J端 2-平均索力)  
