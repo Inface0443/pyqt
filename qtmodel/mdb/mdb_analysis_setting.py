@@ -1,9 +1,13 @@
-from typing import Union, List
+from typing import Union, List, Optional
 from ..core.qt_server import QtServer
-from .data_helper import MdbDataHelper
+from qtmodel.core.data_helper import QtDataHelper
 
 
 class MdbAnalysisSetting:
+    """
+    用于模型分析设置
+    """
+
     # region 分析设置
     @staticmethod
     def update_project_setting(project: str = "", company: str = "", designer: str = "", reviewer: str = "",
@@ -68,7 +72,7 @@ class MdbAnalysisSetting:
                                           do_creep_analysis: bool = True, cable_tension_position: int = 0,
                                           consider_completion_stage: bool = True,
                                           shrink_creep_type: int = 2, creep_load_type: int = 1,
-                                          sub_step_info: tuple[bool, float, float, float, float, float] = None):
+                                          sub_step_info: Optional[tuple[bool, float, float, float, float, float]] = None):
         """
         更新施工阶段设置
         Args:
@@ -105,13 +109,17 @@ class MdbAnalysisSetting:
                                  displacement_calc_type: int = -1, force_calc_type: int = -1,
                                  reaction_calc_type: int = -1,
                                  link_calc_type: int = -1, constrain_calc_type: int = -1, eccentricity: float = 0.0,
-                                 displacement_track: bool = False, force_track: bool = False,
+                                 displacement_track: bool = False,
+                                 force_track: bool = False,
                                  reaction_track: bool = False,
-                                 link_track: bool = False, constrain_track: bool = False,
-                                 damper_groups: list[str] = None,
-                                 displacement_groups: list[str] = None, force_groups: list[str] = None,
-                                 reaction_groups: list[str] = None,
-                                 link_groups: list[str] = None, constrain_groups: list[str] = None):
+                                 link_track: bool = False,
+                                 constrain_track: bool = False,
+                                 damper_groups: Optional[list[str]] = None,
+                                 displacement_groups: Optional[list[str]] = None,
+                                 force_groups: Optional[list[str]] = None,
+                                 reaction_groups: Optional[list[str]] = None,
+                                 link_groups: Optional[list[str]] = None,
+                                 constrain_groups: Optional[list[str]] = None):
         """
         更新移动荷载分析设置
         Args:
@@ -142,8 +150,6 @@ class MdbAnalysisSetting:
         Returns: 无
         """
 
-
-
         try:
             s = "*LIV-SET\r\n" + f"{lateral_spacing:g},{vertical_spacing:g},{eccentricity:g},{'YES' if displacement_track else 'NO'},{'YES' if force_track else 'NO'},{'YES' if reaction_track else 'NO'},{'YES' if link_track else 'NO'},{'YES' if constrain_track else 'NO'}\r\n"
             if damper_calc_type != -1:
@@ -160,7 +166,7 @@ class MdbAnalysisSetting:
 
             for enabled, code, calc_type, groups in configs:
                 if enabled:
-                    lines.append(MdbDataHelper.live_load_set_line(code, calc_type, groups))
+                    lines.append(QtDataHelper.live_load_set_line(code, calc_type, groups))
 
             s = "".join(lines)
             # print(s)
@@ -195,8 +201,9 @@ class MdbAnalysisSetting:
 
     @staticmethod
     def update_operation_stage_setting(do_analysis: bool = True, final_stage: str = "",
-                                       static_load_cases: list[str] = None,
-                                       sink_load_cases: list[str] = None, live_load_cases: list[str] = None, ):
+                                       static_load_cases: Optional[list[str]] = None,
+                                       sink_load_cases: Optional[list[str]] = None,
+                                       live_load_cases: Optional[list[str]] = None, ):
         """
         更新运营阶段分析设置
         Args:
@@ -268,7 +275,7 @@ class MdbAnalysisSetting:
             raise Exception(ex)
 
     @staticmethod
-    def update_time_history_setting(do_analysis: bool = True, output_all: bool = True, groups: list[str] = None):
+    def update_time_history_setting(do_analysis: bool = True, output_all: bool = True, groups: Optional[list[str]] = None):
         """
         更新时程分析设置
         Args:
@@ -295,7 +302,8 @@ class MdbAnalysisSetting:
     @staticmethod
     def update_bulking_setting(do_analysis: bool = True, mode_count: int = 3, stage_id: int = -1,
                                calculate_kind: int = 1,
-                               stressed: bool = True, constant_cases: list[str] = None,
+                               stressed: bool = True,
+                               constant_cases: Optional[list[str]] = None,
                                variable_cases: list[str] = None):
         """
         更新屈曲分析设置

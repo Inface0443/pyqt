@@ -1,3 +1,5 @@
+import json
+
 import requests
 
 
@@ -5,7 +7,7 @@ class QtServer:
     URL: str = "http://localhost:55125/pythonForQt/"
     MERGE_STR: str = ""
     QT_MERGE: bool = False  # 是否合并发送
-    QT_VERSION: str ="1.2.3"
+    QT_VERSION: str = "1.2.3"
 
     @staticmethod
     def post_command(command: str = "", header: str = ""):
@@ -50,3 +52,33 @@ class QtServer:
             raise Exception("服务端或反向代理（Nginx/网关/负载均衡）超时，请增加最大等待时间")
         else:
             raise Exception("连接错误，请重新尝试")
+
+    @staticmethod
+    def send_post(header: str, payload: dict | None):
+        """
+        统一发送：有参数 -> JSON；无参数 -> 不带 command 的 post
+        """
+        try:
+            if not payload:  # None 或 空字典
+                return QtServer.post_command(header=header, command="")
+            if "version" not in payload:
+                payload["version"] = QtServer.QT_VERSION
+            json_string = json.dumps(payload, ensure_ascii=False)
+            return QtServer.post_command(header=header, command=json_string)
+        except Exception as ex:
+            raise Exception(ex)
+
+    @staticmethod
+    def send_get(header: str, payload: dict | None):
+        """
+        统一发送：有参数 -> JSON；无参数 -> 不带 command 的 post
+        """
+        try:
+            if not payload:  # None 或 空字典
+                return QtServer.get_command(header=header, command="")
+            if "version" not in payload:
+                payload["version"] = QtServer.QT_VERSION
+            json_string = json.dumps(payload, ensure_ascii=False)
+            return QtServer.get_command(header=header, command=json_string)
+        except Exception as ex:
+            raise Exception(ex)

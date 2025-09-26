@@ -4,6 +4,9 @@ from typing import List
 
 
 class MdbProject:
+    """
+    用于项目管理，如打开保存运行分析等操作
+    """
     # region 项目管理
     @staticmethod
     def set_url(url: str):
@@ -37,7 +40,7 @@ class MdbProject:
         try:
             QtServer.post_command(header="UNDO")
         except Exception as ex:
-            raise Exception(ex)
+            raise Exception(f"撤销命令失败{ex}")
 
     @staticmethod
     def redo_model():
@@ -51,7 +54,7 @@ class MdbProject:
         try:
             QtServer.post_command(header="REDO")
         except Exception as ex:
-            raise Exception(ex)
+            raise Exception(f"重做命令失败{ex}")
 
     @staticmethod
     def update_model():
@@ -66,7 +69,7 @@ class MdbProject:
             QtServer.post_command(QtServer.MERGE_STR, "UPDATE")
             QtServer.MERGE_STR = ""
         except Exception as ex:
-            raise Exception(ex)
+            raise Exception(f"刷新模型信息失败{ex}")
 
     @staticmethod
     def update_to_pre():
@@ -80,12 +83,12 @@ class MdbProject:
         try:
             QtServer.post_command(header="UPDATE-TO-PRE")
         except Exception as ex:
-            raise Exception(ex)
+            raise Exception(f"切换到前处理失败{ex}")
 
     @staticmethod
     def update_to_post():
         """
-        切换到前处理
+        切换到后处理
         Args:  无
         Example:
             mdb.update_to_post()
@@ -94,7 +97,7 @@ class MdbProject:
         try:
             QtServer.post_command(header="UPDATE-TO-POST")
         except Exception as ex:
-            raise Exception(ex)
+            raise Exception(f"切换到后处理失败{ex}")
 
     @staticmethod
     def do_solve():
@@ -108,7 +111,7 @@ class MdbProject:
         try:
             QtServer.post_command(header="DO-SOLVE")
         except Exception as ex:
-            raise Exception(ex)
+            raise Exception(f"运行分析失败{ex}")
 
     @staticmethod
     def initial():
@@ -122,7 +125,7 @@ class MdbProject:
         try:
             QtServer.post_command(header="INITIAL")
         except Exception as ex:
-            raise Exception(ex)
+            raise Exception(f"初始化模型失败{ex}")
 
     @staticmethod
     def open_file(file_path: str):
@@ -139,7 +142,7 @@ class MdbProject:
                 raise Exception("操作错误，仅支持bfmd文件")
             QtServer.post_command(header="OPEN-FILE",command=file_path)
         except Exception as ex:
-            raise Exception(ex)
+            raise Exception(f"打开项目失败{ex}")
 
     @staticmethod
     def close_project():
@@ -153,7 +156,7 @@ class MdbProject:
         try:
             QtServer.post_command(header="CLOSE-PROJECT")
         except Exception as ex:
-            raise Exception(ex)
+            raise Exception(f"关闭项目{ex}")
 
     @staticmethod
     def save_file(file_path: str=""):
@@ -168,7 +171,7 @@ class MdbProject:
         try:
             QtServer.post_command(header="SAVE-FILE",command=file_path)
         except Exception as ex:
-            raise Exception(ex)
+            raise Exception(f"保存bfmd文件失败{ex}")
 
     @staticmethod
     def import_command(command: str, command_type: int = 1):
@@ -176,14 +179,15 @@ class MdbProject:
         导入命令
         Args:
             command:命令字符
-            command_type:命令类型,默认桥通命令 1-桥通命令 2-mct命令 3-py命令
+            command_type:命令类型,默认桥通命令 1-桥通命令 2-mct命令
         Example:
             mdb.import_command(command="*SEC-INFO")
             mdb.import_command(command="*SECTION",command_type=2)
-            mdb.import_command(command="mdb.initial()",command_type=3)
         Returns: 无
         """
         try:
+            if command_type < 1 or command_type > 2:
+                raise Exception("仅支持command_type(1-桥通命令 2-mct命令 )")
             # 创建参数字典
             params = {
                 "version":QtServer.QT_VERSION,
@@ -193,7 +197,7 @@ class MdbProject:
             json_string = json.dumps(params, indent=2)
             return QtServer.get_command(header="INP-COMMAND", command=json_string)
         except Exception as ex:
-            raise Exception(ex)
+            raise Exception(f"导入命令失败{ex}")
 
     @staticmethod
     def import_file(file_path: str):
@@ -208,7 +212,7 @@ class MdbProject:
         try:
             QtServer.post_command(header="INP-FILE", command=file_path)
         except Exception as ex:
-            raise Exception(ex)
+            raise Exception(f"导入文件失败{ex}")
 
     @staticmethod
     def export_file(file_path: str, convert_sec_group: bool = False, type_kind: int = 2, group_name: List[str] = None):
@@ -236,7 +240,7 @@ class MdbProject:
             with open(file_path, 'w', encoding='utf-8') as file:
                 file.write(content)
         except Exception as ex:
-            raise Exception(ex)
+            raise Exception(f"导出文件失败{ex}")
 
     @staticmethod
     def export_qt_helper(file_path: str):
@@ -254,5 +258,5 @@ class MdbProject:
             with open(file_path, 'w', encoding='utf-8') as file:
                 file.write(content)
         except Exception as ex:
-            raise Exception(ex)
+            raise Exception(f"输出桥通qdat命令帮助文档失败{ex}")
     # endregion

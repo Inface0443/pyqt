@@ -3,7 +3,7 @@ import re
 from typing import List, Optional, Union
 
 
-class MdbDataHelper:
+class QtDataHelper:
     """
     用于内部数据处理，不暴露给用户接口
     """
@@ -86,8 +86,8 @@ class MdbDataHelper:
         return s
 
     @staticmethod
-    def get_str_by_data(s:str,sec_type:str,sec_data:dict):
-        s += MdbDataHelper.str_section(
+    def get_str_by_data(s: str, sec_type: str, sec_data: dict):
+        s += QtDataHelper.str_section(
             sec_type=sec_type,
             sec_info=sec_data.get("sec_info", []),
             symmetry=sec_data.get("symmetry", True),
@@ -127,22 +127,21 @@ class MdbDataHelper:
             secondary_loop_segments: list[dict] = None):
         """仅返回字符串片段,需要拼接"""
         if sec_type == "混凝土箱梁":
-            s = MdbDataHelper.str_concrete_box_beam(symmetry, sec_info, box_num, box_height, charm_info, sec_right, charm_right, box_other_info,
-                                                    box_other_right)
+            s = QtDataHelper.str_concrete_box_beam(symmetry, sec_info, box_num, box_height, charm_info, sec_right, charm_right, box_other_info,
+                                                   box_other_right)
         elif sec_type == "工字钢梁" or sec_type == "箱型钢梁":
-            s = MdbDataHelper.str_steel_beam(sec_info, rib_info, rib_place)
+            s = QtDataHelper.str_steel_beam(sec_info, rib_info, rib_place)
         elif sec_type == "特性截面":
             s = ",".join(f"{x:g}" for x in sec_info) + "\r\n"
         elif sec_type == "自定义组合梁":
-            s = MdbDataHelper.str_custom_compound_beam(mat_combine, loop_segments, secondary_loop_segments)
+            s = QtDataHelper.str_custom_compound_beam(mat_combine, loop_segments, secondary_loop_segments)
         elif sec_type.endswith("组合梁") or sec_type in ("钢管砼", "钢箱砼", "哑铃型钢管混凝土", "哑铃型钢管混凝土竖向"):
-            s = MdbDataHelper.str_compound_section(sec_info, mat_combine)
+            s = QtDataHelper.str_compound_section(sec_info, mat_combine)
         elif sec_type.startswith("自定义"):
-            s = MdbDataHelper.str_custom_section(loop_segments, sec_lines)
+            s = QtDataHelper.str_custom_section(loop_segments, sec_lines)
         else:  # 一般参数截面
             s = ",".join(f"{x:g}" for x in sec_info) + "\r\n"
         return s
-
 
     @staticmethod
     def parse_int_list_to_str(ids: List[int]) -> str:
@@ -204,8 +203,7 @@ class MdbDataHelper:
                 current_index = start_index + 2
 
         return " ".join(result)
-    
-    
+
     @staticmethod
     def convert_three_points_to_vectors(points):
         """
@@ -217,14 +215,14 @@ class MdbDataHelper:
         p1, p2, p3 = points
         # 计算向量 V1 = P2 - P1 (归一化)
         v1 = [p2[i] - p1[i] for i in range(3)]
-        v1_length = math.sqrt(sum(x*x for x in v1))
+        v1_length = math.sqrt(sum(x * x for x in v1))
         v1 = [x / v1_length for x in v1] if v1_length > 0 else v1
         # 计算向量 V2 = (P3 - P1) 在垂直于V1的平面上的投影 (归一化)
         v3 = [p3[i] - p1[i] for i in range(3)]
         dot_product = sum(v1[i] * v3[i] for i in range(3))
         projection = [v1[i] * dot_product for i in range(3)]
         v2 = [v3[i] - projection[i] for i in range(3)]
-        v2_length = math.sqrt(sum(x*x for x in v2))
+        v2_length = math.sqrt(sum(x * x for x in v2))
         v2 = [x / v2_length for x in v2] if v2_length > 0 else v2
         return [v1, v2]
 
@@ -234,7 +232,7 @@ class MdbDataHelper:
         将欧拉角转换为向量格式
         角度绕X,Y,Z旋转（弧度制）
         """
-        if (len(angles) != 3) or (angles==[0,0,0]):
+        if (len(angles) != 3) or (angles == [0, 0, 0]):
             raise ValueError("操作错误，数据无效")
         rx, ry, rz = map(math.radians, angles)
         ca, sa = math.cos(rx), math.sin(rx)
@@ -301,7 +299,7 @@ class MdbDataHelper:
         return ids
 
     @staticmethod
-    def id_to_list(data: Optional[Union[str, int, List[int]]]) ->  List[int]:
+    def id_to_list(data: Optional[Union[str, int, List[int]]]) -> List[int]:
         """
         将整形、列表、XtoYbyZ 统一解析为 int 列表
         """
@@ -313,15 +311,31 @@ class MdbDataHelper:
         elif isinstance(data, list):
             ids = data
         elif isinstance(data, str):
-            parsed = MdbDataHelper.parse_number_string(data)
+            parsed = QtDataHelper.parse_number_string(data)
             ids = parsed if parsed is not None else []
         return ids
 
-
     @staticmethod
-    def live_load_set_line(code: int, calc_type:int, groups:list[str]):
+    def live_load_set_line(code: int, calc_type: int, groups: list[str]):
         """用于更新移动荷载分析设置"""
         if groups is None:
             return f"{code},{calc_type},\r\n"
         return f"{code},{calc_type}," + ",".join(groups) + "\r\n"
 
+    @staticmethod
+    def parse_ids_to_array(ids: Union[int, List[int], str, None]) -> List[int]:
+        result_ids: List[int] = []
+        if ids is None:
+            return result_ids
+        if isinstance(ids, int):
+            result_ids.append(ids)
+        elif isinstance(ids, str):
+            result_ids.extend(QtDataHelper.parse_number_string(ids))
+        else:
+            # 视为可迭代的整数
+            try:
+                for n in ids:  # type: ignore
+                    result_ids.append(int(n))
+            except Exception:
+                raise TypeError("ids 应为 int、可迭代的 int、或字符串（如 '1to10by2,15'）。")
+        return result_ids

@@ -614,7 +614,7 @@ Returns: 无
 ```Python
 # 示例代码
 from qtmodel import *
-mdb.add_tendon_elements(element_id=[1,2,4,6])
+mdb.add_tendon_elements(ids=[1,2,4,6])
 ```  
 Returns: 无
 ##  静力荷载操作

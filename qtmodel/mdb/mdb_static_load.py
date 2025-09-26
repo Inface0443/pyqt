@@ -1,10 +1,14 @@
 import json
 from ..core.qt_server import QtServer
 from typing import Union, List
-from .data_helper import MdbDataHelper
+from qtmodel.core.data_helper import QtDataHelper
 
 
 class MdbStaticLoad:
+    """
+    用于静力荷载添加
+    """
+
     # region 静力荷载操作
     @staticmethod
     def add_nodal_force(node_id, case_name: str = "", load_info: list[float] = None,
@@ -27,7 +31,7 @@ class MdbStaticLoad:
             if node_id is None:
                 node_str = ""
             elif isinstance(node_id, list):  # 列表转化为XtoYbyN
-                node_str = MdbDataHelper.parse_int_list_to_str(node_id)
+                node_str = QtDataHelper.parse_int_list_to_str(node_id)
             else:
                 node_str = str(node_id)
             s = "*NODALLOAD\r\n" + f"{node_str},{case_name},{group_name}," + ",".join(
@@ -59,7 +63,7 @@ class MdbStaticLoad:
             if node_id is None:
                 node_str = ""
             elif isinstance(node_id, list):  # 列表转化为XtoYbyN
-                node_str = MdbDataHelper.parse_int_list_to_str(node_id)
+                node_str = QtDataHelper.parse_int_list_to_str(node_id)
             else:
                 node_str = str(node_id)
             s = "*NODALDISP\r\n" + f"{node_str},{case_name},{group_name}," + ",".join(
@@ -101,7 +105,7 @@ class MdbStaticLoad:
             elif isinstance(element_id, list):
                 elem_ids = element_id
             elif isinstance(element_id, str):
-                parsed = MdbDataHelper.parse_number_string(element_id)
+                parsed = QtDataHelper.parse_number_string(element_id)
                 elem_ids = parsed if parsed is not None else []
             else:
                 raise ValueError(f"Unsupported element_id type: {type(element_id)}")
@@ -181,7 +185,7 @@ class MdbStaticLoad:
             if element_id is None:
                 elem_str = ""
             elif isinstance(element_id, list):  # 列表转化为XtoYbyN
-                elem_str = MdbDataHelper.parse_int_list_to_str(element_id)
+                elem_str = QtDataHelper.parse_int_list_to_str(element_id)
             else:
                 elem_str = str(element_id)
             s = "*INITTENSION\r\n" + f"{elem_str},{case_name},{group_name},{tension:g},{tension_type},{application_type},{stiffness:g}\r\n"
@@ -209,7 +213,7 @@ class MdbStaticLoad:
             if element_id is None:
                 elem_str = ""
             elif isinstance(element_id, list):  # 列表转化为XtoYbyN
-                elem_str = MdbDataHelper.parse_int_list_to_str(element_id)
+                elem_str = QtDataHelper.parse_int_list_to_str(element_id)
             else:
                 elem_str = str(element_id)
             s = "*CABLELENLOAD\r\n" + f"{elem_str},{case_name},{group_name},{length},{tension_type}\r\n"
@@ -242,7 +246,7 @@ class MdbStaticLoad:
             if element_id is None:
                 elem_str = ""
             elif isinstance(element_id, list):  # 列表转化为XtoYbyN
-                elem_str = MdbDataHelper.parse_int_list_to_str(element_id)
+                elem_str = QtDataHelper.parse_int_list_to_str(element_id)
             else:
                 elem_str = str(element_id)
             if isinstance(list_load, float):
@@ -264,4 +268,248 @@ class MdbStaticLoad:
         except Exception as ex:
             raise Exception(ex)
 
+    @staticmethod
+    def add_distribute_plane_load_type(name: str, load_type: int, point_list: list[list[float]], load: float = 0, copy_x: str = None,
+                                       copy_y: str = None,
+                                       describe: str = ""):
+        """
+        添加分配面荷载类型
+        Args:
+            name:荷载类型名称
+            load_type:荷载类型  1-集中荷载 2-线荷载 3-面荷载
+            point_list:点列表，集中力时为列表内元素为 [x,y,force] 线荷载与面荷载时为 [x,y]
+            load:荷载值,仅线荷载与面荷载需要
+            copy_x:复制到x轴距离，与UI一致，支持3@2形式字符串，逗号分隔
+            copy_y:复制到y轴距离，与UI一致，支持3@2形式字符串，逗号分隔
+            describe:描述
+        Example:
+            mdb.add_distribute_plane_load_type(name="荷载类型1",load_type=1,point_list=[[1,0,10],[1,1,10],[1,2,10]])
+            mdb.add_distribute_plane_load_type(name="荷载类型2",load_type=2,point_list=[[1,0],[1,1]],load=10)
+        Returns: 无
+        """
+        payload = {
+            "name": name,
+            "load_type": load_type,
+            "point_list": point_list,
+            "load": load,
+            "copy_x": copy_x,
+            "copy_y": copy_y,
+            "describe": describe,
+        }
+        return QtServer.send_post("ADD-DISTRIBUTE-PLANE-LOAD-TYPE", payload)
+
+    @staticmethod
+    def add_distribute_plane_load(index: int = -1, case_name: str = "", type_name: str = "",
+                                  point1: tuple[float, float, float] = None, point2: tuple[float, float, float] = None,
+                                  point3: tuple[float, float, float] = None,
+                                  plate_ids: list[int] = None, coord_system: int = 3, group_name: str = "默认荷载组"):
+        """
+        添加分配面荷载类型
+        Args:
+            index:荷载编号,默认自动识别
+            case_name:工况名
+            type_name:荷载类型名称
+            point1:第一点(原点)
+            point2:第一点(在x轴上)
+            point3:第一点(在y轴上)
+            plate_ids:指定板单元。默认时为全部板单元
+            coord_system:描述
+            group_name:描述
+        Example:
+            mdb.add_distribute_plane_load(index=1,case_name="工况1",type_name="荷载类型1",point1=(0,0,0),
+                point2=(1,0,0),point3=(0,1,0),group_name="默认荷载组")
+        Returns: 无
+        """
+        payload = {
+            "id": index,
+            "case_name": case_name,
+            "type_name": type_name,
+            "point1": point1,
+            "point2": point2,
+            "point3": point3,
+            "coord_system": coord_system,
+            "plate_ids": plate_ids,
+            "group_name": group_name,
+        }
+        return QtServer.send_post("ADD-DISTRIBUTE-PLANE-LOAD", payload)
+
+    @staticmethod
+    def update_distribute_plane_load_type(name: str = "", new_name: str = "", load_type: int = 1, point_list: list[list[float]] = None,
+                                          load: float = 0, copy_x: str = None, copy_y: str = None, describe: str = ""):
+        """
+        更新板单元类型
+        Args:
+            name:荷载类型名称
+            new_name:新名称，默认不修改名称
+            load_type:荷载类型  1-集中荷载 2-线荷载 3-面荷载
+            point_list:点列表，集中力时为列表内元素为 [x,y,force] 线荷载与面荷载时为 [x,y]
+            load:荷载值,仅线荷载与面荷载需要
+            copy_x:复制到x轴距离，与UI一致，支持3@2形式字符串，逗号分隔
+            copy_y:复制到y轴距离，与UI一致，支持3@2形式字符串，逗号分隔
+            describe:描述
+        Example:
+            mdb.update_distribute_plane_load_type(name="荷载类型1",load_type=1,point_list=[[1,0,10],[1,1,10],[1,2,10]])
+            mdb.update_distribute_plane_load_type(name="荷载类型2",load_type=2,point_list=[[1,0],[1,1]],load=10)
+        Returns: 无
+        """
+        payload = {
+            "name": name,
+            "new_name": new_name,
+            "load_type": load_type,
+            "point_list": point_list,
+            "load": load,
+            "copy_x": copy_x,
+            "copy_y": copy_y,
+            "describe": describe,
+        }
+        return QtServer.send_post("UPDATE-DISTRIBUTE-PLANE-LOAD-TYPE", payload)
+
+    @staticmethod
+    def remove_nodal_force(node_id, case_name: str = "", group_name="默认荷载组"):
+        """
+        删除节点荷载
+        Args:
+             node_id:节点编号且支持XtoYbyN形式字符串
+             case_name:荷载工况名
+             group_name:指定荷载组
+        Example:
+            mdb.remove_nodal_force(case_name="荷载工况1",node_id=1,group_name="默认荷载组")
+        Returns: 无
+        """
+        payload = {
+            "case_name": case_name,
+            "node_id": node_id,
+            "group_name": group_name,
+        }
+        return QtServer.send_post("REMOVE-NODAL-FORCE", payload)
+
+    @staticmethod
+    def remove_nodal_displacement(node_id, case_name: str = "", group_name="默认荷载组"):
+        """
+        删除节点位移荷载
+        Args:
+            node_id:节点编号,支持数或列表且支持XtoYbyN形式字符串
+            case_name:荷载工况名
+            group_name:指定荷载组
+        Example:
+            mdb.remove_nodal_displacement(case_name="荷载工况1",node_id=1,group_name="默认荷载组")
+        Returns: 无
+        """
+        payload = {
+            "case_name": case_name,
+            "node_id": node_id,
+            "group_name": group_name,
+        }
+        return QtServer.send_post("REMOVE-NODAL-DISPLACEMENT", payload)
+
+    @staticmethod
+    def remove_initial_tension_load(element_id, case_name: str, group_name: str = "默认荷载组"):
+        """
+        删除初始拉力
+        Args:
+            element_id:单元编号支持数或列表且支持XtoYbyN形式字符串
+            case_name:荷载工况名
+            group_name:荷载组名
+        Example:
+            mdb.remove_initial_tension_load(element_id=1,case_name="工况1",group_name="默认荷载组")
+        Returns: 无
+        """
+        payload = {
+            "element_id": element_id,
+            "case_name": case_name,
+            "group_name": group_name,
+        }
+        return QtServer.send_post("REMOVE-INITIAL-TENSION-LOAD", payload)
+
+    @staticmethod
+    def remove_beam_element_load(element_id, case_name: str = "", load_type: int = 1, group_name="默认荷载组"):
+        """
+        删除梁单元荷载
+        Args:
+            element_id:单元号支持数或列表且支持XtoYbyN形式字符串
+            case_name:荷载工况名
+            load_type:荷载类型 (1-集中力   2-集中弯矩  3-分布力   4-分布弯矩)
+            group_name:荷载组名称
+        Example:
+            mdb.remove_beam_element_load(case_name="工况1",element_id=1,load_type=1,group_name="默认荷载组")
+        Returns: 无
+        """
+        payload = {
+            "element_id": element_id,
+            "case_name": case_name,
+            "load_type": load_type,
+            "group_name": group_name,
+        }
+        return QtServer.send_post("REMOVE-BEAM-ELEMENT-LOAD", payload)
+
+    @staticmethod
+    def remove_plate_element_load(element_id, case_name: str, load_type: int, group_name="默认荷载组"):
+        """
+        删除指定荷载工况下指定单元的板单元荷载
+        Args:
+            element_id:单元编号，支持数或列表且支持XtoYbyN形式字符串
+            case_name:荷载工况名
+            load_type: 板单元类型 1集中力   2-集中弯矩  3-分布线力  4-分布线弯矩  5-分布面力  6-分布面弯矩
+            group_name:荷载组名
+        Example:
+            mdb.remove_plate_element_load(case_name="工况1",element_id=1,load_type=1,group_name="默认荷载组")
+        Returns: 无
+        """
+        payload = {
+            "element_id": element_id,
+            "case_name": case_name,
+            "load_type": load_type,
+            "group_name": group_name,
+        }
+        return QtServer.send_post("REMOVE-PLATE-ELEMENT-LOAD", payload)
+
+    @staticmethod
+    def remove_cable_length_load(element_id, case_name: str, group_name: str = "默认荷载组"):
+        """
+        删除索长张拉
+        Args:
+            element_id:单元号支持数或列表且支持XtoYbyN形式字符串
+            case_name:荷载工况名
+            group_name:荷载组名
+        Example:
+            mdb.remove_cable_length_load(case_name="工况1",element_id=1, group_name= "默认荷载组")
+        Returns: 无
+        """
+        payload = {
+            "element_id": element_id,
+            "case_name": case_name,
+            "group_name": group_name,
+        }
+        return QtServer.send_post("REMOVE-CABLE-LENGTH-LOAD", payload)
+
+    @staticmethod
+    def remove_plane_load(index: int = -1):
+        """
+        根据荷载编号删除分配面荷载
+        Args:
+            index: 指定荷载编号，默认则删除所有分配面荷载
+        Example:
+            mdb.remove_plane_load()
+            mdb.remove_plane_load(index=1)
+        Returns: 无
+        """
+        payload = {
+            "id": index,
+        }
+        return QtServer.send_post("REMOVE-PLANE-LOAD", payload)
+
+    @staticmethod
+    def remove_distribute_plane_load_type(name: str = -1):
+        """
+        删除分配面荷载类型
+        Args:
+            name: 指定荷载类型，默认则删除所有分配面荷载
+        Example:
+            mdb.remove_distribute_plane_load_type("类型1")
+        Returns: 无
+        """
+        payload = {
+            "name": name,
+        }
+        return QtServer.send_post("REMOVE-DISTRIBUTE-PLANE-LOAD-TYPE", payload)
     # endregion
