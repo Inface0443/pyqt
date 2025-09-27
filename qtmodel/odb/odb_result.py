@@ -10,7 +10,7 @@ class OdbResult:
     # region 结果表格
     @staticmethod
     def get_reaction(ids, envelop_type=1, stage_id: int = 1, result_kind: int = 1,
-                     increment_type: int = 1, case_name="", is_time_history: bool = False):
+                     increment_type: int = 1, case_name="", is_time_history: bool = False) -> str:
         """
         获取制作反力
         Args:
@@ -37,12 +37,12 @@ class OdbResult:
             "case_name": case_name,
             "is_time_history": is_time_history,
         }
-        return QtServer.send_post("GET-REACTION", payload)
+        return QtServer.send_get("GET-REACTION", payload)
 
     @staticmethod
     def get_deformation(ids, envelop_type=1,
                         stage_id: int = 1, result_kind: int = 1, increment_type: int = 1,
-                        case_name="", is_time_history: bool = False):
+                        case_name="", is_time_history: bool = False) -> str:
         """
         获取节点变形结果,支持单个节点和节点列表
         Args:
@@ -69,11 +69,11 @@ class OdbResult:
             "case_name": case_name,
             "is_time_history": is_time_history,
         }
-        return QtServer.send_post("GET-DEFORMATION", payload)
+        return QtServer.send_get("GET-DEFORMATION", payload)
 
     @staticmethod
     def get_element_stress(ids, envelop_type: int = 1, stage_id: int = 1, result_kind: int = 1,
-                           increment_type: int = 1, case_name=""):
+                           increment_type: int = 1, case_name="") -> str:
         """
         获取单元应力,支持单个单元和单元列表
         Args:
@@ -97,12 +97,12 @@ class OdbResult:
             "increment_type": increment_type,
             "case_name": case_name,
         }
-        return QtServer.send_post("GET-ELEMENT-STRESS", payload)
+        return QtServer.send_get("GET-ELEMENT-STRESS", payload)
 
     @staticmethod
     def get_element_force(ids, stage_id: int = 1, envelop_type: int = 1,
                           result_kind: int = 1, increment_type: int = 1, case_name="",
-                          is_time_history: bool = False, is_boundary_element: bool = False):
+                          is_time_history: bool = False, is_boundary_element: bool = False) -> str:
         """
         获取单元内力,支持单个单元和单元列表
         Args:
@@ -130,10 +130,10 @@ class OdbResult:
             "is_time_history": is_time_history,
             "is_boundary_element": is_boundary_element,
         }
-        return QtServer.send_post("GET-ELEMENT-FORCE", payload)
+        return QtServer.send_get("GET-ELEMENT-FORCE", payload)
 
     @staticmethod
-    def get_self_concurrent_reaction(node_id: int, case_name: str):
+    def get_self_concurrent_reaction(node_id: int, case_name: str) -> str:
         """
         获取自并发反力
         Args:
@@ -147,10 +147,10 @@ class OdbResult:
             "node_id": node_id,
             "case_name": case_name,
         }
-        return QtServer.send_post("GET-SELF-CONCURRENT-REACTION", payload)
+        return QtServer.send_get("GET-SELF-CONCURRENT-REACTION", payload)
 
     @staticmethod
-    def get_all_concurrent_reaction(node_id: int, case_name: str):
+    def get_all_concurrent_reaction(node_id: int, case_name: str) -> str:
         """
         获取完全并发反力
         Args:
@@ -164,10 +164,10 @@ class OdbResult:
             "node_id": node_id,
             "case_name": case_name,
         }
-        return QtServer.send_post("GET-ALL-CONCURRENT-REACTION", payload)
+        return QtServer.send_get("GET-ALL-CONCURRENT-REACTION", payload)
 
     @staticmethod
-    def get_concurrent_force(ids=None, case_name: str = ""):
+    def get_concurrent_force(ids=None, case_name: str = "") -> str:
         """
         获取单元并发内力
         Args:
@@ -182,10 +182,10 @@ class OdbResult:
             "ids": QtDataHelper.parse_ids_to_array(ids),
             "case_name": case_name,
         }
-        return QtServer.send_post("GET-CONCURRENT-FORCE", payload)
+        return QtServer.send_get("GET-CONCURRENT-FORCE", payload)
 
     @staticmethod
-    def get_elastic_link_force(ids, result_kind=1, stage_id=-1, envelop_type=0, increment_type=1, case_name=""):
+    def get_elastic_link_force(ids, result_kind=1, stage_id=-1, envelop_type=0, increment_type=1, case_name="") -> str:
         """
         获取弹性连接内力
         Args:
@@ -207,10 +207,10 @@ class OdbResult:
             "increment_type": increment_type,
             "case_name": case_name,
         }
-        return QtServer.send_post("GET-ELASTIC-LINK-FORCE", payload)
+        return QtServer.send_get("GET-ELASTIC-LINK-FORCE", payload)
 
     @staticmethod
-    def get_constrain_equation_force(ids, result_kind=1, stage_id=1, envelop_type=0, increment_type=1, case_name=""):
+    def get_constrain_equation_force(ids, result_kind=1, stage_id=1, envelop_type=0, increment_type=1, case_name="") -> str:
         """
         查询约束方程内力
         Args:
@@ -232,10 +232,10 @@ class OdbResult:
             "increment_type": increment_type,
             "case_name": case_name,
         }
-        return QtServer.send_post("GET-CONSTRAIN-EQUATION-FORCE", payload)
+        return QtServer.send_get("GET-CONSTRAIN-EQUATION-FORCE", payload)
 
     @staticmethod
-    def get_cable_element_length(ids, stage_id=-1, increment_type=1):
+    def get_cable_element_length(ids, stage_id=-1, increment_type=1) -> str:
         """
         查询无应力索长
         Args:
@@ -251,10 +251,10 @@ class OdbResult:
             "stage_id": stage_id,
             "increment_type": increment_type,
         }
-        return QtServer.send_post("GET-CABLE-ELEMENT-LENGTH", payload)
+        return QtServer.send_get("GET-CABLE-ELEMENT-LENGTH", payload)
 
     @staticmethod
-    def get_period_and_vibration_results():
+    def get_period_and_vibration_results() -> str:
         """
         获取自振分析角频率和振型参与质量等结果
         Args: 无
@@ -262,10 +262,10 @@ class OdbResult:
           odb.get_period_and_vibration_results()
         Returns: 返回json字符串，list[dict]包含各模态周期和频率的列表
         """
-        return QtServer.send_post("GET-PERIOD-AND-VIBRATION-RESULTS", None)
+        return QtServer.send_get("GET-PERIOD-AND-VIBRATION-RESULTS", None)
 
     @staticmethod
-    def get_vibration_modal_results(mode: int = 1):
+    def get_vibration_modal_results(mode: int = 1) -> str:
         """
         获取自振分析振型向量
         Args:
@@ -277,10 +277,10 @@ class OdbResult:
         payload = {
             "mode": mode
         }
-        return QtServer.send_post("GET-VIBRATION-MODAL-RESULTS", payload)
+        return QtServer.send_get("GET-VIBRATION-MODAL-RESULTS", payload)
 
     @staticmethod
-    def get_buckling_eigenvalue():
+    def get_buckling_eigenvalue() -> str:
         """
         获取屈曲分析特征值
         Args: 无
@@ -288,10 +288,10 @@ class OdbResult:
             odb.get_buckling_eigenvalue()
         Returns: 返回json字符串， list[dict]包含各模态下特征值
         """
-        return QtServer.send_post("GET-BUCKLING-EIGENVALUE", None)
+        return QtServer.send_get("GET-BUCKLING-EIGENVALUE", None)
 
     @staticmethod
-    def get_buckling_modal_results(mode: int = 1):
+    def get_buckling_modal_results(mode: int = 1) -> str:
         """
         获取屈曲模态向量
         Args:
@@ -303,5 +303,5 @@ class OdbResult:
         payload = {
             "mode": mode
         }
-        return QtServer.send_post("GET-BUCKLING-MODAL-RESULTS", payload)
+        return QtServer.send_get("GET-BUCKLING-MODAL-RESULTS", payload)
 # endregion

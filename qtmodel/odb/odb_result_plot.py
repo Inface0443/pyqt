@@ -12,7 +12,7 @@ class OdbResultPlot:
                              envelop_type: int = 1, component: int = 1,
                              show_number: bool = True, text_rotation=0, max_min_kind: int = -1,
                              show_legend: bool = True, digital_count=3, text_exponential: bool = True, arrow_scale: float = 1,
-                             is_time_history: bool = False, time_kind: int = 1, time_tick: float = 1.0):
+                             is_time_history: bool = False, time_kind: int = 1, time_tick: float = 1.0) -> str:
         """
         保存结果图片到指定文件甲
         Args:
@@ -34,7 +34,7 @@ class OdbResultPlot:
             time_tick:时程分析时刻
         Example:
             odb.plot_reaction_result(file_path=r"D:\\图片\\反力图.png",component=1,case_name="CQ:成桥(合计)",stage_id=-1)
-        Returns: 无
+        Returns: Base64字符串
         """
         payload = {
             "file_path": file_path,
@@ -54,7 +54,7 @@ class OdbResultPlot:
             "time_kind": time_kind,
             "time_tick": time_tick,
         }
-        return QtServer.send_post("PLOT-REACTION-RESULT", payload)
+        return QtServer.send_get("PLOT-REACTION-RESULT", payload)
 
     @staticmethod
     def plot_displacement_result(file_path: str="", stage_id: int = 1, case_name: str = "", show_increment: bool = False,
@@ -62,7 +62,7 @@ class OdbResultPlot:
                                  show_deformed: bool = True, deformed_scale: float = 1.0, deformed_actual: bool = False,
                                  show_number: bool = True, text_rotation=0, max_min_kind: int = 1,
                                  show_legend: bool = True, digital_count=3, text_exponential: bool = True, show_undeformed: bool = True,
-                                 is_time_history: bool = False, deform_kind: int = 1, time_kind: int = 1, time_tick: float = 1.0):
+                                 is_time_history: bool = False, deform_kind: int = 1, time_kind: int = 1, time_tick: float = 1.0)  ->str:
         """
         保存结果图片到指定文件甲
         Args:
@@ -88,7 +88,7 @@ class OdbResultPlot:
             time_tick:时程分析时刻
         Example:
             odb.plot_displacement_result(file_path=r"D:\\图片\\变形图.png",component=1,case_name="CQ:成桥(合计)",stage_id=-1)
-        Returns: 无
+        Returns: Base64字符串
         """
         payload = {
             "file_path": file_path,
@@ -112,7 +112,7 @@ class OdbResultPlot:
             "deform_kind": deform_kind,
             "time_tick": time_tick,
         }
-        return QtServer.send_post("PLOT-DISPLACEMENT-RESULT", payload)
+        return QtServer.send_get("PLOT-DISPLACEMENT-RESULT", payload)
 
     @staticmethod
     def plot_beam_element_force(file_path: str="", stage_id: int = 1, case_name: str = "合计", show_increment: bool = False,
@@ -122,7 +122,7 @@ class OdbResultPlot:
                                 show_number: bool = False, text_rotation: int = 0, max_min_kind: int = 1,
                                 show_legend: bool = True, digital_count: int = 3, text_exponential: bool = True,
                                 show_undeformed: bool = False, position: int = 1,
-                                is_time_history: bool = False, time_kind: int = 1, time_tick: float = 1.0):
+                                is_time_history: bool = False, time_kind: int = 1, time_tick: float = 1.0) -> str:
         """
         绘制梁单元结果图并保存到指定文件
         Args:
@@ -151,7 +151,7 @@ class OdbResultPlot:
             time_tick:时程分析时刻
         Example:
             odb.plot_beam_element_force(file_path=r"D:\\图片\\梁内力.png",component=1,case_name="CQ:成桥(合计)",stage_id=-1)
-        Returns: 无
+        Returns: Base64字符串
         """
         payload = {
             "file_path": file_path,
@@ -178,7 +178,7 @@ class OdbResultPlot:
             "time_kind": time_kind,
             "time_tick": time_tick,
         }
-        return QtServer.send_post("PLOT-BEAM-ELEMENT-FORCE", payload)
+        return QtServer.send_get("PLOT-BEAM-ELEMENT-FORCE", payload)
 
     @staticmethod
     def plot_truss_element_force(file_path: str="", stage_id: int = 1, case_name: str = "合计", show_increment: bool = False,
@@ -188,7 +188,7 @@ class OdbResultPlot:
                                  show_number: bool = False, text_rotation: int = 0, max_min_kind: int = 1,
                                  show_legend: bool = True, digital_count: int = 3, text_exponential: bool = True,
                                  show_undeformed: bool = False, position: int = 1,
-                                 is_time_history: bool = False, time_kind: int = 1, time_tick: float = 1.0):
+                                 is_time_history: bool = False, time_kind: int = 1, time_tick: float = 1.0) ->str:
         """
         绘制杆单元结果图并保存到指定文件
         Args:
@@ -217,7 +217,7 @@ class OdbResultPlot:
             time_tick:时程分析时刻
         Example:
             odb.plot_truss_element_force(file_path=r"D:\\图片\\杆内力.png",case_name="CQ:成桥(合计)",stage_id=-1)
-        Returns: 无
+        Returns: Base64字符串
         """
         payload = {
             "file_path": file_path,
@@ -244,7 +244,7 @@ class OdbResultPlot:
             "time_kind": time_kind,
             "time_tick": time_tick,
         }
-        return QtServer.send_post("PLOT-TRUSS-ELEMENT-FORCE", payload)
+        return QtServer.send_get("PLOT-TRUSS-ELEMENT-FORCE", payload)
 
     @staticmethod
     def plot_plate_element_force(file_path: str="", stage_id: int = 1, case_name: str = "合计", show_increment: bool = False,
@@ -252,7 +252,7 @@ class OdbResultPlot:
                                  show_number: bool = False, text_rotate: int = 0, max_min_kind: int = 1,
                                  show_deformed: bool = True, deformed_scale: float = 1.0, deformed_actual: bool = False,
                                  show_legend: bool = True, digital_count: int = 3, text_exponential: bool = True,
-                                 show_undeformed: bool = False, is_time_history: bool = False, time_kind: int = 1, time_tick: float = 1.0):
+                                 show_undeformed: bool = False, is_time_history: bool = False, time_kind: int = 1, time_tick: float = 1.0) ->str:
         """
         绘制板单元结果图并保存到指定文件
         Args:
@@ -278,7 +278,7 @@ class OdbResultPlot:
             time_tick:时程分析时刻
         Example:
             odb.plot_plate_element_force(file_path=r"D:\\图片\\板内力.png",component=1,case_name="CQ:成桥(合计)",stage_id=-1)
-        Returns: 无
+        Returns: Base64字符串
         """
         payload = {
             "file_path": file_path,
@@ -302,7 +302,7 @@ class OdbResultPlot:
             "time_kind": time_kind,
             "time_tick": time_tick,
         }
-        return QtServer.send_post("PLOT-PLATE-ELEMENT-FORCE", payload)
+        return QtServer.send_get("PLOT-PLATE-ELEMENT-FORCE", payload)
 
     @staticmethod
     def plot_composite_beam_force(file_path: str="", stage_id: int = 1, case_name: str = "合计", show_increment: bool = False,
@@ -311,7 +311,7 @@ class OdbResultPlot:
                                   show_deformed: bool = True, deformed_actual: bool = False, deformed_scale: float = 1.0,
                                   show_number: bool = False, text_rotation: int = 0, max_min_kind: int = 1,
                                   show_legend: bool = True, digital_count: int = 3, text_exponential: bool = True,
-                                  show_undeformed: bool = False, position: int = 1):
+                                  show_undeformed: bool = False, position: int = 1)  ->str:
         """
         绘制组合梁单元结果图并保存到指定文件
         Args:
@@ -338,7 +338,7 @@ class OdbResultPlot:
             position: 位置编号 1-始端 2-末端 3-绝对最大 4-全部
         Example:
             odb.plot_composite_beam_force(file_path=r"D:\\图片\\组合梁内力.png",mat_type=0,component=1,case_name="CQ:成桥(合计)",stage_id=-1)
-        Returns: 无
+        Returns: Base64字符串
         """
         payload = {
             "file_path": file_path,
@@ -363,7 +363,7 @@ class OdbResultPlot:
             "show_undeformed": show_undeformed,
             "position": position,
         }
-        return QtServer.send_post("PLOT-COMPOSITE-BEAM-FORCE", payload)
+        return QtServer.send_get("PLOT-COMPOSITE-BEAM-FORCE", payload)
 
     @staticmethod
     def plot_beam_element_stress(file_path: str="", stage_id: int = 1, case_name: str = "合计", show_increment: bool = False,
@@ -372,7 +372,7 @@ class OdbResultPlot:
                                  show_deformed: bool = True, deformed_actual: bool = False, deformed_scale: float = 1.0,
                                  show_number: bool = False, text_rotation: int = 0, max_min_kind: int = 1,
                                  show_legend: bool = True, digital_count: int = 3, text_exponential: bool = True,
-                                 show_undeformed: bool = False, position: int = 1):
+                                 show_undeformed: bool = False, position: int = 1)  ->str:
         """
         绘制梁单元应力结果图并保存到指定文件
         Args:
@@ -398,7 +398,7 @@ class OdbResultPlot:
             position: 位置编号 1-始端 2-末端 3-绝对最大 4-全部
         Example:
             odb.plot_beam_element_stress(file_path=r"D:\\图片\\梁应力.png",show_line_chart=False,component=1,case_name="CQ:成桥(合计)",stage_id=-1)
-        Returns: 无
+        Returns: Base64字符串
         """
         payload = {
             "file_path": file_path,
@@ -422,7 +422,7 @@ class OdbResultPlot:
             "show_undeformed": show_undeformed,
             "position": position,
         }
-        return QtServer.send_post("PLOT-BEAM-ELEMENT-STRESS", payload)
+        return QtServer.send_get("PLOT-BEAM-ELEMENT-STRESS", payload)
 
     @staticmethod
     def plot_truss_element_stress(file_path: str="", stage_id: int = 1, case_name: str = "合计", show_increment: bool = False, envelop_type: int = 1,
@@ -430,7 +430,7 @@ class OdbResultPlot:
                                   show_deformed: bool = True, deformed_actual: bool = False, deformed_scale: float = 1.0,
                                   show_number: bool = False, text_rotation: int = 0, max_min_kind: int = 1,
                                   show_legend: bool = True, digital_count: int = 3, text_exponential: bool = True,
-                                  show_undeformed: bool = False, position: int = 1):
+                                  show_undeformed: bool = False, position: int = 1)  ->str:
         """
         绘制杆单元结果图并保存到指定文件
         Args:
@@ -455,7 +455,7 @@ class OdbResultPlot:
             position: 位置编号 1-始端 2-末端 3-绝对最大 4-全部
         Example:
             odb.plot_truss_element_stress(file_path=r"D:\\图片\\杆应力.png",case_name="CQ:成桥(合计)",stage_id=-1)
-        Returns: 无
+        Returns: Base64字符串
         """
         payload = {
             "file_path": file_path,
@@ -478,7 +478,7 @@ class OdbResultPlot:
             "show_undeformed": show_undeformed,
             "position": position,
         }
-        return QtServer.send_post("PLOT-TRUSS-ELEMENT-STRESS", payload)
+        return QtServer.send_get("PLOT-TRUSS-ELEMENT-STRESS", payload)
 
     @staticmethod
     def plot_composite_beam_stress(file_path: str="", stage_id: int = 1, case_name: str = "合计", show_increment: bool = False,
@@ -487,7 +487,7 @@ class OdbResultPlot:
                                    show_deformed: bool = True, deformed_actual: bool = False, deformed_scale: float = 1.0,
                                    show_number: bool = False, text_rotation: int = 0, max_min_kind: int = 1,
                                    show_legend: bool = True, digital_count: int = 3, text_exponential: bool = True,
-                                   show_undeformed: bool = False, position: int = 1):
+                                   show_undeformed: bool = False, position: int = 1)  ->str:
         """
         绘制组合梁单元结果图并保存到指定文件
         Args:
@@ -514,7 +514,7 @@ class OdbResultPlot:
             position: 位置编号 1-始端 2-末端 3-绝对最大 4-全部
         Example:
             odb.plot_composite_beam_stress(file_path=r"D:\\图片\\组合梁应力.png",component=1,case_name="CQ:成桥(合计)",stage_id=-1)
-        Returns: 无
+        Returns: Base64字符串
         """
         payload = {
             "file_path": file_path,
@@ -539,7 +539,7 @@ class OdbResultPlot:
             "show_undeformed": show_undeformed,
             "position": position,
         }
-        return QtServer.send_post("PLOT-COMPOSITE-BEAM-STRESS", payload)
+        return QtServer.send_get("PLOT-COMPOSITE-BEAM-STRESS", payload)
 
     @staticmethod
     def plot_plate_element_stress(file_path: str="", stage_id: int = 1, case_name: str = "合计", show_increment: bool = False,
@@ -547,7 +547,7 @@ class OdbResultPlot:
                                   show_number: bool = False, text_rotate: int = 0, max_min_kind: int = 1,
                                   show_deformed: bool = True, deformed_scale: float = 1.0, deformed_actual: bool = False,
                                   show_legend: bool = True, digital_count: int = 3, text_exponential: bool = True,
-                                  show_undeformed: bool = False, position: int = 1):
+                                  show_undeformed: bool = False, position: int = 1)  ->str:
         """
         绘制板单元结果图并保存到指定文件
         Args:
@@ -571,7 +571,7 @@ class OdbResultPlot:
             position: 位置 1-板顶 2-板底 3-绝对值最大
         Example:
             odb.plot_plate_element_stress(file_path=r"D:\\图片\\板应力.png",component=1,case_name="CQ:成桥(合计)",stage_id=-1)
-        Returns: 无
+        Returns: Base64字符串
         """
         payload = {
             "file_path": file_path,
@@ -593,13 +593,13 @@ class OdbResultPlot:
             "show_undeformed": show_undeformed,
             "position": position,
         }
-        return QtServer.send_post("PLOT-PLATE-ELEMENT-STRESS", payload)
+        return QtServer.send_get("PLOT-PLATE-ELEMENT-STRESS", payload)
 
     @staticmethod
     def plot_modal_result(file_path: str="" , mode: int = 1, mode_kind: int = 1, show_number: bool = True,
                           text_rotate: float = 0, max_min_kind: int = 1,
                           show_legend: bool = True, digital_count: int = 3, text_exponential: bool = True,
-                          show_undeformed: bool = False):
+                          show_undeformed: bool = False)  ->str:
         """
         绘制模态结果，可选择自振模态和屈曲模态结果
         Args:
@@ -616,7 +616,7 @@ class OdbResultPlot:
         Example:
            odb.plot_modal_result(file_path=r"D:\\图片\\自振模态.png",mode=1)
            odb.plot_modal_result(file_path=r"D:\\图片\\屈曲模态.png",mode=1,mode_kind=2)
-        Returns: 无
+        Returns: Base64字符串
         """
         payload = {
             "file_path": file_path,
@@ -630,7 +630,7 @@ class OdbResultPlot:
             "text_exponential": text_exponential,
             "show_undeformed": show_undeformed,
         }
-        return QtServer.send_post("PLOT-MODAL-RESULT", payload)
+        return QtServer.send_get("PLOT-MODAL-RESULT", payload)
 
     @staticmethod
     def get_current_png() -> str:
