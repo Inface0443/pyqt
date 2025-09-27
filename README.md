@@ -1,4 +1,4 @@
-> 最新版本 V1.1.4 - 2025-09-27 
+> 最新版本 V1.1.5 - 2025-09-27 
 > pip install --upgrade qtmodel -i https://pypi.org/simple
 - 新增更新结构组接口 
 # 建模操作 
@@ -884,13 +884,14 @@ mdb.add_general_elastic_support(node_id=1, property_name = "特性1",group_name=
 添加一般支承
 > 参数:  
 > node_id:节点编号,支持整数或整数型列表且支持XtoYbyN形式字符串  
-> boundary_info:边界信息  [X,Y,Z,Rx,Ry,Rz]  ture-固定 false-自由  
+> boundary_info:边界信息  [X,Y,Z,Rx,Ry,Rz]  ture-固定 false-自由,也可传数值列表(0-自由 1-固定)  
 > group_name:边界组名,默认为默认边界组  
 ```Python
 # 示例代码
 from qtmodel import *
 mdb.add_general_support(node_id=1, boundary_info=[True,True,True,False,False,False])
 mdb.add_general_support(node_id="1to100", boundary_info=[True,True,True,False,False,False])
+mdb.add_general_support(node_id="1to100", boundary_info=[1,1,1,0,0,0])
 #Returns: 无
 ```  
 ### add_elastic_support
@@ -3414,7 +3415,7 @@ odb.get_reaction(ids=1,stage_id=1)
 odb.get_reaction(ids=[1,2,3],stage_id=1)
 odb.get_reaction(ids="1to3",stage_id=1)
 odb.get_reaction(ids=1,stage_id=-1,case_name="工况名")
-#Returns: 包含信息为list[dict] or dict
+#Returns: 返回json字符串， 内部为list[dict]
 ```  
 ### get_deformation
 获取节点变形结果,支持单个节点和节点列表
@@ -3433,7 +3434,7 @@ odb.get_deformation(ids=1,stage_id=1)
 odb.get_deformation(ids=[1,2,3],stage_id=1)
 odb.get_deformation(ids="1to3",stage_id=1)
 odb.get_deformation(ids=1,stage_id=-1,case_name="工况名")
-#Returns: 多结果获取时返回list[dict] 单一结果获取时返回dict
+#Returns: 返回json字符串， 内部为list[dict]
 ```  
 ### get_element_stress
 获取单元应力,支持单个单元和单元列表
@@ -3450,7 +3451,7 @@ from qtmodel import *
 odb.get_element_stress(ids=1,stage_id=1)
 odb.get_element_stress(ids=[1,2,3],stage_id=1)
 odb.get_element_stress(ids=1,stage_id=-1,case_name="工况名")
-#Returns: 包含信息为list[dict] or dict
+#Returns: 返回json字符串， 内部为list[dict]
 ```  
 ### get_element_force
 获取单元内力,支持单个单元和单元列表
@@ -3469,7 +3470,7 @@ from qtmodel import *
 odb.get_element_force(ids=1,stage_id=1)
 odb.get_element_force(ids=[1,2,3],stage_id=1)
 odb.get_element_force(ids=1,stage_id=-1,case_name="工况名")
-#Returns: 包含信息为list[dict] or dict
+#Returns: 返回json字符串， 内部为list[dict]
 ```  
 ### get_self_concurrent_reaction
 获取自并发反力
@@ -3480,7 +3481,7 @@ odb.get_element_force(ids=1,stage_id=-1,case_name="工况名")
 # 示例代码
 from qtmodel import *
 odb.get_self_concurrent_reaction(node_id=1,case_name="工况1_Fx最大")
-#Returns: 返回该节点并发反力值dict
+#Returns: 返回json字符串， 内部为list[dict]
 ```  
 ### get_all_concurrent_reaction
 获取完全并发反力
@@ -3491,7 +3492,7 @@ odb.get_self_concurrent_reaction(node_id=1,case_name="工况1_Fx最大")
 # 示例代码
 from qtmodel import *
 odb.get_all_concurrent_reaction(node_id=1,case_name="工况1_Fx最大")
-#Returns: 包含信息为list[dict]
+#Returns: 返回json字符串， 包含信息为list[dict]
 ```  
 ### get_concurrent_force
 获取单元并发内力
@@ -3503,7 +3504,7 @@ odb.get_all_concurrent_reaction(node_id=1,case_name="工况1_Fx最大")
 from qtmodel import *
 odb.get_concurrent_force(ids=1,case_name="工况1_Fx最大")
 odb.get_concurrent_force(ids="1to19",case_name="工况1_Fx最大")
-#Returns: 包含信息为list[dict]
+#Returns: 返回json字符串， 包含信息为list[dict]
 ```  
 ### get_elastic_link_force
 获取弹性连接内力
@@ -3518,7 +3519,7 @@ odb.get_concurrent_force(ids="1to19",case_name="工况1_Fx最大")
 # 示例代码
 from qtmodel import *
 odb.get_elastic_link_force(ids=[1,2,3], result_kind=1, stage_id=1)
-#Returns: 返回弹性连接内力列表list[dict] 或 dict(单一结果)
+#Returns: 返回json字符串， 内部为list[dict]
 ```  
 ### get_constrain_equation_force
 查询约束方程内力
@@ -3533,7 +3534,7 @@ odb.get_elastic_link_force(ids=[1,2,3], result_kind=1, stage_id=1)
 # 示例代码
 from qtmodel import *
 odb.get_constrain_equation_force(ids=[1,2,3], result_kind=1, stage_id=1)
-#Returns: 返回约束方程内力列表list[dict] 或 dict(单一结果)
+#Returns: 返回json字符串， 内部为list[dict]
 ```  
 ### get_cable_element_length
 查询无应力索长
@@ -3545,7 +3546,7 @@ odb.get_constrain_equation_force(ids=[1,2,3], result_kind=1, stage_id=1)
 # 示例代码
 from qtmodel import *
 odb.get_cable_element_length(ids=[1,2,3], stage_id=1)
-#Returns: 返回无应力索长列表list[dict] 或 dict(单一结果)
+#Returns: 返回json字符串， 内部为list[dict]
 ```  
 ### get_period_and_vibration_results
 获取自振分析角频率和振型参与质量等结果
@@ -3554,7 +3555,7 @@ odb.get_cable_element_length(ids=[1,2,3], stage_id=1)
 # 示例代码
 from qtmodel import *
 odb.get_period_and_vibration_results()
-#Returns:list[dict]包含各模态周期和频率的列表
+#Returns: 返回json字符串，list[dict]包含各模态周期和频率的列表
 ```  
 ### get_vibration_modal_results
 获取自振分析振型向量
@@ -3564,7 +3565,7 @@ odb.get_period_and_vibration_results()
 # 示例代码
 from qtmodel import *
 odb.get_vibration_modal_results(mode=1)
-#Returns:list[dict]包含该模态下节点位移向量列表
+#Returns: 返回json字符串，list[dict]包含该模态下节点位移向量列表
 ```  
 ### get_buckling_eigenvalue
 获取屈曲分析特征值
@@ -3573,7 +3574,7 @@ odb.get_vibration_modal_results(mode=1)
 # 示例代码
 from qtmodel import *
 odb.get_buckling_eigenvalue()
-#Returns: list[dict]包含各模态下特征值
+#Returns: 返回json字符串， list[dict]包含各模态下特征值
 ```  
 ### get_buckling_modal_results
 获取屈曲模态向量
@@ -3583,7 +3584,7 @@ odb.get_buckling_eigenvalue()
 # 示例代码
 from qtmodel import *
 odb.get_buckling_modal_results(mode=1)
-#Returns:list[dict]包含该模态下屈曲模态向量列表
+#Returns: 返回json字符串，list[dict]包含该模态下屈曲模态向量列表
 ```  
 ##  绘制模型结果
 ### plot_reaction_result
@@ -3905,4 +3906,115 @@ odb.plot_modal_result(file_path=r"D:\\图片\\屈曲模态.png",mode=1,mode_kind
 from qtmodel import *
 odb.get_current_png()
 #Returns: Base64格式(图形)字符串
+```  
+##  视图控制
+### display_node_id
+设置节点号显示
+> 参数:  
+> show_id:是否打开节点号显示  
+```Python
+# 示例代码
+from qtmodel import *
+odb.display_node_id()
+odb.display_node_id(False)
+#Returns: 无
+```  
+### display_element_id
+设置单元号显示
+> 参数:  
+> show_id:是否打开单元号显示  
+```Python
+# 示例代码
+from qtmodel import *
+odb.display_element_id()
+odb.display_element_id(False)
+#Returns: 无
+```  
+### set_view_camera
+更改三维显示相机设置
+> 参数:  
+> camera_point: 相机坐标点  
+> focus_point: 相机焦点  
+> camera_rotate:相机绕XYZ旋转角度  
+> scale: 缩放系数  
+```Python
+# 示例代码
+from qtmodel import *
+odb.set_view_camera(camera_point=(-100,-100,100),focus_point=(0,0,0))
+#Returns: 无
+```  
+### set_view_direction
+更改三维显示默认视图
+> 参数:  
+> direction: 1-空间视图1 2-前视图 3-三维视图2 4-左视图  5-顶视图 6-右视图 7-空间视图3 8-后视图 9-空间视图4 10-底视图  
+> horizontal_degree:水平向旋转角度  
+> vertical_degree:竖向旋转角度  
+> scale:缩放系数  
+```Python
+# 示例代码
+from qtmodel import *
+odb.set_view_direction(direction=1,scale=1.2)
+#Returns: 无
+```  
+### activate_structure
+激活指定阶段和单元,默认激活所有
+> 参数:  
+> node_ids: 节点集合支持XtoYbyN形式字符串  
+> element_ids: 单元集合支持XtoYbyN形式字符串  
+```Python
+# 示例代码
+from qtmodel import *
+odb.activate_structure(node_ids=[1,2,3],element_ids=[1,2,3])
+#Returns: 无
+```  
+### set_unit
+修改视图显示时单位制,不影响建模
+> 参数:  
+> unit_force: 支持 N KN TONF KIPS LBF  
+> unit_length: 支持 M MM CM IN FT  
+```Python
+# 示例代码
+from qtmodel import *
+odb.set_unit(unit_force="N",unit_length="M")
+#Returns: 无
+```  
+### remove_display
+删除当前所有显示,包括边界荷载钢束等全部显示
+> 参数:  
+```Python
+# 示例代码
+from qtmodel import *
+odb.remove_display()
+#Returns: 无
+```  
+### save_png
+保存当前模型窗口图形信息
+> 参数:  
+> file_path: 文件全路径  
+```Python
+# 示例代码
+from qtmodel import *
+odb.save_png(file_path=r"D:\\QT\\aa.png")
+#Returns: 无
+```  
+### set_render
+消隐设置开关
+> 参数:  
+> flag: 默认设置打开消隐  
+```Python
+# 示例代码
+from qtmodel import *
+odb.set_render(flag=True)
+#Returns: 无
+```  
+### change_construct_stage
+消隐设置开关
+> 参数:  
+> stage: 施工阶段名称或施工阶段号  0-基本  
+```Python
+# 示例代码
+from qtmodel import *
+odb.change_construct_stage(0)
+odb.change_construct_stage(stage=1)
+#Returns: 无
 ```  

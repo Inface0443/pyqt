@@ -86,8 +86,8 @@ class QtDataHelper:
         return s
 
     @staticmethod
-    def get_str_by_data(s: str, sec_type: str, sec_data: dict):
-        s += QtDataHelper.str_section(
+    def get_str_by_data(sec_type: str, sec_data: dict):
+        s = QtDataHelper.str_section(
             sec_type=sec_type,
             sec_info=sec_data.get("sec_info", []),
             symmetry=sec_data.get("symmetry", True),

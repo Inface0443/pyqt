@@ -105,7 +105,7 @@ class MdbSection:
                 loop_segments,
                 sec_lines,
                 secondary_loop_segments)
-            # print(s)
+
             QtServer.post_command(s, "QDAT")
         except Exception as ex:
             raise Exception(f"添加截面:{name}失败，{ex}")
@@ -139,9 +139,11 @@ class MdbSection:
             if sec_property is not None:
                 s += "*SEC-PROPERTY\r\n" + f"ID={index},{name},1,{'YES' if shear_consider else 'NO'},{bias}\r\n"
                 s += ",".join(f"{x:g}" for x in sec_property) + "\r\n"
-            s += "*SEC-INFO\r\n" + f"ID={index},{name},{sec_type},{'YES' if shear_consider else 'NO'},{bias}\r\n"
-            s = QtDataHelper.get_str_by_data(s, sec_type, sec_data)
-            # print(s)
+            QtServer.post_command(s, "QDAT")
+
+            s = "*SEC-INFO\r\n" + f"ID={index},{name},{sec_type},{'YES' if shear_consider else 'NO'},{bias}\r\n"
+            s += QtDataHelper.get_str_by_data(sec_type, sec_data)
+
             QtServer.post_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
@@ -187,22 +189,22 @@ class MdbSection:
             else:
                 bias2 = f"{center_type_j},{bias_type_j}"
             s = ""
+            # 先导入截面特性，以免重复计算截面
             if sec_property_i is not None and sec_property_j is not None:
                 s += "*SEC-PROPERTY\r\n" + f"ID={index},{name},2,{'YES' if shear_consider else 'NO'},{bias1},{bias2}\r\n"
                 s += ",".join(f"{x:g}" for x in sec_property_i) + "\r\n"
                 s += ",".join(f"{x:g}" for x in sec_property_j) + "\r\n"
-            s += ("*SEC-INFO\r\n" +
-                  f"ID={index},{name},{sec_type}-变截面,{'YES' if shear_consider else 'NO'},{bias1},{bias2}\r\n")
+            QtServer.post_command(s, "QDAT")
 
+            # 再导入截面信息
+            s = ("*SEC-INFO\r\n" +
+                  f"ID={index},{name},{sec_type}-变截面,{'YES' if shear_consider else 'NO'},{bias1},{bias2}\r\n")
             # I 端截面
             s += "I=\r\n"
-            s = QtDataHelper.get_str_by_data(s, sec_type, sec_begin)
-
+            s += QtDataHelper.get_str_by_data(sec_type, sec_begin)
             # J 端截面
             s += "J=\r\n"
-            s = QtDataHelper.get_str_by_data(s, sec_type, sec_end)
-
-            # print(s)
+            s += QtDataHelper.get_str_by_data(sec_type, sec_end)
             QtServer.post_command(s, "QDAT")
             if sec_normalize:
                 params = {
@@ -462,7 +464,7 @@ class MdbSection:
                 id_str = str(ids)
             if parameter_info is None:
                 s = "*TSGROUP\r\n" + f"{name},{id_str},{factor_w:g},{ref_w},{dis_w:g},{factor_h:g},{ref_h},{dis_h:g}\r\n"
-                # print(s)
+
                 QtServer.post_command(s, "QDAT")
             if parameter_info is not None:
                 s = "*PARA-TSGROUP\r\n" + f"NAME={name},{id_str}\r\n"

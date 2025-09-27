@@ -26,7 +26,7 @@ class OdbResult:
             odb.get_reaction(ids=[1,2,3],stage_id=1)
             odb.get_reaction(ids="1to3",stage_id=1)
             odb.get_reaction(ids=1,stage_id=-1,case_name="工况名")
-        Returns: 包含信息为list[dict] or dict
+        Returns: 返回json字符串， 内部为list[dict]
         """
         payload = {
             "ids": QtDataHelper.parse_ids_to_array(ids),
@@ -58,7 +58,7 @@ class OdbResult:
             odb.get_deformation(ids=[1,2,3],stage_id=1)
             odb.get_deformation(ids="1to3",stage_id=1)
             odb.get_deformation(ids=1,stage_id=-1,case_name="工况名")
-        Returns: 多结果获取时返回list[dict] 单一结果获取时返回dict
+        Returns: 返回json字符串， 内部为list[dict]
         """
         payload = {
             "ids": QtDataHelper.parse_ids_to_array(ids),
@@ -87,7 +87,7 @@ class OdbResult:
             odb.get_element_stress(ids=1,stage_id=1)
             odb.get_element_stress(ids=[1,2,3],stage_id=1)
             odb.get_element_stress(ids=1,stage_id=-1,case_name="工况名")
-        Returns: 包含信息为list[dict] or dict
+        Returns: 返回json字符串， 内部为list[dict]
         """
         payload = {
             "ids": QtDataHelper.parse_ids_to_array(ids),
@@ -118,7 +118,7 @@ class OdbResult:
             odb.get_element_force(ids=1,stage_id=1)
             odb.get_element_force(ids=[1,2,3],stage_id=1)
             odb.get_element_force(ids=1,stage_id=-1,case_name="工况名")
-        Returns: 包含信息为list[dict] or dict
+        Returns: 返回json字符串， 内部为list[dict]
         """
         payload = {
             "ids": QtDataHelper.parse_ids_to_array(ids),
@@ -141,7 +141,7 @@ class OdbResult:
           case_name:工况号
         Example:
           odb.get_self_concurrent_reaction(node_id=1,case_name="工况1_Fx最大")
-        Returns: 返回该节点并发反力值dict
+        Returns: 返回json字符串， 内部为list[dict]
         """
         payload = {
             "node_id": node_id,
@@ -158,7 +158,7 @@ class OdbResult:
           case_name:工况号
         Example:
           odb.get_all_concurrent_reaction(node_id=1,case_name="工况1_Fx最大")
-        Returns: 包含信息为list[dict]
+        Returns: 返回json字符串， 包含信息为list[dict]
         """
         payload = {
             "node_id": node_id,
@@ -176,7 +176,7 @@ class OdbResult:
         Example:
           odb.get_concurrent_force(ids=1,case_name="工况1_Fx最大")
           odb.get_concurrent_force(ids="1to19",case_name="工况1_Fx最大")
-        Returns: 包含信息为list[dict]
+        Returns: 返回json字符串， 包含信息为list[dict]
         """
         payload = {
             "ids": QtDataHelper.parse_ids_to_array(ids),
@@ -197,7 +197,7 @@ class OdbResult:
             case_name: 工况名称，默认为空
         Example:
             odb.get_elastic_link_force(ids=[1,2,3], result_kind=1, stage_id=1)
-        Returns: 返回弹性连接内力列表list[dict] 或 dict(单一结果)
+        Returns: 返回json字符串， 内部为list[dict]
         """
         payload = {
             "ids": QtDataHelper.parse_ids_to_array(ids),
@@ -222,7 +222,7 @@ class OdbResult:
             case_name: 工况名称
         Example:
             odb.get_constrain_equation_force(ids=[1,2,3], result_kind=1, stage_id=1)
-        Returns: 返回约束方程内力列表list[dict] 或 dict(单一结果)
+        Returns: 返回json字符串， 内部为list[dict]
         """
         payload = {
             "ids": QtDataHelper.parse_ids_to_array(ids),
@@ -244,7 +244,7 @@ class OdbResult:
             increment_type: 增量类型，默认为1
         Example:
             odb.get_cable_element_length(ids=[1,2,3], stage_id=1)
-        Returns: 返回无应力索长列表list[dict] 或 dict(单一结果)
+        Returns: 返回json字符串， 内部为list[dict]
         """
         payload = {
             "ids": QtDataHelper.parse_ids_to_array(ids),
@@ -260,7 +260,7 @@ class OdbResult:
         Args: 无
         Example:
           odb.get_period_and_vibration_results()
-        Returns:list[dict]包含各模态周期和频率的列表
+        Returns: 返回json字符串，list[dict]包含各模态周期和频率的列表
         """
         return QtServer.send_post("GET-PERIOD-AND-VIBRATION-RESULTS", None)
 
@@ -272,7 +272,7 @@ class OdbResult:
             mode: 模态号. 默认为1
         Example:
             odb.get_vibration_modal_results(mode=1)
-        Returns:list[dict]包含该模态下节点位移向量列表
+        Returns: 返回json字符串，list[dict]包含该模态下节点位移向量列表
         """
         payload = {
             "mode": mode
@@ -286,7 +286,7 @@ class OdbResult:
         Args: 无
         Example:
             odb.get_buckling_eigenvalue()
-        Returns: list[dict]包含各模态下特征值
+        Returns: 返回json字符串， list[dict]包含各模态下特征值
         """
         return QtServer.send_post("GET-BUCKLING-EIGENVALUE", None)
 
@@ -298,7 +298,7 @@ class OdbResult:
             mode:模态号. 默认为1
         Example:
             odb.get_buckling_modal_results(mode=1)
-        Returns:list[dict]包含该模态下屈曲模态向量列表
+        Returns: 返回json字符串，list[dict]包含该模态下屈曲模态向量列表
         """
         payload = {
             "mode": mode
