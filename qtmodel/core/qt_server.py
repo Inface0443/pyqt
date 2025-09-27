@@ -1,4 +1,5 @@
 import json
+from typing import Optional
 
 import requests
 
@@ -54,7 +55,7 @@ class QtServer:
             raise Exception("连接错误，请重新尝试")
 
     @staticmethod
-    def send_post(header: str, payload: dict | None):
+    def send_post(header: str, payload: Optional[dict] = None):
         """
         统一发送：有参数 -> JSON；无参数 -> 不带 command 的 post
         """
@@ -69,7 +70,7 @@ class QtServer:
             raise Exception(ex)
 
     @staticmethod
-    def send_get(header: str, payload: dict | None):
+    def send_get(header: str, payload: Optional[dict] = None):
         """
         统一发送：有参数 -> JSON；无参数 -> 不带 command 的 post
         """
