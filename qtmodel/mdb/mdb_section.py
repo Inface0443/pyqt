@@ -276,7 +276,7 @@ class MdbSection:
         以字典形式添加单一截面
         Args:
             index:截面编号
-            new_id:新截面编号，默认不修改截面编号
+            new_id:新截面编号，默认为-1时不修改截面编号
             name:截面名称
             sec_type:截面类型
             sec_data:截面信息字典，键值参考添加add_section方法参数

@@ -12,7 +12,7 @@ class OdbResult:
     def get_reaction(ids, envelop_type=1, stage_id: int = 1, result_kind: int = 1,
                      increment_type: int = 1, case_name="", is_time_history: bool = False):
         """
-        获取节点反力
+        获取制作反力
         Args:
             ids: 节点编号,支持整数或整数型列表支持XtoYbyN形式字符串
             envelop_type: 施工阶段包络类型 1-最大 2-最小

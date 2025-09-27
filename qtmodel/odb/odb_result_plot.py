@@ -8,7 +8,7 @@ class OdbResultPlot:
 
     # region 绘制模型结果
     @staticmethod
-    def plot_reaction_result(file_path: str, stage_id: int = 1, case_name: str = "", show_increment: bool = False,
+    def plot_reaction_result(file_path: str="", stage_id: int = 1, case_name: str = "", show_increment: bool = False,
                              envelop_type: int = 1, component: int = 1,
                              show_number: bool = True, text_rotation=0, max_min_kind: int = -1,
                              show_legend: bool = True, digital_count=3, text_exponential: bool = True, arrow_scale: float = 1,
@@ -57,7 +57,7 @@ class OdbResultPlot:
         return QtServer.send_post("PLOT-REACTION-RESULT", payload)
 
     @staticmethod
-    def plot_displacement_result(file_path: str, stage_id: int = 1, case_name: str = "", show_increment: bool = False,
+    def plot_displacement_result(file_path: str="", stage_id: int = 1, case_name: str = "", show_increment: bool = False,
                                  envelop_type: int = 1, component: int = 1,
                                  show_deformed: bool = True, deformed_scale: float = 1.0, deformed_actual: bool = False,
                                  show_number: bool = True, text_rotation=0, max_min_kind: int = 1,
@@ -115,7 +115,7 @@ class OdbResultPlot:
         return QtServer.send_post("PLOT-DISPLACEMENT-RESULT", payload)
 
     @staticmethod
-    def plot_beam_element_force(file_path: str, stage_id: int = 1, case_name: str = "合计", show_increment: bool = False,
+    def plot_beam_element_force(file_path: str="", stage_id: int = 1, case_name: str = "合计", show_increment: bool = False,
                                 envelop_type: int = 1, component: int = 1,
                                 show_line_chart: bool = True, line_scale: float = 1.0, flip_plot: bool = True,
                                 show_deformed: bool = True, deformed_actual: bool = False, deformed_scale: float = 1.0,
@@ -181,7 +181,7 @@ class OdbResultPlot:
         return QtServer.send_post("PLOT-BEAM-ELEMENT-FORCE", payload)
 
     @staticmethod
-    def plot_truss_element_force(file_path: str, stage_id: int = 1, case_name: str = "合计", show_increment: bool = False,
+    def plot_truss_element_force(file_path: str="", stage_id: int = 1, case_name: str = "合计", show_increment: bool = False,
                                  envelop_type: int = 1, component: int = 1,
                                  show_line_chart: bool = True, line_scale: float = 1.0, flip_plot: bool = True,
                                  show_deformed: bool = True, deformed_actual: bool = False, deformed_scale: float = 1.0,
@@ -247,7 +247,7 @@ class OdbResultPlot:
         return QtServer.send_post("PLOT-TRUSS-ELEMENT-FORCE", payload)
 
     @staticmethod
-    def plot_plate_element_force(file_path: str, stage_id: int = 1, case_name: str = "合计", show_increment: bool = False,
+    def plot_plate_element_force(file_path: str="", stage_id: int = 1, case_name: str = "合计", show_increment: bool = False,
                                  envelop_type: int = 1, force_kind: int = 1, component: int = 1,
                                  show_number: bool = False, text_rotate: int = 0, max_min_kind: int = 1,
                                  show_deformed: bool = True, deformed_scale: float = 1.0, deformed_actual: bool = False,
@@ -305,7 +305,7 @@ class OdbResultPlot:
         return QtServer.send_post("PLOT-PLATE-ELEMENT-FORCE", payload)
 
     @staticmethod
-    def plot_composite_beam_force(file_path: str, stage_id: int = 1, case_name: str = "合计", show_increment: bool = False,
+    def plot_composite_beam_force(file_path: str="", stage_id: int = 1, case_name: str = "合计", show_increment: bool = False,
                                   envelop_type: int = 1, mat_type: int = 1, component: int = 1,
                                   show_line_chart: bool = True, line_scale: float = 1.0, flip_plot: bool = True,
                                   show_deformed: bool = True, deformed_actual: bool = False, deformed_scale: float = 1.0,
@@ -366,7 +366,7 @@ class OdbResultPlot:
         return QtServer.send_post("PLOT-COMPOSITE-BEAM-FORCE", payload)
 
     @staticmethod
-    def plot_beam_element_stress(file_path: str, stage_id: int = 1, case_name: str = "合计", show_increment: bool = False,
+    def plot_beam_element_stress(file_path: str="", stage_id: int = 1, case_name: str = "合计", show_increment: bool = False,
                                  envelop_type: int = 1, component: int = 1,
                                  show_line_chart: bool = True, line_scale: float = 1.0, flip_plot: bool = True,
                                  show_deformed: bool = True, deformed_actual: bool = False, deformed_scale: float = 1.0,
@@ -425,7 +425,7 @@ class OdbResultPlot:
         return QtServer.send_post("PLOT-BEAM-ELEMENT-STRESS", payload)
 
     @staticmethod
-    def plot_truss_element_stress(file_path: str, stage_id: int = 1, case_name: str = "合计", show_increment: bool = False, envelop_type: int = 1,
+    def plot_truss_element_stress(file_path: str="", stage_id: int = 1, case_name: str = "合计", show_increment: bool = False, envelop_type: int = 1,
                                   show_line_chart: bool = True, line_scale: float = 1.0, flip_plot: bool = True,
                                   show_deformed: bool = True, deformed_actual: bool = False, deformed_scale: float = 1.0,
                                   show_number: bool = False, text_rotation: int = 0, max_min_kind: int = 1,
@@ -481,7 +481,7 @@ class OdbResultPlot:
         return QtServer.send_post("PLOT-TRUSS-ELEMENT-STRESS", payload)
 
     @staticmethod
-    def plot_composite_beam_stress(file_path: str, stage_id: int = 1, case_name: str = "合计", show_increment: bool = False,
+    def plot_composite_beam_stress(file_path: str="", stage_id: int = 1, case_name: str = "合计", show_increment: bool = False,
                                    envelop_type: int = 1, mat_type: int = 0, component: int = 1,
                                    show_line_chart: bool = True, line_scale: float = 1.0, flip_plot: bool = True,
                                    show_deformed: bool = True, deformed_actual: bool = False, deformed_scale: float = 1.0,
@@ -542,7 +542,7 @@ class OdbResultPlot:
         return QtServer.send_post("PLOT-COMPOSITE-BEAM-STRESS", payload)
 
     @staticmethod
-    def plot_plate_element_stress(file_path: str, stage_id: int = 1, case_name: str = "合计", show_increment: bool = False,
+    def plot_plate_element_stress(file_path: str="", stage_id: int = 1, case_name: str = "合计", show_increment: bool = False,
                                   envelop_type: int = 1, stress_kind: int = 0, component: int = 1,
                                   show_number: bool = False, text_rotate: int = 0, max_min_kind: int = 1,
                                   show_deformed: bool = True, deformed_scale: float = 1.0, deformed_actual: bool = False,
@@ -596,7 +596,7 @@ class OdbResultPlot:
         return QtServer.send_post("PLOT-PLATE-ELEMENT-STRESS", payload)
 
     @staticmethod
-    def plot_modal_result(file_path: str = "", mode: int = 1, mode_kind: int = 1, show_number: bool = True,
+    def plot_modal_result(file_path: str="" , mode: int = 1, mode_kind: int = 1, show_number: bool = True,
                           text_rotate: float = 0, max_min_kind: int = 1,
                           show_legend: bool = True, digital_count: int = 3, text_exponential: bool = True,
                           show_undeformed: bool = False):
