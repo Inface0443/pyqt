@@ -2,6 +2,10 @@ from ..core.qt_server import QtServer
 
 
 class OdbModelBoundary:
+    """
+    用于获取边界信息
+    """
+
     # region 获取模型边界信息
     @staticmethod
     def get_boundary_group_names():
