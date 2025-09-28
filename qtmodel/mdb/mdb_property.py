@@ -177,7 +177,7 @@ class MdbProperty:
                         construct_factor: float = 1, modified: bool = False, data_info: list[float] = None, creep_id: int = -1,
                         f_cuk: float = 0, composite_info: Optional[tuple[str, str]] = None):
         """
-        添加材料
+        todo 更新材料
         Args:
             name:旧材料名称
             new_name:新材料名称,默认不更改名称
@@ -215,7 +215,7 @@ class MdbProperty:
     @staticmethod
     def update_creep_function(name: str, new_name="", creep_data: list[tuple[float, float]] = None, scale_factor: float = 1):
         """
-        添加徐变函数
+        todo 更新徐变函数
         Args:
             name:徐变函数名
             new_name: 新徐变函数名，默认不改变函数名
@@ -236,7 +236,7 @@ class MdbProperty:
     @staticmethod
     def update_shrink_function(name: str, new_name="", shrink_data: list[tuple[float, float]] = None, scale_factor: float = 1):
         """
-        添加收缩函数
+        todo 更新收缩函数
         Args:
             name:收缩函数名
             new_name:收缩函数名
@@ -259,7 +259,7 @@ class MdbProperty:
     @staticmethod
     def remove_shrink_function(name: str = ""):
         """
-        删除收缩函数
+        todo 删除收缩函数
         Args:
             name:收缩函数名
         Example:
@@ -272,7 +272,7 @@ class MdbProperty:
     @staticmethod
     def remove_creep_function(name: str = ""):
         """
-        删除徐变函数
+        todo 删除徐变函数
         Args:
             name:徐变函数名
         Example:
@@ -285,7 +285,7 @@ class MdbProperty:
     @staticmethod
     def update_material_time_parameter(name: str = "", time_parameter_name: str = "", f_cuk: float = 0):
         """
-        将收缩徐变参数连接到材料
+        todo 将收缩徐变参数连接到材料
         Args:
             name: 材料名
             time_parameter_name: 收缩徐变名称
@@ -304,7 +304,7 @@ class MdbProperty:
     @staticmethod
     def update_material_id(name: str, new_id: int):
         """
-        更新材料编号
+        todo 更新材料编号
         Args:
             name:材料名称
             new_id:新编号
@@ -321,7 +321,7 @@ class MdbProperty:
     @staticmethod
     def remove_material(index: int = -1, name: str = ""):
         """
-        删除指定材料
+        todo 删除指定材料
         Args:
             index:指定材料编号，默认则删除所有材料
             name: 指定材料名，材料名为空时按照index删除
@@ -342,7 +342,7 @@ class MdbProperty:
     @staticmethod
     def update_material_construction_factor(name: str, factor: float = 1):
         """
-        更新材料构造系数
+        todo 更新材料构造系数
         Args:
             name:指定材料编号，默认则删除所有材料
             factor:指定材料编号，默认则删除所有材料
@@ -359,7 +359,7 @@ class MdbProperty:
     @staticmethod
     def remove_time_parameter(name: str = ""):
         """
-        删除指定时间依存材料
+        todo 删除指定时间依存材料
         Args:
             name: 指定收缩徐变材料名
         Example:
@@ -418,7 +418,7 @@ class MdbProperty:
     @staticmethod
     def update_thickness_id(index: int, new_id: int):
         """
-        更新板厚编号
+        todo 更新板厚编号
         Args:
             index: 板厚id
             new_id: 新板厚id
@@ -435,7 +435,7 @@ class MdbProperty:
     @staticmethod
     def remove_thickness(index: int = -1, name: str = ""):
         """
-        删除板厚
+        todo 删除板厚
         Args:
              index:板厚编号,默认时删除所有板厚信息
              name:默认按照编号删除,如果不为空则按照名称删除

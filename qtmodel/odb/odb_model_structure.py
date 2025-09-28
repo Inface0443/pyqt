@@ -2,11 +2,7 @@ from ..core.qt_server import QtServer
 from ..core.data_helper import QtDataHelper
 
 
-class OdbModel:
-    """
-    用于获取模型信息
-    """
-
+class OdbModelStructure:
     # region 获取节点信息
     @staticmethod
     def get_overlap_nodes(round_num: int = 4):
@@ -98,6 +94,19 @@ class OdbModel:
         return QtServer.send_get("GET-ELEMENTS-BY-MATERIAL", payload)
 
     @staticmethod
+    def get_element_by_section(index: int = 1):
+        """
+        获取某一截面相应的单元
+        Args:
+            index:截面编号
+        Example:
+            odb.get_element_by_section("材料1")
+        Returns: 包含信息为list[int]
+        """
+        payload = {"index": index}
+        return QtServer.send_get("GET-ELEMENTS-BY-SECTION", payload)
+
+    @staticmethod
     def get_overlap_elements():
         """
         获取重合节点
@@ -118,9 +127,6 @@ class OdbModel:
         Returns: 包含信息为list[str]
         """
         return QtServer.send_get("GET-STRUCTURE-GROUP-NAMES", None)
-
-
-
 
     @staticmethod
     def get_element_data(ids=None):
@@ -162,164 +168,4 @@ class OdbModel:
         payload = {"group_name": group_name}
         return QtServer.send_get("GET-GROUP-ELEMENTS", payload)
 
-
-
-
-
-    # endregion
-
-    # region 获取材料
-    @staticmethod
-    def get_concrete_material(ids=None):
-        """
-        获取混凝土材料信息
-        Args:
-            ids: 材料号支持XtoYbyN形式字符串,默认时输出全部材料
-        Example:
-            odb.get_concrete_material() # 获取所有材料信息
-        Returns:  list[dict]
-        """
-        payload = {"ids": QtDataHelper.parse_ids_to_array(ids)} if ids is not None else None
-        return QtServer.send_get("GET-CONCRETE-MATERIAL", payload)
-
-    @staticmethod
-    def get_steel_plate_material(ids=None):
-        """
-        获取钢材材料信息
-        Args:
-            ids: 材料号支持XtoYbyN形式字符串,默认时输出全部材料
-        Example:
-            odb.get_steel_plate_material() # 获取所有钢材材料信息
-        Returns:  list[dict]
-        """
-        payload = {"ids": QtDataHelper.parse_ids_to_array(ids)} if ids is not None else None
-        return QtServer.send_get("GET-STEEL-PLATE-MATERIAL", payload)
-
-    @staticmethod
-    def get_pre_stress_bar_material(ids=None):
-        """
-        获取钢材材料信息
-        Args:
-            ids: 材料号,默认时输出全部材料
-        Example:
-            odb.get_pre_stress_bar_material() # 获取所有预应力材料信息
-        Returns:  list[dict]
-        """
-        payload = {"ids": QtDataHelper.parse_ids_to_array(ids)} if ids is not None else None
-        return QtServer.send_get("GET-PRE-STRESS-BAR-MATERIAL", payload)
-
-    @staticmethod
-    def get_steel_bar_material(ids=None):
-        """
-        获取钢筋材料信息
-        Args:
-            ids: 材料号,默认None时输出全部材料
-        Example:
-            odb.get_steel_bar_material() # 获取所有钢筋材料信息
-        Returns:  list[dict]
-        """
-        payload = {"ids": QtDataHelper.parse_ids_to_array(ids)} if ids is not None else None
-        return QtServer.send_get("GET-STEEL-BAR-MATERIAL", payload)
-
-    @staticmethod
-    def get_user_define_material(ids=None):
-        """
-        获取自定义材料信息
-        Args:
-            ids: 材料号支持XtoYbyN形式字符串,默认None时输出全部材料
-        Example:
-            odb.get_user_define_material() # 获取所有自定义材料信息
-            odb.get_user_define_material("1to10") # 获取所有自定义材料信息
-        Returns:  list[dict]
-        """
-        payload = {"ids": QtDataHelper.parse_ids_to_array(ids)} if ids is not None else None
-        return QtServer.send_get("GET-USER-DEFINE-MATERIAL", payload)
-
-    @staticmethod
-    def get_material_data():
-        """
-        获取材料信息
-        Args: 无
-        Example:
-            odb.get_material_data() # 获取所有材料信息
-        Returns: 包含信息为list[dict]
-        """
-        return QtServer.send_get("GET-MATERIAL-DATA", None)
-
-    @staticmethod
-    def get_thickness_data(thick_id: int):
-        """
-        获取所有板厚信息
-        Args:
-        Example:
-            odb.get_thickness_data(1)
-        Returns:
-            包含信息为dict
-        """
-        payload = {"thick_id": thick_id}
-        return QtServer.send_get("GET-THICKNESS-DATA", payload)
-
-    @staticmethod
-    def get_all_thickness_data():
-        """
-        获取所有板厚信息
-        Args:
-        Example:
-            odb.get_all_thickness_data()
-        Returns: 包含信息为list[dict]
-        """
-        return QtServer.send_get("GET-ALL-THICKNESS-DATA", None)
-    # endregion
-
-
-    # region 获取施工阶段信息
-    @staticmethod
-    def get_stage_name():
-        """
-        获取所有施工阶段名称
-        Args: 无
-        Example:
-            odb.get_stage_name()
-        Returns: 包含信息为list[int]
-        """
-        return QtServer.send_get("GET-STAGE-NAMES", None)
-
-    @staticmethod
-    def get_elements_of_stage(stage_id: int):
-        """
-        获取指定施工阶段单元编号信息
-        Args:
-            stage_id: 施工阶段编号
-        Example:
-            odb.get_elements_of_stage(stage_id=1)
-        Returns: 包含信息为list[int]
-        """
-        payload = {"stage_id": stage_id}
-        return QtServer.send_get("GET-ELEMENTS-OF-STAGE", payload)
-
-    @staticmethod
-    def get_nodes_of_stage(stage_id: int):
-        """
-        获取指定施工阶段节点编号信息
-        Args:
-            stage_id: 施工阶段编号
-        Example:
-            odb.get_nodes_of_stage(stage_id=1)
-        Returns: 包含信息为list[int]
-        """
-        payload = {"stage_id": stage_id}
-        return QtServer.send_get("GET-NODES-OF-STAGE", payload)
-
-    @staticmethod
-    def get_groups_of_stage(stage_id: int):
-        """
-        获取施工阶段结构组、边界组、荷载组名集合
-        Args:
-            stage_id: 施工阶段编号
-        Example:
-            odb.get_groups_of_stage(stage_id=1)
-        Returns: 包含信息为dict
-        """
-        payload = {"stage_id": stage_id}
-        return QtServer.send_get("GET-GROUPS-OF-STAGE", payload)
     # endregion

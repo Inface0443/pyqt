@@ -224,7 +224,7 @@ class MdbStructure:
     @staticmethod
     def update_local_orientation(element_id: int):
         """
-        反转杆系单元局部方向
+        todo 反转杆系单元局部方向
         Args:
             element_id: 杆系单元编号
         Example:
@@ -237,7 +237,7 @@ class MdbStructure:
     @staticmethod
     def update_element_id(old_id: int, new_id: int):
         """
-        更改单元编号
+        todo 更改单元编号
         Args:
             old_id: 单元编号
             new_id: 新单元编号
@@ -252,7 +252,7 @@ class MdbStructure:
     def update_element(old_id: int, new_id: int = -1, ele_type: int = 1, node_ids: list[int] = None, beta_angle: float = 0,
                        mat_id: int = -1, sec_id: int = -1, initial_type: int = 1, initial_value: float = 0, plate_type: int = 0):
         """
-        根据单元编号和单元类型添加单元
+        todo 根据单元编号和单元类型添加单元
         Args:
             old_id:原单元编号
             new_id:现单元编号，默认不修改原单元Id
@@ -285,7 +285,7 @@ class MdbStructure:
     @staticmethod
     def update_element_local_orientation(index: 1):
         """
-        更新指定单元的单元局部坐标系
+        todo 更新指定单元的单元局部坐标系
         Args:
             index: 单元编号,支持列表和XtoYbyN形式字符串
         Example:
@@ -298,7 +298,7 @@ class MdbStructure:
     @staticmethod
     def update_element_material(index: Union[int, List[int]], mat_id: int):
         """
-        更新指定单元的材料号
+        todo 更新指定单元的材料号
         Args:
             index: 单元编号
             mat_id: 材料编号
@@ -312,7 +312,7 @@ class MdbStructure:
     @staticmethod
     def update_element_beta_angle(index: Union[int, List[int]], beta_angle: float):
         """
-        更新指定单元的贝塔角
+        todo 更新指定单元的贝塔角
         Args:
             index: 单元编号
             beta_angle: 贝塔角度数
@@ -326,7 +326,7 @@ class MdbStructure:
     @staticmethod
     def update_element_section(index: Union[int, List[int]], sec_id: int):
         """
-        更新杆系单元截面或板单元板厚
+        todo 更新杆系单元截面或板单元板厚
         Args:
             index: 单元编号
             sec_id: 截面号
@@ -340,7 +340,7 @@ class MdbStructure:
     @staticmethod
     def update_element_node(index: int, nodes: list[float]):
         """
-        更新单元节点
+        todo 更新单元节点
         Args:
             index: 单元编号
             nodes: 杆系单元时为[node_i,node_j] 板单元[i,j,k,l]
@@ -355,7 +355,7 @@ class MdbStructure:
     @staticmethod
     def remove_element(index: (Union[int, List[int]]) = None):
         """
-        删除指定编号的单元
+        todo  删除指定编号的单元
         Args:
             index: 单元编号,默认时删除所有单元
         Example:
@@ -371,7 +371,7 @@ class MdbStructure:
     @staticmethod
     def renumber_elements(element_ids: list[int] = None, new_ids: list[int] = None):
         """
-        单元编号重排序，默认按1升序重排所有节点
+        todo 单元编号重排序，默认按1升序重排所有节点
         Args:
             element_ids:被修改单元号
             new_ids:新单元号
@@ -428,7 +428,7 @@ class MdbStructure:
     @staticmethod
     def update_structure_group_name(name: str = "", new_name: str = ""):
         """
-        更新结构组名
+        todo 更新结构组名
         Args:
             name: 结构组名
             new_name: 新结构组名(可选参数)
@@ -450,7 +450,7 @@ class MdbStructure:
     @staticmethod
     def update_structure_group(name: str = "", new_name: str = "", node_ids=None, element_ids=None):
         """
-        更新结构组信息
+        todo 更新结构组信息
         Args:
             name: 结构组名
             new_name: 新结构组名
@@ -476,7 +476,7 @@ class MdbStructure:
     @staticmethod
     def remove_structure_group(name: str = ""):
         """
-        可根据结构与组名删除结构组，当组名为默认则删除所有结构组
+        todo 可根据结构与组名删除结构组，当组名为默认则删除所有结构组
         Args:
             name:结构组名称
         Example:
@@ -525,7 +525,7 @@ class MdbStructure:
     @staticmethod
     def remove_structure_from_group(name: str = "", node_ids: Union[str, list[int]] = None, element_ids=None):
         """
-        为结构组删除节点、单元
+        todo 为结构组删除节点、单元
         Args:
             name: 结构组名
             node_ids: 节点编号列表(可选参数)

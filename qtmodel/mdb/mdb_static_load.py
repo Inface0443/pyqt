@@ -337,7 +337,7 @@ class MdbStaticLoad:
     def update_distribute_plane_load_type(name: str = "", new_name: str = "", load_type: int = 1, point_list: list[list[float]] = None,
                                           load: float = 0, copy_x: str = None, copy_y: str = None, describe: str = ""):
         """
-        更新板单元类型
+        todo  更新板单元类型
         Args:
             name:荷载类型名称
             new_name:新名称，默认不修改名称
@@ -367,7 +367,7 @@ class MdbStaticLoad:
     @staticmethod
     def remove_nodal_force(node_id, case_name: str = "", group_name="默认荷载组"):
         """
-        删除节点荷载
+        todo 删除节点荷载
         Args:
              node_id:节点编号且支持XtoYbyN形式字符串
              case_name:荷载工况名
@@ -386,7 +386,7 @@ class MdbStaticLoad:
     @staticmethod
     def remove_nodal_displacement(node_id, case_name: str = "", group_name="默认荷载组"):
         """
-        删除节点位移荷载
+        todo 删除节点位移荷载
         Args:
             node_id:节点编号,支持数或列表且支持XtoYbyN形式字符串
             case_name:荷载工况名
@@ -405,7 +405,7 @@ class MdbStaticLoad:
     @staticmethod
     def remove_initial_tension_load(element_id, case_name: str, group_name: str = "默认荷载组"):
         """
-        删除初始拉力
+        todo 删除初始拉力
         Args:
             element_id:单元编号支持数或列表且支持XtoYbyN形式字符串
             case_name:荷载工况名
@@ -424,7 +424,7 @@ class MdbStaticLoad:
     @staticmethod
     def remove_beam_element_load(element_id, case_name: str = "", load_type: int = 1, group_name="默认荷载组"):
         """
-        删除梁单元荷载
+        todo 删除梁单元荷载
         Args:
             element_id:单元号支持数或列表且支持XtoYbyN形式字符串
             case_name:荷载工况名
@@ -445,7 +445,7 @@ class MdbStaticLoad:
     @staticmethod
     def remove_plate_element_load(element_id, case_name: str, load_type: int, group_name="默认荷载组"):
         """
-        删除指定荷载工况下指定单元的板单元荷载
+        todo 删除指定荷载工况下指定单元的板单元荷载
         Args:
             element_id:单元编号，支持数或列表且支持XtoYbyN形式字符串
             case_name:荷载工况名
@@ -466,7 +466,7 @@ class MdbStaticLoad:
     @staticmethod
     def remove_cable_length_load(element_id, case_name: str, group_name: str = "默认荷载组"):
         """
-        删除索长张拉
+        todo 删除索长张拉
         Args:
             element_id:单元号支持数或列表且支持XtoYbyN形式字符串
             case_name:荷载工况名
@@ -485,7 +485,7 @@ class MdbStaticLoad:
     @staticmethod
     def remove_plane_load(index: int = -1):
         """
-        根据荷载编号删除分配面荷载
+        todo 根据荷载编号删除分配面荷载
         Args:
             index: 指定荷载编号，默认则删除所有分配面荷载
         Example:
@@ -501,7 +501,7 @@ class MdbStaticLoad:
     @staticmethod
     def remove_distribute_plane_load_type(name: str = -1):
         """
-        删除分配面荷载类型
+        todo 删除分配面荷载类型
         Args:
             name: 指定荷载类型，默认则删除所有分配面荷载
         Example:

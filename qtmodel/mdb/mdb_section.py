@@ -454,7 +454,7 @@ class MdbSection:
     @staticmethod
     def add_elements_to_tapper_section_group(name: str, ids=None):
         """
-        删除变截面组，默认删除所有变截面组
+        todo 添加变截面组单元
         Args:
           name:变截面组名称
           ids:新增单元编号
@@ -488,7 +488,7 @@ class MdbSection:
                                     ref_w: int = 0, ref_h: int = 0, dis_w: float = 0, dis_h: float = 0,
                                     parameter_info: dict[str, str] = None):
         """
-        添加变截面组
+        todo 更新变截面组
         Args:
              name:变截面组组名
              new_name: 新变截面组名
@@ -525,7 +525,7 @@ class MdbSection:
     @staticmethod
     def remove_tapper_section_group(name: str = ""):
         """
-        删除变截面组，默认删除所有变截面组
+        todo  删除变截面组，默认删除所有变截面组
         Args:
             name:变截面组名称
         Example:

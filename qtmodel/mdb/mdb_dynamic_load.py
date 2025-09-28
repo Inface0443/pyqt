@@ -347,8 +347,7 @@ class MdbDynamicLoad:
                                          info_z: Optional[list[float]] = None,
                                          weight: float = 0, pin_stiffness: float = 0, pin_yield: float = 0, description: str = "") -> None:
         """
-        更新边界单元特性，输入参数单位默认为N、m
-
+        todo 更新边界单元特性，输入参数单位默认为N、m
         Args:
             name: 原边界单元特性名称
             new_name: 更新后边界单元特性名称，默认时不修改
@@ -385,7 +384,7 @@ class MdbDynamicLoad:
     def update_boundary_element_link(index: int, property_name: str = "", node_i: int = 1, node_j: int = 2,
                                      beta: float = 0, node_system: int = 0, group_name: str = "默认边界组") -> None:
         """
-        更新边界单元连接
+        todo 更新边界单元连接
         Args:
             index: 根据边界单元连接id选择待更新对象
             property_name: 边界单元特性名
@@ -415,7 +414,7 @@ class MdbDynamicLoad:
                                  tolerance: float = 1e-4, damp_type: int = 0, single_damping: list[float] = None,
                                  group_damping: list[tuple[str, float, float, float]] = None) -> None:
         """
-        添加时程工况
+        todo 添加时程工况
         Args:
             name: 时程工况号
             new_name: 时程工况名
@@ -455,7 +454,7 @@ class MdbDynamicLoad:
     def update_time_history_function(name: str, new_name: str = "", factor: float = 1.0, kind: int = 0,
                                      function_info: list[tuple[float, float]] = None) -> None:
         """
-        更新时程函数
+        todo 更新时程函数
         Args:
             name: 更新前函数名
             new_name: 更新后函数名，默认不更新名称
@@ -479,7 +478,7 @@ class MdbDynamicLoad:
     def update_nodal_dynamic_load(index: int = -1, node_id: int = 1, case_name: str = "", function_name: str = "",
                                   direction: int = 1, factor: float = 1, time: float = 1) -> None:
         """
-        更新节点动力荷载
+        todo 更新节点动力荷载
         Args:
             index: 待修改荷载编号
             node_id: 节点号
@@ -509,7 +508,7 @@ class MdbDynamicLoad:
                              info_y: Optional[tuple[str, float, float]] = None,
                              info_z: Optional[tuple[str, float, float]] = None) -> None:
         """
-        更新地面加速度
+        todo 更新地面加速度
         Args:
             index: 地面加速度编号
             case_name: 时程工况名
@@ -533,7 +532,7 @@ class MdbDynamicLoad:
     @staticmethod
     def remove_time_history_load_case(name: str) -> None:
         """
-        通过时程工况名删除时程工况
+        todo 通过时程工况名删除时程工况
         Args:
             name: 时程工况名
         Example:
@@ -546,7 +545,7 @@ class MdbDynamicLoad:
     @staticmethod
     def remove_time_history_function(ids=None, name: str = "") -> None:
         """
-        通过函数编号删除时程函数
+        todo 通过函数编号删除时程函数
         Args:
             ids: 删除时程函数编号集合支持XtoYbyN形式，默认为空时则按照名称删除
             name: 编号集合为空时则按照名称删除
@@ -565,7 +564,7 @@ class MdbDynamicLoad:
     @staticmethod
     def remove_load_to_mass(name: str = ""):
         """
-        删除荷载转为质量,默认删除所有荷载转质量
+        todo 删除荷载转为质量,默认删除所有荷载转质量
         Args:
             name:荷载工况名
         Example:
@@ -578,7 +577,7 @@ class MdbDynamicLoad:
     @staticmethod
     def remove_nodal_mass(node_id=None):
         """
-        删除节点质量
+        todo 删除节点质量
         Args:
              node_id:节点号,自动忽略不存在的节点质量
         Example:
@@ -593,7 +592,7 @@ class MdbDynamicLoad:
     @staticmethod
     def remove_boundary_element_property(name: str) -> None:
         """
-        删除边界单元特性
+        todo 删除边界单元特性
         Args: 无
         Example:
             mdb.remove_boundary_element_property(name="特性名")
@@ -605,7 +604,7 @@ class MdbDynamicLoad:
     @staticmethod
     def remove_boundary_element_link(ids=None) -> None:
         """
-        删除边界单元连接
+        todo 删除边界单元连接
         Args:
             ids:所删除的边界单元连接号且支持XtoYbyN形式字符串
         Example:
@@ -619,7 +618,7 @@ class MdbDynamicLoad:
     @staticmethod
     def remove_ground_motion(name: str) -> None:
         """
-        删除地面加速度
+        todo 删除地面加速度
         Args:
             name: 工况名称
         Example:
@@ -632,7 +631,7 @@ class MdbDynamicLoad:
     @staticmethod
     def remove_nodal_dynamic_load(ids=None) -> None:
         """
-        删除节点动力荷载
+        todo 删除节点动力荷载
         Args:
             ids:所删除的节点动力荷载编号且支持XtoYbyN形式字符串
         Example:
@@ -647,89 +646,6 @@ class MdbDynamicLoad:
 
     # region 反应谱分析
     @staticmethod
-    def update_spectrum_function(name: str = "", new_name: str = "", factor: float = 1.0, kind: int = 0,
-                                 function_info: list[tuple[float, float]] = None) -> None:
-        """
-        更新反应谱函数
-        Args:
-            name: 函数名称
-            new_name: 新函数名称
-            factor: 反应谱调整系数
-            kind: 0-无量纲 1-加速度 2-位移
-            function_info: 函数信息[(时间1,数值1),(时间2,数值2)]
-        Example:
-            mdb.update_spectrum_function( name="函数名称", factor=1.2, kind=1, function_info=[(0.0, 0.0), (0.5, 0.8), (1.0, 1.2)])
-        Returns: 无
-        """
-        payload = {
-            "name": name,
-            "new_name": new_name,
-            "factor": factor,
-            "kind": kind,
-            "function_info": function_info or [],
-        }
-        return QtServer.send_post("UPDATE-SPECTRUM-FUNCTION", payload)
-
-    @staticmethod
-    def update_spectrum_case(name: str, new_name: str = "", description: str = "", kind: int = 1,
-                             info_x: Optional[tuple[str, float]] = None,
-                             info_y: Optional[tuple[str, float]] = None,
-                             info_z: Optional[tuple[str, float]] = None) -> None:
-        """
-        更新反应谱工况
-        Args:
-            name: 工况名称
-            new_name: 新工况名称
-            description: 描述
-            kind: 组合方式 1-求模 2-求和
-            info_x: 反应谱X向信息 (X方向函数名,系数)
-            info_y: Y向信息
-            info_z: Z向信息
-        Example:
-            mdb.update_spectrum_case(name="RS1",kind=1,info_x=("函数X", 1.0),info_y=("函数Y", 0.85) )
-        Returns: 无
-        """
-        payload = {
-            "name": name,
-            "new_name": new_name,
-            "description": description,
-            "kind": kind,
-            "info_x": info_x,
-            "info_y": info_y,
-            "info_z": info_z,
-        }
-        return QtServer.send_post("UPDATE-SPECTRUM-CASE", payload)
-
-    @staticmethod
-    def remove_spectrum_case(name: str) -> None:
-        """
-        删除反应谱工况
-        Args:
-            name: 工况名称
-        Example:
-            mdb.remove_spectrum_case("工况名")
-        Returns: 无
-        """
-        payload = {"name": name}
-        return QtServer.send_post("REMOVE-SPECTRUM-CASE", payload)
-
-    @staticmethod
-    def remove_spectrum_function(ids=None, name: str = "") -> None:
-        """
-        删除反应谱函数
-        Args:
-            ids: 删除反应谱工况函数编号集合支持XtoYbyN形式，默认为空时则按照名称删除
-            name: 编号集合为空时则按照名称删除
-        Example:
-            mdb.remove_spectrum_function(name="工况名")
-        Returns: 无
-        """
-        payload = {
-            "ids": ids,
-            "name": name,
-        }
-        return QtServer.send_post("REMOVE-SPECTRUM-FUNCTION", payload)
-
     @staticmethod
     def add_spectrum_function(name: str = "", factor: float = 1.0, kind: int = 0,
                               function_info: list[tuple[float, float]] = None):
@@ -783,4 +699,88 @@ class MdbDynamicLoad:
             QtServer.post_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
+
+    def update_spectrum_function(name: str = "", new_name: str = "", factor: float = 1.0, kind: int = 0,
+                                 function_info: list[tuple[float, float]] = None) -> None:
+        """
+        todo 更新反应谱函数
+        Args:
+            name: 函数名称
+            new_name: 新函数名称
+            factor: 反应谱调整系数
+            kind: 0-无量纲 1-加速度 2-位移
+            function_info: 函数信息[(时间1,数值1),(时间2,数值2)]
+        Example:
+            mdb.update_spectrum_function( name="函数名称", factor=1.2, kind=1, function_info=[(0.0, 0.0), (0.5, 0.8), (1.0, 1.2)])
+        Returns: 无
+        """
+        payload = {
+            "name": name,
+            "new_name": new_name,
+            "factor": factor,
+            "kind": kind,
+            "function_info": function_info or [],
+        }
+        return QtServer.send_post("UPDATE-SPECTRUM-FUNCTION", payload)
+
+    @staticmethod
+    def update_spectrum_case(name: str, new_name: str = "", description: str = "", kind: int = 1,
+                             info_x: Optional[tuple[str, float]] = None,
+                             info_y: Optional[tuple[str, float]] = None,
+                             info_z: Optional[tuple[str, float]] = None) -> None:
+        """
+        todo 更新反应谱工况
+        Args:
+            name: 工况名称
+            new_name: 新工况名称
+            description: 描述
+            kind: 组合方式 1-求模 2-求和
+            info_x: 反应谱X向信息 (X方向函数名,系数)
+            info_y: Y向信息
+            info_z: Z向信息
+        Example:
+            mdb.update_spectrum_case(name="RS1",kind=1,info_x=("函数X", 1.0),info_y=("函数Y", 0.85) )
+        Returns: 无
+        """
+        payload = {
+            "name": name,
+            "new_name": new_name,
+            "description": description,
+            "kind": kind,
+            "info_x": info_x,
+            "info_y": info_y,
+            "info_z": info_z,
+        }
+        return QtServer.send_post("UPDATE-SPECTRUM-CASE", payload)
+
+    @staticmethod
+    def remove_spectrum_case(name: str) -> None:
+        """
+        todo 删除反应谱工况
+        Args:
+            name: 工况名称
+        Example:
+            mdb.remove_spectrum_case("工况名")
+        Returns: 无
+        """
+        payload = {"name": name}
+        return QtServer.send_post("REMOVE-SPECTRUM-CASE", payload)
+
+    @staticmethod
+    def remove_spectrum_function(ids=None, name: str = "") -> None:
+        """
+        todo 删除反应谱函数
+        Args:
+            ids: 删除反应谱工况函数编号集合支持XtoYbyN形式，默认为空时则按照名称删除
+            name: 编号集合为空时则按照名称删除
+        Example:
+            mdb.remove_spectrum_function(name="工况名")
+        Returns: 无
+        """
+        payload = {
+            "ids": ids,
+            "name": name,
+        }
+        return QtServer.send_post("REMOVE-SPECTRUM-FUNCTION", payload)
+
     # endregion

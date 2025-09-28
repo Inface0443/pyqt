@@ -101,7 +101,7 @@ class MdbSinkLoad:
     @staticmethod
     def update_sink_case(name: str, new_name: str = "", sink_groups: (Union[str, List[str]]) = None):
         """
-        添加沉降工况
+        todo 更新沉降工况
         Args:
             name:荷载工况名
             new_name: 新沉降组名,默认不修改
@@ -122,7 +122,7 @@ class MdbSinkLoad:
     @staticmethod
     def remove_sink_group(name: str = ""):
         """
-        按照名称删除沉降组
+        todo 按照名称删除沉降组
         Args:
              name:沉降组名,默认删除所有沉降组
         Example:
@@ -138,7 +138,7 @@ class MdbSinkLoad:
     @staticmethod
     def remove_sink_case(name=""):
         """
-        按照名称删除沉降工况,不输入名称时默认删除所有沉降工况
+        todo 按照名称删除沉降工况,不输入名称时默认删除所有沉降工况
         Args:
             name:沉降工况名
         Example:
@@ -156,7 +156,7 @@ class MdbSinkLoad:
     @staticmethod
     def remove_concurrent_reaction():
         """
-        删除所有并发反力组
+        todo 删除所有并发反力组
         Args:无
         Example:
             mdb.remove_concurrent_reaction()
@@ -168,7 +168,7 @@ class MdbSinkLoad:
     @staticmethod
     def remove_concurrent_force():
         """
-        删除所有并发内力组
+        todo 删除所有并发内力组
         Args: 无
         Example:
             mdb.remove_concurrent_force()

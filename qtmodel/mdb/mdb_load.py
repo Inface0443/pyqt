@@ -50,7 +50,7 @@ class MdbLoad:
     @staticmethod
     def update_sink_group(name: str = "", new_name: str = "", sink: float = 0.1, node_ids: (Union[int, List[int]]) = None):
         """
-        添加沉降组
+        todo 添加沉降组
         Args:
              name: 沉降组名
              new_name: 新沉降组名,默认不修改
@@ -71,7 +71,7 @@ class MdbLoad:
     @staticmethod
     def update_load_case(name: str, new_name: str = "", case_type: str = "施工阶段荷载"):
         """
-        添加荷载工况
+        todo 添加荷载工况
         Args:
            name:工况名
            new_name:新工况名
@@ -92,7 +92,7 @@ class MdbLoad:
     @staticmethod
     def update_load_group(name: str, new_name: str = ""):
         """
-        根据荷载组名称添加荷载组
+        todo 根据荷载组名称添加荷载组
         Args:
            name: 荷载组名称
            new_name: 荷载组名称
@@ -109,7 +109,7 @@ class MdbLoad:
     @staticmethod
     def remove_load_case(index: int = -1, name: str = ""):
         """
-        删除荷载工况,参数均为默认时删除全部荷载工况
+        todo 删除荷载工况,参数均为默认时删除全部荷载工况
         Args:
             index:荷载编号
             name:荷载名
@@ -128,7 +128,7 @@ class MdbLoad:
     @staticmethod
     def remove_load_group(name: str = ""):
         """
-        根据荷载组名称删除荷载组,参数为默认时删除所有荷载组
+        todo 根据荷载组名称删除荷载组,参数为默认时删除所有荷载组
         Args:
              name: 荷载组名称
         Example:
@@ -183,7 +183,7 @@ class MdbLoad:
     @staticmethod
     def remove_load_combine(index: int = -1, name: str = ""):
         """
-        删除荷载组合
+        todo 删除荷载组合
         Args:
             index: 默认时则按照name删除荷载组合
             name:指定删除荷载组合名

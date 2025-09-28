@@ -211,7 +211,7 @@ class MdbTemperatureLoad:
     @staticmethod
     def remove_element_temperature(element_id, case_name: str):
         """
-        删除指定单元温度
+        todo 删除指定单元温度
         Args:
             element_id:单元编号，支持数或列表且支持XtoYbyN形式字符串
             case_name:荷载工况名
@@ -228,7 +228,7 @@ class MdbTemperatureLoad:
     @staticmethod
     def remove_top_plate_temperature(element_id, case_name: str):
         """
-        删除梁单元顶板温度
+        todo 删除梁单元顶板温度
         Args:
             element_id:单元编号，支持数或列表且支持XtoYbyN形式字符串
             case_name:荷载工况名
@@ -245,7 +245,7 @@ class MdbTemperatureLoad:
     @staticmethod
     def remove_beam_section_temperature(element_id, case_name: str):
         """
-        删除指定梁或板单元梁截面温度
+        todo 删除指定梁或板单元梁截面温度
         Args:
             case_name:荷载工况名
             element_id:单元编号，支持数或列表且支持XtoYbyN形式字符串
@@ -262,7 +262,7 @@ class MdbTemperatureLoad:
     @staticmethod
     def remove_gradient_temperature(element_id, case_name: str):
         """
-        删除梁或板单元梯度温度
+        todo 删除梁或板单元梯度温度
         Args:
             element_id:单元编号，支持数或列表且支持XtoYbyN形式字符串
             case_name:荷载工况名
@@ -279,7 +279,7 @@ class MdbTemperatureLoad:
     @staticmethod
     def remove_custom_temperature(element_id, case_name: str):
         """
-        删除梁单元自定义温度
+        todo 删除梁单元自定义温度
         Args:
             element_id:单元编号，支持数或列表且支持XtoYbyN形式字符串
             case_name:荷载工况名
@@ -296,7 +296,7 @@ class MdbTemperatureLoad:
     @staticmethod
     def remove_index_temperature(element_id, case_name: str):
         """
-        删除梁单元指数温度且支持XtoYbyN形式字符串
+        todo 删除梁单元指数温度且支持XtoYbyN形式字符串
         Args:
             element_id:单元编号，支持数或列表且支持XtoYbyN形式字符串
             case_name:荷载工况名
@@ -313,66 +313,6 @@ class MdbTemperatureLoad:
     # endregion
 
     # region 偏差荷载
-    @staticmethod
-    def update_deviation_parameter(name: str = "", new_name: str = "", element_type: int = 1, parameters: list[float] = None):
-        """
-        添加制造误差
-        Args:
-            name:名称
-            new_name:新名称，默认不修改名称
-            element_type:单元类型  1-梁单元  2-板单元
-            parameters:参数列表
-                 _梁杆单元为[轴向,I端X向转角,I端Y向转角,I端Z向转角,J端X向转角,J端Y向转角,J端Z向转角]
-                _板单元为[X向位移,Y向位移,Z向位移,X向转角,Y向转角]
-        Example:
-            mdb.update_deviation_parameter(name="梁端制造误差",element_type=1,parameters=[1,0,0,0,0,0,0])
-            mdb.update_deviation_parameter(name="板端制造误差",element_type=1,parameters=[1,0,0,0,0])
-        Returns: 无
-        """
-        payload = {
-            "name": name,
-            "new_name": new_name,
-            "element_type": element_type,
-            "parameters": parameters,
-        }
-        return QtServer.send_post("UPDATE-DEVIATION-PARAMETER", payload)
-
-    @staticmethod
-    def remove_deviation_parameter(name: str, para_type: int = 1):
-        """
-        删除指定制造偏差参数
-        Args:
-            name:制造偏差参数名
-            para_type:制造偏差类型 1-梁单元  2-板单元
-        Example:
-            mdb.remove_deviation_parameter(name="参数1",para_type=1)
-        Returns: 无
-        """
-        payload = {
-            "name": name,
-            "para_type": para_type,
-        }
-        return QtServer.send_post("REMOVE-DEVIATION-PARAMETER", payload)
-
-    @staticmethod
-    def remove_deviation_load(element_id, case_name: str, group_name: str = "默认荷载组"):
-        """
-        删除指定制造偏差荷载
-        Args:
-            element_id:单元编号，支持数或列表且支持XtoYbyN形式字符串
-            case_name:荷载工况名
-            group_name: 荷载组
-        Example:
-            mdb.remove_deviation_load(case_name="工况1",element_id=1,group_name="荷载组1")
-        Returns: 无
-        """
-        payload = {
-            "case_name": case_name,
-            "element_id": element_id,
-            "group_name": group_name,
-        }
-        return QtServer.send_post("REMOVE-DEVIATION-LOAD", payload)
-
     @staticmethod
     def add_deviation_parameter(name: str = "", parameters: list[float] = None):
         """
@@ -433,4 +373,65 @@ class MdbTemperatureLoad:
             QtServer.post_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
+
+    @staticmethod
+    def update_deviation_parameter(name: str = "", new_name: str = "", element_type: int = 1, parameters: list[float] = None):
+        """
+        todo 更新制造误差参数
+        Args:
+            name:名称
+            new_name:新名称，默认不修改名称
+            element_type:单元类型  1-梁单元  2-板单元
+            parameters:参数列表
+                 _梁杆单元为[轴向,I端X向转角,I端Y向转角,I端Z向转角,J端X向转角,J端Y向转角,J端Z向转角]
+                _板单元为[X向位移,Y向位移,Z向位移,X向转角,Y向转角]
+        Example:
+            mdb.update_deviation_parameter(name="梁端制造误差",element_type=1,parameters=[1,0,0,0,0,0,0])
+            mdb.update_deviation_parameter(name="板端制造误差",element_type=1,parameters=[1,0,0,0,0])
+        Returns: 无
+        """
+        payload = {
+            "name": name,
+            "new_name": new_name,
+            "element_type": element_type,
+            "parameters": parameters,
+        }
+        return QtServer.send_post("UPDATE-DEVIATION-PARAMETER", payload)
+
+    @staticmethod
+    def remove_deviation_parameter(name: str, para_type: int = 1):
+        """
+        todo 删除指定制造偏差参数
+        Args:
+            name:制造偏差参数名
+            para_type:制造偏差类型 1-梁单元  2-板单元
+        Example:
+            mdb.remove_deviation_parameter(name="参数1",para_type=1)
+        Returns: 无
+        """
+        payload = {
+            "name": name,
+            "para_type": para_type,
+        }
+        return QtServer.send_post("REMOVE-DEVIATION-PARAMETER", payload)
+
+    @staticmethod
+    def remove_deviation_load(element_id, case_name: str, group_name: str = "默认荷载组"):
+        """
+        todo 删除指定制造偏差荷载
+        Args:
+            element_id:单元编号，支持数或列表且支持XtoYbyN形式字符串
+            case_name:荷载工况名
+            group_name: 荷载组
+        Example:
+            mdb.remove_deviation_load(case_name="工况1",element_id=1,group_name="荷载组1")
+        Returns: 无
+        """
+        payload = {
+            "case_name": case_name,
+            "element_id": element_id,
+            "group_name": group_name,
+        }
+        return QtServer.send_post("REMOVE-DEVIATION-LOAD", payload)
+
     # endregion

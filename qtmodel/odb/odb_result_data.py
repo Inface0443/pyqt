@@ -2,7 +2,7 @@ from ..core.qt_server import QtServer
 from ..core.data_helper import QtDataHelper
 
 
-class OdbResult:
+class OdbResultData:
     """
     用于获取结果数据，统一返回json字符串
     """
