@@ -273,7 +273,7 @@ class MdbSection:
     @staticmethod
     def update_single_section(index: int, new_id: int = -1, name: str = "", sec_type: str = "矩形", sec_data: dict = None):
         """
-        以字典形式添加单一截面
+        todo 以字典形式添加单一截面
         Args:
             index:截面编号
             new_id:新截面编号，默认为-1时不修改截面编号
@@ -298,7 +298,7 @@ class MdbSection:
     def update_tapper_section(index: int, new_id: int = -1, name: str = "", sec_type: str = "矩形", sec_begin: dict = None, sec_end: dict = None,
                               shear_consider: bool = True, sec_normalize: bool = False):
         """
-        添加变截面,字典参数参考单一截面,如果截面存在则自动覆盖
+        todo 添加变截面,字典参数参考单一截面,如果截面存在则自动覆盖
         Args:
             index:截面编号
             new_id:新截面编号，默认不修改截面编号
@@ -330,7 +330,7 @@ class MdbSection:
     def update_section_bias(index: int = 1, bias_type: str = "中心", center_type: str = "质心", shear_consider: bool = True,
                             bias_point: list[float] = None, side_i: bool = True):
         """
-        更新截面偏心
+        todo 更新截面偏心
         Args:
              index:截面编号
              bias_type:偏心类型
@@ -356,7 +356,7 @@ class MdbSection:
     @staticmethod
     def update_section_property(index: int, sec_property: list[float], side_i: bool = True):
         """
-        更新截面特性
+        todo 更新截面特性
         Args:
             index:截面号
             sec_property:截面特性值参考UI共计26个数值
@@ -375,7 +375,7 @@ class MdbSection:
     @staticmethod
     def update_section_id(index: int, new_id: int):
         """
-        更新截面编号
+        todo 更新截面编号
         Args:
             index: 原编号
             new_id: 新编号
@@ -389,43 +389,20 @@ class MdbSection:
         }
         return QtServer.send_post("UPDATE-SEC-ID", payload)
 
-    @staticmethod
-    def remove_tapper_section_group(name: str = ""):
-        """
-        删除变截面组，默认删除所有变截面组
-        Args:
-            name:变截面组名称
-        Example:
-            mdb.remove_tapper_section_group()
-            mdb.remove_tapper_section_group("变截面组1")
-        Returns:无
-        """
-        payload = {"name": name}
-        return QtServer.send_post("REMOVE-TAPPER-SEC-GROUP", payload)
+
 
     @staticmethod
-    def remove_all_section():
+    def remove_section(ids=None):
         """
-        删除全部截面信息
-        Args: 无
-        Example:
-          mdb.remove_all_section()
-        Returns: 无
-        """
-        return QtServer.send_post("REMOVE-ALL-SEC", None)
-
-    @staticmethod
-    def remove_section(index=None):
-        """
-        删除截面信息
+        删除截面信息,默认则删除所有截面
         Args:
-            index: 截面编号
+            ids: 截面编号
         Example:
             mdb.remove_section(1)
             mdb.remove_section("1to100")
         Returns: 无
         """
-        payload = {"index": index}
+        payload = {"index": QtDataHelper.parse_ids_to_array(ids),}
         return QtServer.send_post("REMOVE-SEC", payload)
 
     # endregion
@@ -508,7 +485,8 @@ class MdbSection:
 
     @staticmethod
     def update_tapper_section_group(name: str, new_name="", ids=None, factor_w: float = 1.0, factor_h: float = 1.0,
-                                    ref_w: int = 0, ref_h: int = 0, dis_w: float = 0, dis_h: float = 0):
+                                    ref_w: int = 0, ref_h: int = 0, dis_w: float = 0, dis_h: float = 0,
+                                    parameter_info: dict[str, str] = None):
         """
         添加变截面组
         Args:
@@ -521,6 +499,10 @@ class MdbSection:
              ref_h: 高度方向参考点 0-i 1-j
              dis_w: 宽度方向距离
              dis_h: 高度方向距离
+             parameter_info:参数化变截面组信息,键为参数名(参考UI)值为如下三种类型
+                 1(非线性),指数,参考点(I/J),距离
+                 2(自定义),变化长1,终点值1,变化长2,终点值2...
+                 3(圆弧),半径,参考点(I/J)
         Example:
             mdb.update_tapper_section_group(name="变截面组1",ids=[1,2,3,4])
             mdb.update_tapper_section_group(name="变截面组2",ids="1t0100")
@@ -536,6 +518,21 @@ class MdbSection:
             "ref_h": ref_h,
             "dis_w": dis_w,
             "dis_h": dis_h,
+            "parameter_info": parameter_info,
         }
         return QtServer.send_post("UPDATE-TAPPER-SEC-GROUP", payload)
+
+    @staticmethod
+    def remove_tapper_section_group(name: str = ""):
+        """
+        删除变截面组，默认删除所有变截面组
+        Args:
+            name:变截面组名称
+        Example:
+            mdb.remove_tapper_section_group()
+            mdb.remove_tapper_section_group("变截面组1")
+        Returns:无
+        """
+        payload = {"name": name}
+        return QtServer.send_post("REMOVE-TAPPER-SEC-GROUP", payload)
     # endregion

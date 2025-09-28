@@ -42,7 +42,7 @@ class OdbResult:
     @staticmethod
     def get_deformation(ids, envelop_type=1,
                         stage_id: int = 1, result_kind: int = 1, increment_type: int = 1,
-                        case_name="", is_time_history: bool = False) -> str:
+                        case_name="", is_time_history: bool = False,is_local=False) -> str:
         """
         获取节点变形结果,支持单个节点和节点列表
         Args:
@@ -53,6 +53,7 @@ class OdbResult:
             increment_type: 1-全量    2-增量
             case_name: 运营阶段所需荷载工况名
             is_time_history: 是否为时程分析
+            is_local: 是否为局部坐标系
         Example:
             odb.get_deformation(ids=1,stage_id=1)
             odb.get_deformation(ids=[1,2,3],stage_id=1)
@@ -68,6 +69,7 @@ class OdbResult:
             "increment_type": increment_type,
             "case_name": case_name,
             "is_time_history": is_time_history,
+            "is_local": is_local,
         }
         return QtServer.send_get("GET-DEFORMATION", payload)
 
