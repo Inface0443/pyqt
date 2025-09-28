@@ -1,4 +1,4 @@
-> 最新版本 V1.1.5 - 2025-09-27 
+> 最新版本 V1.1.6 - 2025-09-28 
 > pip install --upgrade qtmodel -i https://pypi.org/simple
 - 新增更新结构组接口 
 # 建模操作 
@@ -662,10 +662,10 @@ mdb.add_tapper_section_by_id(name="变截面1",begin_id=1,end_id=2)
 #Returns: 无
 ```  
 ### update_single_section
-以字典形式添加单一截面
+todo 以字典形式添加单一截面
 > 参数:  
 > index:截面编号  
-> new_id:新截面编号，默认不修改截面编号  
+> new_id:新截面编号，默认为-1时不修改截面编号  
 > name:截面名称  
 > sec_type:截面类型  
 > sec_data:截面信息字典，键值参考添加add_section方法参数  
@@ -677,7 +677,7 @@ sec_data={"sec_info":[1,2],"bias_type":"中心"})
 #Returns: 无
 ```  
 ### update_tapper_section
-添加变截面,字典参数参考单一截面,如果截面存在则自动覆盖
+todo 添加变截面,字典参数参考单一截面,如果截面存在则自动覆盖
 > 参数:  
 > index:截面编号  
 > new_id:新截面编号，默认不修改截面编号  
@@ -696,7 +696,7 @@ sec_end={"sec_info":[2,2],"bias_type":"中心"})
 #Returns: 无
 ```  
 ### update_section_bias
-更新截面偏心
+todo 更新截面偏心
 > 参数:  
 > index:截面编号  
 > bias_type:偏心类型  
@@ -712,7 +712,7 @@ mdb.update_section_bias(index=1,bias_type="自定义",bias_point=[0.1,0.2])
 #Returns: 无
 ```  
 ### update_section_property
-更新截面特性
+todo 更新截面特性
 > 参数:  
 > index:截面号  
 > sec_property:截面特性值参考UI共计26个数值  
@@ -724,7 +724,7 @@ mdb.update_section_property(index=1,sec_property=[i for i in range(1,27)])
 #Returns: 无
 ```  
 ### update_section_id
-更新截面编号
+todo 更新截面编号
 > 参数:  
 > index: 原编号  
 > new_id: 新编号  
@@ -734,30 +734,10 @@ from qtmodel import *
 mdb.update_section_id(index=1,new_id=2)
 #Returns:无
 ```  
-### remove_tapper_section_group
-删除变截面组，默认删除所有变截面组
-> 参数:  
-> name:变截面组名称  
-```Python
-# 示例代码
-from qtmodel import *
-mdb.remove_tapper_section_group()
-mdb.remove_tapper_section_group("变截面组1")
-#Returns:无
-```  
-### remove_all_section
-删除全部截面信息
-> 参数:  
-```Python
-# 示例代码
-from qtmodel import *
-mdb.remove_all_section()
-#Returns: 无
-```  
 ### remove_section
-删除截面信息
+删除截面信息,默认则删除所有截面
 > 参数:  
-> index: 截面编号  
+> ids: 截面编号  
 ```Python
 # 示例代码
 from qtmodel import *
@@ -823,12 +803,27 @@ mdb.add_tapper_section_from_group("变截面组1")
 > ref_h: 高度方向参考点 0-i 1-j  
 > dis_w: 宽度方向距离  
 > dis_h: 高度方向距离  
+> parameter_info:参数化变截面组信息,键为参数名(参考UI)值为如下三种类型  
+> 1(非线性),指数,参考点(I/J),距离  
+> 2(自定义),变化长1,终点值1,变化长2,终点值2...  
+> 3(圆弧),半径,参考点(I/J)  
 ```Python
 # 示例代码
 from qtmodel import *
 mdb.update_tapper_section_group(name="变截面组1",ids=[1,2,3,4])
 mdb.update_tapper_section_group(name="变截面组2",ids="1t0100")
 #Returns: 无
+```  
+### remove_tapper_section_group
+删除变截面组，默认删除所有变截面组
+> 参数:  
+> name:变截面组名称  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.remove_tapper_section_group()
+mdb.remove_tapper_section_group("变截面组1")
+#Returns:无
 ```  
 ##  边界操作
 ### add_effective_width
@@ -3399,7 +3394,7 @@ odb.get_section_ids()
 ```  
 ##  结果表格
 ### get_reaction
-获取节点反力
+获取制作反力
 > 参数:  
 > ids: 节点编号,支持整数或整数型列表支持XtoYbyN形式字符串  
 > envelop_type: 施工阶段包络类型 1-最大 2-最小  
@@ -3427,6 +3422,7 @@ odb.get_reaction(ids=1,stage_id=-1,case_name="工况名")
 > increment_type: 1-全量    2-增量  
 > case_name: 运营阶段所需荷载工况名  
 > is_time_history: 是否为时程分析  
+> is_local: 是否为输出局部坐标系  
 ```Python
 # 示例代码
 from qtmodel import *
@@ -3610,7 +3606,7 @@ odb.get_buckling_modal_results(mode=1)
 # 示例代码
 from qtmodel import *
 odb.plot_reaction_result(file_path=r"D:\\图片\\反力图.png",component=1,case_name="CQ:成桥(合计)",stage_id=-1)
-#Returns: 无
+#Returns: Base64字符串
 ```  
 ### plot_displacement_result
 保存结果图片到指定文件甲
@@ -3639,7 +3635,7 @@ odb.plot_reaction_result(file_path=r"D:\\图片\\反力图.png",component=1,case
 # 示例代码
 from qtmodel import *
 odb.plot_displacement_result(file_path=r"D:\\图片\\变形图.png",component=1,case_name="CQ:成桥(合计)",stage_id=-1)
-#Returns: 无
+#Returns: Base64字符串
 ```  
 ### plot_beam_element_force
 绘制梁单元结果图并保存到指定文件
@@ -3671,7 +3667,7 @@ odb.plot_displacement_result(file_path=r"D:\\图片\\变形图.png",component=1,
 # 示例代码
 from qtmodel import *
 odb.plot_beam_element_force(file_path=r"D:\\图片\\梁内力.png",component=1,case_name="CQ:成桥(合计)",stage_id=-1)
-#Returns: 无
+#Returns: Base64字符串
 ```  
 ### plot_truss_element_force
 绘制杆单元结果图并保存到指定文件
@@ -3703,7 +3699,7 @@ odb.plot_beam_element_force(file_path=r"D:\\图片\\梁内力.png",component=1,c
 # 示例代码
 from qtmodel import *
 odb.plot_truss_element_force(file_path=r"D:\\图片\\杆内力.png",case_name="CQ:成桥(合计)",stage_id=-1)
-#Returns: 无
+#Returns: Base64字符串
 ```  
 ### plot_plate_element_force
 绘制板单元结果图并保存到指定文件
@@ -3732,7 +3728,7 @@ odb.plot_truss_element_force(file_path=r"D:\\图片\\杆内力.png",case_name="C
 # 示例代码
 from qtmodel import *
 odb.plot_plate_element_force(file_path=r"D:\\图片\\板内力.png",component=1,case_name="CQ:成桥(合计)",stage_id=-1)
-#Returns: 无
+#Returns: Base64字符串
 ```  
 ### plot_composite_beam_force
 绘制组合梁单元结果图并保存到指定文件
@@ -3762,7 +3758,7 @@ odb.plot_plate_element_force(file_path=r"D:\\图片\\板内力.png",component=1,
 # 示例代码
 from qtmodel import *
 odb.plot_composite_beam_force(file_path=r"D:\\图片\\组合梁内力.png",mat_type=0,component=1,case_name="CQ:成桥(合计)",stage_id=-1)
-#Returns: 无
+#Returns: Base64字符串
 ```  
 ### plot_beam_element_stress
 绘制梁单元应力结果图并保存到指定文件
@@ -3791,7 +3787,7 @@ odb.plot_composite_beam_force(file_path=r"D:\\图片\\组合梁内力.png",mat_t
 # 示例代码
 from qtmodel import *
 odb.plot_beam_element_stress(file_path=r"D:\\图片\\梁应力.png",show_line_chart=False,component=1,case_name="CQ:成桥(合计)",stage_id=-1)
-#Returns: 无
+#Returns: Base64字符串
 ```  
 ### plot_truss_element_stress
 绘制杆单元结果图并保存到指定文件
@@ -3819,7 +3815,7 @@ odb.plot_beam_element_stress(file_path=r"D:\\图片\\梁应力.png",show_line_ch
 # 示例代码
 from qtmodel import *
 odb.plot_truss_element_stress(file_path=r"D:\\图片\\杆应力.png",case_name="CQ:成桥(合计)",stage_id=-1)
-#Returns: 无
+#Returns: Base64字符串
 ```  
 ### plot_composite_beam_stress
 绘制组合梁单元结果图并保存到指定文件
@@ -3849,7 +3845,7 @@ odb.plot_truss_element_stress(file_path=r"D:\\图片\\杆应力.png",case_name="
 # 示例代码
 from qtmodel import *
 odb.plot_composite_beam_stress(file_path=r"D:\\图片\\组合梁应力.png",component=1,case_name="CQ:成桥(合计)",stage_id=-1)
-#Returns: 无
+#Returns: Base64字符串
 ```  
 ### plot_plate_element_stress
 绘制板单元结果图并保存到指定文件
@@ -3876,7 +3872,7 @@ odb.plot_composite_beam_stress(file_path=r"D:\\图片\\组合梁应力.png",comp
 # 示例代码
 from qtmodel import *
 odb.plot_plate_element_stress(file_path=r"D:\\图片\\板应力.png",component=1,case_name="CQ:成桥(合计)",stage_id=-1)
-#Returns: 无
+#Returns: Base64字符串
 ```  
 ### plot_modal_result
 绘制模态结果，可选择自振模态和屈曲模态结果
@@ -3896,7 +3892,7 @@ odb.plot_plate_element_stress(file_path=r"D:\\图片\\板应力.png",component=1
 from qtmodel import *
 odb.plot_modal_result(file_path=r"D:\\图片\\自振模态.png",mode=1)
 odb.plot_modal_result(file_path=r"D:\\图片\\屈曲模态.png",mode=1,mode_kind=2)
-#Returns: 无
+#Returns: Base64字符串
 ```  
 ### get_current_png
 获取当前窗口Base64格式(图形)字符串

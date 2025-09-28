@@ -53,7 +53,7 @@ class OdbResult:
             increment_type: 1-全量    2-增量
             case_name: 运营阶段所需荷载工况名
             is_time_history: 是否为时程分析
-            is_local: 是否为局部坐标系
+            is_local: 是否为输出局部坐标系
         Example:
             odb.get_deformation(ids=1,stage_id=1)
             odb.get_deformation(ids=[1,2,3],stage_id=1)
