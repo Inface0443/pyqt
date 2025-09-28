@@ -294,7 +294,7 @@ class MdbLiveLoad:
     def update_standard_vehicle(name: str, new_name: str = "", standard_code: int = 1, load_type: str = "高速铁路",
                                 load_length: float = 0, factor: float = 1.0, n: int = 6, calc_fatigue: bool = False):
         """
-        todo 添加标准车辆
+        todo 更新标准车辆
         Args:
              name: 车辆荷载名称
              new_name: 新车辆荷载名称,默认不修改
@@ -334,7 +334,7 @@ class MdbLiveLoad:
                             width: float = 1.5, wheelbase: float = 1.8, min_dis: float = 1.5,
                             unit_force: str = "N", unit_length: str = "M"):
         """
-        todo 修改自定义标准车辆
+        todo 更新自定义标准车辆
         Args:
              name: 车辆荷载名称
              new_name: 新车辆荷载名称，默认不修改
@@ -375,7 +375,7 @@ class MdbLiveLoad:
     @staticmethod
     def update_influence_plane(name: str, new_name: str = "", tandem_names: list[str] = None):
         """
-        todo 添加影响面
+        todo 更新影响面
         Args:
              name:影响面名称
              new_name:更改后影响面名称，若无更改则默认
@@ -395,7 +395,7 @@ class MdbLiveLoad:
     def update_lane_line(name: str, new_name: str = "", influence_name: str = "", tandem_name: str = "", offset: float = 0, lane_width: float = 0,
                          optimize: bool = False, direction: int = 0):
         """
-        todo 添加车道线
+        todo 更新车道线
         Args:
              name:车道线名称
              new_name:更改后车道名,默认为不更改
@@ -424,7 +424,7 @@ class MdbLiveLoad:
     @staticmethod
     def update_node_tandem(name: str, new_name: str = "", node_ids=None, order_by_x: bool = True):
         """
-        todo 添加节点纵列,默认以最小X对应节点作为纵列起点
+        todo 更新节点纵列,默认以最小X对应节点作为纵列起点
         Args:
              name:节点纵列名
              new_name: 新节点纵列名，默认不修改
@@ -448,7 +448,7 @@ class MdbLiveLoad:
                               sub_case: list[tuple[str, float, list[str]]] = None,
                               trailer_code: str = "", special_code: str = ""):
         """
-        todo 添加移动荷载工况
+        todo 更新移动荷载工况
         Args:
              name:活载工况名
              new_name:新移动荷载名,默认不修改
@@ -490,7 +490,7 @@ class MdbLiveLoad:
     @staticmethod
     def remove_node_tandem(index: int = -1, name: str = ""):
         """
-        todo 按照 节点纵列编号/节点纵列名 删除节点纵列
+        todo 按照节点纵列编号/节点纵列名 删除节点纵列
         Args:
              index:节点纵列编号
              name:节点纵列名
@@ -505,7 +505,7 @@ class MdbLiveLoad:
     @staticmethod
     def remove_influence_plane(index: int = -1, name: str = ""):
         """
-        todo 按照 影响面编号/影响面名称 删除影响面
+        todo 按照影响面编号/影响面名称 删除影响面
         Args:
              index:影响面编号
              name:影响面名称

@@ -414,7 +414,7 @@ class MdbDynamicLoad:
                                  tolerance: float = 1e-4, damp_type: int = 0, single_damping: list[float] = None,
                                  group_damping: list[tuple[str, float, float, float]] = None) -> None:
         """
-        todo 添加时程工况
+        todo 更新时程工况
         Args:
             name: 时程工况号
             new_name: 时程工况名

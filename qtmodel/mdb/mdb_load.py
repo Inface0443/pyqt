@@ -50,7 +50,7 @@ class MdbLoad:
     @staticmethod
     def update_sink_group(name: str = "", new_name: str = "", sink: float = 0.1, node_ids: (Union[int, List[int]]) = None):
         """
-        todo 添加沉降组
+        todo 更新沉降组
         Args:
              name: 沉降组名
              new_name: 新沉降组名,默认不修改
@@ -71,7 +71,7 @@ class MdbLoad:
     @staticmethod
     def update_load_case(name: str, new_name: str = "", case_type: str = "施工阶段荷载"):
         """
-        todo 添加荷载工况
+        todo 更新荷载工况
         Args:
            name:工况名
            new_name:新工况名

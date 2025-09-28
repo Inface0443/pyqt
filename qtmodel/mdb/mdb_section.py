@@ -454,7 +454,7 @@ class MdbSection:
     @staticmethod
     def add_elements_to_tapper_section_group(name: str, ids=None):
         """
-        todo 添加变截面组单元
+        添加单元到变截面组
         Args:
           name:变截面组名称
           ids:新增单元编号
@@ -465,7 +465,7 @@ class MdbSection:
         """
         payload = {
             "name": name,
-            "ids": ids,
+            "ids": QtDataHelper.parse_ids_to_array(ids),
         }
         return QtServer.send_post("ADD-ELEMENTS-TO-TAPPER-SEC-GROUP", payload)
 
