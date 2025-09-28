@@ -632,14 +632,5 @@ class OdbResultPlot:
         }
         return QtServer.send_get("PLOT-MODAL-RESULT", payload)
 
-    @staticmethod
-    def get_current_png() -> str:
-        """
-        获取当前窗口Base64格式(图形)字符串
-        Args: 无
-        Example:
-            odb.get_current_png()
-        Returns: Base64格式(图形)字符串
-        """
-        return QtServer.send_get("GET-CURRENT-PNG", None)
+
     # endregion

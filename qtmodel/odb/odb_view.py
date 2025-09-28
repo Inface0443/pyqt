@@ -148,17 +148,17 @@ class OdbView:
     @staticmethod
     def save_png(file_path: str):
         """
-        保存当前模型窗口图形信息
+        保存当前模型窗口图形信息，文件夹为空时返回Base64字符串
         Args:
             file_path: 文件全路径
         Example:
-           odb.save_png(file_path=r"D:\\QT\\aa.png")
+           odb.save_png(file_path="D:\\QT\\aa.png")
         Returns: 无
         """
         payload = {
             "file_path": file_path
         }
-        return QtServer.send_post("SAVE-PNG", payload)
+        return QtServer.send_get("SAVE-PNG", payload)
 
     @staticmethod
     def set_render(flag: bool = True):
@@ -190,4 +190,15 @@ class OdbView:
             "stage": stage
         }
         return QtServer.send_post("CHANGE-STAGE", payload)
+
+    @staticmethod
+    def get_current_png() -> str:
+        """
+        获取当前窗口Base64格式(图形)字符串
+        Args: 无
+        Example:
+            odb.get_current_png()
+        Returns: Base64格式(图形)字符串
+        """
+        return QtServer.send_get("GET-CURRENT-PNG", None)
     # endregion
