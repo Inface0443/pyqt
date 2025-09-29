@@ -309,7 +309,7 @@ class QtDataHelper:
         return f"{code},{calc_type}," + ",".join(groups) + "\r\n"
 
     @staticmethod
-    def parse_ids_to_array(ids: Union[int, List[int], str, None]) -> List[int]:
+    def parse_ids_to_array(ids: Union[int, List[int], str, None],allow_empty = True) -> List[int]:
         """
         支持整形、列表、XtoYbyZ形式字符串 统一解析为 int 列表
         """
@@ -320,5 +320,8 @@ class QtDataHelper:
             result_ids.append(ids)
         elif isinstance(ids, str):
             result_ids.extend(QtDataHelper.parse_number_string(ids))
+        else:
+            result_ids.extend(ids)
+        if len(result_ids) == 0 and allow_empty is False:
+            raise Exception("集合不可为空，请核查数据")
         return result_ids
-

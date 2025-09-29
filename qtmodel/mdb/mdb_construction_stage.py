@@ -1,6 +1,6 @@
 import json
-from typing import Optional
-
+from typing import Optional, List, Union
+from ..core.data_helper import QtDataHelper
 from ..core.qt_server import QtServer
 
 
@@ -147,9 +147,9 @@ class MdbConstructionStage:
         return QtServer.send_post("UPDATE-CONSTRUCTION-STAGE", payload)
 
     @staticmethod
-    def update_construction_stage_id(stage_id, target_id: int = 3):
+    def update_construction_stage_id(stage_id:Union[int,List[int],str], target_id: int = 3):
         """
-        todo 更新部分施工阶段到指定编号位置之前，例如将1号施工阶段插入到3号之前即为1号与2号施工阶段互换
+        更新部分施工阶段到指定编号位置之前，例如将1号施工阶段插入到3号之前即为1号与2号施工阶段互换
         Args:
             stage_id:修改施工阶段编号且支持XtoYbyN形式字符串
             target_id:目标施工阶段编号
@@ -159,7 +159,7 @@ class MdbConstructionStage:
         Returns:无
         """
         payload = {
-            "stage_id": stage_id,
+            "stage_id": QtDataHelper.parse_ids_to_array(stage_id),
             "target_id": target_id,
         }
         return QtServer.send_post("UPDATE-CONSTRUCTION-STAGE-ID", payload)
@@ -167,7 +167,7 @@ class MdbConstructionStage:
     @staticmethod
     def update_all_stage_setting_type(setting_type: int = 1):
         """
-        todo 更新施工阶段安装方式
+        更新施工阶段安装方式
         Args:
             setting_type:安装方式 (1-接线法 2-无应力法 3-变形法 4-切线法)
         Example:
@@ -183,7 +183,7 @@ class MdbConstructionStage:
     def update_section_connection_stage(name: str, new_name="", sec_id: int = 1, element_id=None,
                                         stage_name="", age: float = 0, weight_type: int = 0):
         """
-        todo 更新施工阶段联合截面
+        更新施工阶段联合截面
         Args:
             name:名称
             new_name:新名称
@@ -201,7 +201,7 @@ class MdbConstructionStage:
             "name": name,
             "new_name": new_name,
             "sec_id": sec_id,
-            "element_id": element_id,
+            "element_id": QtDataHelper.parse_ids_to_array(element_id,False) ,
             "stage_name": stage_name,
             "age": age,
             "weight_type": weight_type,
@@ -211,7 +211,7 @@ class MdbConstructionStage:
     @staticmethod
     def remove_construction_stage(name: str = ""):
         """
-        todo 按照施工阶段名删除施工阶段,默认删除所有施工阶段
+        按照施工阶段名删除施工阶段,默认删除所有施工阶段
         Args:
             name:所删除施工阶段名称
         Example:
@@ -228,7 +228,7 @@ class MdbConstructionStage:
                          boundary_type: int = 0, load_type: int = 0, tendon_cancel_loss: float = 0,
                          constraint_cancel_type: int = 1) -> None:
         """
-        todo 合并当前所有施工阶段
+        合并当前所有施工阶段
         Args:
             name: 阶段名称
             setting_type: 安装方式 1-变形法安装 2-无应力安装，默认为1
@@ -256,7 +256,7 @@ class MdbConstructionStage:
 
     # endregion
 
-    # region
+    # region 施工阶段联合截面
     @staticmethod
     def add_section_connection_stage(name: str, sec_id: int, element_id=None, stage_name="", age: float = 0,
                                      weight_type: int = 0):
@@ -303,7 +303,7 @@ class MdbConstructionStage:
     @staticmethod
     def remove_section_connection_stage(name: str):
         """
-        todo 删除施工阶段联合截面
+        删除施工阶段联合截面
         Args:
             name:名称
         Example:
