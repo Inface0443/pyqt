@@ -144,12 +144,13 @@ class QtDataHelper:
         return s
 
     @staticmethod
-    def parse_int_list_to_str(ids: List[int]) -> str:
+    def parse_int_list_to_str(ids: Union[int, List[int], str]) -> str:
         """列表转XtoYbyZ
         """
-        if not ids:
-            return ""
-
+        if ids is None or isinstance(ids, str):
+            return "" if ids is None else str(ids)
+        if isinstance(ids, int):
+            return str(ids)
         sorted_ids = sorted(set(ids))  # 排序并去重
         if len(sorted_ids) == 1:
             return str(sorted_ids[0])
@@ -298,22 +299,7 @@ class QtDataHelper:
 
         return ids
 
-    @staticmethod
-    def id_to_list(data: Optional[Union[str, int, List[int]]]) -> List[int]:
-        """
-        将整形、列表、XtoYbyZ 统一解析为 int 列表
-        """
-        ids = []
-        if data is None:
-            return ids
-        elif isinstance(data, int):
-            ids = [data]
-        elif isinstance(data, list):
-            ids = data
-        elif isinstance(data, str):
-            parsed = QtDataHelper.parse_number_string(data)
-            ids = parsed if parsed is not None else []
-        return ids
+
 
     @staticmethod
     def live_load_set_line(code: int, calc_type: int, groups: list[str]):
@@ -324,6 +310,9 @@ class QtDataHelper:
 
     @staticmethod
     def parse_ids_to_array(ids: Union[int, List[int], str, None]) -> List[int]:
+        """
+        支持整形、列表、XtoYbyZ形式字符串 统一解析为 int 列表
+        """
         result_ids: List[int] = []
         if ids is None:
             return result_ids
@@ -331,11 +320,5 @@ class QtDataHelper:
             result_ids.append(ids)
         elif isinstance(ids, str):
             result_ids.extend(QtDataHelper.parse_number_string(ids))
-        else:
-            # 视为可迭代的整数
-            try:
-                for n in ids:  # type: ignore
-                    result_ids.append(int(n))
-            except Exception:
-                raise TypeError("ids 应为 int、可迭代的 int、或字符串（如 '1to10by2,15'）。")
         return result_ids
+

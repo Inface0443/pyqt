@@ -1,7 +1,7 @@
 import json
 from ..core.qt_server import QtServer
 from qtmodel.core.data_helper import QtDataHelper
-from typing import Union, List
+from typing import Union, List, Optional
 
 
 class MdbStructure:
@@ -83,7 +83,7 @@ class MdbStructure:
         return QtServer.send_post("UPDATE-NODE-ID", payload)
 
     @staticmethod
-    def merge_nodes(ids=None, tolerance: float = 1e-4):
+    def merge_nodes(ids = None, tolerance: float = 1e-4):
         """
         根据坐标信息和节点编号添加节点，默认自动识别编号
         Args:
@@ -93,34 +93,54 @@ class MdbStructure:
             mdb.merge_nodes()
         Returns: 无
         """
-        payload = {"tolerance": tolerance}
-        if ids is not None:
-            payload["ids"] = ids
+        if ids is None:
+            # merge all nodes
+            return QtServer.send_post("MERGE-NODES")
+        payload = {"tolerance": tolerance, "ids": QtDataHelper.parse_ids_to_array(ids)}
         return QtServer.send_post("MERGE-NODES", payload)
 
     @staticmethod
-    def remove_node(ids=None):
+    def move_nodes(ids = None, offset_x: float = 0, offset_y: float = 0, offset_z: float = 0):
         """
-        删除指定节点,不输入参数时默认删除所有节点
+        移动节点坐标，默认移动所有节点
         Args:
-            ids:节点编号
+            ids:节点号
+            offset_x:X轴偏移量
+            offset_y:Y轴偏移量
+            offset_z:Z轴偏移量
         Example:
-            mdb.remove_node()
-            mdb.remove_node(ids=1)
-            mdb.remove_node(ids=[1,2,3])
+            mdb.move_nodes(ids=1,offset_x=1.5,offset_y=1.5,offset_z=1.5)
+        Returns: 无
+        """
+        payload = {
+            "ids": QtDataHelper.parse_ids_to_array(ids),
+            "offsets": [offset_x, offset_y, offset_z]
+        }
+        return QtServer.send_post("MOVE-NODES", payload)
+
+    @staticmethod
+    def remove_nodes(ids = None):
+        """
+        删除指定节点,默认删除所有节点
+        Args:
+            ids:节点编号,支持多种类型
+        Example:
+            mdb.remove_nodes()
+            mdb.remove_nodes(ids=1)
+            mdb.remove_nodes(ids=[1,2,3])
         Returns: 无
         """
         if ids is None:
-            return QtServer.send_post("REMOVE-NODES", None)
-        payload = {"ids": ids}
+            return QtServer.send_post("REMOVE-NODES")
+        payload = {"ids": QtDataHelper.parse_ids_to_array(ids)}
         return QtServer.send_post("REMOVE-NODES", payload)
 
     @staticmethod
-    def renumber_nodes(node_ids: list[int] = None, new_ids: list[int] = None):
+    def renumber_nodes(ids: Optional[list[int]] = None, new_ids: Optional[list[int]] = None):
         """
         节点编号重排序，默认按1升序重排所有节点
         Args:
-            node_ids:被修改节点号
+            ids:原修改节点号
             new_ids:新节点号
         Example:
             mdb.renumber_nodes()
@@ -128,32 +148,13 @@ class MdbStructure:
         Returns: 无
         """
         payload = {}
-        if node_ids is None or new_ids is None:
-            raise Exception("重命名节点不可为空")
-        if len(node_ids) != len(new_ids):
+        if ids is None or new_ids is None:
+            return QtServer.send_post("RENUMBER-NODES")
+        if len(ids) != len(new_ids):
             raise Exception("原节点和新节点编号数据无法对应")
-        payload["node_ids"] = node_ids
+        payload["node_ids"] = ids
         payload["new_ids"] = new_ids
         return QtServer.send_post("RENUMBER-NODES", payload if payload else None)
-
-    @staticmethod
-    def move_node(node_id: int, offset_x: float = 0, offset_y: float = 0, offset_z: float = 0):
-        """
-        移动节点坐标
-        Args:
-            node_id:节点号
-            offset_x:X轴偏移量
-            offset_y:Y轴偏移量
-            offset_z:Z轴偏移量
-        Example:
-            mdb.move_node(node_id=1,offset_x=1.5,offset_y=1.5,offset_z=1.5)
-        Returns: 无
-        """
-        payload = {
-            "node_id": node_id,
-            "offsets": [offset_x, offset_y, offset_z]
-        }
-        return QtServer.send_post("MOVE-NODE", payload)
 
     # endregion
 
@@ -189,7 +190,7 @@ class MdbStructure:
                 s += f"{index},{ele_type},{mat_id},{sec_id},{beta_angle},{node_ids[0]},{node_ids[1]},{initial_type},{initial_value:g}" + "\r\n"
             elif ele_type == 4:  # 4-板
                 s += f"{index},{ele_type},{mat_id},{sec_id},{beta_angle},{node_ids[0]},{node_ids[1]},{node_ids[2]},{node_ids[3]},{plate_type}" + "\r\n"
-            # print(s)
+
             if QtServer.QT_MERGE:
                 QtServer.MERGE_STR += s  # 开启合并发送时需要调用update_model生效
             else:
@@ -216,28 +217,27 @@ class MdbStructure:
         """
         try:
             s = "*ELEMENT\r\n" + "\r\n".join(",".join(str(x) for x in row) for row in ele_data) + "\r\n"
-            # print(s)
             QtServer.post_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
 
     @staticmethod
-    def update_local_orientation(element_id: int):
+    def update_local_orientation(ids=None):
         """
-        todo 反转杆系单元局部方向
+        反转杆系单元局部方向
         Args:
-            element_id: 杆系单元编号
+            ids: 杆系单元编号,支持整形、列表、XtoYbyZ形式字符串
         Example:
             mdb.update_local_orientation(1)
         Returns: 无
         """
-        payload = {"element_id": element_id}
+        payload = {"ids": QtDataHelper.parse_ids_to_array(ids)}
         return QtServer.send_post("UPDATE-LOCAL-ORIENTATION", payload)
 
     @staticmethod
     def update_element_id(old_id: int, new_id: int):
         """
-        todo 更改单元编号
+        更改单元编号
         Args:
             old_id: 单元编号
             new_id: 新单元编号
@@ -252,7 +252,7 @@ class MdbStructure:
     def update_element(old_id: int, new_id: int = -1, ele_type: int = 1, node_ids: list[int] = None, beta_angle: float = 0,
                        mat_id: int = -1, sec_id: int = -1, initial_type: int = 1, initial_value: float = 0, plate_type: int = 0):
         """
-        todo 根据单元编号和单元类型添加单元
+        根据单元编号和单元类型添加单元
         Args:
             old_id:原单元编号
             new_id:现单元编号，默认不修改原单元Id
@@ -283,95 +283,98 @@ class MdbStructure:
         return QtServer.send_post("UPDATE-ELEMENT", payload)
 
     @staticmethod
-    def update_element_local_orientation(index: 1):
+    def update_element_material(ids=None, mat_id: int=1):
         """
-        todo 更新指定单元的单元局部坐标系
+        更新指定单元的材料号
         Args:
-            index: 单元编号,支持列表和XtoYbyN形式字符串
-        Example:
-            mdb.update_element_local_orientation(index=1)
-        Returns: 无
-        """
-        payload = {"index": index}
-        return QtServer.send_post("UPDATE-ELEMENT-LOCAL-ORIENTATION", payload)
-
-    @staticmethod
-    def update_element_material(index: Union[int, List[int]], mat_id: int):
-        """
-        todo 更新指定单元的材料号
-        Args:
-            index: 单元编号
+            ids: 单元编号,支持整形、列表、XtoYbyZ形式字符串
             mat_id: 材料编号
         Example:
-            mdb.update_element_material(index=1,mat_id=2)
+            mdb.update_element_material(ids=1,mat_id=2)
         Returns: 无
         """
-        payload = {"index": index, "mat_id": mat_id}
+        payload = {"ids": QtDataHelper.parse_ids_to_array(ids), "mat_id": mat_id}
         return QtServer.send_post("UPDATE-ELEMENT-MATERIAL", payload)
 
     @staticmethod
-    def update_element_beta_angle(index: Union[int, List[int]], beta_angle: float):
+    def update_element_beta(ids=None, beta: float=0):
         """
-        todo 更新指定单元的贝塔角
+        更新指定单元的贝塔角
         Args:
-            index: 单元编号
-            beta_angle: 贝塔角度数
+            ids: 单元编号,支持整形、列表、XtoYbyZ形式字符串
+            beta: 贝塔角度数
         Example:
-            mdb.update_element_beta_angle(index=1,beta_angle=90)
+            mdb.update_element_beta(ids=1,beta=90)
         Returns: 无
         """
-        payload = {"index": index, "beta_angle": beta_angle}
-        return QtServer.send_post("UPDATE-ELEMENT-BETA-ANGLE", payload)
+        payload = {"ids": QtDataHelper.parse_ids_to_array(ids), "beta_angle": beta}
+        return QtServer.send_post("UPDATE-ELEMENT-BETA", payload)
 
     @staticmethod
-    def update_element_section(index: Union[int, List[int]], sec_id: int):
+    def update_frame_section(ids, sec_id: int=1):
         """
-        todo 更新杆系单元截面或板单元板厚
+        更新杆系单元截面
         Args:
-            index: 单元编号
+            ids: 单元编号,支持整形、列表、XtoYbyZ形式字符串
             sec_id: 截面号
         Example:
-            mdb.update_element_section(index=1,sec_id=2)
+            mdb.update_frame_section(ids=1,sec_id=2)
         Returns: 无
         """
-        payload = {"index": index, "sec_id": sec_id}
-        return QtServer.send_post("UPDATE-ELEMENT-SECTION", payload)
+        payload = {"ids": QtDataHelper.parse_ids_to_array(ids), "sec_id": sec_id}
+        return QtServer.send_post("UPDATE-FRAME-SECTION", payload)
 
     @staticmethod
-    def update_element_node(index: int, nodes: list[float]):
+    def update_plate_thick(ids, thick_id: int=1):
         """
-        todo 更新单元节点
+        更新杆系单元截面
         Args:
-            index: 单元编号
-            nodes: 杆系单元时为[node_i,node_j] 板单元[i,j,k,l]
+            ids: 单元编号,支持整形、列表、XtoYbyZ形式字符串
+            thick_id: 板厚号
+        Example:
+            mdb.update_plate_thick(ids=1,thick_id=2)
+        Returns: 无
+        """
+        payload = {"ids": QtDataHelper.parse_ids_to_array(ids), "thick_id": thick_id}
+        return QtServer.send_post("UPDATE-PLATE-THICK", payload)
+
+    @staticmethod
+    def update_element_node(element_id: int, node_ids: list[int]):
+        """
+        更新单元节点
+        Args:
+            element_id: 单元编号
+            node_ids: 杆系单元时为[i,j] 板单元[i,j,k,l]
         Example:
             mdb.update_element_node(1,[1,2])
             mdb.update_element_node(2,[1,2,3,4])
         Returns: 无
         """
-        payload = {"index": index, "nodes": nodes}
-        return QtServer.send_post("UPDATE-ELEMENT-NODES", payload)
+        payload = {"element_id": element_id, "node_ids": node_ids}
+        return QtServer.send_post("UPDATE-ELEMENT-NODE", payload)
 
     @staticmethod
-    def remove_element(index: (Union[int, List[int]]) = None):
+    def remove_element(ids = None, remove_free: bool = False):
         """
-        todo  删除指定编号的单元
+        删除指定编号的单元,默认则删除所有单元
         Args:
-            index: 单元编号,默认时删除所有单元
+            ids: 单元编号,支持整形、列表、XtoYbyZ形式字符串
+            remove_free: 是否删除自由节点
         Example:
             mdb.remove_element()
-            mdb.remove_element(index=1)
+            mdb.remove_element(element_ids=1)
         Returns: 无
         """
-        if index is None:
-            return QtServer.send_post("REMOVE-ELEMENTS", None)
-        payload = {"index": index}
+        if ids is None:
+            # remove all elements
+            return QtServer.send_post("REMOVE-ELEMENTS")
+        payload = {"ids": QtDataHelper.parse_ids_to_array(ids), "remove_free": remove_free}
         return QtServer.send_post("REMOVE-ELEMENTS", payload)
 
     @staticmethod
-    def renumber_elements(element_ids: list[int] = None, new_ids: list[int] = None):
+    def renumber_elements(element_ids: Optional[list[int]] = None, new_ids: Optional[list[int]] = None):
         """
-        todo 单元编号重排序，默认按1升序重排所有节点
+        单元编号重排序，默认按1升序重排所有节点
         Args:
             element_ids:被修改单元号
             new_ids:新单元号
@@ -381,10 +384,11 @@ class MdbStructure:
         Returns: 无
         """
         payload = {}
-        if element_ids is not None:
-            payload["element_ids"] = element_ids
-        if new_ids is not None:
-            payload["new_ids"] = new_ids
+        if element_ids is None or new_ids is None:
+            # renumber all elements
+            return QtServer.send_post("RENUMBER-ELEMENTS")
+        payload["element_ids"] = element_ids
+        payload["new_ids"] = new_ids
         return QtServer.send_post("RENUMBER-ELEMENTS", payload if payload else None)
 
     # endregion
@@ -420,7 +424,7 @@ class MdbStructure:
                 elem_str = str(element_ids)
 
             s = "*STRGROUP\r\n" + f"{name},{node_str},{elem_str}" + "\r\n"
-            # print(s)
+
             QtServer.post_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
@@ -428,7 +432,7 @@ class MdbStructure:
     @staticmethod
     def update_structure_group_name(name: str = "", new_name: str = ""):
         """
-        todo 更新结构组名
+        更新结构组名
         Args:
             name: 结构组名
             new_name: 新结构组名(可选参数)
@@ -450,7 +454,7 @@ class MdbStructure:
     @staticmethod
     def update_structure_group(name: str = "", new_name: str = "", node_ids=None, element_ids=None):
         """
-        todo 更新结构组信息
+        更新结构组信息
         Args:
             name: 结构组名
             new_name: 新结构组名
@@ -465,8 +469,8 @@ class MdbStructure:
                 "version": QtServer.QT_VERSION,  # 版本控制
                 "name": name,
                 "new_name": new_name,
-                "node_ids": QtDataHelper.id_to_list(node_ids),
-                "element_ids": QtDataHelper.id_to_list(element_ids)
+                "node_ids": QtDataHelper.parse_ids_to_array(node_ids),
+                "element_ids": QtDataHelper.parse_ids_to_array(element_ids)
             }
             json_string = json.dumps(params, indent=2, ensure_ascii=False)
             QtServer.get_command(header="UPDATE-STRUCTURE-GROUP", command=json_string)
@@ -476,7 +480,7 @@ class MdbStructure:
     @staticmethod
     def remove_structure_group(name: str = ""):
         """
-        todo 可根据结构与组名删除结构组，当组名为默认则删除所有结构组
+        可根据结构与组名删除结构组，当组名为默认则删除所有结构组
         Args:
             name:结构组名称
         Example:
@@ -499,7 +503,7 @@ class MdbStructure:
             raise Exception(ex)
 
     @staticmethod
-    def add_structure_to_group(name: str = "", node_ids: Union[str, list[int]] = None, element_ids: Union[str, list[int]] = None):
+    def add_structure_to_group(name: str = "", node_ids = None, element_ids = None):
         """
         为结构组添加节点和/或单元
         Args:
@@ -514,8 +518,8 @@ class MdbStructure:
             params = {
                 "version": QtServer.QT_VERSION,  # 版本控制
                 "name": name,
-                "node_ids": QtDataHelper.id_to_list(node_ids),
-                "element_ids": QtDataHelper.id_to_list(element_ids)
+                "node_ids": QtDataHelper.parse_ids_to_array(node_ids),
+                "element_ids": QtDataHelper.parse_ids_to_array(element_ids)
             }
             json_string = json.dumps(params, indent=2, ensure_ascii=False)
             QtServer.get_command(header="ADD-STRUCTURE-TO-GROUP", command=json_string)
@@ -523,9 +527,9 @@ class MdbStructure:
             raise Exception(ex)
 
     @staticmethod
-    def remove_structure_from_group(name: str = "", node_ids: Union[str, list[int]] = None, element_ids=None):
+    def remove_structure_from_group(name: str = "", node_ids = None, element_ids =None):
         """
-        todo 为结构组删除节点、单元
+        为结构组删除节点、单元
         Args:
             name: 结构组名
             node_ids: 节点编号列表(可选参数)
@@ -538,8 +542,8 @@ class MdbStructure:
             params = {
                 "version": QtServer.QT_VERSION,  # 版本控制
                 "name": name,
-                "node_ids": QtDataHelper.id_to_list(node_ids),
-                "element_ids": QtDataHelper.id_to_list(element_ids)
+                "node_ids": QtDataHelper.parse_ids_to_array(node_ids),
+                "element_ids": QtDataHelper.parse_ids_to_array(element_ids)
             }
             json_string = json.dumps(params, indent=2, ensure_ascii=False)
             QtServer.get_command(header="REMOVE-STRUCTURE-FROM-GROUP", command=json_string)

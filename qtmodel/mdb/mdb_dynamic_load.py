@@ -646,7 +646,6 @@ class MdbDynamicLoad:
 
     # region 反应谱分析
     @staticmethod
-    @staticmethod
     def add_spectrum_function(name: str = "", factor: float = 1.0, kind: int = 0,
                               function_info: list[tuple[float, float]] = None):
         """
