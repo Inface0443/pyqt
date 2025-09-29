@@ -284,7 +284,7 @@ class OdbResultData:
     @staticmethod
     def get_buckling_eigenvalue() -> str:
         """
-        获取屈曲分析特征值
+        获取屈曲分析特征值结果
         Args: 无
         Example:
             odb.get_buckling_eigenvalue()
