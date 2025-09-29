@@ -192,7 +192,7 @@ class MdbSection:
             s += ",".join(f"{x:g}" for x in sec_property_j) + "\r\n"
 
         # 再导入截面信息
-        s = ("*SEC-INFO\r\n" +
+        s += ("*SEC-INFO\r\n" +
               f"ID={index},{name},{sec_type}-变截面,{'YES' if shear_consider else 'NO'},{bias1},{bias2}\r\n")
         # I 端截面
         s += "I=\r\n"
