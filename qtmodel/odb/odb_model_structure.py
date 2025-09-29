@@ -100,7 +100,7 @@ class OdbModelStructure:
         Args:
             index:截面编号
         Example:
-            odb.get_element_by_section("材料1")
+            odb.get_element_by_section(index=1)
         Returns: 包含信息为list[int]
         """
         payload = {"index": index}

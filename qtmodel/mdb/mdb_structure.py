@@ -362,7 +362,7 @@ class MdbStructure:
             remove_free: 是否删除自由节点
         Example:
             mdb.remove_element()
-            mdb.remove_element(element_ids=1)
+            mdb.remove_element(ids=1)
         Returns: 无
         """
         if ids is None:
