@@ -1,4 +1,4 @@
-> 最新版本 V1.1.7 - 2025-09-29 
+> 最新版本 V1.1.8 - 2025-09-30 
 > pip install --upgrade qtmodel -i https://pypi.org/simple
 - 新增更新结构组接口 
 # 建模操作 
@@ -2633,7 +2633,7 @@ active_boundaries=[("默认边界组",1)],active_loads=[("默认荷载组1",0)])
 #Returns: 无
 ```  
 ### update_construction_stage_id
-todo 更新部分施工阶段到指定编号位置之前，例如将1号施工阶段插入到3号之前即为1号与2号施工阶段互换
+更新部分施工阶段到指定编号位置之前，例如将1号施工阶段插入到3号之前即为1号与2号施工阶段互换
 > 参数:  
 > stage_id:修改施工阶段编号且支持XtoYbyN形式字符串  
 > target_id:目标施工阶段编号  
@@ -2645,7 +2645,7 @@ mdb.update_construction_stage_id([1,2,3],9)
 #Returns:无
 ```  
 ### update_all_stage_setting_type
-todo 更新施工阶段安装方式
+更新施工阶段安装方式
 > 参数:  
 > setting_type:安装方式 (1-接线法 2-无应力法 3-变形法 4-切线法)  
 ```Python
@@ -2655,7 +2655,7 @@ mdb.update_all_stage_setting_type(setting_type=1)
 #Returns: 无
 ```  
 ### update_section_connection_stage
-todo 更新施工阶段联合截面
+更新施工阶段联合截面
 > 参数:  
 > name:名称  
 > new_name:新名称  
@@ -2672,7 +2672,7 @@ mdb.update_section_connection_stage(name="联合阶段",sec_id=1,element_id="2to
 #Returns:无
 ```  
 ### remove_construction_stage
-todo 按照施工阶段名删除施工阶段,默认删除所有施工阶段
+按照施工阶段名删除施工阶段,默认删除所有施工阶段
 > 参数:  
 > name:所删除施工阶段名称  
 ```Python
@@ -2682,7 +2682,7 @@ mdb.remove_construction_stage(name="施工阶段1")
 #Returns: 无
 ```  
 ### merge_all_stages
-todo 合并当前所有施工阶段
+合并当前所有施工阶段
 > 参数:  
 > name: 阶段名称  
 > setting_type: 安装方式 1-变形法安装 2-无应力安装，默认为1  
@@ -2698,7 +2698,7 @@ from qtmodel import *
 mdb.merge_all_stages(name="合并阶段", setting_type=1, weight_type=1, age=5)
 #Returns: 无
 ```  
-## 
+##  施工阶段联合截面
 ### add_section_connection_stage
 添加施工阶段联合截面
 > 参数:  
@@ -2726,7 +2726,7 @@ mdb.add_element_to_connection_stage([1,2,3,4],"联合阶段")
 #Returns:无
 ```  
 ### remove_section_connection_stage
-todo 删除施工阶段联合截面
+删除施工阶段联合截面
 > 参数:  
 > name:名称  
 ```Python
@@ -3576,7 +3576,7 @@ odb.get_vibration_modal_results(mode=1)
 #Returns: 返回json字符串，list[dict]包含该模态下节点位移向量列表
 ```  
 ### get_buckling_eigenvalue
-获取屈曲分析特征值
+获取屈曲分析特征值结果
 > 参数:  
 ```Python
 # 示例代码

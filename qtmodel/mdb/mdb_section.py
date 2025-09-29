@@ -139,11 +139,8 @@ class MdbSection:
             if sec_property is not None:
                 s += "*SEC-PROPERTY\r\n" + f"ID={index},{name},1,{'YES' if shear_consider else 'NO'},{bias}\r\n"
                 s += ",".join(f"{x:g}" for x in sec_property) + "\r\n"
-            QtServer.post_command(s, "QDAT")
-
-            s = "*SEC-INFO\r\n" + f"ID={index},{name},{sec_type},{'YES' if shear_consider else 'NO'},{bias}\r\n"
+            s += "*SEC-INFO\r\n" + f"ID={index},{name},{sec_type},{'YES' if shear_consider else 'NO'},{bias}\r\n"
             s += QtDataHelper.get_str_by_data(sec_type, sec_data)
-
             QtServer.post_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
@@ -168,53 +165,50 @@ class MdbSection:
                 sec_end={"sec_info":[2,2],"bias_type":"中心"})
         Returns: 无
         """
-        try:
-            bias_type_i = sec_begin.get("bias_type", "中心")
-            center_type_i = sec_begin.get("center_type", "质心")
-            bias_x_i = sec_begin.get("bias_x", 0)
-            bias_y_i = sec_begin.get("bias_y", 0)
-            sec_property_i: Union[list[float], None] = sec_begin.get("sec_property", None)
-            bias_type_j = sec_end.get("bias_type", "中心")
-            center_type_j = sec_end.get("center_type", "质心")
-            bias_x_j = sec_end.get("bias_x", 0)
-            bias_y_j = sec_end.get("bias_y", 0)
-            sec_property_j: Union[list[float], None] = sec_end.get("sec_property", None)
+        bias_type_i = sec_begin.get("bias_type", "中心")
+        center_type_i = sec_begin.get("center_type", "质心")
+        bias_x_i = sec_begin.get("bias_x", 0)
+        bias_y_i = sec_begin.get("bias_y", 0)
+        sec_property_i: Union[list[float], None] = sec_begin.get("sec_property", None)
+        bias_type_j = sec_end.get("bias_type", "中心")
+        center_type_j = sec_end.get("center_type", "质心")
+        bias_x_j = sec_end.get("bias_x", 0)
+        bias_y_j = sec_end.get("bias_y", 0)
+        sec_property_j: Union[list[float], None] = sec_end.get("sec_property", None)
 
-            if (bias_x_i, bias_y_i) != (0, 0):
-                bias1 = f"{bias_x_i:g},{bias_y_i:g}"
-            else:
-                bias1 = f"{center_type_i},{bias_type_i}"
-            if (bias_x_j, bias_y_j) != (0, 0):
-                bias2 = f"{bias_x_j:g},{bias_y_j:g}"
-            else:
-                bias2 = f"{center_type_j},{bias_type_j}"
-            s = ""
-            # 先导入截面特性，以免重复计算截面
-            if sec_property_i is not None and sec_property_j is not None:
-                s += "*SEC-PROPERTY\r\n" + f"ID={index},{name},2,{'YES' if shear_consider else 'NO'},{bias1},{bias2}\r\n"
-                s += ",".join(f"{x:g}" for x in sec_property_i) + "\r\n"
-                s += ",".join(f"{x:g}" for x in sec_property_j) + "\r\n"
-            QtServer.post_command(s, "QDAT")
+        if (bias_x_i, bias_y_i) != (0, 0):
+            bias1 = f"{bias_x_i:g},{bias_y_i:g}"
+        else:
+            bias1 = f"{center_type_i},{bias_type_i}"
+        if (bias_x_j, bias_y_j) != (0, 0):
+            bias2 = f"{bias_x_j:g},{bias_y_j:g}"
+        else:
+            bias2 = f"{center_type_j},{bias_type_j}"
+        s = ""
+        # 先导入截面特性，以免重复计算截面
+        if sec_property_i is not None and sec_property_j is not None:
+            s += "*SEC-PROPERTY\r\n" + f"ID={index},{name},2,{'YES' if shear_consider else 'NO'},{bias1},{bias2}\r\n"
+            s += ",".join(f"{x:g}" for x in sec_property_i) + "\r\n"
+            s += ",".join(f"{x:g}" for x in sec_property_j) + "\r\n"
 
-            # 再导入截面信息
-            s = ("*SEC-INFO\r\n" +
-                  f"ID={index},{name},{sec_type}-变截面,{'YES' if shear_consider else 'NO'},{bias1},{bias2}\r\n")
-            # I 端截面
-            s += "I=\r\n"
-            s += QtDataHelper.get_str_by_data(sec_type, sec_begin)
-            # J 端截面
-            s += "J=\r\n"
-            s += QtDataHelper.get_str_by_data(sec_type, sec_end)
-            QtServer.post_command(s, "QDAT")
-            if sec_normalize:
-                params = {
-                    "version": QtServer.QT_VERSION,
-                    "index": index,
-                }
-                json_string = json.dumps(params, indent=2)
-                QtServer.post_command(json_string, "NORMALIZE-SEC")
-        except Exception as ex:
-            raise Exception(ex)
+        # 再导入截面信息
+        s = ("*SEC-INFO\r\n" +
+              f"ID={index},{name},{sec_type}-变截面,{'YES' if shear_consider else 'NO'},{bias1},{bias2}\r\n")
+        # I 端截面
+        s += "I=\r\n"
+        s += QtDataHelper.get_str_by_data(sec_type, sec_begin)
+        # J 端截面
+        s += "J=\r\n"
+        s += QtDataHelper.get_str_by_data(sec_type, sec_end)
+        QtServer.post_command(s, "QDAT")
+        if sec_normalize:
+            params = {
+                "version": QtServer.QT_VERSION,
+                "index": index,
+            }
+            json_string = json.dumps(params, indent=2)
+            QtServer.post_command(json_string, "NORMALIZE-SEC")
+
 
     @staticmethod
     def calculate_section_property():
