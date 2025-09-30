@@ -15,7 +15,7 @@ class OdbModelStructure:
         Returns: 包含信息为list[list[int]]
         """
         payload = {"round_num": round_num}
-        return QtServer.send_get("GET-OVERLAP-NODES", payload)
+        return QtServer.send_dict("GET-OVERLAP-NODES", payload)
 
     @staticmethod
     def get_node_id(x: float = 0, y: float = 0, z: float = 0, tolerance: float = 1e-4):
@@ -31,7 +31,7 @@ class OdbModelStructure:
         Returns: int
         """
         payload = {"x": x, "y": y, "z": z, "tolerance": tolerance}
-        return QtServer.send_get("GET-NODE-ID", payload)
+        return QtServer.send_dict("GET-NODE-ID", payload)
 
     @staticmethod
     def get_group_nodes(group_name: str = "默认结构组"):
@@ -44,7 +44,7 @@ class OdbModelStructure:
         Returns: list[int]
         """
         payload = {"group_name": group_name}
-        return QtServer.send_get("GET-GROUP-NODES", payload)
+        return QtServer.send_dict("GET-GROUP-NODES", payload)
 
     @staticmethod
     def get_node_data(ids=None):
@@ -59,7 +59,7 @@ class OdbModelStructure:
         Returns:  包含信息为list[dict] or dict
         """
         payload = {"ids": QtDataHelper.parse_ids_to_array(ids)} if ids is not None else None
-        return QtServer.send_get("GET-NODE-DATA", payload)
+        return QtServer.send_dict("GET-NODE-DATA", payload)
 
     # endregion
 
@@ -78,7 +78,7 @@ class OdbModelStructure:
         Returns: 包含信息为list[int]
         """
         payload = {"x": x, "y": y, "z": z, "tolerance": tolerance}
-        return QtServer.send_get("GET-ELEMENTS-BY-POINT", payload)
+        return QtServer.send_dict("GET-ELEMENTS-BY-POINT", payload)
 
     @staticmethod
     def get_element_by_material(name: str = ""):
@@ -91,7 +91,7 @@ class OdbModelStructure:
         Returns: 包含信息为list[int]
         """
         payload = {"name": name}
-        return QtServer.send_get("GET-ELEMENTS-BY-MATERIAL", payload)
+        return QtServer.send_dict("GET-ELEMENTS-BY-MATERIAL", payload)
 
     @staticmethod
     def get_element_by_section(index: int = 1):
@@ -104,7 +104,7 @@ class OdbModelStructure:
         Returns: 包含信息为list[int]
         """
         payload = {"index": index}
-        return QtServer.send_get("GET-ELEMENTS-BY-SECTION", payload)
+        return QtServer.send_dict("GET-ELEMENTS-BY-SECTION", payload)
 
     @staticmethod
     def get_overlap_elements():
@@ -115,7 +115,7 @@ class OdbModelStructure:
             odb.get_overlap_elements()
         Returns:  包含信息为list[list[int]]
         """
-        return QtServer.send_get("GET-OVERLAP-ELEMENTS", None)
+        return QtServer.send_dict("GET-OVERLAP-ELEMENTS", None)
 
     @staticmethod
     def get_structure_group_names():
@@ -126,7 +126,7 @@ class OdbModelStructure:
             odb.get_structure_group_names()
         Returns: 包含信息为list[str]
         """
-        return QtServer.send_get("GET-STRUCTURE-GROUP-NAMES", None)
+        return QtServer.send_dict("GET-STRUCTURE-GROUP-NAMES", None)
 
     @staticmethod
     def get_element_data(ids=None):
@@ -140,7 +140,7 @@ class OdbModelStructure:
         Returns:  包含信息为list[dict] or dict
         """
         payload = {"ids": QtDataHelper.parse_ids_to_array(ids)} if ids is not None else None
-        return QtServer.send_get("GET-ELEMENT-DATA", payload)
+        return QtServer.send_dict("GET-ELEMENT-DATA", payload)
 
     @staticmethod
     def get_element_type(element_id: int) -> str:
@@ -153,7 +153,7 @@ class OdbModelStructure:
         Returns: str
         """
         payload = {"element_id": element_id}
-        return QtServer.send_get("GET-ELEMENT-TYPE", payload)
+        return QtServer.send_dict("GET-ELEMENT-TYPE", payload)
 
     @staticmethod
     def get_group_elements(group_name: str = "默认结构组"):
@@ -166,6 +166,6 @@ class OdbModelStructure:
         Returns: list[int]
         """
         payload = {"group_name": group_name}
-        return QtServer.send_get("GET-GROUP-ELEMENTS", payload)
+        return QtServer.send_dict("GET-GROUP-ELEMENTS", payload)
 
     # endregion

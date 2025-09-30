@@ -67,7 +67,7 @@ class MdbProperty:
                     raise Exception("操作错误,组合材料composite_info数据无效!")
                 s += f"{index},{name},{mat_type},{composite_info[0]},{composite_info[1]}\r\n"
             # print(s)
-            QtServer.post_command(s, "QDAT")
+            QtServer.send_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
 
@@ -127,7 +127,7 @@ class MdbProperty:
                 s += f"{index},{name},{code_index},{shrink_data}," + ",".join(
                     str(x) for pair in creep_data for x in pair) + "\r\n"
             # print(s)
-            QtServer.post_command(s, "QDAT")
+            QtServer.send_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
 
@@ -147,7 +147,7 @@ class MdbProperty:
             s = "*CREEPFCT\r\n" + f"Name={name},{scale_factor:g}\r\n" + ",".join(
                 f"{x:g},{y:g}" for x, y in creep_data) + "\r\n"
             # print(s)
-            QtServer.post_command(s, "QDAT")
+            QtServer.send_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
 
@@ -168,7 +168,7 @@ class MdbProperty:
             s = "*SHRINKFCT\r\n" + f"Name={name},{scale_factor:g}\r\n" + ",".join(
                 f"{x:g},{y:g}" for x, y in shrink_data) + "\r\n"
             # print(s)
-            QtServer.post_command(s, "QDAT")
+            QtServer.send_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
 
@@ -210,7 +210,7 @@ class MdbProperty:
             "f_cuk": f_cuk,
             "composite_info": composite_info,
         }
-        return QtServer.send_post("UPDATE-MATERIAL", payload)
+        return QtServer.send_dict("UPDATE-MATERIAL", payload)
 
     @staticmethod
     def update_creep_function(name: str, new_name="", creep_data: list[tuple[float, float]] = None, scale_factor: float = 1):
@@ -231,7 +231,7 @@ class MdbProperty:
             "creep_data": creep_data,
             "scale_factor": scale_factor,
         }
-        return QtServer.send_post("UPDATE-CREEP-FUNCTION", payload)
+        return QtServer.send_dict("UPDATE-CREEP-FUNCTION", payload)
 
     @staticmethod
     def update_shrink_function(name: str, new_name="", shrink_data: list[tuple[float, float]] = None, scale_factor: float = 1):
@@ -254,7 +254,7 @@ class MdbProperty:
             "shrink_data": shrink_data,
             "scale_factor": scale_factor,
         }
-        return QtServer.send_post("UPDATE-SHRINK-FUNCTION", payload)
+        return QtServer.send_dict("UPDATE-SHRINK-FUNCTION", payload)
 
     @staticmethod
     def remove_shrink_function(name: str = ""):
@@ -267,7 +267,7 @@ class MdbProperty:
         Returns: 无
         """
         payload = {"name": name} if name else None
-        return QtServer.send_post("REMOVE-SHRINK-FUNCTION", payload)
+        return QtServer.send_dict("REMOVE-SHRINK-FUNCTION", payload)
 
     @staticmethod
     def remove_creep_function(name: str = ""):
@@ -280,7 +280,7 @@ class MdbProperty:
         Returns: 无
         """
         payload = {"name": name} if name else None
-        return QtServer.send_post("REMOVE-CREEP-FUNCTION", payload)
+        return QtServer.send_dict("REMOVE-CREEP-FUNCTION", payload)
 
     @staticmethod
     def update_material_time_parameter(name: str = "", time_parameter_name: str = "", f_cuk: float = 0):
@@ -299,7 +299,7 @@ class MdbProperty:
             "time_parameter_name": time_parameter_name,
             "f_cuk": f_cuk,
         }
-        return QtServer.send_post("UPDATE-MATERIAL-TIME-PARAMETER", payload)
+        return QtServer.send_dict("UPDATE-MATERIAL-TIME-PARAMETER", payload)
 
     @staticmethod
     def update_material_id(name: str, new_id: int):
@@ -316,7 +316,7 @@ class MdbProperty:
             "name": name,
             "new_id": new_id,
         }
-        return QtServer.send_post("UPDATE-MATERIAL-ID", payload)
+        return QtServer.send_dict("UPDATE-MATERIAL-ID", payload)
 
     @staticmethod
     def remove_material(index: int = -1, name: str = ""):
@@ -332,12 +332,12 @@ class MdbProperty:
         """
         # 两者均为默认值 -> 视作删除全部，按需仅发 Header
         if index == -1 and not name:
-            return QtServer.send_post("REMOVE-MATERIAL", None)
+            return QtServer.send_dict("REMOVE-MATERIAL", None)
         payload = {
             "index": index,
             "name": name,
         }
-        return QtServer.send_post("REMOVE-MATERIAL", payload)
+        return QtServer.send_dict("REMOVE-MATERIAL", payload)
 
     @staticmethod
     def update_material_construction_factor(name: str, factor: float = 1):
@@ -354,7 +354,7 @@ class MdbProperty:
             "name": name,
             "factor": factor,
         }
-        return QtServer.send_post("UPDATE-MATERIAL-CONSTRUCTION-FACTOR", payload)
+        return QtServer.send_dict("UPDATE-MATERIAL-CONSTRUCTION-FACTOR", payload)
 
     @staticmethod
     def remove_time_parameter(name: str = ""):
@@ -367,7 +367,7 @@ class MdbProperty:
         Returns: 无
         """
         payload = {"name": name} if name else None
-        return QtServer.send_post("REMOVE-TIME-PARAMETER", payload)
+        return QtServer.send_dict("REMOVE-TIME-PARAMETER", payload)
 
     # endregion
 
@@ -411,7 +411,7 @@ class MdbProperty:
                     type_l = {4: "T,", 5: "U,"}.get(len(rib_l), "")
                     s += f"YES,{dist_l},{type_l}" + ",".join(f"{x:g}" for x in rib_l) + "\r\n"
             # print(s)
-            QtServer.post_command(s, "QDAT")
+            QtServer.send_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
 
@@ -430,7 +430,7 @@ class MdbProperty:
             "index": index,
             "new_id": new_id,
         }
-        return QtServer.send_post("UPDATE-THICKNESS-ID", payload)
+        return QtServer.send_dict("UPDATE-THICKNESS-ID", payload)
 
     @staticmethod
     def remove_thickness(index: int = -1, name: str = ""):
@@ -452,6 +452,6 @@ class MdbProperty:
             payload = None  # 仅发 Header，表示“删除全部”
         else:
             payload = {"index": index}
-        return QtServer.send_post("REMOVE-THICKNESS", payload)
+        return QtServer.send_dict("REMOVE-THICKNESS", payload)
 
     # endregion

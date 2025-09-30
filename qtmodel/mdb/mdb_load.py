@@ -23,7 +23,7 @@ class MdbLoad:
         try:
             s = "*LOADCASE\r\n" + f"{name},{case_type}\r\n"
             # print(s)
-            QtServer.post_command(s, "QDAT")
+            QtServer.send_command(s, "QDAT")
         except Exception as ex:
             raise Exception(f"添加荷载工况错误,{ex}")
 
@@ -43,7 +43,7 @@ class MdbLoad:
                 # print(s)
             else:
                 s = ""
-            QtServer.post_command(s, "QDAT")
+            QtServer.send_command(s, "QDAT")
         except Exception as ex:
             raise Exception(f"添加荷载组,{ex}")
 
@@ -66,7 +66,7 @@ class MdbLoad:
             "sink": sink,
             "node_ids": node_ids,
         }
-        return QtServer.send_post("UPDATE-SINK-GROUP", payload)
+        return QtServer.send_dict("UPDATE-SINK-GROUP", payload)
 
     @staticmethod
     def update_load_case(name: str, new_name: str = "", case_type: str = "施工阶段荷载"):
@@ -87,7 +87,7 @@ class MdbLoad:
             "new_name": new_name,
             "case_type": case_type,
         }
-        return QtServer.send_post("UPDATE-LOAD-CASE", payload)
+        return QtServer.send_dict("UPDATE-LOAD-CASE", payload)
 
     @staticmethod
     def update_load_group(name: str, new_name: str = ""):
@@ -104,7 +104,7 @@ class MdbLoad:
             "name": name,
             "new_name": new_name,
         }
-        return QtServer.send_post("UPDATE-LOAD-GROUP", payload)
+        return QtServer.send_dict("UPDATE-LOAD-GROUP", payload)
 
     @staticmethod
     def remove_load_case(index: int = -1, name: str = ""):
@@ -123,7 +123,7 @@ class MdbLoad:
             "index": index,
             "name": name,
         }
-        return QtServer.send_post("REMOVE-LOAD-CASE", payload)
+        return QtServer.send_dict("REMOVE-LOAD-CASE", payload)
 
     @staticmethod
     def remove_load_group(name: str = ""):
@@ -138,7 +138,7 @@ class MdbLoad:
         payload = {
             "name": name,
         }
-        return QtServer.send_post("REMOVE-LOAD-GROUP", payload)
+        return QtServer.send_dict("REMOVE-LOAD-GROUP", payload)
     # endregion
 
     # region 荷载组合操作
@@ -176,7 +176,7 @@ class MdbLoad:
                 "combine_info": combine_info or [],
             }
             json_string = json.dumps(params, indent=2, ensure_ascii=False)
-            QtServer.get_command(header="ADD-LOAD-COMBINE", command=json_string)
+            QtServer.send_command(header="ADD-LOAD-COMBINE", command=json_string)
         except Exception as ex:
             raise Exception(f"添加荷载组合:{name}错误,{ex}")
 
@@ -195,6 +195,6 @@ class MdbLoad:
             "index": index,
             "name": name,
         }
-        return QtServer.send_post("REMOVE-LOAD-COMBINE", payload)
+        return QtServer.send_dict("REMOVE-LOAD-COMBINE", payload)
 
     # endregion

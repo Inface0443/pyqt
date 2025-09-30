@@ -37,7 +37,7 @@ class MdbStaticLoad:
             s = "*NODALLOAD\r\n" + f"{node_str},{case_name},{group_name}," + ",".join(
                 f"{x:g}" for x in load_info) + "\r\n"
             # print(s)
-            QtServer.post_command(s, "QDAT")
+            QtServer.send_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
 
@@ -69,7 +69,7 @@ class MdbStaticLoad:
             s = "*NODALDISP\r\n" + f"{node_str},{case_name},{group_name}," + ",".join(
                 f"{x:g}" for x in load_info) + "\r\n"
             # print(s)
-            QtServer.post_command(s, "QDAT")
+            QtServer.send_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
 
@@ -123,7 +123,7 @@ class MdbStaticLoad:
                 "projected": projected,
             }
             json_string = json.dumps(params, indent=2, ensure_ascii=False)
-            QtServer.get_command(header="ADD-BEAM-ELEMENT-LOAD", command=json_string)
+            QtServer.send_command(header="ADD-BEAM-ELEMENT-LOAD", command=json_string)
             # s = "*BEAMLOAD\r\n" + f"{elem_str},{case_name},{group_name},{load_type},{coord_system},"
             # if load_type in (1, 2):
             #     s += f"{list_x:g},{list_load:g}"
@@ -160,7 +160,7 @@ class MdbStaticLoad:
             s = "*PRESTRESS\r\n" + "\r\n".join(
                 f"{tend},{case_name},{group_name},{tension_type},{force}" for tend in tend_list) + "\r\n"
             # print(s)
-            QtServer.post_command(s, "QDAT")
+            QtServer.send_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
 
@@ -190,7 +190,7 @@ class MdbStaticLoad:
                 elem_str = str(element_id)
             s = "*INITTENSION\r\n" + f"{elem_str},{case_name},{group_name},{tension:g},{tension_type},{application_type},{stiffness:g}\r\n"
             # print(s)
-            QtServer.post_command(s, "QDAT")
+            QtServer.send_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
 
@@ -218,7 +218,7 @@ class MdbStaticLoad:
                 elem_str = str(element_id)
             s = "*CABLELENLOAD\r\n" + f"{elem_str},{case_name},{group_name},{length},{tension_type}\r\n"
             # print(s)
-            QtServer.post_command(s, "QDAT")
+            QtServer.send_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
 
@@ -264,7 +264,7 @@ class MdbStaticLoad:
             else:
                 raise Exception("操作错误，板单元暂不支持该类型荷载")
             # print(s)
-            QtServer.post_command(s, "QDAT")
+            QtServer.send_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
 
@@ -296,7 +296,7 @@ class MdbStaticLoad:
             "copy_y": copy_y,
             "describe": describe,
         }
-        return QtServer.send_post("ADD-DISTRIBUTE-PLANE-LOAD-TYPE", payload)
+        return QtServer.send_dict("ADD-DISTRIBUTE-PLANE-LOAD-TYPE", payload)
 
     @staticmethod
     def add_distribute_plane_load(index: int = -1, case_name: str = "", type_name: str = "",
@@ -331,7 +331,7 @@ class MdbStaticLoad:
             "plate_ids": plate_ids,
             "group_name": group_name,
         }
-        return QtServer.send_post("ADD-DISTRIBUTE-PLANE-LOAD", payload)
+        return QtServer.send_dict("ADD-DISTRIBUTE-PLANE-LOAD", payload)
 
     @staticmethod
     def update_distribute_plane_load_type(name: str = "", new_name: str = "", load_type: int = 1, point_list: list[list[float]] = None,
@@ -362,7 +362,7 @@ class MdbStaticLoad:
             "copy_y": copy_y,
             "describe": describe,
         }
-        return QtServer.send_post("UPDATE-DISTRIBUTE-PLANE-LOAD-TYPE", payload)
+        return QtServer.send_dict("UPDATE-DISTRIBUTE-PLANE-LOAD-TYPE", payload)
 
     @staticmethod
     def remove_nodal_force(node_id, case_name: str = "", group_name="默认荷载组"):
@@ -381,7 +381,7 @@ class MdbStaticLoad:
             "node_id": node_id,
             "group_name": group_name,
         }
-        return QtServer.send_post("REMOVE-NODAL-FORCE", payload)
+        return QtServer.send_dict("REMOVE-NODAL-FORCE", payload)
 
     @staticmethod
     def remove_nodal_displacement(node_id, case_name: str = "", group_name="默认荷载组"):
@@ -400,7 +400,7 @@ class MdbStaticLoad:
             "node_id": node_id,
             "group_name": group_name,
         }
-        return QtServer.send_post("REMOVE-NODAL-DISPLACEMENT", payload)
+        return QtServer.send_dict("REMOVE-NODAL-DISPLACEMENT", payload)
 
     @staticmethod
     def remove_initial_tension_load(element_id, case_name: str, group_name: str = "默认荷载组"):
@@ -419,7 +419,7 @@ class MdbStaticLoad:
             "case_name": case_name,
             "group_name": group_name,
         }
-        return QtServer.send_post("REMOVE-INITIAL-TENSION-LOAD", payload)
+        return QtServer.send_dict("REMOVE-INITIAL-TENSION-LOAD", payload)
 
     @staticmethod
     def remove_beam_element_load(element_id, case_name: str = "", load_type: int = 1, group_name="默认荷载组"):
@@ -440,7 +440,7 @@ class MdbStaticLoad:
             "load_type": load_type,
             "group_name": group_name,
         }
-        return QtServer.send_post("REMOVE-BEAM-ELEMENT-LOAD", payload)
+        return QtServer.send_dict("REMOVE-BEAM-ELEMENT-LOAD", payload)
 
     @staticmethod
     def remove_plate_element_load(element_id, case_name: str, load_type: int, group_name="默认荷载组"):
@@ -461,7 +461,7 @@ class MdbStaticLoad:
             "load_type": load_type,
             "group_name": group_name,
         }
-        return QtServer.send_post("REMOVE-PLATE-ELEMENT-LOAD", payload)
+        return QtServer.send_dict("REMOVE-PLATE-ELEMENT-LOAD", payload)
 
     @staticmethod
     def remove_cable_length_load(element_id, case_name: str, group_name: str = "默认荷载组"):
@@ -480,7 +480,7 @@ class MdbStaticLoad:
             "case_name": case_name,
             "group_name": group_name,
         }
-        return QtServer.send_post("REMOVE-CABLE-LENGTH-LOAD", payload)
+        return QtServer.send_dict("REMOVE-CABLE-LENGTH-LOAD", payload)
 
     @staticmethod
     def remove_plane_load(index: int = -1):
@@ -496,7 +496,7 @@ class MdbStaticLoad:
         payload = {
             "id": index,
         }
-        return QtServer.send_post("REMOVE-PLANE-LOAD", payload)
+        return QtServer.send_dict("REMOVE-PLANE-LOAD", payload)
 
     @staticmethod
     def remove_distribute_plane_load_type(name: str = -1):
@@ -511,5 +511,5 @@ class MdbStaticLoad:
         payload = {
             "name": name,
         }
-        return QtServer.send_post("REMOVE-DISTRIBUTE-PLANE-LOAD-TYPE", payload)
+        return QtServer.send_dict("REMOVE-DISTRIBUTE-PLANE-LOAD-TYPE", payload)
     # endregion

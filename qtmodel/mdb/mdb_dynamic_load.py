@@ -24,7 +24,7 @@ class MdbDynamicLoad:
         try:
             s = "*LOADTOMASS\r\n" + f"{name},{factor}\r\n"
             # print(s)
-            QtServer.post_command(s, "QDAT")
+            QtServer.send_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
 
@@ -48,7 +48,7 @@ class MdbDynamicLoad:
                 node_str = str(node_id)
             s = "*NODALMASS\r\n" + f"{node_str},{mass_info[0]:g},{mass_info[1]:g},{mass_info[2]:g},{mass_info[3]:g}\r\n"
             # print(s)
-            QtServer.post_command(s, "QDAT")
+            QtServer.send_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
 
@@ -88,7 +88,7 @@ class MdbDynamicLoad:
                 "description": description
             }
             json_string = json.dumps(params, indent=2, ensure_ascii=False)
-            QtServer.get_command(header="ADD-BOUNDARY-ELEMENT-PROPERTY", command=json_string)
+            QtServer.send_command(header="ADD-BOUNDARY-ELEMENT-PROPERTY", command=json_string)
         except Exception as ex:
             raise Exception(ex)
 
@@ -112,7 +112,7 @@ class MdbDynamicLoad:
         try:
             s = "*BDLINK\r\n" + f"{index},{property_name},{node_i},{node_j},{beta},{node_system},{group_name}\r\n"
             # print(s)
-            QtServer.post_command(s, "QDAT")
+            QtServer.send_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
 
@@ -148,7 +148,7 @@ class MdbDynamicLoad:
                 "time": time
             }
             json_string = json.dumps(params, indent=2)
-            QtServer.get_command(header="ADD-NODAL-DYNAMIC-LOAD", command=json_string)
+            QtServer.send_command(header="ADD-NODAL-DYNAMIC-LOAD", command=json_string)
         except Exception as ex:
             raise Exception(ex)
 
@@ -177,7 +177,7 @@ class MdbDynamicLoad:
             if info_z is not None:
                 s += f"Z={info_z[0]},{info_z[1]:g},{info_z[2]:g}\r\n"
             # print(s)
-            QtServer.post_command(s, "QDAT")
+            QtServer.send_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
 
@@ -233,7 +233,7 @@ class MdbDynamicLoad:
                 "group_damping": [list(x) for x in (group_damping or [])],
             }
             json_string = json.dumps(params, indent=2, ensure_ascii=False)
-            QtServer.get_command(header="ADD-TIME-HISTORY-CASE", command=json_string)
+            QtServer.send_command(header="ADD-TIME-HISTORY-CASE", command=json_string)
         except Exception as ex:
             raise Exception(ex)
 
@@ -255,7 +255,7 @@ class MdbDynamicLoad:
             if function_info is not None:
                 s += ",".join(f"{time:g},{y:g}" for time, y in function_info) + "\r\n"
             # print(s)
-            QtServer.post_command(s, "QDAT")
+            QtServer.send_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
 
@@ -302,7 +302,7 @@ class MdbDynamicLoad:
             "factor": factor,
             "vehicle_info_kn": vehicle_info_kn,
         }
-        return QtServer.send_post("ADD-VEHICLE-DYNAMIC-LOAD", payload)
+        return QtServer.send_dict("ADD-VEHICLE-DYNAMIC-LOAD", payload)
 
     @staticmethod
     def update_load_to_mass(name: str = "", factor: float = 1):
@@ -319,7 +319,7 @@ class MdbDynamicLoad:
             "name": name,
             "factor": factor,
         }
-        return QtServer.send_post("UPDATE-LOAD-TO-MASS", payload)
+        return QtServer.send_dict("UPDATE-LOAD-TO-MASS", payload)
 
     @staticmethod
     def update_nodal_mass(node_id: int, new_node_id: int = -1, mass_info: tuple[float, float, float, float] = None):
@@ -338,7 +338,7 @@ class MdbDynamicLoad:
             "new_node_id": new_node_id,
             "mass_info": mass_info,
         }
-        return QtServer.send_post("UPDATE-NODAL-MASS", payload)
+        return QtServer.send_dict("UPDATE-NODAL-MASS", payload)
 
     @staticmethod
     def update_boundary_element_property(name: str = "", new_name: str = "", kind: str = "钩",
@@ -378,7 +378,7 @@ class MdbDynamicLoad:
             "pin_yield": pin_yield,
             "description": description,
         }
-        return QtServer.send_post("UPDATE-BOUNDARY-ELEMENT-PROPERTY", payload)
+        return QtServer.send_dict("UPDATE-BOUNDARY-ELEMENT-PROPERTY", payload)
 
     @staticmethod
     def update_boundary_element_link(index: int, property_name: str = "", node_i: int = 1, node_j: int = 2,
@@ -406,7 +406,7 @@ class MdbDynamicLoad:
             "node_system": node_system,
             "group_name": group_name,
         }
-        return QtServer.send_post("UPDATE-BOUNDARY-ELEMENT-LINK", payload)
+        return QtServer.send_dict("UPDATE-BOUNDARY-ELEMENT-LINK", payload)
 
     @staticmethod
     def update_time_history_case(name: str = "", new_name: str = "", description: str = "", analysis_kind: int = 0,
@@ -448,7 +448,7 @@ class MdbDynamicLoad:
             "single_damping": single_damping or [],
             "group_damping": group_damping or [],
         }
-        return QtServer.send_post("UPDATE-TIME-HISTORY-CASE", payload)
+        return QtServer.send_dict("UPDATE-TIME-HISTORY-CASE", payload)
 
     @staticmethod
     def update_time_history_function(name: str, new_name: str = "", factor: float = 1.0, kind: int = 0,
@@ -472,7 +472,7 @@ class MdbDynamicLoad:
             "kind": kind,
             "function_info": function_info,
         }
-        return QtServer.send_post("UPDATE-TIME-HISTORY-FUNCTION", payload)
+        return QtServer.send_dict("UPDATE-TIME-HISTORY-FUNCTION", payload)
 
     @staticmethod
     def update_nodal_dynamic_load(index: int = -1, node_id: int = 1, case_name: str = "", function_name: str = "",
@@ -500,7 +500,7 @@ class MdbDynamicLoad:
             "factor": factor,
             "time": time,
         }
-        return QtServer.send_post("UPDATE-NODAL-DYNAMIC-LOAD", payload)
+        return QtServer.send_dict("UPDATE-NODAL-DYNAMIC-LOAD", payload)
 
     @staticmethod
     def update_ground_motion(index: int, case_name: str = "",
@@ -527,7 +527,7 @@ class MdbDynamicLoad:
             "info_y": info_y,
             "info_z": info_z,
         }
-        return QtServer.send_post("UPDATE-GROUND-MOTION", payload)
+        return QtServer.send_dict("UPDATE-GROUND-MOTION", payload)
 
     @staticmethod
     def remove_time_history_load_case(name: str) -> None:
@@ -540,7 +540,7 @@ class MdbDynamicLoad:
         Returns: 无
         """
         payload = {"name": name}
-        return QtServer.send_post("REMOVE-TIME-HISTORY-LOAD-CASE", payload)
+        return QtServer.send_dict("REMOVE-TIME-HISTORY-LOAD-CASE", payload)
 
     @staticmethod
     def remove_time_history_function(ids=None, name: str = "") -> None:
@@ -559,7 +559,7 @@ class MdbDynamicLoad:
             "ids": ids,
             "name": name,
         }
-        return QtServer.send_post("REMOVE-TIME-HISTORY-FUNCTION", payload)
+        return QtServer.send_dict("REMOVE-TIME-HISTORY-FUNCTION", payload)
 
     @staticmethod
     def remove_load_to_mass(name: str = ""):
@@ -572,7 +572,7 @@ class MdbDynamicLoad:
         Returns: 无
         """
         payload = {"name": name} if name else None
-        return QtServer.send_post("REMOVE-LOAD-TO-MASS", payload)
+        return QtServer.send_dict("REMOVE-LOAD-TO-MASS", payload)
 
     @staticmethod
     def remove_nodal_mass(node_id=None):
@@ -587,7 +587,7 @@ class MdbDynamicLoad:
         Returns: 无
         """
         payload = None if node_id is None else {"node_id": node_id}
-        return QtServer.send_post("REMOVE-NODAL-MASS", payload)
+        return QtServer.send_dict("REMOVE-NODAL-MASS", payload)
 
     @staticmethod
     def remove_boundary_element_property(name: str) -> None:
@@ -599,7 +599,7 @@ class MdbDynamicLoad:
         Returns: 无
         """
         payload = {"name": name}
-        return QtServer.send_post("REMOVE-BOUNDARY-ELEMENT-PROPERTY", payload)
+        return QtServer.send_dict("REMOVE-BOUNDARY-ELEMENT-PROPERTY", payload)
 
     @staticmethod
     def remove_boundary_element_link(ids=None) -> None:
@@ -613,7 +613,7 @@ class MdbDynamicLoad:
         Returns: 无
         """
         payload = {"ids": ids}
-        return QtServer.send_post("REMOVE-BOUNDARY-ELEMENT-LINK", payload)
+        return QtServer.send_dict("REMOVE-BOUNDARY-ELEMENT-LINK", payload)
 
     @staticmethod
     def remove_ground_motion(name: str) -> None:
@@ -626,7 +626,7 @@ class MdbDynamicLoad:
         Returns: 无
         """
         payload = {"name": name}
-        return QtServer.send_post("REMOVE-GROUND-MOTION", payload)
+        return QtServer.send_dict("REMOVE-GROUND-MOTION", payload)
 
     @staticmethod
     def remove_nodal_dynamic_load(ids=None) -> None:
@@ -640,7 +640,7 @@ class MdbDynamicLoad:
         Returns: 无
         """
         payload = {"ids": ids}
-        return QtServer.send_post("REMOVE-NODAL-DYNAMIC-LOAD", payload)
+        return QtServer.send_dict("REMOVE-NODAL-DYNAMIC-LOAD", payload)
 
     # endregion
 
@@ -664,7 +664,7 @@ class MdbDynamicLoad:
             if function_info is not None:
                 s += ",".join(f"{time:g},{y:g}" for time, y in function_info) + "\r\n"
             # print(s)
-            QtServer.post_command(s, "QDAT")
+            QtServer.send_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
 
@@ -695,7 +695,7 @@ class MdbDynamicLoad:
             if info_z is not None:
                 s += f"Z={info_z[0]},{info_z[1]:g}\r\n"
             # print(s)
-            QtServer.post_command(s, "QDAT")
+            QtServer.send_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
 
@@ -720,7 +720,7 @@ class MdbDynamicLoad:
             "kind": kind,
             "function_info": function_info or [],
         }
-        return QtServer.send_post("UPDATE-SPECTRUM-FUNCTION", payload)
+        return QtServer.send_dict("UPDATE-SPECTRUM-FUNCTION", payload)
 
     @staticmethod
     def update_spectrum_case(name: str, new_name: str = "", description: str = "", kind: int = 1,
@@ -750,7 +750,7 @@ class MdbDynamicLoad:
             "info_y": info_y,
             "info_z": info_z,
         }
-        return QtServer.send_post("UPDATE-SPECTRUM-CASE", payload)
+        return QtServer.send_dict("UPDATE-SPECTRUM-CASE", payload)
 
     @staticmethod
     def remove_spectrum_case(name: str) -> None:
@@ -763,7 +763,7 @@ class MdbDynamicLoad:
         Returns: 无
         """
         payload = {"name": name}
-        return QtServer.send_post("REMOVE-SPECTRUM-CASE", payload)
+        return QtServer.send_dict("REMOVE-SPECTRUM-CASE", payload)
 
     @staticmethod
     def remove_spectrum_function(ids=None, name: str = "") -> None:
@@ -780,6 +780,6 @@ class MdbDynamicLoad:
             "ids": ids,
             "name": name,
         }
-        return QtServer.send_post("REMOVE-SPECTRUM-FUNCTION", payload)
+        return QtServer.send_dict("REMOVE-SPECTRUM-FUNCTION", payload)
 
     # endregion

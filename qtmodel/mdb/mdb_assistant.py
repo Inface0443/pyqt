@@ -31,4 +31,4 @@ class MdbAssistant:
             "box_num": box_num,
             "material": material,
         }
-        return QtServer.send_post("CREATE-CANTILEVER-BRIDGE", payload)
+        return QtServer.send_dict("CREATE-CANTILEVER-BRIDGE", payload)

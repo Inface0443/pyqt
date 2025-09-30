@@ -17,7 +17,7 @@ class OdbModelMaterial:
         Returns:  list[dict]
         """
         payload = {"ids": QtDataHelper.parse_ids_to_array(ids)} if ids is not None else None
-        return QtServer.send_get("GET-CONCRETE-MATERIAL", payload)
+        return QtServer.send_dict("GET-CONCRETE-MATERIAL", payload)
 
     @staticmethod
     def get_steel_plate_material(ids=None):
@@ -30,7 +30,7 @@ class OdbModelMaterial:
         Returns:  list[dict]
         """
         payload = {"ids": QtDataHelper.parse_ids_to_array(ids)} if ids is not None else None
-        return QtServer.send_get("GET-STEEL-PLATE-MATERIAL", payload)
+        return QtServer.send_dict("GET-STEEL-PLATE-MATERIAL", payload)
 
     @staticmethod
     def get_pre_stress_bar_material(ids=None):
@@ -43,7 +43,7 @@ class OdbModelMaterial:
         Returns:  list[dict]
         """
         payload = {"ids": QtDataHelper.parse_ids_to_array(ids)} if ids is not None else None
-        return QtServer.send_get("GET-PRE-STRESS-BAR-MATERIAL", payload)
+        return QtServer.send_dict("GET-PRE-STRESS-BAR-MATERIAL", payload)
 
     @staticmethod
     def get_steel_bar_material(ids=None):
@@ -56,7 +56,7 @@ class OdbModelMaterial:
         Returns:  list[dict]
         """
         payload = {"ids": QtDataHelper.parse_ids_to_array(ids)} if ids is not None else None
-        return QtServer.send_get("GET-STEEL-BAR-MATERIAL", payload)
+        return QtServer.send_dict("GET-STEEL-BAR-MATERIAL", payload)
 
     @staticmethod
     def get_user_define_material(ids=None):
@@ -70,7 +70,7 @@ class OdbModelMaterial:
         Returns:  list[dict]
         """
         payload = {"ids": QtDataHelper.parse_ids_to_array(ids)} if ids is not None else None
-        return QtServer.send_get("GET-USER-DEFINE-MATERIAL", payload)
+        return QtServer.send_dict("GET-USER-DEFINE-MATERIAL", payload)
 
     @staticmethod
     def get_material_data():
@@ -81,7 +81,7 @@ class OdbModelMaterial:
             odb.get_material_data() # 获取所有材料信息
         Returns: 包含信息为list[dict]
         """
-        return QtServer.send_get("GET-MATERIAL-DATA", None)
+        return QtServer.send_dict("GET-MATERIAL-DATA", None)
 
     @staticmethod
     def get_thickness_data(thick_id: int):
@@ -94,7 +94,7 @@ class OdbModelMaterial:
             包含信息为dict
         """
         payload = {"thick_id": thick_id}
-        return QtServer.send_get("GET-THICKNESS-DATA", payload)
+        return QtServer.send_dict("GET-THICKNESS-DATA", payload)
 
     @staticmethod
     def get_all_thickness_data():
@@ -105,5 +105,5 @@ class OdbModelMaterial:
             odb.get_all_thickness_data()
         Returns: 包含信息为list[dict]
         """
-        return QtServer.send_get("GET-ALL-THICKNESS-DATA", None)
+        return QtServer.send_dict("GET-ALL-THICKNESS-DATA", None)
     # endregion

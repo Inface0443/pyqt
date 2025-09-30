@@ -22,7 +22,7 @@ class OdbView:
         payload = {
             "show_id": show_id,
         }
-        return QtServer.send_post("DISPLAY-NODE-ID", payload)
+        return QtServer.send_dict("DISPLAY-NODE-ID", payload)
 
     @staticmethod
     def display_element_id(show_id: bool = True):
@@ -38,7 +38,7 @@ class OdbView:
         payload = {
             "show_id": show_id,
         }
-        return QtServer.send_post("DISPLAY-ELEMENT-ID", payload)
+        return QtServer.send_dict("DISPLAY-ELEMENT-ID", payload)
 
     @staticmethod
     def set_view_camera(
@@ -67,7 +67,7 @@ class OdbView:
         payload = {
             "direction": direction
         }
-        return QtServer.send_post("SET-VIEW-CAMERA", payload)
+        return QtServer.send_dict("SET-VIEW-CAMERA", payload)
 
     @staticmethod
     def set_view_direction(
@@ -93,7 +93,7 @@ class OdbView:
             "vertical_degree": vertical_degree,
             "scale": scale
         }
-        return QtServer.send_post("SET-VIEW-DIRECTION", payload)
+        return QtServer.send_dict("SET-VIEW-DIRECTION", payload)
 
     @staticmethod
     def activate_structure(node_ids=None, element_ids=None):
@@ -112,7 +112,7 @@ class OdbView:
         if element_ids is not None:
             payload["element_ids"] = element_ids
 
-        return QtServer.send_post(
+        return QtServer.send_dict(
             "ACTIVATE-STRUCTURE",
             payload if payload else None  # 两者都空则只发 Header
         )
@@ -132,7 +132,7 @@ class OdbView:
             "unit_force": unit_force,
             "unit_length": unit_length
         }
-        return QtServer.send_post("SET-UNIT", payload)
+        return QtServer.send_dict("SET-UNIT", payload)
 
     @staticmethod
     def remove_display():
@@ -143,7 +143,7 @@ class OdbView:
            odb.remove_display()
         Returns: 无
         """
-        return QtServer.send_post("DISPLAY-RESET", None)
+        return QtServer.send_dict("DISPLAY-RESET", None)
 
     @staticmethod
     def save_png(file_path: str):
@@ -158,7 +158,7 @@ class OdbView:
         payload = {
             "file_path": file_path
         }
-        return QtServer.send_get("SAVE-PNG", payload)
+        return QtServer.send_dict("SAVE-PNG", payload)
 
     @staticmethod
     def set_render(flag: bool = True):
@@ -173,7 +173,7 @@ class OdbView:
         payload = {
             "flag": flag
         }
-        return QtServer.send_post("SET-RENDER", payload)
+        return QtServer.send_dict("SET-RENDER", payload)
 
     @staticmethod
     def change_construct_stage(stage: int = 0):
@@ -189,7 +189,7 @@ class OdbView:
         payload = {
             "stage": stage
         }
-        return QtServer.send_post("CHANGE-STAGE", payload)
+        return QtServer.send_dict("CHANGE-STAGE", payload)
 
     @staticmethod
     def get_current_png() -> str:
@@ -200,5 +200,5 @@ class OdbView:
             odb.get_current_png()
         Returns: Base64格式(图形)字符串
         """
-        return QtServer.send_get("GET-CURRENT-PNG", None)
+        return QtServer.send_dict("GET-CURRENT-PNG", None)
     # endregion

@@ -12,7 +12,7 @@ class OdbModelStage:
             odb.get_stage_name()
         Returns: 包含信息为list[int]
         """
-        return QtServer.send_get("GET-STAGE-NAMES", None)
+        return QtServer.send_dict("GET-STAGE-NAMES", None)
 
     @staticmethod
     def get_elements_of_stage(stage_id: int):
@@ -25,7 +25,7 @@ class OdbModelStage:
         Returns: 包含信息为list[int]
         """
         payload = {"stage_id": stage_id}
-        return QtServer.send_get("GET-ELEMENTS-OF-STAGE", payload)
+        return QtServer.send_dict("GET-ELEMENTS-OF-STAGE", payload)
 
     @staticmethod
     def get_nodes_of_stage(stage_id: int):
@@ -38,7 +38,7 @@ class OdbModelStage:
         Returns: 包含信息为list[int]
         """
         payload = {"stage_id": stage_id}
-        return QtServer.send_get("GET-NODES-OF-STAGE", payload)
+        return QtServer.send_dict("GET-NODES-OF-STAGE", payload)
 
     @staticmethod
     def get_groups_of_stage(stage_id: int):
@@ -51,5 +51,5 @@ class OdbModelStage:
         Returns: 包含信息为dict
         """
         payload = {"stage_id": stage_id}
-        return QtServer.send_get("GET-GROUPS-OF-STAGE", payload)
+        return QtServer.send_dict("GET-GROUPS-OF-STAGE", payload)
     # endregion

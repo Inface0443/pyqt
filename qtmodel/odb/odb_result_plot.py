@@ -54,7 +54,7 @@ class OdbResultPlot:
             "time_kind": time_kind,
             "time_tick": time_tick,
         }
-        return QtServer.send_get("PLOT-REACTION-RESULT", payload)
+        return QtServer.send_dict("PLOT-REACTION-RESULT", payload)
 
     @staticmethod
     def plot_displacement_result(file_path: str="", stage_id: int = 1, case_name: str = "", show_increment: bool = False,
@@ -112,7 +112,7 @@ class OdbResultPlot:
             "deform_kind": deform_kind,
             "time_tick": time_tick,
         }
-        return QtServer.send_get("PLOT-DISPLACEMENT-RESULT", payload)
+        return QtServer.send_dict("PLOT-DISPLACEMENT-RESULT", payload)
 
     @staticmethod
     def plot_beam_element_force(file_path: str="", stage_id: int = 1, case_name: str = "合计", show_increment: bool = False,
@@ -178,7 +178,7 @@ class OdbResultPlot:
             "time_kind": time_kind,
             "time_tick": time_tick,
         }
-        return QtServer.send_get("PLOT-BEAM-ELEMENT-FORCE", payload)
+        return QtServer.send_dict("PLOT-BEAM-ELEMENT-FORCE", payload)
 
     @staticmethod
     def plot_truss_element_force(file_path: str="", stage_id: int = 1, case_name: str = "合计", show_increment: bool = False,
@@ -244,7 +244,7 @@ class OdbResultPlot:
             "time_kind": time_kind,
             "time_tick": time_tick,
         }
-        return QtServer.send_get("PLOT-TRUSS-ELEMENT-FORCE", payload)
+        return QtServer.send_dict("PLOT-TRUSS-ELEMENT-FORCE", payload)
 
     @staticmethod
     def plot_plate_element_force(file_path: str="", stage_id: int = 1, case_name: str = "合计", show_increment: bool = False,
@@ -302,7 +302,7 @@ class OdbResultPlot:
             "time_kind": time_kind,
             "time_tick": time_tick,
         }
-        return QtServer.send_get("PLOT-PLATE-ELEMENT-FORCE", payload)
+        return QtServer.send_dict("PLOT-PLATE-ELEMENT-FORCE", payload)
 
     @staticmethod
     def plot_composite_beam_force(file_path: str="", stage_id: int = 1, case_name: str = "合计", show_increment: bool = False,
@@ -363,7 +363,7 @@ class OdbResultPlot:
             "show_undeformed": show_undeformed,
             "position": position,
         }
-        return QtServer.send_get("PLOT-COMPOSITE-BEAM-FORCE", payload)
+        return QtServer.send_dict("PLOT-COMPOSITE-BEAM-FORCE", payload)
 
     @staticmethod
     def plot_beam_element_stress(file_path: str="", stage_id: int = 1, case_name: str = "合计", show_increment: bool = False,
@@ -422,7 +422,7 @@ class OdbResultPlot:
             "show_undeformed": show_undeformed,
             "position": position,
         }
-        return QtServer.send_get("PLOT-BEAM-ELEMENT-STRESS", payload)
+        return QtServer.send_dict("PLOT-BEAM-ELEMENT-STRESS", payload)
 
     @staticmethod
     def plot_truss_element_stress(file_path: str="", stage_id: int = 1, case_name: str = "合计", show_increment: bool = False, envelop_type: int = 1,
@@ -478,7 +478,7 @@ class OdbResultPlot:
             "show_undeformed": show_undeformed,
             "position": position,
         }
-        return QtServer.send_get("PLOT-TRUSS-ELEMENT-STRESS", payload)
+        return QtServer.send_dict("PLOT-TRUSS-ELEMENT-STRESS", payload)
 
     @staticmethod
     def plot_composite_beam_stress(file_path: str="", stage_id: int = 1, case_name: str = "合计", show_increment: bool = False,
@@ -539,7 +539,7 @@ class OdbResultPlot:
             "show_undeformed": show_undeformed,
             "position": position,
         }
-        return QtServer.send_get("PLOT-COMPOSITE-BEAM-STRESS", payload)
+        return QtServer.send_dict("PLOT-COMPOSITE-BEAM-STRESS", payload)
 
     @staticmethod
     def plot_plate_element_stress(file_path: str="", stage_id: int = 1, case_name: str = "合计", show_increment: bool = False,
@@ -593,7 +593,7 @@ class OdbResultPlot:
             "show_undeformed": show_undeformed,
             "position": position,
         }
-        return QtServer.send_get("PLOT-PLATE-ELEMENT-STRESS", payload)
+        return QtServer.send_dict("PLOT-PLATE-ELEMENT-STRESS", payload)
 
     @staticmethod
     def plot_modal_result(file_path: str="" , mode: int = 1, mode_kind: int = 1, show_number: bool = True,
@@ -630,7 +630,7 @@ class OdbResultPlot:
             "text_exponential": text_exponential,
             "show_undeformed": show_undeformed,
         }
-        return QtServer.send_get("PLOT-MODAL-RESULT", payload)
+        return QtServer.send_dict("PLOT-MODAL-RESULT", payload)
 
 
     # endregion

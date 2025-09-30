@@ -106,7 +106,7 @@ class MdbSection:
                 sec_lines,
                 secondary_loop_segments)
 
-            QtServer.post_command(s, "QDAT")
+            QtServer.send_command(s, "QDAT")
         except Exception as ex:
             raise Exception(f"添加截面:{name}失败，{ex}")
 
@@ -141,7 +141,7 @@ class MdbSection:
                 s += ",".join(f"{x:g}" for x in sec_property) + "\r\n"
             s += "*SEC-INFO\r\n" + f"ID={index},{name},{sec_type},{'YES' if shear_consider else 'NO'},{bias}\r\n"
             s += QtDataHelper.get_str_by_data(sec_type, sec_data)
-            QtServer.post_command(s, "QDAT")
+            QtServer.send_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
 
@@ -200,14 +200,14 @@ class MdbSection:
         # J 端截面
         s += "J=\r\n"
         s += QtDataHelper.get_str_by_data(sec_type, sec_end)
-        QtServer.post_command(s, "QDAT")
+        QtServer.send_command(s, "QDAT")
         if sec_normalize:
             params = {
                 "version": QtServer.QT_VERSION,
                 "index": index,
             }
             json_string = json.dumps(params, indent=2)
-            QtServer.post_command(json_string, "NORMALIZE-SEC")
+            QtServer.send_command(json_string, "NORMALIZE-SEC")
 
 
     @staticmethod
@@ -220,7 +220,7 @@ class MdbSection:
         Returns: 无
         """
         try:
-            QtServer.post_command(header="CALC-SEC")
+            QtServer.send_command(header="CALC-SEC")
         except Exception as ex:
             raise Exception(ex)
 
@@ -234,7 +234,7 @@ class MdbSection:
         Returns: 无
         """
         try:
-            QtServer.post_command(header="REMOVE-UNUSED-SEC")
+            QtServer.send_command(header="REMOVE-UNUSED-SEC")
         except Exception as ex:
             raise Exception(ex)
 
@@ -262,7 +262,7 @@ class MdbSection:
             "shear_consider": shear_consider,
             "sec_normalize": sec_normalize,
         }
-        return QtServer.send_post("ADD-TAPPER-SEC-BY-ID", payload)
+        return QtServer.send_dict("ADD-TAPPER-SEC-BY-ID", payload)
 
     @staticmethod
     def update_single_section(index: int, new_id: int = -1, name: str = "", sec_type: str = "矩形", sec_data: dict = None):
@@ -286,7 +286,7 @@ class MdbSection:
             "sec_type": sec_type,
             "sec_data": sec_data,
         }
-        return QtServer.send_post("UPDATE-SINGLE-SEC", payload)
+        return QtServer.send_dict("UPDATE-SINGLE-SEC", payload)
 
     @staticmethod
     def update_tapper_section(index: int, new_id: int = -1, name: str = "", sec_type: str = "矩形", sec_begin: dict = None, sec_end: dict = None,
@@ -318,7 +318,7 @@ class MdbSection:
             "shear_consider": shear_consider,
             "sec_normalize": sec_normalize,
         }
-        return QtServer.send_post("UPDATE-TAPPER-SEC", payload)
+        return QtServer.send_dict("UPDATE-TAPPER-SEC", payload)
 
     @staticmethod
     def update_section_bias(index: int = 1, bias_type: str = "中心", center_type: str = "质心", shear_consider: bool = True,
@@ -345,7 +345,7 @@ class MdbSection:
             "bias_point": bias_point,
             "side_i": side_i,
         }
-        return QtServer.send_post("UPDATE-SEC-BIAS", payload)
+        return QtServer.send_dict("UPDATE-SEC-BIAS", payload)
 
     @staticmethod
     def update_section_property(index: int, sec_property: list[float], side_i: bool = True):
@@ -364,7 +364,7 @@ class MdbSection:
             "sec_property": sec_property,
             "side_i": side_i,
         }
-        return QtServer.send_post("UPDATE-SEC-PROPERTY", payload)
+        return QtServer.send_dict("UPDATE-SEC-PROPERTY", payload)
 
     @staticmethod
     def update_section_id(index: int, new_id: int):
@@ -381,7 +381,7 @@ class MdbSection:
             "index": index,
             "new_id": new_id,
         }
-        return QtServer.send_post("UPDATE-SEC-ID", payload)
+        return QtServer.send_dict("UPDATE-SEC-ID", payload)
 
 
 
@@ -397,7 +397,7 @@ class MdbSection:
         Returns: 无
         """
         payload = {"index": QtDataHelper.parse_ids_to_array(ids),}
-        return QtServer.send_post("REMOVE-SEC", payload)
+        return QtServer.send_dict("REMOVE-SEC", payload)
 
     # endregion
 
@@ -436,12 +436,12 @@ class MdbSection:
             if parameter_info is None:
                 s = "*TSGROUP\r\n" + f"{name},{id_str},{factor_w:g},{ref_w},{dis_w:g},{factor_h:g},{ref_h},{dis_h:g}\r\n"
 
-                QtServer.post_command(s, "QDAT")
+                QtServer.send_command(s, "QDAT")
             if parameter_info is not None:
                 s = "*PARA-TSGROUP\r\n" + f"NAME={name},{id_str}\r\n"
                 for key, value in parameter_info.items():
                     s += f"{key}={value}\r\n"
-                QtServer.post_command(s, "QDAT")
+                QtServer.send_command(s, "QDAT")
         except Exception as ex:
             raise Exception(f"添加变截面组:{name}失败,{ex}")
 
@@ -461,7 +461,7 @@ class MdbSection:
             "name": name,
             "ids": QtDataHelper.parse_ids_to_array(ids),
         }
-        return QtServer.send_post("ADD-ELEMENTS-TO-TAPPER-SEC-GROUP", payload)
+        return QtServer.send_dict("ADD-ELEMENTS-TO-TAPPER-SEC-GROUP", payload)
 
     @staticmethod
     def add_tapper_section_from_group(name: str = ""):
@@ -475,7 +475,7 @@ class MdbSection:
         Returns: 无
         """
         payload = {"name": name}
-        return QtServer.send_post("ADD-TAPPER-SEC-FROM-GROUP", payload)
+        return QtServer.send_dict("ADD-TAPPER-SEC-FROM-GROUP", payload)
 
     @staticmethod
     def update_tapper_section_group(name: str, new_name="", ids=None, factor_w: float = 1.0, factor_h: float = 1.0,
@@ -514,7 +514,7 @@ class MdbSection:
             "dis_h": dis_h,
             "parameter_info": parameter_info,
         }
-        return QtServer.send_post("UPDATE-TAPPER-SEC-GROUP", payload)
+        return QtServer.send_dict("UPDATE-TAPPER-SEC-GROUP", payload)
 
     @staticmethod
     def remove_tapper_section_group(name: str = ""):
@@ -528,5 +528,5 @@ class MdbSection:
         Returns:无
         """
         payload = {"name": name}
-        return QtServer.send_post("REMOVE-TAPPER-SEC-GROUP", payload)
+        return QtServer.send_dict("REMOVE-TAPPER-SEC-GROUP", payload)
     # endregion

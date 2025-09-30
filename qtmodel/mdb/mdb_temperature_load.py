@@ -34,7 +34,7 @@ class MdbTemperatureLoad:
             s = "*USER-TEMP\r\n" + f"{id_str},{case_name},{group_name},{orientation},"
             s += ",".join(f"({','.join(f'{x:g}' for x in data)})" for data in temperature_data) + "\r\n"
             # print(s)
-            QtServer.post_command(s, "QDAT")
+            QtServer.send_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
 
@@ -61,7 +61,7 @@ class MdbTemperatureLoad:
                 id_str = str(element_id)
             s = "*ELE-TEMP\r\n" + f"{id_str},{case_name},{group_name},{temperature:g}\r\n"
             # print(s)
-            QtServer.post_command(s, "QDAT")
+            QtServer.send_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
 
@@ -80,7 +80,7 @@ class MdbTemperatureLoad:
         try:
             s = "*SYSTEM-TEMP\r\n" + f"{case_name},{group_name},{temperature:g}\r\n"
             # print(s)
-            QtServer.post_command(s, "QDAT")
+            QtServer.send_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
 
@@ -114,7 +114,7 @@ class MdbTemperatureLoad:
             elif element_type == 2:  # 2-板单元
                 s = "*PLATEGRD-TEMP\r\n" + f"{id_str},{case_name},{group_name},{temperature:g}" + "\r\n"
             # print(s)
-            QtServer.post_command(s, "QDAT")
+            QtServer.send_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
 
@@ -148,7 +148,7 @@ class MdbTemperatureLoad:
                 id_str = str(element_id)
             s = "*SEC-TEMP\r\n" + f"{id_str},{case_name},{group_name},{code_index},{sec_type},{t1:g},{t2:g},{t3:g},{t4:g},{thick:g}" + "\r\n"
             # print(s)
-            QtServer.post_command(s, "QDAT")
+            QtServer.send_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
 
@@ -177,7 +177,7 @@ class MdbTemperatureLoad:
             tem_dir = 1  # 目前仅支持截面高度方向温度加载
             s = "*INDEX-TEMP\r\n" + f"{id_str},{case_name},{group_name},{tem_dir},{temperature:g},{index:g}" + "\r\n"
             # print(s)
-            QtServer.post_command(s, "QDAT")
+            QtServer.send_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
 
@@ -204,7 +204,7 @@ class MdbTemperatureLoad:
                 id_str = str(element_id)
             s = "*TOPPLATE-TEMP\r\n" + f"{id_str},{case_name},{group_name},{temperature:g}" + "\r\n"
             # print(s)
-            QtServer.post_command(s, "QDAT")
+            QtServer.send_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
 
@@ -223,7 +223,7 @@ class MdbTemperatureLoad:
             "case_name": case_name,
             "element_id": element_id,
         }
-        return QtServer.send_post("REMOVE-ELEMENT-TEMPERATURE", payload)
+        return QtServer.send_dict("REMOVE-ELEMENT-TEMPERATURE", payload)
 
     @staticmethod
     def remove_top_plate_temperature(element_id, case_name: str):
@@ -240,7 +240,7 @@ class MdbTemperatureLoad:
             "case_name": case_name,
             "element_id": element_id,
         }
-        return QtServer.send_post("REMOVE-TOP-PLATE-TEMPERATURE", payload)
+        return QtServer.send_dict("REMOVE-TOP-PLATE-TEMPERATURE", payload)
 
     @staticmethod
     def remove_beam_section_temperature(element_id, case_name: str):
@@ -257,7 +257,7 @@ class MdbTemperatureLoad:
             "case_name": case_name,
             "element_id": element_id,
         }
-        return QtServer.send_post("REMOVE-BEAM-SECTION-TEMPERATURE", payload)
+        return QtServer.send_dict("REMOVE-BEAM-SECTION-TEMPERATURE", payload)
 
     @staticmethod
     def remove_gradient_temperature(element_id, case_name: str):
@@ -274,7 +274,7 @@ class MdbTemperatureLoad:
             "case_name": case_name,
             "element_id": element_id,
         }
-        return QtServer.send_post("REMOVE-GRADIENT-TEMPERATURE", payload)
+        return QtServer.send_dict("REMOVE-GRADIENT-TEMPERATURE", payload)
 
     @staticmethod
     def remove_custom_temperature(element_id, case_name: str):
@@ -291,7 +291,7 @@ class MdbTemperatureLoad:
             "case_name": case_name,
             "element_id": element_id,
         }
-        return QtServer.send_post("REMOVE-CUSTOM-TEMPERATURE", payload)
+        return QtServer.send_dict("REMOVE-CUSTOM-TEMPERATURE", payload)
 
     @staticmethod
     def remove_index_temperature(element_id, case_name: str):
@@ -308,7 +308,7 @@ class MdbTemperatureLoad:
             "case_name": case_name,
             "element_id": element_id,
         }
-        return QtServer.send_post("REMOVE-INDEX-TEMPERATURE", payload)
+        return QtServer.send_dict("REMOVE-INDEX-TEMPERATURE", payload)
 
     # endregion
 
@@ -334,7 +334,7 @@ class MdbTemperatureLoad:
                 raise Exception("操作错误，制造误差信息数量有误，请核查数据")
             s = "*DEVPARAM\r\n" + f"{name},{','.join(f'{x:g}' for x in parameters)}" + "\r\n"
             # print(s)
-            QtServer.post_command(s, "QDAT")
+            QtServer.send_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
 
@@ -370,7 +370,7 @@ class MdbTemperatureLoad:
             elif isinstance(parameters, list):
                 s += ",".join(f"{s}" for s in parameters) + "\r\n"
             # print(s)
-            QtServer.post_command(s, "QDAT")
+            QtServer.send_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
 
@@ -396,7 +396,7 @@ class MdbTemperatureLoad:
             "element_type": element_type,
             "parameters": parameters,
         }
-        return QtServer.send_post("UPDATE-DEVIATION-PARAMETER", payload)
+        return QtServer.send_dict("UPDATE-DEVIATION-PARAMETER", payload)
 
     @staticmethod
     def remove_deviation_parameter(name: str, para_type: int = 1):
@@ -413,7 +413,7 @@ class MdbTemperatureLoad:
             "name": name,
             "para_type": para_type,
         }
-        return QtServer.send_post("REMOVE-DEVIATION-PARAMETER", payload)
+        return QtServer.send_dict("REMOVE-DEVIATION-PARAMETER", payload)
 
     @staticmethod
     def remove_deviation_load(element_id, case_name: str, group_name: str = "默认荷载组"):
@@ -432,6 +432,6 @@ class MdbTemperatureLoad:
             "element_id": element_id,
             "group_name": group_name,
         }
-        return QtServer.send_post("REMOVE-DEVIATION-LOAD", payload)
+        return QtServer.send_dict("REMOVE-DEVIATION-LOAD", payload)
 
     # endregion

@@ -13,7 +13,7 @@ class OdbModelLoad:
             odb.get_case_names()
         Returns: 包含信息为list[str]
         """
-        return QtServer.send_get("GET-CASE-NAMES", None)
+        return QtServer.send_dict("GET-CASE-NAMES", None)
 
     @staticmethod
     def get_pre_stress_load(case_name: str):
@@ -26,7 +26,7 @@ class OdbModelLoad:
         Returns: 包含信息为list[dict]
         """
         payload = {"case_name": case_name}
-        return QtServer.send_get("GET-PRESTRESS-LOAD", payload)
+        return QtServer.send_dict("GET-PRESTRESS-LOAD", payload)
 
     @staticmethod
     def get_node_mass_data():
@@ -37,7 +37,7 @@ class OdbModelLoad:
             odb.get_node_mass_data()
         Returns: 包含信息为list[dict]
         """
-        return QtServer.send_get("GET-NODE-MASS-DATA", None)
+        return QtServer.send_dict("GET-NODE-MASS-DATA", None)
 
     @staticmethod
     def get_nodal_force_load(case_name: str):
@@ -50,7 +50,7 @@ class OdbModelLoad:
         Returns: 包含信息为list[dict]
         """
         payload = {"case_name": case_name}
-        return QtServer.send_get("GET-NODAL-FORCE-LOAD", payload)
+        return QtServer.send_dict("GET-NODAL-FORCE-LOAD", payload)
 
     @staticmethod
     def get_nodal_displacement_load(case_name: str):
@@ -63,7 +63,7 @@ class OdbModelLoad:
         Returns: 包含信息为list[dict]
         """
         payload = {"case_name": case_name}
-        return QtServer.send_get("GET-NODAL-DISPLACEMENT-LOAD", payload)
+        return QtServer.send_dict("GET-NODAL-DISPLACEMENT-LOAD", payload)
 
     @staticmethod
     def get_beam_element_load(case_name: str):
@@ -76,7 +76,7 @@ class OdbModelLoad:
         Returns: 包含信息为list[dict]
         """
         payload = {"case_name": case_name}
-        return QtServer.send_get("GET-BEAM-ELEMENT-LOAD", payload)
+        return QtServer.send_dict("GET-BEAM-ELEMENT-LOAD", payload)
 
     @staticmethod
     def get_plate_element_load(case_name: str):
@@ -89,7 +89,7 @@ class OdbModelLoad:
         Returns: 包含信息为list[dict]
         """
         payload = {"case_name": case_name}
-        return QtServer.send_get("GET-PLATE-ELEMENT-LOAD", payload)
+        return QtServer.send_dict("GET-PLATE-ELEMENT-LOAD", payload)
 
     @staticmethod
     def get_initial_tension_load(case_name: str):
@@ -102,7 +102,7 @@ class OdbModelLoad:
         Returns: 包含信息为list[dict]
         """
         payload = {"case_name": case_name}
-        return QtServer.send_get("GET-INITIAL-TENSION-LOAD", payload)
+        return QtServer.send_dict("GET-INITIAL-TENSION-LOAD", payload)
 
     @staticmethod
     def get_cable_length_load(case_name: str):
@@ -115,7 +115,7 @@ class OdbModelLoad:
         Returns: 包含信息为list[dict]
         """
         payload = {"case_name": case_name}
-        return QtServer.send_get("GET-CABLE-LENGTH-LOAD", payload)
+        return QtServer.send_dict("GET-CABLE-LENGTH-LOAD", payload)
 
     @staticmethod
     def get_deviation_parameter():
@@ -126,7 +126,7 @@ class OdbModelLoad:
             odb.get_deviation_parameter()
         Returns: 包含信息为list[dict]
         """
-        return QtServer.send_get("GET-DEVIATION-PARAMETER", None)
+        return QtServer.send_dict("GET-DEVIATION-PARAMETER", None)
 
     @staticmethod
     def get_deviation_load(case_name: str):
@@ -139,5 +139,5 @@ class OdbModelLoad:
         Returns: 包含信息为list[dict]
         """
         payload = {"case_name": case_name}
-        return QtServer.send_get("GET-DEVIATION-LOAD", payload)
+        return QtServer.send_dict("GET-DEVIATION-LOAD", payload)
     # endregion

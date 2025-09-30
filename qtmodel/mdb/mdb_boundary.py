@@ -34,7 +34,7 @@ class MdbBoundary:
                 id_str = str(element_ids)
             s = "*EFCFACTOR\r\n" + f"{id_str},{factor_i},{factor_j},{dz_i},{dz_j},{group_name}\r\n"
 
-            QtServer.post_command(s, "QDAT")
+            QtServer.send_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
 
@@ -51,7 +51,7 @@ class MdbBoundary:
         try:
             s = "*BNDRGROUP\r\n" + f"{name}\r\n"
 
-            QtServer.post_command(s, "QDAT")
+            QtServer.send_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
 
@@ -71,7 +71,7 @@ class MdbBoundary:
         try:
             s = "*GSPRTYPE\r\n" + f"{name}," + ",".join(f"{x:g}" for x in data_matrix) + "\r\n"
 
-            QtServer.post_command(s, "QDAT")
+            QtServer.send_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
 
@@ -94,7 +94,7 @@ class MdbBoundary:
                 id_str = str(node_id)
             s = "*GSPRING\r\n" + f"{id_str},{property_name},{group_name}\r\n"
 
-            QtServer.post_command(s, "QDAT")
+            QtServer.send_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
 
@@ -126,7 +126,7 @@ class MdbBoundary:
                 id_str = str(node_id)
             s = "*GSUPPORT\r\n" + f"{id_str}," + "".join(str(int(x)) for x in boundary_info) + f",{group_name}\r\n"
 
-            QtServer.post_command(s, "QDAT")
+            QtServer.send_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
 
@@ -159,7 +159,7 @@ class MdbBoundary:
             else:
                 s += f"{support_type},{group_name}," + ",".join(f"{x:g}" for x in boundary_info) + "\r\n"
 
-            QtServer.post_command(s, "QDAT")
+            QtServer.send_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
 
@@ -199,7 +199,7 @@ class MdbBoundary:
                 "kx": kx,
             }
             json_string = json.dumps(params, indent=2)
-            QtServer.get_command(header="ADD-ELASTIC-LINK", command=json_string)
+            QtServer.send_command(header="ADD-ELASTIC-LINK", command=json_string)
         except Exception as ex:
             raise Exception(ex)
 
@@ -228,7 +228,7 @@ class MdbBoundary:
                 ids_str = QtDataHelper.parse_int_list_to_str(slave_ids)
                 s += f"{master_id},{ids_str}," + "".join(str(int(x)) for x in boundary_info) + f",{group_name}\r\n"
 
-            QtServer.post_command(s, "QDAT")
+            QtServer.send_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
 
@@ -255,7 +255,7 @@ class MdbBoundary:
             s = "*MSLINK\r\n" + f"{master_id},{id_str}," + "".join(
                 str(int(x)) for x in boundary_info) + f",{group_name}\r\n"
 
-            QtServer.post_command(s, "QDAT")
+            QtServer.send_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
 
@@ -281,7 +281,7 @@ class MdbBoundary:
             s = "*RESTRAINTS\r\n" + f"{beam_id}," + "".join(str(int(x)) for x in info_i) + "," + "".join(
                 str(int(y)) for y in info_j) + f",{group_name}\r\n"
 
-            QtServer.post_command(s, "QDAT")
+            QtServer.send_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
 
@@ -304,7 +304,7 @@ class MdbBoundary:
             s = "*EQUATION\r\n" + f"{name},{group_name},{sec_node},{sec_dof}," + ",".join(
                 f"{tuples}" for tuples in master_info) + "\r\n"
 
-            QtServer.post_command(s, "QDAT")
+            QtServer.send_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
 
@@ -333,7 +333,7 @@ class MdbBoundary:
                 tran_info = QtDataHelper.convert_three_points_to_vectors(coord_info)
             s += f"V1({','.join(f'{axis:g}' for axis in tran_info[0])}),V2({','.join(f'{axis:g}' for axis in tran_info[1])})\r\n"
 
-            QtServer.post_command(s, "QDAT")
+            QtServer.send_command(s, "QDAT")
         except Exception as ex:
             pass
             raise Exception(ex)
@@ -354,7 +354,7 @@ class MdbBoundary:
             "element_ids": element_ids,
             "group_name": group_name,
         }
-        return QtServer.send_post("REMOVE-EFFECTIVE-WIDTH", payload)
+        return QtServer.send_dict("REMOVE-EFFECTIVE-WIDTH", payload)
 
     @staticmethod
     def update_boundary_group(name: str, new_name: str):
@@ -371,7 +371,7 @@ class MdbBoundary:
             "name": name,
             "new_name": new_name,
         }
-        return QtServer.send_post("UPDATE-BOUNDARY-GROUP", payload)
+        return QtServer.send_dict("UPDATE-BOUNDARY-GROUP", payload)
 
     @staticmethod
     def remove_boundary_group(name: str = ""):
@@ -386,7 +386,7 @@ class MdbBoundary:
         """
         # 为空表示删除所有
         payload = {"name": name} if name else None
-        return QtServer.send_post("REMOVE-BOUNDARY-GROUP", payload)
+        return QtServer.send_dict("REMOVE-BOUNDARY-GROUP", payload)
 
     @staticmethod
     def remove_all_boundary():
@@ -397,7 +397,7 @@ class MdbBoundary:
             mdb.remove_all_boundary()
         Returns: 无
         """
-        return QtServer.send_post("REMOVE-ALL-BOUNDARY", None)
+        return QtServer.send_dict("REMOVE-ALL-BOUNDARY", None)
 
     @staticmethod
     def remove_boundary(remove_id: int, kind: str, group_name: str = "默认边界组", extra_name="I"):
@@ -419,7 +419,7 @@ class MdbBoundary:
             "group_name": group_name,
             "extra_name": extra_name,
         }
-        return QtServer.send_post("REMOVE-BOUNDARY", payload)
+        return QtServer.send_dict("REMOVE-BOUNDARY", payload)
 
     @staticmethod
     def update_general_elastic_support_property(name: str = "", new_name: str = "", data_matrix: list[float] = None):
@@ -438,7 +438,7 @@ class MdbBoundary:
             "new_name": new_name,
             "data_matrix": data_matrix,
         }
-        return QtServer.send_post("UPDATE-GENERAL-ELASTIC-SUPPORT-PROPERTY", payload)
+        return QtServer.send_dict("UPDATE-GENERAL-ELASTIC-SUPPORT-PROPERTY", payload)
 
     @staticmethod
     def remove_general_elastic_support_property(name: str = ""):
@@ -451,7 +451,7 @@ class MdbBoundary:
         Returns: 无
         """
         payload = {"name": name}
-        return QtServer.send_post("REMOVE-GENERAL-ELASTIC-SUPPORT-PROPERTY", payload)
+        return QtServer.send_dict("REMOVE-GENERAL-ELASTIC-SUPPORT-PROPERTY", payload)
 
     @staticmethod
     def update_node_axis(node_id: int, new_id: int = 1, input_type: int = 1, coord_info: list = None):
@@ -474,7 +474,7 @@ class MdbBoundary:
             "input_type": input_type,
             "coord_info": coord_info,
         }
-        return QtServer.send_post("UPDATE-NODE-AXIS", payload)
+        return QtServer.send_dict("UPDATE-NODE-AXIS", payload)
 
     @staticmethod
     def remove_node_axis(node_id: int):
@@ -487,5 +487,5 @@ class MdbBoundary:
         Returns: 无
         """
         payload = {"node_id": node_id}
-        return QtServer.send_post("REMOVE-NODE-AXIS", payload)
+        return QtServer.send_dict("REMOVE-NODE-AXIS", payload)
     # region

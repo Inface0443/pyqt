@@ -16,7 +16,7 @@ class OdbModelBoundary:
             odb.get_boundary_group_names()
         Returns: 包含信息为list[str]
         """
-        return QtServer.send_get("GET-BOUNDARY-GROUP-NAMES", None)
+        return QtServer.send_dict("GET-BOUNDARY-GROUP-NAMES", None)
 
     @staticmethod
     def get_general_support_data(group_name: str = None):
@@ -29,7 +29,7 @@ class OdbModelBoundary:
         Returns: 包含信息为list[dict]
         """
         payload = {"group_name": group_name} if group_name is not None else None
-        return QtServer.send_get("GET-GENERAL-SUPPORT-DATA", payload)
+        return QtServer.send_dict("GET-GENERAL-SUPPORT-DATA", payload)
 
     @staticmethod
     def get_elastic_link_data(group_name: str = None):
@@ -42,7 +42,7 @@ class OdbModelBoundary:
         Returns: 包含信息为list[dict]
         """
         payload = {"group_name": group_name} if group_name is not None else None
-        return QtServer.send_get("GET-ELASTIC-LINK-DATA", payload)
+        return QtServer.send_dict("GET-ELASTIC-LINK-DATA", payload)
 
     @staticmethod
     def get_elastic_support_data(group_name: str = None):
@@ -55,7 +55,7 @@ class OdbModelBoundary:
         Returns: 包含信息为list[dict]
         """
         payload = {"group_name": group_name} if group_name is not None else None
-        return QtServer.send_get("GET-ELASTIC-SUPPORT-DATA", payload)
+        return QtServer.send_dict("GET-ELASTIC-SUPPORT-DATA", payload)
 
     @staticmethod
     def get_master_slave_link_data(group_name: str = None):
@@ -68,7 +68,7 @@ class OdbModelBoundary:
         Returns: 包含信息为list[dict]
         """
         payload = {"group_name": group_name} if group_name is not None else None
-        return QtServer.send_get("GET-MASTER-SLAVE-LINK-DATA", payload)
+        return QtServer.send_dict("GET-MASTER-SLAVE-LINK-DATA", payload)
 
     @staticmethod
     def get_node_local_axis_data():
@@ -79,7 +79,7 @@ class OdbModelBoundary:
             odb.get_node_local_axis_data()
         Returns: 包含信息为list[dict]
         """
-        return QtServer.send_get("GET-NODE-LOCAL-AXIS-DATA", None)
+        return QtServer.send_dict("GET-NODE-LOCAL-AXIS-DATA", None)
 
     @staticmethod
     def get_beam_constraint_data(group_name: str = None):
@@ -92,7 +92,7 @@ class OdbModelBoundary:
            Returns: 包含信息为list[dict]或 dict
         """
         payload = {"group_name": group_name} if group_name is not None else None
-        return QtServer.send_get("GET-BEAM-CONSTRAINT-DATA", payload)
+        return QtServer.send_dict("GET-BEAM-CONSTRAINT-DATA", payload)
 
     @staticmethod
     def get_constraint_equation_data(group_name: str = None):
@@ -105,7 +105,7 @@ class OdbModelBoundary:
          Returns: 包含信息为list[dict]
          """
         payload = {"group_name": group_name} if group_name is not None else None
-        return QtServer.send_get("GET-CONSTRAINT-EQUATION-DATA", payload)
+        return QtServer.send_dict("GET-CONSTRAINT-EQUATION-DATA", payload)
 
     @staticmethod
     def get_effective_width(group_name: str = None):
@@ -118,6 +118,6 @@ class OdbModelBoundary:
         Returns:  list[dict]
         """
         payload = {"group_name": group_name} if group_name is not None else None
-        return QtServer.send_get("GET-EFFECTIVE-WIDTH", payload)
+        return QtServer.send_dict("GET-EFFECTIVE-WIDTH", payload)
 
 # endregion

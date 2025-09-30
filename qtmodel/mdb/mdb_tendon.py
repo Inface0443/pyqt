@@ -22,7 +22,7 @@ class MdbTendon:
         try:
             s = "*TDNGROUP\r\n" + f"{name}\r\n"
             # print(s)
-            QtServer.post_command(s, "QDAT")
+            QtServer.send_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
 
@@ -67,7 +67,7 @@ class MdbTendon:
                 s += "螺纹钢筋," + ",".join(f"{steel:g}" for steel in steel_detail)
             s += f",{slip_info[0]:g},{slip_info[1]:g}\r\n"
             # print(s)
-            QtServer.post_command(s, "QDAT")
+            QtServer.send_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
 
@@ -117,7 +117,7 @@ class MdbTendon:
                 s += f"{track_group},{point_insert[0]},{point_insert[2]},{point_insert[1]},{rotation_angle:g}\r\n"
             s += ",".join(f"({','.join(f'{v:g}' for v in point)})" for point in control_points) + "\r\n"
             # print(s)
-            QtServer.post_command(s, "QDAT")
+            QtServer.send_command(s, "QDAT")
         except Exception as ex:
             raise Exception(f"添加三维钢束:{name}失败,{ex}")
 
@@ -173,7 +173,7 @@ class MdbTendon:
                 s += "Y=" + ",".join(
                     f"({','.join(f'{y:g}' for y in point)})" for point in control_points_lateral) + "\r\n"
             # print(s)
-            QtServer.post_command(s, "QDAT")
+            QtServer.send_command(s, "QDAT")
         except Exception as ex:
             raise Exception(f"添加二维钢束:{name}失败,{ex}")
 
@@ -196,7 +196,7 @@ class MdbTendon:
                 elem_str = str(ids)
             s = "*PSELEMENT\r\n" + f"{elem_str}\r\n"
             # print(s)
-            QtServer.post_command(s, "QDAT")
+            QtServer.send_command(s, "QDAT")
         except Exception as ec:
             raise Exception(ec)
 
@@ -215,7 +215,7 @@ class MdbTendon:
             "name": name,
             "material_name": material_name,
         }
-        return QtServer.send_post("UPDATE-TENDON-PROPERTY-MATERIAL", payload)
+        return QtServer.send_dict("UPDATE-TENDON-PROPERTY-MATERIAL", payload)
 
     @staticmethod
     def update_tendon_property(name: str, new_name: str = "", tendon_type: int = 0, material_name: str = "", duct_type: int = 1,
@@ -251,7 +251,7 @@ class MdbTendon:
             "loos_detail": loos_detail,
             "slip_info": slip_info,
         }
-        return QtServer.send_post("UPDATE-TENDON-PROPERTY", payload)
+        return QtServer.send_dict("UPDATE-TENDON-PROPERTY", payload)
 
     @staticmethod
     def update_tendon(name: str, new_name: str = "", tendon_2d: bool = True, property_name: str = "", group_name: str = "默认钢束组",
@@ -304,7 +304,7 @@ class MdbTendon:
             "track_group": track_group,
             "projection": projection,
         }
-        return QtServer.send_post("UPDATE-TENDON", payload)
+        return QtServer.send_dict("UPDATE-TENDON", payload)
 
     @staticmethod
     def update_element_component_type(ids=None, component_type: int = 2):
@@ -321,7 +321,7 @@ class MdbTendon:
             "ids": ids,
             "component_type": component_type,
         }
-        return QtServer.send_post("UPDATE-ELEMENT-COMPONENT-TYPE", payload)
+        return QtServer.send_dict("UPDATE-ELEMENT-COMPONENT-TYPE", payload)
 
     @staticmethod
     def update_tendon_group(name: str, new_name: str = ""):
@@ -338,7 +338,7 @@ class MdbTendon:
             "name": name,
             "new_name": new_name,
         }
-        return QtServer.send_post("UPDATE-TENDON-GROUP", payload)
+        return QtServer.send_dict("UPDATE-TENDON-GROUP", payload)
 
     @staticmethod
     def remove_tendon(name: str = "", index: int = -1):
@@ -357,7 +357,7 @@ class MdbTendon:
             "name": name,
             "index": index,
         }
-        return QtServer.send_post("REMOVE-TENDON", payload)
+        return QtServer.send_dict("REMOVE-TENDON", payload)
 
     @staticmethod
     def remove_tendon_property(name: str = "", index: int = -1):
@@ -376,7 +376,7 @@ class MdbTendon:
             "name": name,
             "index": index,
         }
-        return QtServer.send_post("REMOVE-TENDON-PROPERTY", payload)
+        return QtServer.send_dict("REMOVE-TENDON-PROPERTY", payload)
 
     @staticmethod
     def remove_pre_stress(tendon_name: str = ""):
@@ -390,7 +390,7 @@ class MdbTendon:
         Returns: 无
         """
         payload = {"tendon_name": tendon_name} if tendon_name != "" else None
-        return QtServer.send_post("REMOVE-PRE-STRESS", payload)
+        return QtServer.send_dict("REMOVE-PRE-STRESS", payload)
 
     @staticmethod
     def remove_tendon_group(name: str = ""):
@@ -403,5 +403,5 @@ class MdbTendon:
         Returns: 无
         """
         payload = {"name": name} if name != "" else None
-        return QtServer.send_post("REMOVE-TENDON-GROUP", payload)
+        return QtServer.send_dict("REMOVE-TENDON-GROUP", payload)
     # endregion

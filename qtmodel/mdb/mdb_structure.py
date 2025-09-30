@@ -38,7 +38,7 @@ class MdbStructure:
                 "start_id": start_id
             }
             json_string = json.dumps(params, indent=2)
-            QtServer.get_command(header="ADD-NODES", command=json_string)
+            QtServer.send_command(header="ADD-NODES", command=json_string)
         except Exception as ex:
             raise Exception(ex)
 
@@ -63,7 +63,7 @@ class MdbStructure:
             "y": y,
             "z": z,
         }
-        return QtServer.send_post("UPDATE-NODE", payload)
+        return QtServer.send_dict("UPDATE-NODE", payload)
 
     @staticmethod
     def update_node_id(node_id: int, new_id: int):
@@ -80,7 +80,7 @@ class MdbStructure:
             "node_id": node_id,
             "new_id": new_id,
         }
-        return QtServer.send_post("UPDATE-NODE-ID", payload)
+        return QtServer.send_dict("UPDATE-NODE-ID", payload)
 
     @staticmethod
     def merge_nodes(ids = None, tolerance: float = 1e-4):
@@ -95,9 +95,9 @@ class MdbStructure:
         """
         if ids is None:
             # merge all nodes
-            return QtServer.send_post("MERGE-NODES")
+            return QtServer.send_dict("MERGE-NODES")
         payload = {"tolerance": tolerance, "ids": QtDataHelper.parse_ids_to_array(ids)}
-        return QtServer.send_post("MERGE-NODES", payload)
+        return QtServer.send_dict("MERGE-NODES", payload)
 
     @staticmethod
     def move_nodes(ids = None, offset_x: float = 0, offset_y: float = 0, offset_z: float = 0):
@@ -116,7 +116,7 @@ class MdbStructure:
             "ids": QtDataHelper.parse_ids_to_array(ids),
             "offsets": [offset_x, offset_y, offset_z]
         }
-        return QtServer.send_post("MOVE-NODES", payload)
+        return QtServer.send_dict("MOVE-NODES", payload)
 
     @staticmethod
     def remove_nodes(ids = None):
@@ -131,9 +131,9 @@ class MdbStructure:
         Returns: 无
         """
         if ids is None:
-            return QtServer.send_post("REMOVE-NODES")
+            return QtServer.send_dict("REMOVE-NODES")
         payload = {"ids": QtDataHelper.parse_ids_to_array(ids)}
-        return QtServer.send_post("REMOVE-NODES", payload)
+        return QtServer.send_dict("REMOVE-NODES", payload)
 
     @staticmethod
     def renumber_nodes(ids: Optional[list[int]] = None, new_ids: Optional[list[int]] = None):
@@ -149,12 +149,12 @@ class MdbStructure:
         """
         payload = {}
         if ids is None or new_ids is None:
-            return QtServer.send_post("RENUMBER-NODES")
+            return QtServer.send_dict("RENUMBER-NODES")
         if len(ids) != len(new_ids):
             raise Exception("原节点和新节点编号数据无法对应")
         payload["node_ids"] = ids
         payload["new_ids"] = new_ids
-        return QtServer.send_post("RENUMBER-NODES", payload if payload else None)
+        return QtServer.send_dict("RENUMBER-NODES", payload if payload else None)
 
     # endregion
 
@@ -194,7 +194,7 @@ class MdbStructure:
             if QtServer.QT_MERGE:
                 QtServer.MERGE_STR += s  # 开启合并发送时需要调用update_model生效
             else:
-                QtServer.post_command(s, "QDAT")
+                QtServer.send_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
 
@@ -217,7 +217,7 @@ class MdbStructure:
         """
         try:
             s = "*ELEMENT\r\n" + "\r\n".join(",".join(str(x) for x in row) for row in ele_data) + "\r\n"
-            QtServer.post_command(s, "QDAT")
+            QtServer.send_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
 
@@ -232,7 +232,7 @@ class MdbStructure:
         Returns: 无
         """
         payload = {"ids": QtDataHelper.parse_ids_to_array(ids)}
-        return QtServer.send_post("UPDATE-LOCAL-ORIENTATION", payload)
+        return QtServer.send_dict("UPDATE-LOCAL-ORIENTATION", payload)
 
     @staticmethod
     def update_element_id(old_id: int, new_id: int):
@@ -246,7 +246,7 @@ class MdbStructure:
         Returns: 无
         """
         payload = {"old_id": old_id, "new_id": new_id}
-        return QtServer.send_post("UPDATE-ELEMENT-ID", payload)
+        return QtServer.send_dict("UPDATE-ELEMENT-ID", payload)
 
     @staticmethod
     def update_element(old_id: int, new_id: int = -1, ele_type: int = 1, node_ids: list[int] = None, beta_angle: float = 0,
@@ -280,7 +280,7 @@ class MdbStructure:
             "initial_value": initial_value,
             "plate_type": plate_type,
         }
-        return QtServer.send_post("UPDATE-ELEMENT", payload)
+        return QtServer.send_dict("UPDATE-ELEMENT", payload)
 
     @staticmethod
     def update_element_material(ids=None, mat_id: int=1):
@@ -294,7 +294,7 @@ class MdbStructure:
         Returns: 无
         """
         payload = {"ids": QtDataHelper.parse_ids_to_array(ids), "mat_id": mat_id}
-        return QtServer.send_post("UPDATE-ELEMENT-MATERIAL", payload)
+        return QtServer.send_dict("UPDATE-ELEMENT-MATERIAL", payload)
 
     @staticmethod
     def update_element_beta(ids=None, beta: float=0):
@@ -308,7 +308,7 @@ class MdbStructure:
         Returns: 无
         """
         payload = {"ids": QtDataHelper.parse_ids_to_array(ids), "beta_angle": beta}
-        return QtServer.send_post("UPDATE-ELEMENT-BETA", payload)
+        return QtServer.send_dict("UPDATE-ELEMENT-BETA", payload)
 
     @staticmethod
     def update_frame_section(ids, sec_id: int=1):
@@ -322,7 +322,7 @@ class MdbStructure:
         Returns: 无
         """
         payload = {"ids": QtDataHelper.parse_ids_to_array(ids), "sec_id": sec_id}
-        return QtServer.send_post("UPDATE-FRAME-SECTION", payload)
+        return QtServer.send_dict("UPDATE-FRAME-SECTION", payload)
 
     @staticmethod
     def update_plate_thick(ids, thick_id: int=1):
@@ -336,7 +336,7 @@ class MdbStructure:
         Returns: 无
         """
         payload = {"ids": QtDataHelper.parse_ids_to_array(ids), "thick_id": thick_id}
-        return QtServer.send_post("UPDATE-PLATE-THICK", payload)
+        return QtServer.send_dict("UPDATE-PLATE-THICK", payload)
 
     @staticmethod
     def update_element_node(element_id: int, node_ids: list[int]):
@@ -351,7 +351,7 @@ class MdbStructure:
         Returns: 无
         """
         payload = {"element_id": element_id, "node_ids": node_ids}
-        return QtServer.send_post("UPDATE-ELEMENT-NODE", payload)
+        return QtServer.send_dict("UPDATE-ELEMENT-NODE", payload)
 
     @staticmethod
     def remove_element(ids = None, remove_free: bool = False):
@@ -367,9 +367,9 @@ class MdbStructure:
         """
         if ids is None:
             # remove all elements
-            return QtServer.send_post("REMOVE-ELEMENTS")
+            return QtServer.send_dict("REMOVE-ELEMENTS")
         payload = {"ids": QtDataHelper.parse_ids_to_array(ids), "remove_free": remove_free}
-        return QtServer.send_post("REMOVE-ELEMENTS", payload)
+        return QtServer.send_dict("REMOVE-ELEMENTS", payload)
 
     @staticmethod
     def renumber_elements(element_ids: Optional[list[int]] = None, new_ids: Optional[list[int]] = None):
@@ -386,10 +386,10 @@ class MdbStructure:
         payload = {}
         if element_ids is None or new_ids is None:
             # renumber all elements
-            return QtServer.send_post("RENUMBER-ELEMENTS")
+            return QtServer.send_dict("RENUMBER-ELEMENTS")
         payload["element_ids"] = element_ids
         payload["new_ids"] = new_ids
-        return QtServer.send_post("RENUMBER-ELEMENTS", payload if payload else None)
+        return QtServer.send_dict("RENUMBER-ELEMENTS", payload if payload else None)
 
     # endregion
 
@@ -425,7 +425,7 @@ class MdbStructure:
 
             s = "*STRGROUP\r\n" + f"{name},{node_str},{elem_str}" + "\r\n"
 
-            QtServer.post_command(s, "QDAT")
+            QtServer.send_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
 
@@ -447,7 +447,7 @@ class MdbStructure:
                 "new_name": new_name
             }
             json_string = json.dumps(params, indent=2, ensure_ascii=False)
-            QtServer.get_command(header="UPDATE-STRUCTURE-GROUP-NAME", command=json_string)
+            QtServer.send_command(header="UPDATE-STRUCTURE-GROUP-NAME", command=json_string)
         except Exception as ex:
             raise Exception(ex)
 
@@ -473,7 +473,7 @@ class MdbStructure:
                 "element_ids": QtDataHelper.parse_ids_to_array(element_ids)
             }
             json_string = json.dumps(params, indent=2, ensure_ascii=False)
-            QtServer.get_command(header="UPDATE-STRUCTURE-GROUP", command=json_string)
+            QtServer.send_command(header="UPDATE-STRUCTURE-GROUP", command=json_string)
         except Exception as ex:
             raise Exception(ex)
 
@@ -495,9 +495,9 @@ class MdbStructure:
                     "name": name
                 }
                 json_string = json.dumps(params, indent=2, ensure_ascii=False)
-                QtServer.get_command(header="REMOVE-STRUCTURE-GROUP", command=json_string)
+                QtServer.send_command(header="REMOVE-STRUCTURE-GROUP", command=json_string)
             else:
-                QtServer.post_command(header="REMOVE-ALL-STRUCTURE-GROUP")
+                QtServer.send_command(header="REMOVE-ALL-STRUCTURE-GROUP")
 
         except Exception as ex:
             raise Exception(ex)
@@ -522,7 +522,7 @@ class MdbStructure:
                 "element_ids": QtDataHelper.parse_ids_to_array(element_ids)
             }
             json_string = json.dumps(params, indent=2, ensure_ascii=False)
-            QtServer.get_command(header="ADD-STRUCTURE-TO-GROUP", command=json_string)
+            QtServer.send_command(header="ADD-STRUCTURE-TO-GROUP", command=json_string)
         except Exception as ex:
             raise Exception(ex)
 
@@ -546,7 +546,7 @@ class MdbStructure:
                 "element_ids": QtDataHelper.parse_ids_to_array(element_ids)
             }
             json_string = json.dumps(params, indent=2, ensure_ascii=False)
-            QtServer.get_command(header="REMOVE-STRUCTURE-FROM-GROUP", command=json_string)
+            QtServer.send_command(header="REMOVE-STRUCTURE-FROM-GROUP", command=json_string)
         except Exception as ex:
             raise Exception(ex)
 

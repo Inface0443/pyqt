@@ -64,7 +64,7 @@ class MdbConstructionStage:
             if temp_loads is not None:
                 s += f"TEPLOAD={','.join(map(str, temp_loads))}\r\n"
             # print(s)
-            QtServer.post_command(s, "QDAT")
+            QtServer.send_command(s, "QDAT")
         except Exception as ex:
             raise Exception(f"添加施工阶段:{name}错误,{ex}")
 
@@ -90,7 +90,7 @@ class MdbConstructionStage:
             }
             json_string = json.dumps(params, indent=2)
             # 假设这里需要将命令发送到服务器或进行其他操作
-            QtServer.get_command(header="UPDATE-WEIGHT-STAGE", command=json_string)
+            QtServer.send_command(header="UPDATE-WEIGHT-STAGE", command=json_string)
         except Exception as ex:
             raise Exception(f"更新施工阶段自重:{name}错误,{ex}")
 
@@ -144,7 +144,7 @@ class MdbConstructionStage:
             "tendon_cancel_loss": tendon_cancel_loss,
             "constraint_cancel_type": constraint_cancel_type,
         }
-        return QtServer.send_post("UPDATE-CONSTRUCTION-STAGE", payload)
+        return QtServer.send_dict("UPDATE-CONSTRUCTION-STAGE", payload)
 
     @staticmethod
     def update_construction_stage_id(stage_id:Union[int,List[int],str], target_id: int = 3):
@@ -162,7 +162,7 @@ class MdbConstructionStage:
             "stage_id": QtDataHelper.parse_ids_to_array(stage_id),
             "target_id": target_id,
         }
-        return QtServer.send_post("UPDATE-CONSTRUCTION-STAGE-ID", payload)
+        return QtServer.send_dict("UPDATE-CONSTRUCTION-STAGE-ID", payload)
 
     @staticmethod
     def update_all_stage_setting_type(setting_type: int = 1):
@@ -177,7 +177,7 @@ class MdbConstructionStage:
         payload = {
             "setting_type": setting_type,
         }
-        return QtServer.send_post("UPDATE-ALL-STAGE-SETTING-TYPE", payload)
+        return QtServer.send_dict("UPDATE-ALL-STAGE-SETTING-TYPE", payload)
 
     @staticmethod
     def update_section_connection_stage(name: str, new_name="", sec_id: int = 1, element_id=None,
@@ -206,7 +206,7 @@ class MdbConstructionStage:
             "age": age,
             "weight_type": weight_type,
         }
-        return QtServer.send_post("UPDATE-SECTION-CONNECTION-STAGE", payload)
+        return QtServer.send_dict("UPDATE-SECTION-CONNECTION-STAGE", payload)
 
     @staticmethod
     def remove_construction_stage(name: str = ""):
@@ -221,7 +221,7 @@ class MdbConstructionStage:
         payload = {
             "name": name,
         }
-        return QtServer.send_post("REMOVE-CONSTRUCTION-STAGE", payload)
+        return QtServer.send_dict("REMOVE-CONSTRUCTION-STAGE", payload)
 
     @staticmethod
     def merge_all_stages(name: str = "一次成桥", setting_type: int = 1, weight_type: int = 1, age: float = 5,
@@ -252,7 +252,7 @@ class MdbConstructionStage:
             "tendon_cancel_loss": tendon_cancel_loss,
             "constraint_cancel_type": constraint_cancel_type,
         }
-        return QtServer.send_post("MERGE-ALL-STAGES", payload)
+        return QtServer.send_dict("MERGE-ALL-STAGES", payload)
 
     # endregion
 
@@ -281,7 +281,7 @@ class MdbConstructionStage:
             "age": age,
             "weight_type": weight_type,
         }
-        return QtServer.send_post("ADD-SECTION-CONNECTION-STAGE", payload)
+        return QtServer.send_dict("ADD-SECTION-CONNECTION-STAGE", payload)
 
     @staticmethod
     def add_element_to_connection_stage(element_id, name: str):
@@ -298,7 +298,7 @@ class MdbConstructionStage:
             "element_id": element_id,
             "name": name,
         }
-        return QtServer.send_post("ADD-ELEMENT-TO-CONNECTION-STAGE", payload)
+        return QtServer.send_dict("ADD-ELEMENT-TO-CONNECTION-STAGE", payload)
 
     @staticmethod
     def remove_section_connection_stage(name: str):
@@ -313,5 +313,5 @@ class MdbConstructionStage:
         payload = {
             "name": name,
         }
-        return QtServer.send_post("REMOVE-SECTION-CONNECTION-STAGE", payload)
+        return QtServer.send_dict("REMOVE-SECTION-CONNECTION-STAGE", payload)
     # endregion

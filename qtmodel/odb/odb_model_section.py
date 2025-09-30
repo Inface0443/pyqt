@@ -14,7 +14,7 @@ class OdbModelSection:
             odb.get_all_section_shape()
         Returns: 包含信息为list[dict]
         """
-        return QtServer.send_get("GET-ALL-SECTION-SHAPE", None)
+        return QtServer.send_dict("GET-ALL-SECTION-SHAPE", None)
 
     @staticmethod
     def get_section_shape(sec_id: int):
@@ -28,7 +28,7 @@ class OdbModelSection:
             包含信息为dict
         """
         payload = {"sec_id": sec_id}
-        return QtServer.send_get("GET-SECTION-SHAPE", payload)
+        return QtServer.send_dict("GET-SECTION-SHAPE", payload)
 
     @staticmethod
     def get_all_section_data():
@@ -39,7 +39,7 @@ class OdbModelSection:
             odb.get_all_section_data()
         Returns: 包含信息为list[dict]
         """
-        return QtServer.send_get("GET-ALL-SECTION-DATA", None)
+        return QtServer.send_dict("GET-ALL-SECTION-DATA", None)
 
     @staticmethod
     def get_section_data(sec_id: int):
@@ -52,7 +52,7 @@ class OdbModelSection:
         Returns: 包含信息为dict
         """
         payload = {"sec_id": sec_id}
-        return QtServer.send_get("GET-SECTION-DATA", payload)
+        return QtServer.send_dict("GET-SECTION-DATA", payload)
 
     @staticmethod
     def get_section_property(index: int):
@@ -65,7 +65,7 @@ class OdbModelSection:
         Returns: dict
         """
         payload = {"index": index}
-        return QtServer.send_get("GET-SECTION-PROPERTY", payload)
+        return QtServer.send_dict("GET-SECTION-PROPERTY", payload)
 
     @staticmethod
     def get_section_ids():
@@ -76,6 +76,6 @@ class OdbModelSection:
             odb.get_section_ids()
         Returns: list[int]
         """
-        return QtServer.send_get("GET-SECTION-IDS", None)
+        return QtServer.send_dict("GET-SECTION-IDS", None)
 
     # endregion

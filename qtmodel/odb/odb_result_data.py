@@ -37,7 +37,7 @@ class OdbResultData:
             "case_name": case_name,
             "is_time_history": is_time_history,
         }
-        return QtServer.send_get("GET-REACTION", payload)
+        return QtServer.send_dict("GET-REACTION", payload)
 
     @staticmethod
     def get_deformation(ids, envelop_type=1,
@@ -71,7 +71,7 @@ class OdbResultData:
             "is_time_history": is_time_history,
             "is_local": is_local,
         }
-        return QtServer.send_get("GET-DEFORMATION", payload)
+        return QtServer.send_dict("GET-DEFORMATION", payload)
 
     @staticmethod
     def get_element_stress(ids, envelop_type: int = 1, stage_id: int = 1, result_kind: int = 1,
@@ -99,7 +99,7 @@ class OdbResultData:
             "increment_type": increment_type,
             "case_name": case_name,
         }
-        return QtServer.send_get("GET-ELEMENT-STRESS", payload)
+        return QtServer.send_dict("GET-ELEMENT-STRESS", payload)
 
     @staticmethod
     def get_element_force(ids, stage_id: int = 1, envelop_type: int = 1,
@@ -132,7 +132,7 @@ class OdbResultData:
             "is_time_history": is_time_history,
             "is_boundary_element": is_boundary_element,
         }
-        return QtServer.send_get("GET-ELEMENT-FORCE", payload)
+        return QtServer.send_dict("GET-ELEMENT-FORCE", payload)
 
     @staticmethod
     def get_self_concurrent_reaction(node_id: int, case_name: str) -> str:
@@ -149,7 +149,7 @@ class OdbResultData:
             "node_id": node_id,
             "case_name": case_name,
         }
-        return QtServer.send_get("GET-SELF-CONCURRENT-REACTION", payload)
+        return QtServer.send_dict("GET-SELF-CONCURRENT-REACTION", payload)
 
     @staticmethod
     def get_all_concurrent_reaction(node_id: int, case_name: str) -> str:
@@ -166,7 +166,7 @@ class OdbResultData:
             "node_id": node_id,
             "case_name": case_name,
         }
-        return QtServer.send_get("GET-ALL-CONCURRENT-REACTION", payload)
+        return QtServer.send_dict("GET-ALL-CONCURRENT-REACTION", payload)
 
     @staticmethod
     def get_concurrent_force(ids=None, case_name: str = "") -> str:
@@ -184,7 +184,7 @@ class OdbResultData:
             "ids": QtDataHelper.parse_ids_to_array(ids),
             "case_name": case_name,
         }
-        return QtServer.send_get("GET-CONCURRENT-FORCE", payload)
+        return QtServer.send_dict("GET-CONCURRENT-FORCE", payload)
 
     @staticmethod
     def get_elastic_link_force(ids, result_kind=1, stage_id=-1, envelop_type=0, increment_type=1, case_name="") -> str:
@@ -209,7 +209,7 @@ class OdbResultData:
             "increment_type": increment_type,
             "case_name": case_name,
         }
-        return QtServer.send_get("GET-ELASTIC-LINK-FORCE", payload)
+        return QtServer.send_dict("GET-ELASTIC-LINK-FORCE", payload)
 
     @staticmethod
     def get_constrain_equation_force(ids, result_kind=1, stage_id=1, envelop_type=0, increment_type=1, case_name="") -> str:
@@ -234,7 +234,7 @@ class OdbResultData:
             "increment_type": increment_type,
             "case_name": case_name,
         }
-        return QtServer.send_get("GET-CONSTRAIN-EQUATION-FORCE", payload)
+        return QtServer.send_dict("GET-CONSTRAIN-EQUATION-FORCE", payload)
 
     @staticmethod
     def get_cable_element_length(ids, stage_id=-1, increment_type=1) -> str:
@@ -253,7 +253,7 @@ class OdbResultData:
             "stage_id": stage_id,
             "increment_type": increment_type,
         }
-        return QtServer.send_get("GET-CABLE-ELEMENT-LENGTH", payload)
+        return QtServer.send_dict("GET-CABLE-ELEMENT-LENGTH", payload)
 
     @staticmethod
     def get_period_and_vibration_results() -> str:
@@ -264,7 +264,7 @@ class OdbResultData:
           odb.get_period_and_vibration_results()
         Returns: 返回json字符串，list[dict]包含各模态周期和频率的列表
         """
-        return QtServer.send_get("GET-PERIOD-AND-VIBRATION-RESULTS", None)
+        return QtServer.send_dict("GET-PERIOD-AND-VIBRATION-RESULTS", None)
 
     @staticmethod
     def get_vibration_modal_results(mode: int = 1) -> str:
@@ -279,7 +279,7 @@ class OdbResultData:
         payload = {
             "mode": mode
         }
-        return QtServer.send_get("GET-VIBRATION-MODAL-RESULTS", payload)
+        return QtServer.send_dict("GET-VIBRATION-MODAL-RESULTS", payload)
 
     @staticmethod
     def get_buckling_eigenvalue() -> str:
@@ -290,7 +290,7 @@ class OdbResultData:
             odb.get_buckling_eigenvalue()
         Returns: 返回json字符串， list[dict]包含各模态下特征值
         """
-        return QtServer.send_get("GET-BUCKLING-EIGENVALUE", None)
+        return QtServer.send_dict("GET-BUCKLING-EIGENVALUE", None)
 
     @staticmethod
     def get_buckling_modal_results(mode: int = 1) -> str:
@@ -305,5 +305,5 @@ class OdbResultData:
         payload = {
             "mode": mode
         }
-        return QtServer.send_get("GET-BUCKLING-MODAL-RESULTS", payload)
+        return QtServer.send_dict("GET-BUCKLING-MODAL-RESULTS", payload)
 # endregion

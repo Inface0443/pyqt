@@ -45,7 +45,7 @@ class MdbLiveLoad:
             elif standard_code in (2, 3, 4, 5, 7):
                 s += "\r\n"
             # print(s)
-            QtServer.post_command(s, "QDAT")
+            QtServer.send_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
 
@@ -96,7 +96,7 @@ class MdbLiveLoad:
                 else:
                     raise Exception("操作错误，P和D列表长度不一致")
             # print(s)
-            QtServer.post_command(s, "QDAT")
+            QtServer.send_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
 
@@ -123,7 +123,7 @@ class MdbLiveLoad:
                 "order_by_x": order_by_x,
             }
             json_string = json.dumps(params, indent=2)
-            QtServer.post_command(json_string, "ADD-NODE-TANDEM")
+            QtServer.send_command(json_string, "ADD-NODE-TANDEM")
         except Exception as ex:
             raise Exception(ex)
 
@@ -141,7 +141,7 @@ class MdbLiveLoad:
         try:
             s = "*INF-PLANE\r\n" + f"{name}," + ",".join(tandem_names) + "\r\n"
             # print(s)
-            QtServer.post_command(s, "QDAT")
+            QtServer.send_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
 
@@ -166,7 +166,7 @@ class MdbLiveLoad:
             opt_str = "YES" if optimize else "NO"
             s = "*LANE-LINE\r\n" + f"{name},{influence_name},{tandem_name},{offset:g},{lane_width:g},{opt_str},{direction}\r\n"
             # print(s)
-            QtServer.post_command(s, "QDAT")
+            QtServer.send_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
 
@@ -203,7 +203,7 @@ class MdbLiveLoad:
                 s += f"YES,{special_code}\r\n"
             s += "\r\n".join((f"{veh_name},{coeff:g}," + ",".join(lanes)) for veh_name, coeff, lanes in sub_case)
             # print(s)
-            QtServer.post_command(s, "QDAT")
+            QtServer.send_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
 
@@ -228,7 +228,7 @@ class MdbLiveLoad:
             s = "*LIVE-REDUCTION\r\n" + f"NAME={name},1,{code_index},{longitude_factor:g},{impact_factor:g},{frequency:g}\r\n" + ",".join(
                 f"{x:g}" for x in cross_factors) + "\r\n"
             # print(s)
-            QtServer.post_command(s, "QDAT")
+            QtServer.send_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
 
@@ -262,7 +262,7 @@ class MdbLiveLoad:
             s = "*LIVE-REDUCTION\r\n" + f"NAME={name},2,{code_index},{calc_str},{line_count},{longitude_factor:g},{impact_factor:g},{fatigue_factor:g},{bridge_kind},{fill_thick:g},{rise:g},{calc_length}\r\n"
             s += ",".join(f"{x:g}" for x in cross_factors) + "\r\n"
             # print(s)
-            QtServer.post_command(s, "QDAT")
+            QtServer.send_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
 
@@ -285,7 +285,7 @@ class MdbLiveLoad:
             s = "*LIVE-REDUCTION\r\n" + f"NAME={name},3,0,{longitude_factor:g},{impact_factor:g}\r\n" + ",".join(
                 f"{x:g}" for x in cross_factors) + "\r\n"
             # print(s)
-            QtServer.post_command(s, "QDAT")
+            QtServer.send_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
 
@@ -325,7 +325,7 @@ class MdbLiveLoad:
             "n": n,
             "calc_fatigue": calc_fatigue,
         }
-        return QtServer.send_post("UPDATE-STANDARD-VEHICLE", payload)
+        return QtServer.send_dict("UPDATE-STANDARD-VEHICLE", payload)
 
     @staticmethod
     def update_user_vehicle(name: str, new_name: str = "", load_type: str = "车辆荷载",
@@ -370,7 +370,7 @@ class MdbLiveLoad:
             "unit_force": unit_force,
             "unit_length": unit_length,
         }
-        return QtServer.send_post("UPDATE-USER-VEHICLE", payload)
+        return QtServer.send_dict("UPDATE-USER-VEHICLE", payload)
 
     @staticmethod
     def update_influence_plane(name: str, new_name: str = "", tandem_names: list[str] = None):
@@ -389,7 +389,7 @@ class MdbLiveLoad:
             "new_name": new_name,
             "tandem_names": tandem_names,
         }
-        return QtServer.send_post("UPDATE-INFLUENCE-PLANE", payload)
+        return QtServer.send_dict("UPDATE-INFLUENCE-PLANE", payload)
 
     @staticmethod
     def update_lane_line(name: str, new_name: str = "", influence_name: str = "", tandem_name: str = "", offset: float = 0, lane_width: float = 0,
@@ -419,7 +419,7 @@ class MdbLiveLoad:
             "optimize": optimize,
             "direction": direction,
         }
-        return QtServer.send_post("UPDATE-LANE-LINE", payload)
+        return QtServer.send_dict("UPDATE-LANE-LINE", payload)
 
     @staticmethod
     def update_node_tandem(name: str, new_name: str = "", node_ids=None, order_by_x: bool = True):
@@ -441,7 +441,7 @@ class MdbLiveLoad:
             "node_ids": node_ids,
             "order_by_x": order_by_x,
         }
-        return QtServer.send_post("UPDATE-NODE-TANDEM", payload)
+        return QtServer.send_dict("UPDATE-NODE-TANDEM", payload)
 
     @staticmethod
     def update_live_load_case(name: str, new_name: str = "", influence_plane: str = "", span: float = 0,
@@ -470,7 +470,7 @@ class MdbLiveLoad:
             "trailer_code": trailer_code,
             "special_code": special_code,
         }
-        return QtServer.send_post("UPDATE-LIVE-LOAD-CASE", payload)
+        return QtServer.send_dict("UPDATE-LIVE-LOAD-CASE", payload)
 
     @staticmethod
     def remove_vehicle(index: int = -1, name: str = ""):
@@ -485,7 +485,7 @@ class MdbLiveLoad:
         Returns: 无
         """
         payload = {"index": index, "name": name}
-        return QtServer.send_post("REMOVE-VEHICLE", payload)
+        return QtServer.send_dict("REMOVE-VEHICLE", payload)
 
     @staticmethod
     def remove_node_tandem(index: int = -1, name: str = ""):
@@ -500,7 +500,7 @@ class MdbLiveLoad:
         Returns: 无
         """
         payload = {"index": index, "name": name}
-        return QtServer.send_post("REMOVE-NODE-TANDEM", payload)
+        return QtServer.send_dict("REMOVE-NODE-TANDEM", payload)
 
     @staticmethod
     def remove_influence_plane(index: int = -1, name: str = ""):
@@ -515,7 +515,7 @@ class MdbLiveLoad:
         Returns: 无
         """
         payload = {"index": index, "name": name}
-        return QtServer.send_post("REMOVE-INFLUENCE-PLANE", payload)
+        return QtServer.send_dict("REMOVE-INFLUENCE-PLANE", payload)
 
     @staticmethod
     def remove_lane_line(index: int = -1, name: str = ""):
@@ -530,7 +530,7 @@ class MdbLiveLoad:
         Returns: 无
         """
         payload = {"index": index, "name": name}
-        return QtServer.send_post("REMOVE-LANE-LINE", payload)
+        return QtServer.send_dict("REMOVE-LANE-LINE", payload)
 
     @staticmethod
     def remove_live_load_case(index: int = -1, name: str = ""):
@@ -545,7 +545,7 @@ class MdbLiveLoad:
         Returns: 无
         """
         payload = {"index": index, "name": name}
-        return QtServer.send_post("REMOVE-LIVE-LOAD-CASE", payload)
+        return QtServer.send_dict("REMOVE-LIVE-LOAD-CASE", payload)
 
 
 

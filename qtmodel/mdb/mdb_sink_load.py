@@ -32,7 +32,7 @@ class MdbSinkLoad:
                 id_str = str(node_ids)
             s = "*SINK-GROUP\r\n" + f"{name},{sink:g},{id_str}\r\n"
             # print(s)
-            QtServer.post_command(s, "QDAT")
+            QtServer.send_command(s, "QDAT")
         except Exception as ex:
             raise Exception(f"添加沉降组:{name}错误,{ex}")
 
@@ -52,7 +52,7 @@ class MdbSinkLoad:
                 sink_groups = [sink_groups]
             s = "*SINK-CASE\r\n" + f"{name},{','.join(sink_groups)}\r\n"
             # print(s)
-            QtServer.post_command(s, "QDAT")
+            QtServer.send_command(s, "QDAT")
         except Exception as ex:
             raise Exception(f"添加沉降工况:{name}错误,{ex}")
 
@@ -73,7 +73,7 @@ class MdbSinkLoad:
                 names = [names]
             s = "*CCT-REACT\r\n" + ",".join(names) + "\r\n"
             # print(s)
-            QtServer.post_command(s, "QDAT")
+            QtServer.send_command(s, "QDAT")
         except Exception as ex:
             raise Exception(f"添加并发反力组错误,{ex}")
 
@@ -92,7 +92,7 @@ class MdbSinkLoad:
                 names = [names]
             s = "*CCT-FORCE\r\n" + ",".join(names) + "\r\n"
             # print(s)
-            QtServer.post_command(s, "QDAT")
+            QtServer.send_command(s, "QDAT")
         except Exception as ex:
             raise Exception(f"添加并发内力组错误,{ex}")
 
@@ -115,7 +115,7 @@ class MdbSinkLoad:
             "new_name": new_name,
             "sink_groups": sink_groups,
         }
-        return QtServer.send_post("UPDATE-SINK-CASE", payload)
+        return QtServer.send_dict("UPDATE-SINK-CASE", payload)
 
 
 
@@ -133,7 +133,7 @@ class MdbSinkLoad:
         payload = {
             "name": name,
         }
-        return QtServer.send_post("REMOVE-SINK-GROUP", payload)
+        return QtServer.send_dict("REMOVE-SINK-GROUP", payload)
 
     @staticmethod
     def remove_sink_case(name=""):
@@ -149,7 +149,7 @@ class MdbSinkLoad:
         payload = {
             "name": name,
         }
-        return QtServer.send_post("REMOVE-SINK-CASE", payload)
+        return QtServer.send_dict("REMOVE-SINK-CASE", payload)
 
 
 
@@ -163,7 +163,7 @@ class MdbSinkLoad:
         Returns: 无
         """
         payload = {}
-        return QtServer.send_post("REMOVE-CONCURRENT-REACTION", payload)
+        return QtServer.send_dict("REMOVE-CONCURRENT-REACTION", payload)
 
     @staticmethod
     def remove_concurrent_force():
@@ -175,7 +175,7 @@ class MdbSinkLoad:
         Returns: 无
         """
         payload = {}
-        return QtServer.send_post("REMOVE-CONCURRENT-FORCE", payload)
+        return QtServer.send_dict("REMOVE-CONCURRENT-FORCE", payload)
 
 
     # endregion
