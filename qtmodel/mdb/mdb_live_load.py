@@ -1,5 +1,5 @@
 import json
-from ..core.qt_server import QtServer
+from qtmodel.core.qt_server import QtServer
 from typing import Union, List, Optional
 from qtmodel.core.data_helper import QtDataHelper
 
@@ -44,7 +44,6 @@ class MdbLiveLoad:
                     s += f",{','.join('YES' if x else 'NO' for x in calc_fatigue[:3])}\r\n"
             elif standard_code in (2, 3, 4, 5, 7):
                 s += "\r\n"
-            # print(s)
             QtServer.send_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)

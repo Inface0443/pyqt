@@ -1,4 +1,4 @@
-from ..core.qt_server import QtServer
+from qtmodel.core.qt_server import QtServer
 
 
 class OdbModelStage:

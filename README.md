@@ -2283,8 +2283,8 @@ from qtmodel import *
 mdb.add_spectrum_case(name="反应谱工况",info_x=("函数1",1.0))
 #Returns: 无
 ```  
-# print(s)
-QtServer.post_command(s, "QDAT")
+### update_spectrum_function
+todo 更新反应谱函数
 > 参数:  
 > name: 函数名称  
 > new_name: 新函数名称  

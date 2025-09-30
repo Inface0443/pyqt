@@ -2,7 +2,7 @@ import json
 from typing import Union
 
 from qtmodel.core.data_helper import QtDataHelper
-from ..core.qt_server import QtServer
+from qtmodel.core.qt_server import QtServer
 
 
 class MdbSection:
@@ -78,37 +78,33 @@ class MdbSection:
                             (1, 0, 0.2, "板肋1", 2, "默认名称1")])
         Returns: 无
             """
-        try:
-            if (bias_x, bias_y) != (0, 0):
-                bias = f"{bias_x:g},{bias_y:g}"
-            else:
-                bias = f"{center_type},{bias_type}"
-            s = ""
-            if sec_property is not None:
-                s += "*SEC-PROPERTY\r\n" + f"ID={index},{name},1,{'YES' if shear_consider else 'NO'},{bias}\r\n"
-                s += ",".join(f"{x:g}" for x in sec_property) + "\r\n"
-            s += "*SEC-INFO\r\n" + f"ID={index},{name},{sec_type},{'YES' if shear_consider else 'NO'},{bias}\r\n"
-            s += QtDataHelper.str_section(
-                sec_type,
-                sec_info,
-                symmetry,
-                charm_info,
-                sec_right,
-                charm_right,
-                box_num,
-                box_height,
-                box_other_info,
-                box_other_right,
-                mat_combine,
-                rib_info,
-                rib_place,
-                loop_segments,
-                sec_lines,
-                secondary_loop_segments)
-
-            QtServer.send_command(s, "QDAT")
-        except Exception as ex:
-            raise Exception(f"添加截面:{name}失败，{ex}")
+        if (bias_x, bias_y) != (0, 0):
+            bias = f"{bias_x:g},{bias_y:g}"
+        else:
+            bias = f"{center_type},{bias_type}"
+        s = ""
+        if sec_property is not None:
+            s += "*SEC-PROPERTY\r\n" + f"ID={index},{name},1,{'YES' if shear_consider else 'NO'},{bias}\r\n"
+            s += ",".join(f"{x:g}" for x in sec_property) + "\r\n"
+        s += "*SEC-INFO\r\n" + f"ID={index},{name},{sec_type},{'YES' if shear_consider else 'NO'},{bias}\r\n"
+        s += QtDataHelper.str_section(
+            sec_type,
+            sec_info,
+            symmetry,
+            charm_info,
+            sec_right,
+            charm_right,
+            box_num,
+            box_height,
+            box_other_info,
+            box_other_right,
+            mat_combine,
+            rib_info,
+            rib_place,
+            loop_segments,
+            sec_lines,
+            secondary_loop_segments)
+        QtServer.send_command(s, "QDAT")
 
     @staticmethod
     def add_single_section(index: int = -1, name: str = "", sec_type: str = "矩形", sec_data: dict = None):
@@ -124,26 +120,23 @@ class MdbSection:
                 sec_data={"sec_info":[1,2],"bias_type":"中心"})
         Returns: 无
         """
-        try:
-            shear_consider = sec_data.get("shear_consider", True)
-            bias_type = sec_data.get("bias_type", "中心")
-            center_type = sec_data.get("center_type", "质心")
-            bias_x = sec_data.get("bias_x", 0)
-            bias_y = sec_data.get("bias_y", 0)
-            if (bias_x, bias_y) != (0, 0):
-                bias = f"{bias_x:g},{bias_y:g}"
-            else:
-                bias = f"{center_type},{bias_type}"
-            sec_property: Union[list[float], None] = sec_data.get("sec_property", None)
-            s = ""
-            if sec_property is not None:
-                s += "*SEC-PROPERTY\r\n" + f"ID={index},{name},1,{'YES' if shear_consider else 'NO'},{bias}\r\n"
-                s += ",".join(f"{x:g}" for x in sec_property) + "\r\n"
-            s += "*SEC-INFO\r\n" + f"ID={index},{name},{sec_type},{'YES' if shear_consider else 'NO'},{bias}\r\n"
-            s += QtDataHelper.get_str_by_data(sec_type, sec_data)
-            QtServer.send_command(s, "QDAT")
-        except Exception as ex:
-            raise Exception(ex)
+        shear_consider = sec_data.get("shear_consider", True)
+        bias_type = sec_data.get("bias_type", "中心")
+        center_type = sec_data.get("center_type", "质心")
+        bias_x = sec_data.get("bias_x", 0)
+        bias_y = sec_data.get("bias_y", 0)
+        if (bias_x, bias_y) != (0, 0):
+            bias = f"{bias_x:g},{bias_y:g}"
+        else:
+            bias = f"{center_type},{bias_type}"
+        sec_property: Union[list[float], None] = sec_data.get("sec_property", None)
+        s = ""
+        if sec_property is not None:
+            s += "*SEC-PROPERTY\r\n" + f"ID={index},{name},1,{'YES' if shear_consider else 'NO'},{bias}\r\n"
+            s += ",".join(f"{x:g}" for x in sec_property) + "\r\n"
+        s += "*SEC-INFO\r\n" + f"ID={index},{name},{sec_type},{'YES' if shear_consider else 'NO'},{bias}\r\n"
+        s += QtDataHelper.get_str_by_data(sec_type, sec_data)
+        QtServer.send_command(s, "QDAT")
 
     @staticmethod
     def add_tapper_section(index: int, name: str = "", sec_type: str = "矩形", sec_begin: dict = None,
@@ -426,24 +419,22 @@ class MdbSection:
             mdb.add_tapper_section_group(ids=[1,2,3,4],name="参数化变截面组",parameter_info={"梁高(H)":"1,2,I,0"})
         Returns: 无
         """
-        try:
-            if ids is None:
-                id_str = ""
-            elif isinstance(ids, list):  # 列表转化为XtoYbyN
-                id_str = QtDataHelper.parse_int_list_to_str(ids)
-            else:
-                id_str = str(ids)
-            if parameter_info is None:
-                s = "*TSGROUP\r\n" + f"{name},{id_str},{factor_w:g},{ref_w},{dis_w:g},{factor_h:g},{ref_h},{dis_h:g}\r\n"
+        if ids is None:
+            id_str = ""
+        elif isinstance(ids, list):  # 列表转化为XtoYbyN
+            id_str = QtDataHelper.parse_int_list_to_str(ids)
+        else:
+            id_str = str(ids)
+        if parameter_info is None:
+            s = "*TSGROUP\r\n" + f"{name},{id_str},{factor_w:g},{ref_w},{dis_w:g},{factor_h:g},{ref_h},{dis_h:g}\r\n"
 
-                QtServer.send_command(s, "QDAT")
-            if parameter_info is not None:
-                s = "*PARA-TSGROUP\r\n" + f"NAME={name},{id_str}\r\n"
-                for key, value in parameter_info.items():
-                    s += f"{key}={value}\r\n"
-                QtServer.send_command(s, "QDAT")
-        except Exception as ex:
-            raise Exception(f"添加变截面组:{name}失败,{ex}")
+            QtServer.send_command(s, "QDAT")
+        if parameter_info is not None:
+            s = "*PARA-TSGROUP\r\n" + f"NAME={name},{id_str}\r\n"
+            for key, value in parameter_info.items():
+                s += f"{key}={value}\r\n"
+            QtServer.send_command(s, "QDAT")
+
 
     @staticmethod
     def add_elements_to_tapper_section_group(name: str, ids=None):

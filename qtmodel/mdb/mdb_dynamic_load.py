@@ -1,6 +1,6 @@
 import json
 from qtmodel.core.data_helper import QtDataHelper
-from ..core.qt_server import QtServer
+from qtmodel.core.qt_server import QtServer
 from typing import Union, List, Optional
 
 
@@ -21,12 +21,9 @@ class MdbDynamicLoad:
             mdb.add_load_to_mass(name="荷载工况",factor=1)
         Returns: 无
         """
-        try:
-            s = "*LOADTOMASS\r\n" + f"{name},{factor}\r\n"
-            # print(s)
-            QtServer.send_command(s, "QDAT")
-        except Exception as ex:
-            raise Exception(ex)
+        s = "*LOADTOMASS\r\n" + f"{name},{factor}\r\n"
+        # print(s)
+        QtServer.send_command(s, "QDAT")
 
     @staticmethod
     def add_nodal_mass(node_id, mass_info: tuple[float, float, float, float] = None):
@@ -39,18 +36,14 @@ class MdbDynamicLoad:
             mdb.add_nodal_mass(node_id=1,mass_info=(100,0,0,0))
         Returns: 无
         """
-        try:
-            if mass_info is None:
-                raise Exception("操作错误，节点质量信息列表不能为空")
-            if isinstance(node_id, list):  # 列表转化为XtoYbyN
-                node_str = QtDataHelper.parse_int_list_to_str(node_id)
-            else:
-                node_str = str(node_id)
-            s = "*NODALMASS\r\n" + f"{node_str},{mass_info[0]:g},{mass_info[1]:g},{mass_info[2]:g},{mass_info[3]:g}\r\n"
-            # print(s)
-            QtServer.send_command(s, "QDAT")
-        except Exception as ex:
-            raise Exception(ex)
+        if mass_info is None:
+            raise Exception("操作错误，节点质量信息列表不能为空")
+        if isinstance(node_id, list):  # 列表转化为XtoYbyN
+            node_str = QtDataHelper.parse_int_list_to_str(node_id)
+        else:
+            node_str = str(node_id)
+        s = "*NODALMASS\r\n" + f"{node_str},{mass_info[0]:g},{mass_info[1]:g},{mass_info[2]:g},{mass_info[3]:g}\r\n"
+        QtServer.send_command(s, "QDAT")
 
     @staticmethod
     def add_boundary_element_property(index: int = -1, name: str = "", kind: str = "钩",
@@ -73,24 +66,21 @@ class MdbDynamicLoad:
             mdb.add_boundary_element_property(name="边界单元特性",kind="粘滞阻尼器",info_x=[0.05,1])
         Returns: 无
         """
-        try:
-            params = {
-                "version": QtServer.QT_VERSION,
-                "index": index,
-                "name": name,
-                "kind": kind,
-                "info_x": info_x,
-                "info_y": info_y,
-                "info_z": info_z,
-                "weight": weight,
-                "pin_stiffness": pin_stiffness,
-                "pin_yield": pin_yield,
-                "description": description
-            }
-            json_string = json.dumps(params, indent=2, ensure_ascii=False)
-            QtServer.send_command(header="ADD-BOUNDARY-ELEMENT-PROPERTY", command=json_string)
-        except Exception as ex:
-            raise Exception(ex)
+        params = {
+            "version": QtServer.QT_VERSION,
+            "index": index,
+            "name": name,
+            "kind": kind,
+            "info_x": info_x,
+            "info_y": info_y,
+            "info_z": info_z,
+            "weight": weight,
+            "pin_stiffness": pin_stiffness,
+            "pin_yield": pin_yield,
+            "description": description
+        }
+        json_string = json.dumps(params, indent=2, ensure_ascii=False)
+        QtServer.send_command(header="ADD-BOUNDARY-ELEMENT-PROPERTY", command=json_string)
 
     @staticmethod
     def add_boundary_element_link(index: int = -1, property_name: str = "", node_i: int = 1, node_j: int = 2,
@@ -109,12 +99,9 @@ class MdbDynamicLoad:
             mdb.add_boundary_element_link(property_name="边界单元特性",node_i=1,node_j=2,group_name="边界组1")
         Returns: 无
         """
-        try:
-            s = "*BDLINK\r\n" + f"{index},{property_name},{node_i},{node_j},{beta},{node_system},{group_name}\r\n"
-            # print(s)
-            QtServer.send_command(s, "QDAT")
-        except Exception as ex:
-            raise Exception(ex)
+        s = "*BDLINK\r\n" + f"{index},{property_name},{node_i},{node_j},{beta},{node_system},{group_name}\r\n"
+        # print(s)
+        QtServer.send_command(s, "QDAT")
 
     @staticmethod
     def add_nodal_dynamic_load(index: int = -1, node_id: int = 1, case_name: str = "",
@@ -133,24 +120,18 @@ class MdbDynamicLoad:
             mdb.add_nodal_dynamic_load(node_id=1,case_name="时程工况1",function_name="函数1",time=10)
         Returns: 无
         """
-        try:
-            # s = "*DMCLOAD\r\n" + f"{node_id},{case_name},{function_name},{force_type},{factor},{time}\r\n"
-            # # print(s)
-            # QtServer.post_command(s, "QDAT")
-            params = {
-                "version": QtServer.QT_VERSION,  # 版本控制
-                "index": index,
-                "node_id": node_id,
-                "case_name": case_name,
-                "function_name": function_name,
-                "force_type": force_type,
-                "factor": factor,
-                "time": time
-            }
-            json_string = json.dumps(params, indent=2)
-            QtServer.send_command(header="ADD-NODAL-DYNAMIC-LOAD", command=json_string)
-        except Exception as ex:
-            raise Exception(ex)
+        params = {
+            "version": QtServer.QT_VERSION,  # 版本控制
+            "index": index,
+            "node_id": node_id,
+            "case_name": case_name,
+            "function_name": function_name,
+            "force_type": force_type,
+            "factor": factor,
+            "time": time
+        }
+        json_string = json.dumps(params, indent=2)
+        QtServer.send_command(header="ADD-NODAL-DYNAMIC-LOAD", command=json_string)
 
     @staticmethod
     def add_ground_motion(case_name: str = "",
@@ -168,18 +149,14 @@ class MdbDynamicLoad:
             mdb.add_ground_motion(case_name="时程工况1",info_x=("函数名",1,10))
         Returns: 无
         """
-        try:
-            s = "*GDMOTION\r\n" + f"NAME={case_name}\r\n"
-            if info_x is not None:
-                s += f"X={info_x[0]},{info_x[1]:g},{info_x[2]:g}\r\n"
-            if info_y is not None:
-                s += f"Y={info_y[0]},{info_y[1]:g},{info_y[2]:g}\r\n"
-            if info_z is not None:
-                s += f"Z={info_z[0]},{info_z[1]:g},{info_z[2]:g}\r\n"
-            # print(s)
-            QtServer.send_command(s, "QDAT")
-        except Exception as ex:
-            raise Exception(ex)
+        s = "*GDMOTION\r\n" + f"NAME={case_name}\r\n"
+        if info_x is not None:
+            s += f"X={info_x[0]},{info_x[1]:g},{info_x[2]:g}\r\n"
+        if info_y is not None:
+            s += f"Y={info_y[0]},{info_y[1]:g},{info_y[2]:g}\r\n"
+        if info_z is not None:
+            s += f"Z={info_z[0]},{info_z[1]:g},{info_z[2]:g}\r\n"
+        QtServer.send_command(s, "QDAT")
 
     @staticmethod
     def add_time_history_case(
@@ -216,26 +193,23 @@ class MdbDynamicLoad:
                 group_damping=[("材料1",8,1,0.05),("材料2",8,1,0.05),("材料3",8,1,0.02)])
         Returns: 无
         """
-        try:
-            params = {
-                "version": QtServer.QT_VERSION,  # 版本控制
-                "index": index,
-                "name": name,
-                "description": description,
-                "analysis_kind": analysis_kind,
-                "nonlinear_groups": nonlinear_groups or [],
-                "duration": duration,
-                "time_step": time_step,
-                "min_step": min_step,
-                "tolerance": tolerance,
-                "damp_type": damp_type,
-                "single_damping": list(single_damping) if single_damping else [],
-                "group_damping": [list(x) for x in (group_damping or [])],
-            }
-            json_string = json.dumps(params, indent=2, ensure_ascii=False)
-            QtServer.send_command(header="ADD-TIME-HISTORY-CASE", command=json_string)
-        except Exception as ex:
-            raise Exception(ex)
+        params = {
+            "version": QtServer.QT_VERSION,  # 版本控制
+            "index": index,
+            "name": name,
+            "description": description,
+            "analysis_kind": analysis_kind,
+            "nonlinear_groups": nonlinear_groups or [],
+            "duration": duration,
+            "time_step": time_step,
+            "min_step": min_step,
+            "tolerance": tolerance,
+            "damp_type": damp_type,
+            "single_damping": list(single_damping) if single_damping else [],
+            "group_damping": [list(x) for x in (group_damping or [])],
+        }
+        json_string = json.dumps(params, indent=2, ensure_ascii=False)
+        QtServer.send_command(header="ADD-TIME-HISTORY-CASE", command=json_string)
 
     @staticmethod
     def add_time_history_function(name: str = "", factor: float = 1.0, kind: int = 0, function_info: list = None):
@@ -250,14 +224,10 @@ class MdbDynamicLoad:
             mdb.add_time_history_function(name="时程函数1",factor=1,function_info=[(0,0),(0.02,0.1),[0.04,0.3]])
         Returns: 无
         """
-        try:
-            s = "*THFUNC\r\n" + f"NAME={name},{factor},{kind}\r\n"
-            if function_info is not None:
-                s += ",".join(f"{time:g},{y:g}" for time, y in function_info) + "\r\n"
-            # print(s)
-            QtServer.send_command(s, "QDAT")
-        except Exception as ex:
-            raise Exception(ex)
+        s = "*THFUNC\r\n" + f"NAME={name},{factor},{kind}\r\n"
+        if function_info is not None:
+            s += ",".join(f"{time:g},{y:g}" for time, y in function_info) + "\r\n"
+        QtServer.send_command(s, "QDAT")
 
     @staticmethod
     def add_vehicle_dynamic_load(node_ids=None, function_name: str = "", case_name: str = "", kind: int = 1,
@@ -699,6 +669,7 @@ class MdbDynamicLoad:
         except Exception as ex:
             raise Exception(ex)
 
+    @staticmethod
     def update_spectrum_function(name: str = "", new_name: str = "", factor: float = 1.0, kind: int = 0,
                                  function_info: list[tuple[float, float]] = None) -> None:
         """

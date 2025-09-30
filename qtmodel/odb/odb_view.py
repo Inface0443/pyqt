@@ -1,4 +1,4 @@
-from qtmodel.core import QtServer
+from qtmodel.core.qt_server import QtServer
 
 
 class OdbView:

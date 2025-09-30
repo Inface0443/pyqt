@@ -1,5 +1,5 @@
 from typing import Union, List, Optional
-from ..core.qt_server import QtServer
+from qtmodel.core.qt_server import QtServer
 from qtmodel.core.data_helper import QtDataHelper
 
 
@@ -59,12 +59,8 @@ class MdbAnalysisSetting:
            mdb.update_global_setting(solver_type=0,calculation_type=2,thread_count=12)
         Returns: 无
         """
-        try:
-            s = "*GLB-SET\r\n" + f"{solver_type},{calculation_type},{thread_count}\r\n"
-            # print(s)
-            QtServer.send_command(s, "QDAT")
-        except Exception as ex:
-            raise Exception(ex)
+        s = "*GLB-SET\r\n" + f"{solver_type},{calculation_type},{thread_count}\r\n"
+        QtServer.send_command(s, "QDAT")
 
     @staticmethod
     def update_construction_stage_setting(do_analysis: bool = True, to_end_stage: bool = True,
@@ -91,18 +87,14 @@ class MdbAnalysisSetting:
                 do_creep_analysis=True, cable_tension_position=0, consider_completion_stage=True,shrink_creep_type=2)
         Returns: 无
         """
-        try:
-            do_str = "YES" if do_analysis else "NO"
-            toend_str = "YES" if to_end_stage else "NO"
-            creep_str = "YES" if do_creep_analysis else "NO"
-            comp_str = "YES" if consider_completion_stage else "NO"
-            s = "*CS-SET\r\n" + f"{do_str},{toend_str},{other_stage_name},{analysis_type},{creep_str},{cable_tension_position},{comp_str}\r\n"
-            s += f"{shrink_creep_type},{creep_load_type},"
-            s += f"{'YES' if sub_step_info[0] else 'NO'},{','.join(f'{x:g}' for x in sub_step_info[1:])}\r\n" if sub_step_info else "\r\n"
-            # print(s)
-            QtServer.send_command(s, "QDAT")
-        except Exception as ex:
-            raise Exception(ex)
+        do_str = "YES" if do_analysis else "NO"
+        toend_str = "YES" if to_end_stage else "NO"
+        creep_str = "YES" if do_creep_analysis else "NO"
+        comp_str = "YES" if consider_completion_stage else "NO"
+        s = "*CS-SET\r\n" + f"{do_str},{toend_str},{other_stage_name},{analysis_type},{creep_str},{cable_tension_position},{comp_str}\r\n"
+        s += f"{shrink_creep_type},{creep_load_type},"
+        s += f"{'YES' if sub_step_info[0] else 'NO'},{','.join(f'{x:g}' for x in sub_step_info[1:])}\r\n" if sub_step_info else "\r\n"
+        QtServer.send_command(s, "QDAT")
 
     @staticmethod
     def update_live_load_setting(lateral_spacing: float = 0.1, vertical_spacing: float = 1, damper_calc_type: int = -1,
@@ -149,30 +141,25 @@ class MdbAnalysisSetting:
                 displacement_groups=["结构组1","结构组2"])
         Returns: 无
         """
+        s = "*LIV-SET\r\n" + f"{lateral_spacing:g},{vertical_spacing:g},{eccentricity:g},{'YES' if displacement_track else 'NO'},{'YES' if force_track else 'NO'},{'YES' if reaction_track else 'NO'},{'YES' if link_track else 'NO'},{'YES' if constrain_track else 'NO'}\r\n"
+        if damper_calc_type != -1:
+            s += f"1,{damper_calc_type},{','.join(damper_groups)}\r\n"
 
-        try:
-            s = "*LIV-SET\r\n" + f"{lateral_spacing:g},{vertical_spacing:g},{eccentricity:g},{'YES' if displacement_track else 'NO'},{'YES' if force_track else 'NO'},{'YES' if reaction_track else 'NO'},{'YES' if link_track else 'NO'},{'YES' if constrain_track else 'NO'}\r\n"
-            if damper_calc_type != -1:
-                s += f"1,{damper_calc_type},{','.join(damper_groups)}\r\n"
+        lines = []
+        configs = [
+            (displacement_track, 2, displacement_calc_type, displacement_groups),
+            (force_track, 3, force_calc_type, force_groups),
+            (reaction_track, 4, reaction_calc_type, reaction_groups),
+            (link_track, 5, link_calc_type, link_groups),
+            (constrain_track, 6, constrain_calc_type, constrain_groups),
+        ]
 
-            lines = []
-            configs = [
-                (displacement_track, 2, displacement_calc_type, displacement_groups),
-                (force_track, 3, force_calc_type, force_groups),
-                (reaction_track, 4, reaction_calc_type, reaction_groups),
-                (link_track, 5, link_calc_type, link_groups),
-                (constrain_track, 6, constrain_calc_type, constrain_groups),
-            ]
+        for enabled, code, calc_type, groups in configs:
+            if enabled:
+                lines.append(QtDataHelper.live_load_set_line(code, calc_type, groups))
 
-            for enabled, code, calc_type, groups in configs:
-                if enabled:
-                    lines.append(QtDataHelper.live_load_set_line(code, calc_type, groups))
-
-            s = "".join(lines)
-            # print(s)
-            QtServer.send_command(s, "QDAT")
-        except Exception as ex:
-            raise Exception(ex)
+        s = "".join(lines)
+        QtServer.send_command(s, "QDAT")
 
     @staticmethod
     def update_non_linear_setting(non_linear_type: int = 1, non_linear_method: int = 1, max_loading_steps: int = 1,
@@ -192,12 +179,8 @@ class MdbAnalysisSetting:
                 accuracy_of_displacement=0.0001, accuracy_of_force=0.0001)
         Returns: 无
         """
-        try:
-            s = "*NON-SET\r\n" + f"{non_linear_type},{non_linear_method},{max_loading_steps},{max_iteration_times},{accuracy_of_displacement:g},{accuracy_of_force:g}\r\n"
-            # print(s)
-            QtServer.send_command(s, "QDAT")
-        except Exception as ex:
-            raise Exception(ex)
+        s = "*NON-SET\r\n" + f"{non_linear_type},{non_linear_method},{max_loading_steps},{max_iteration_times},{accuracy_of_displacement:g},{accuracy_of_force:g}\r\n"
+        QtServer.send_command(s, "QDAT")
 
     @staticmethod
     def update_operation_stage_setting(do_analysis: bool = True, final_stage: str = "",
@@ -216,18 +199,14 @@ class MdbAnalysisSetting:
             mdb.update_operation_stage_setting(do_analysis=True, final_stage="上二恒",static_load_cases=None)
         Returns: 无
         """
-        try:
-            s = "*OP-SET\r\n" + f"{'YES' if do_analysis else 'NO'},{final_stage}\r\n"
-            if static_load_cases is not None:
-                s += f"ST={','.join(static_load_cases)}\r\n"
-            if sink_load_cases is not None:
-                s += f"SM={','.join(sink_load_cases)}\r\n"
-            if live_load_cases is not None:
-                s += f"MV={','.join(live_load_cases)}\r\n"
-            # print(s)
-            QtServer.send_command(s, "QDAT")
-        except Exception as ex:
-            raise Exception(ex)
+        s = "*OP-SET\r\n" + f"{'YES' if do_analysis else 'NO'},{final_stage}\r\n"
+        if static_load_cases is not None:
+            s += f"ST={','.join(static_load_cases)}\r\n"
+        if sink_load_cases is not None:
+            s += f"SM={','.join(sink_load_cases)}\r\n"
+        if live_load_cases is not None:
+            s += f"MV={','.join(live_load_cases)}\r\n"
+        QtServer.send_command(s, "QDAT")
 
     @staticmethod
     def update_self_vibration_setting(do_analysis: bool = True, method: int = 1, matrix_type: int = 0,
@@ -243,12 +222,8 @@ class MdbAnalysisSetting:
             mdb.update_self_vibration_setting(do_analysis=True,method=1,matrix_type=0,mode_num=3)
         Returns: 无
         """
-        try:
-            s = "*VB-SET\r\n" + f"{'YES' if do_analysis else 'NO'},{method},{matrix_type},{mode_num}\r\n"
-            # print(s)
-            QtServer.send_command(s, "QDAT")
-        except Exception as ex:
-            raise Exception(ex)
+        s = "*VB-SET\r\n" + f"{'YES' if do_analysis else 'NO'},{method},{matrix_type},{mode_num}\r\n"
+        QtServer.send_command(s, "QDAT")
 
     @staticmethod
     def update_response_spectrum_setting(do_analysis: bool = True, kind: int = 1, by_mode: bool = False,
@@ -264,15 +239,11 @@ class MdbAnalysisSetting:
             mdb.update_response_spectrum_setting(do_analysis=True,kind=1,damping_ratio=0.05)
         Returns: 无
         """
-        try:
-            if do_analysis:
-                if isinstance(damping_ratio, float):
-                    damping_ratio = [damping_ratio]
-                s = "*RS-SET\r\n" + f"{kind},{'YES' if by_mode else 'NO'},{','.join(f'{x:g}' for x in damping_ratio)}\r\n"
-                # print(s)
-                QtServer.send_command(s, "QDAT")
-        except Exception as ex:
-            raise Exception(ex)
+        if do_analysis:
+            if isinstance(damping_ratio, float):
+                damping_ratio = [damping_ratio]
+            s = "*RS-SET\r\n" + f"{kind},{'YES' if by_mode else 'NO'},{','.join(f'{x:g}' for x in damping_ratio)}\r\n"
+            QtServer.send_command(s, "QDAT")
 
     @staticmethod
     def update_time_history_setting(do_analysis: bool = True, output_all: bool = True, groups: Optional[list[str]] = None):
@@ -286,18 +257,14 @@ class MdbAnalysisSetting:
             mdb.update_time_history_setting(do_analysis=True,output_all=True)
         Returns: 无
         """
-        try:
-            if do_analysis:
-                s = "*TH-SET\r\n" + f"{'YES' if output_all else 'NO'}"
-                if groups:
-                    s += "," + ','.join(groups) + "\r\n"
-                else:
-                    s += "\r\n"
-                QtServer.send_command(s, "QDAT")
-                # print(s)
-                QtServer.send_command(s, "QDAT")
-        except Exception as ex:
-            raise Exception(ex)
+        if do_analysis:
+            s = "*TH-SET\r\n" + f"{'YES' if output_all else 'NO'}"
+            if groups:
+                s += "," + ','.join(groups) + "\r\n"
+            else:
+                s += "\r\n"
+            QtServer.send_command(s, "QDAT")
+            QtServer.send_command(s, "QDAT")
 
     @staticmethod
     def update_bulking_setting(do_analysis: bool = True, mode_count: int = 3, stage_id: int = -1,
@@ -319,18 +286,14 @@ class MdbAnalysisSetting:
             mdb.update_bulking_setting(do_analysis=True,mode_count=3,variable_cases=["工况1","工况2"])
         Returns: 无
         """
-        try:
-            if do_analysis:
-                s = "*BUK-SET\r\n" + f"{mode_count},{stage_id},{'YES' if stressed else 'NO'},{calculate_kind}\r\n"
-                if variable_cases is None:
-                    raise Exception("操作错误，可变荷载工况名称集合为必要参数")
-                else:
-                    s += f"VL={','.join(variable_cases)}\r\n"
-                if constant_cases is not None:
-                    s += f"CL={','.join(constant_cases)}\r\n"
-                # print(s)
-                QtServer.send_command(s, "QDAT")
-        except Exception as ex:
-            raise Exception(ex)
+        if do_analysis:
+            s = "*BUK-SET\r\n" + f"{mode_count},{stage_id},{'YES' if stressed else 'NO'},{calculate_kind}\r\n"
+            if variable_cases is None:
+                raise Exception("操作错误，可变荷载工况名称集合为必要参数")
+            else:
+                s += f"VL={','.join(variable_cases)}\r\n"
+            if constant_cases is not None:
+                s += f"CL={','.join(constant_cases)}\r\n"
+            QtServer.send_command(s, "QDAT")
 
     # endregion

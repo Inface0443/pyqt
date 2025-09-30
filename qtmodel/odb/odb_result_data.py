@@ -1,5 +1,5 @@
-from ..core.qt_server import QtServer
-from ..core.data_helper import QtDataHelper
+from qtmodel.core.qt_server import QtServer
+from qtmodel.core.data_helper import QtDataHelper
 
 
 class OdbResultData:

@@ -1,6 +1,6 @@
 from typing import Optional
 
-from ..core.qt_server import QtServer
+from qtmodel.core.qt_server import QtServer
 
 
 class MdbProperty:
@@ -33,43 +33,40 @@ class MdbProperty:
             mdb.add_material(index=1,name="自定义材料1",mat_type=5,data_info=[3.5e10,2.5e4,0.2,1.5e-5])
         Returns: 无
         """
-        try:
-            if mat_type == 5:
-                modified = True
-            if modified and len(data_info) != 4:
-                raise Exception("操作错误,modify_info数据无效!")
-            mod_str = "YES" if modified else "NO"
-            s = "*MAT-INFO\r\n"
-            if mat_type == 1:  # 1-混凝土
-                s += f"{index},{name},{mat_type},{standard},{database},{construct_factor:g},{creep_id},{mod_str}"
-                if modified:
-                    s += f",{data_info[0]:g},{data_info[1]:g},{data_info[2]:g},{data_info[3]:g}"
-                s += "\r\n"
-            elif mat_type == 2:  # 2-钢材
-                s += f"{index},{name},{mat_type},{standard},{database},{construct_factor:g},{mod_str}"
-                if modified:
-                    s += f",{data_info[0]:g},{data_info[1]:g},{data_info[2]:g},{data_info[3]:g}"
-                s += "\r\n"
-            elif mat_type == 3:  # 3-预应力/钢丝
-                s += f"{index},{name},{mat_type},{standard},{database},{construct_factor:g},{mod_str}"
-                if modified:
-                    s += f",{data_info[0]:g},{data_info[1]:g},{data_info[2]:g},{data_info[3]:g}"
-                s += "\r\n"
-            elif mat_type == 4:  # 4-钢筋
-                s += f"{index},{name},{mat_type},{standard},{database},{construct_factor:g},{mod_str}"
-                if modified:
-                    s += f",{data_info[0]:g},{data_info[1]:g},{data_info[2]:g},{data_info[3]:g}"
-                s += "\r\n"
-            elif mat_type == 5:  # 5-自定义
-                s += f"{index},{name},{mat_type},{construct_factor:g},{data_info[0]:g},{data_info[1]:g},{data_info[2]:g},{data_info[3]:g},{creep_id},{f_cuk:g}\r\n"
-            elif mat_type == 6:  # 6-组合材料
-                if not composite_info or len(composite_info) != 2:
-                    raise Exception("操作错误,组合材料composite_info数据无效!")
-                s += f"{index},{name},{mat_type},{composite_info[0]},{composite_info[1]}\r\n"
-            # print(s)
-            QtServer.send_command(s, "QDAT")
-        except Exception as ex:
-            raise Exception(ex)
+        if mat_type == 5:
+            modified = True
+        if modified and len(data_info) != 4:
+            raise Exception("操作错误,modify_info数据无效!")
+        mod_str = "YES" if modified else "NO"
+        s = "*MAT-INFO\r\n"
+        if mat_type == 1:  # 1-混凝土
+            s += f"{index},{name},{mat_type},{standard},{database},{construct_factor:g},{creep_id},{mod_str}"
+            if modified:
+                s += f",{data_info[0]:g},{data_info[1]:g},{data_info[2]:g},{data_info[3]:g}"
+            s += "\r\n"
+        elif mat_type == 2:  # 2-钢材
+            s += f"{index},{name},{mat_type},{standard},{database},{construct_factor:g},{mod_str}"
+            if modified:
+                s += f",{data_info[0]:g},{data_info[1]:g},{data_info[2]:g},{data_info[3]:g}"
+            s += "\r\n"
+        elif mat_type == 3:  # 3-预应力/钢丝
+            s += f"{index},{name},{mat_type},{standard},{database},{construct_factor:g},{mod_str}"
+            if modified:
+                s += f",{data_info[0]:g},{data_info[1]:g},{data_info[2]:g},{data_info[3]:g}"
+            s += "\r\n"
+        elif mat_type == 4:  # 4-钢筋
+            s += f"{index},{name},{mat_type},{standard},{database},{construct_factor:g},{mod_str}"
+            if modified:
+                s += f",{data_info[0]:g},{data_info[1]:g},{data_info[2]:g},{data_info[3]:g}"
+            s += "\r\n"
+        elif mat_type == 5:  # 5-自定义
+            s += f"{index},{name},{mat_type},{construct_factor:g},{data_info[0]:g},{data_info[1]:g},{data_info[2]:g},{data_info[3]:g},{creep_id},{f_cuk:g}\r\n"
+        elif mat_type == 6:  # 6-组合材料
+            if not composite_info or len(composite_info) != 2:
+                raise Exception("操作错误,组合材料composite_info数据无效!")
+            s += f"{index},{name},{mat_type},{composite_info[0]},{composite_info[1]}\r\n"
+        QtServer.send_command(s, "QDAT")
+
 
     @staticmethod
     def add_time_parameter(index: int = -1, name: str = "", code_index: int = 1, time_parameter: list[float] = None,
@@ -87,49 +84,45 @@ class MdbProperty:
             mdb.add_time_parameter(name="收缩徐变材料1",code_index=1)
         Returns: 无
         """
-        try:
-            s = "*TDMATERIAL\r\n"
-            if time_parameter is None and code_index < 9:  # 默认不修改收缩徐变相关参数
-                s += f"{index},{name},{code_index}\r\n"
-            elif code_index == 1:  # 公规 JTG 3362-2018
-                if len(time_parameter) != 4:
-                    raise Exception("操作错误,time_parameter数据无效!")
-                s += f"{index},{name},{code_index},{time_parameter[0]:g},{time_parameter[1]:g},{time_parameter[2]:g},{time_parameter[3]:g}\r\n"
-            elif code_index == 2:  # 公规 JTG D62-2004
-                if len(time_parameter) != 3:
-                    raise Exception("操作错误,time_parameter数据无效!")
-                s += f"{index},{name},{code_index},{time_parameter[0]:g},{time_parameter[1]:g},{time_parameter[2]:g}\r\n"
-            elif code_index == 3:  # 公规 JTJ 023-85
-                if len(time_parameter) != 4:
-                    raise Exception("操作错误,time_parameter数据无效!")
-                s += f"{index},{name},{code_index},{time_parameter[0]:g},{time_parameter[1]:g},{time_parameter[2]:g},{time_parameter[3]:g}\r\n"
-            elif code_index == 4:  # 铁规 TB 10092-2017
-                if len(time_parameter) != 5:
-                    raise Exception("操作错误,time_parameter数据无效!")
-                s += f"{index},{name},{code_index},{time_parameter[0]:g},{time_parameter[1]:g},{time_parameter[2]:g},{time_parameter[3]:g},{time_parameter[4]:g}\r\n"
-            elif code_index == 5:  # 地铁 GB 50157-2013
-                if len(time_parameter) != 3:
-                    raise Exception("操作错误,time_parameter数据无效!")
-                s += f"{index},{name},{code_index},{time_parameter[0]:g},{time_parameter[1]:g},{time_parameter[2]:g}\r\n"
-            elif code_index == 6:  # 老化理论
-                if len(time_parameter) != 4:
-                    raise Exception("操作错误,time_parameter数据无效!")
-                s += f"{index},{name},{code_index},{time_parameter[0]:g},{time_parameter[1]:g},{time_parameter[2]:g},{time_parameter[3]:g}\r\n"
-            elif code_index == 7:  # BS5400_4_1990
-                if len(time_parameter) != 4:
-                    raise Exception("操作错误,time_parameter数据无效!")
-                s += f"{index},{name},{code_index},{time_parameter[0]:g},{time_parameter[1]:g},{time_parameter[2]:g},{time_parameter[3]:g}\r\n"
-            elif code_index == 8:  # AASHTO_LRFD_2017
-                if len(time_parameter) != 2:
-                    raise Exception("操作错误,time_parameter数据无效!")
-                s += f"{index},{name},{code_index},{time_parameter[0]:g},{time_parameter[1]:g}\r\n"
-            elif code_index == 1000:  # 自定义收缩徐变
-                s += f"{index},{name},{code_index},{shrink_data}," + ",".join(
-                    str(x) for pair in creep_data for x in pair) + "\r\n"
-            # print(s)
-            QtServer.send_command(s, "QDAT")
-        except Exception as ex:
-            raise Exception(ex)
+        s = "*TDMATERIAL\r\n"
+        if time_parameter is None and code_index < 9:  # 默认不修改收缩徐变相关参数
+            s += f"{index},{name},{code_index}\r\n"
+        elif code_index == 1:  # 公规 JTG 3362-2018
+            if len(time_parameter) != 4:
+                raise Exception("操作错误,time_parameter数据无效!")
+            s += f"{index},{name},{code_index},{time_parameter[0]:g},{time_parameter[1]:g},{time_parameter[2]:g},{time_parameter[3]:g}\r\n"
+        elif code_index == 2:  # 公规 JTG D62-2004
+            if len(time_parameter) != 3:
+                raise Exception("操作错误,time_parameter数据无效!")
+            s += f"{index},{name},{code_index},{time_parameter[0]:g},{time_parameter[1]:g},{time_parameter[2]:g}\r\n"
+        elif code_index == 3:  # 公规 JTJ 023-85
+            if len(time_parameter) != 4:
+                raise Exception("操作错误,time_parameter数据无效!")
+            s += f"{index},{name},{code_index},{time_parameter[0]:g},{time_parameter[1]:g},{time_parameter[2]:g},{time_parameter[3]:g}\r\n"
+        elif code_index == 4:  # 铁规 TB 10092-2017
+            if len(time_parameter) != 5:
+                raise Exception("操作错误,time_parameter数据无效!")
+            s += f"{index},{name},{code_index},{time_parameter[0]:g},{time_parameter[1]:g},{time_parameter[2]:g},{time_parameter[3]:g},{time_parameter[4]:g}\r\n"
+        elif code_index == 5:  # 地铁 GB 50157-2013
+            if len(time_parameter) != 3:
+                raise Exception("操作错误,time_parameter数据无效!")
+            s += f"{index},{name},{code_index},{time_parameter[0]:g},{time_parameter[1]:g},{time_parameter[2]:g}\r\n"
+        elif code_index == 6:  # 老化理论
+            if len(time_parameter) != 4:
+                raise Exception("操作错误,time_parameter数据无效!")
+            s += f"{index},{name},{code_index},{time_parameter[0]:g},{time_parameter[1]:g},{time_parameter[2]:g},{time_parameter[3]:g}\r\n"
+        elif code_index == 7:  # BS5400_4_1990
+            if len(time_parameter) != 4:
+                raise Exception("操作错误,time_parameter数据无效!")
+            s += f"{index},{name},{code_index},{time_parameter[0]:g},{time_parameter[1]:g},{time_parameter[2]:g},{time_parameter[3]:g}\r\n"
+        elif code_index == 8:  # AASHTO_LRFD_2017
+            if len(time_parameter) != 2:
+                raise Exception("操作错误,time_parameter数据无效!")
+            s += f"{index},{name},{code_index},{time_parameter[0]:g},{time_parameter[1]:g}\r\n"
+        elif code_index == 1000:  # 自定义收缩徐变
+            s += f"{index},{name},{code_index},{shrink_data}," + ",".join(
+                str(x) for pair in creep_data for x in pair) + "\r\n"
+        QtServer.send_command(s, "QDAT")
 
     @staticmethod
     def add_creep_function(name: str, creep_data: list[tuple[float, float]], scale_factor: float = 1):
@@ -143,13 +136,10 @@ class MdbProperty:
             mdb.add_creep_function(name="徐变函数名",creep_data=[(5,0.5),(100,0.75)])
         Returns: 无
         """
-        try:
-            s = "*CREEPFCT\r\n" + f"Name={name},{scale_factor:g}\r\n" + ",".join(
-                f"{x:g},{y:g}" for x, y in creep_data) + "\r\n"
-            # print(s)
-            QtServer.send_command(s, "QDAT")
-        except Exception as ex:
-            raise Exception(ex)
+        s = "*CREEPFCT\r\n" + f"Name={name},{scale_factor:g}\r\n" + ",".join(
+            f"{x:g},{y:g}" for x, y in creep_data) + "\r\n"
+        QtServer.send_command(s, "QDAT")
+
 
     @staticmethod
     def add_shrink_function(name: str, shrink_data: list[tuple[float, float]] = None, scale_factor: float = 1):
@@ -164,13 +154,9 @@ class MdbProperty:
             mdb.add_shrink_function(name="收缩函数名",scale_factor=1.2)
         Returns: 无
         """
-        try:
-            s = "*SHRINKFCT\r\n" + f"Name={name},{scale_factor:g}\r\n" + ",".join(
-                f"{x:g},{y:g}" for x, y in shrink_data) + "\r\n"
-            # print(s)
-            QtServer.send_command(s, "QDAT")
-        except Exception as ex:
-            raise Exception(ex)
+        s = "*SHRINKFCT\r\n" + f"Name={name},{scale_factor:g}\r\n" + ",".join(
+            f"{x:g},{y:g}" for x, y in shrink_data) + "\r\n"
+        QtServer.send_command(s, "QDAT")
 
     @staticmethod
     def update_material(name: str = "", new_name="", new_id=-1, mat_type: int = 1, standard: int = 1, database: str = "C50",

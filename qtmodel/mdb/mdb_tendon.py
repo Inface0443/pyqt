@@ -1,7 +1,7 @@
 from typing import Optional
 
 from qtmodel.core.data_helper import QtDataHelper
-from ..core.qt_server import QtServer
+from qtmodel.core.qt_server import QtServer
 
 
 class MdbTendon:
@@ -19,12 +19,9 @@ class MdbTendon:
             mdb.add_tendon_group(name="钢束组1")
         Returns: 无
         """
-        try:
-            s = "*TDNGROUP\r\n" + f"{name}\r\n"
-            # print(s)
-            QtServer.send_command(s, "QDAT")
-        except Exception as ex:
-            raise Exception(ex)
+        s = "*TDNGROUP\r\n" + f"{name}\r\n"
+        QtServer.send_command(s, "QDAT")
+
 
     @staticmethod
     def add_tendon_property(name: str = "", tendon_type: int = 0, material_name: str = "", duct_type: int = 1,
@@ -52,24 +49,20 @@ class MdbTendon:
                                     steel_detail=[0.00014,0.10,0.25,0.0015],loos_detail=(1,1,1))
         Returns: 无
         """
-        try:
-            if steel_detail is None:
-                raise Exception("操作错误，钢束特性信息不能为空")
-            if loos_detail is None:
-                loos_detail = (1, 1, 1)
-            if slip_info is None:
-                slip_info = (0.006, 0.006)
-            s = "*TDN-PROPERTY\r\n" + f"{name},{tendon_type},{material_name},{duct_type},"
-            if steel_type == 1:
-                s += "钢绞线," + ",".join(f"{steel:g}" for steel in steel_detail)
-                s += "," + ",".join(f"{loos}" for loos in loos_detail)
-            elif steel_type == 2:
-                s += "螺纹钢筋," + ",".join(f"{steel:g}" for steel in steel_detail)
-            s += f",{slip_info[0]:g},{slip_info[1]:g}\r\n"
-            # print(s)
-            QtServer.send_command(s, "QDAT")
-        except Exception as ex:
-            raise Exception(ex)
+        if steel_detail is None:
+            raise Exception("操作错误，钢束特性信息不能为空")
+        if loos_detail is None:
+            loos_detail = (1, 1, 1)
+        if slip_info is None:
+            slip_info = (0.006, 0.006)
+        s = "*TDN-PROPERTY\r\n" + f"{name},{tendon_type},{material_name},{duct_type},"
+        if steel_type == 1:
+            s += "钢绞线," + ",".join(f"{steel:g}" for steel in steel_detail)
+            s += "," + ",".join(f"{loos}" for loos in loos_detail)
+        elif steel_type == 2:
+            s += "螺纹钢筋," + ",".join(f"{steel:g}" for steel in steel_detail)
+        s += f",{slip_info[0]:g},{slip_info[1]:g}\r\n"
+        QtServer.send_command(s, "QDAT")
 
     @staticmethod
     def add_tendon_3d(name: str, property_name: str = "", group_name: str = "默认钢束组",
@@ -100,26 +93,23 @@ class MdbTendon:
                     control_points=[(0,0,-1,0),(10,0,-1,0)],point_insert=(1,1,1),track_group="轨迹线结构组1")
         Returns: 无
         """
-        try:
-            if tendon_direction is None:
-                tendon_direction = (1, 0, 0)
-            if control_points is None:
-                raise Exception("操作错误，钢束形状控制点不能为空")
-            if point_insert is None or len(point_insert) != 3:
-                raise Exception("操作错误，钢束插入点信息不能为空且长度必须为3")
-            prj_str = "YES" if projection else "NO"
-            s = "*TDN-PROFILE\r\n" + f"NAME={name},{property_name},{group_name},{num},{line_type},"
-            if position_type == 1:
-                s += "STRAIGHT,2,3D\r\n"
-                s += f"({','.join(f'{x}' for x in point_insert)}),({','.join(f'{x:g}' for x in tendon_direction)}),{rotation_angle:g},{prj_str}\r\n"
-            elif position_type == 2:
-                s += "TRACK,2,3D\r\n"
-                s += f"{track_group},{point_insert[0]},{point_insert[2]},{point_insert[1]},{rotation_angle:g}\r\n"
-            s += ",".join(f"({','.join(f'{v:g}' for v in point)})" for point in control_points) + "\r\n"
-            # print(s)
-            QtServer.send_command(s, "QDAT")
-        except Exception as ex:
-            raise Exception(f"添加三维钢束:{name}失败,{ex}")
+        if tendon_direction is None:
+            tendon_direction = (1, 0, 0)
+        if control_points is None:
+            raise Exception("操作错误，钢束形状控制点不能为空")
+        if point_insert is None or len(point_insert) != 3:
+            raise Exception("操作错误，钢束插入点信息不能为空且长度必须为3")
+        prj_str = "YES" if projection else "NO"
+        s = "*TDN-PROFILE\r\n" + f"NAME={name},{property_name},{group_name},{num},{line_type},"
+        if position_type == 1:
+            s += "STRAIGHT,2,3D\r\n"
+            s += f"({','.join(f'{x}' for x in point_insert)}),({','.join(f'{x:g}' for x in tendon_direction)}),{rotation_angle:g},{prj_str}\r\n"
+        elif position_type == 2:
+            s += "TRACK,2,3D\r\n"
+            s += f"{track_group},{point_insert[0]},{point_insert[2]},{point_insert[1]},{rotation_angle:g}\r\n"
+        s += ",".join(f"({','.join(f'{v:g}' for v in point)})" for point in control_points) + "\r\n"
+        QtServer.send_command(s, "QDAT")
+
 
     @staticmethod
     def add_tendon_2d(name: str, property_name: str = "", group_name: str = "默认钢束组",

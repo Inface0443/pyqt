@@ -1,5 +1,5 @@
 import json
-from ..core.qt_server import QtServer
+from qtmodel.core.qt_server import QtServer
 from typing import Union, List
 
 
@@ -20,12 +20,8 @@ class MdbLoad:
             mdb.add_load_case(name="工况1",case_type="施工阶段荷载")
         Returns: 无
         """
-        try:
-            s = "*LOADCASE\r\n" + f"{name},{case_type}\r\n"
-            # print(s)
-            QtServer.send_command(s, "QDAT")
-        except Exception as ex:
-            raise Exception(f"添加荷载工况错误,{ex}")
+        s = "*LOADCASE\r\n" + f"{name},{case_type}\r\n"
+        QtServer.send_command(s, "QDAT")
 
     @staticmethod
     def add_load_group(name: str = ""):
@@ -37,15 +33,11 @@ class MdbLoad:
             mdb.add_load_group(name="荷载组1")
         Returns: 无
         """
-        try:
-            if name != "":
-                s = "*LOADGROUP\r\n" + f"{name}\r\n"
-                # print(s)
-            else:
-                s = ""
-            QtServer.send_command(s, "QDAT")
-        except Exception as ex:
-            raise Exception(f"添加荷载组,{ex}")
+        if name != "":
+            s = "*LOADGROUP\r\n" + f"{name}\r\n"
+        else:
+            s = ""
+        QtServer.send_command(s, "QDAT")
 
     @staticmethod
     def update_sink_group(name: str = "", new_name: str = "", sink: float = 0.1, node_ids: (Union[int, List[int]]) = None):
@@ -159,26 +151,17 @@ class MdbLoad:
             mdb.add_load_combine(name="荷载组合1",combine_type=1,describe="无",combine_info=[("CS","合计值",1),("CS","恒载",1)])
         Returns: 无
         """
-        try:
-            # if combine_info is None:
-            #     combine_info = []
-            # s = "*LOADCOMB\r\n" + f"NAME={name},{combine_type},{describe}\r\n"
-            # s += "\r\n".join(f'{','.join(f'{x:g}' if isinstance(x, float) else str(x) for x in row)}' for row in
-            #                  combine_info) + "\r\n"
-            # # print(s)
-            # QtServer.post_command(s, "QDAT")
-            params = {
-                "version": QtServer.QT_VERSION,  # 版本控制
-                "index": index,
-                "name": name,
-                "combine_type": combine_type,
-                "describe": describe,
-                "combine_info": combine_info or [],
-            }
-            json_string = json.dumps(params, indent=2, ensure_ascii=False)
-            QtServer.send_command(header="ADD-LOAD-COMBINE", command=json_string)
-        except Exception as ex:
-            raise Exception(f"添加荷载组合:{name}错误,{ex}")
+        params = {
+            "version": QtServer.QT_VERSION,  # 版本控制
+            "index": index,
+            "name": name,
+            "combine_type": combine_type,
+            "describe": describe,
+            "combine_info": combine_info or [],
+        }
+        json_string = json.dumps(params, indent=2, ensure_ascii=False)
+        QtServer.send_command(header="ADD-LOAD-COMBINE", command=json_string)
+
 
     @staticmethod
     def remove_load_combine(index: int = -1, name: str = ""):

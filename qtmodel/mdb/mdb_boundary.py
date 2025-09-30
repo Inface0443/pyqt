@@ -1,5 +1,5 @@
 import json
-from ..core.qt_server import QtServer
+from qtmodel.core.qt_server import QtServer
 from qtmodel.core.data_helper import QtDataHelper
 from typing import Union
 
@@ -113,22 +113,20 @@ class MdbBoundary:
             mdb.add_general_support(node_id="1to100", boundary_info=[1,1,1,0,0,0])
         Returns: 无
         """
-        try:
-            if boundary_info is None or len(boundary_info) != 6:
-                raise Exception("操作错误，要求输入一般支承列表长度为6")
-            # 若是数值列表（int/float），先按阈值转换为 bool
-            if all(isinstance(x, (int, float, bool)) for x in boundary_info) and \
-                    any(isinstance(x, (int, float)) and not isinstance(x, bool) for x in boundary_info):
-                boundary_info = [bool(x > 0.5) for x in boundary_info]
-            if isinstance(node_id, list):
-                id_str = QtDataHelper.parse_int_list_to_str(node_id)
-            else:
-                id_str = str(node_id)
-            s = "*GSUPPORT\r\n" + f"{id_str}," + "".join(str(int(x)) for x in boundary_info) + f",{group_name}\r\n"
+        if boundary_info is None or len(boundary_info) != 6:
+            raise ValueError("操作错误，要求输入一般支承列表长度为6")
+        # 若是数值列表（int/float），先按阈值转换为 bool
+        if all(isinstance(x, (int, float, bool)) for x in boundary_info) and \
+                any(isinstance(x, (int, float)) and not isinstance(x, bool) for x in boundary_info):
+            boundary_info = [bool(x > 0.5) for x in boundary_info]
+        if isinstance(node_id, list):
+            id_str = QtDataHelper.parse_int_list_to_str(node_id)
+        else:
+            id_str = str(node_id)
+        s = "*GSUPPORT\r\n" + f"{id_str}," + "".join(str(int(x)) for x in boundary_info) + f",{group_name}\r\n"
 
-            QtServer.send_command(s, "QDAT")
-        except Exception as ex:
-            raise Exception(ex)
+        QtServer.send_command(s, "QDAT")
+
 
     @staticmethod
     def add_elastic_support(node_id, support_type: int = 1,
@@ -146,22 +144,20 @@ class MdbBoundary:
             mdb.add_elastic_support(node_id=1,support_type=3,boundary_info=[1,1e6])
         Returns: 无
         """
-        try:
-            if isinstance(node_id, list):
-                id_str = QtDataHelper.parse_int_list_to_str(node_id)
-            else:
-                id_str = str(node_id)
-            s = "*ESUPPORT\r\n" + f"{id_str},"
-            if support_type == 1 and (boundary_info is None or len(boundary_info) != 6):
-                raise Exception("操作错误，要求输入弹性支承边界信息长度为6")
-            elif support_type in (2, 3) and (boundary_info is None or len(boundary_info) != 2):
-                raise Exception("操作错误，要求输入弹性支承边界信息长度为2")
-            else:
-                s += f"{support_type},{group_name}," + ",".join(f"{x:g}" for x in boundary_info) + "\r\n"
+        if isinstance(node_id, list):
+            id_str = QtDataHelper.parse_int_list_to_str(node_id)
+        else:
+            id_str = str(node_id)
+        s = "*ESUPPORT\r\n" + f"{id_str},"
+        if support_type == 1 and (boundary_info is None or len(boundary_info) != 6):
+            raise Exception("操作错误，要求输入弹性支承边界信息长度为6")
+        elif support_type in (2, 3) and (boundary_info is None or len(boundary_info) != 2):
+            raise Exception("操作错误，要求输入弹性支承边界信息长度为2")
+        else:
+            s += f"{support_type},{group_name}," + ",".join(f"{x:g}" for x in boundary_info) + "\r\n"
 
-            QtServer.send_command(s, "QDAT")
-        except Exception as ex:
-            raise Exception(ex)
+        QtServer.send_command(s, "QDAT")
+
 
     @staticmethod
     def add_elastic_link(index: int = -1, link_type: int = 1, start_id: int = 1, end_id: int = 2, beta_angle: float = 0,
@@ -185,23 +181,21 @@ class MdbBoundary:
             mdb.add_elastic_link(link_type=3,start_id=1,end_id=2,kx=1e6)
         Returns: 无
         """
-        try:
-            params = {
-                "version": QtServer.QT_VERSION,  # 版本控制
-                "index": index,
-                "link_type": link_type,
-                "start_id": start_id,
-                "end_id": end_id,
-                "beta_angle": beta_angle,
-                "boundary_info": boundary_info,
-                "group_name": group_name,
-                "dis_ratio": dis_ratio,
-                "kx": kx,
-            }
-            json_string = json.dumps(params, indent=2)
-            QtServer.send_command(header="ADD-ELASTIC-LINK", command=json_string)
-        except Exception as ex:
-            raise Exception(ex)
+        params = {
+            "version": QtServer.QT_VERSION,  # 版本控制
+            "index": index,
+            "link_type": link_type,
+            "start_id": start_id,
+            "end_id": end_id,
+            "beta_angle": beta_angle,
+            "boundary_info": boundary_info,
+            "group_name": group_name,
+            "dis_ratio": dis_ratio,
+            "kx": kx,
+        }
+        json_string = json.dumps(params, indent=2)
+        QtServer.send_command(header="ADD-ELASTIC-LINK", command=json_string)
+
 
     @staticmethod
     def add_master_slave_links(node_ids: list[tuple[int, int]] = None, boundary_info: list[bool] = None,
@@ -216,21 +210,18 @@ class MdbBoundary:
             mdb.add_master_slave_links(node_ids=[(1,2),(1,3),(4,5),(4,6)],boundary_info=[True,True,True,False,False,False])
         Returns: 无
         """
-        try:
-            s = "*MSLINK\r\n"
-            # 按照主节点分组
-            master_slave_dict = {}
-            for master_id, slave_id in node_ids:
-                if master_id not in master_slave_dict:
-                    master_slave_dict[master_id] = []
-                master_slave_dict[master_id].append(slave_id)
-            for master_id, slave_ids in master_slave_dict.items():
-                ids_str = QtDataHelper.parse_int_list_to_str(slave_ids)
-                s += f"{master_id},{ids_str}," + "".join(str(int(x)) for x in boundary_info) + f",{group_name}\r\n"
+        s = "*MSLINK\r\n"
+        # 按照主节点分组
+        master_slave_dict = {}
+        for master_id, slave_id in node_ids:
+            if master_id not in master_slave_dict:
+                master_slave_dict[master_id] = []
+            master_slave_dict[master_id].append(slave_id)
+        for master_id, slave_ids in master_slave_dict.items():
+            ids_str = QtDataHelper.parse_int_list_to_str(slave_ids)
+            s += f"{master_id},{ids_str}," + "".join(str(int(x)) for x in boundary_info) + f",{group_name}\r\n"
 
-            QtServer.send_command(s, "QDAT")
-        except Exception as ex:
-            raise Exception(ex)
+        QtServer.send_command(s, "QDAT")
 
     @staticmethod
     def add_master_slave_link(master_id: int, slave_id=None,
@@ -247,17 +238,14 @@ class MdbBoundary:
             mdb.add_master_slave_link(master_id=1,slave_id="2to3",boundary_info=[True,True,True,False,False,False])
         Returns: 无
         """
-        try:
-            if isinstance(slave_id, list):
-                id_str = QtDataHelper.parse_int_list_to_str(slave_id)
-            else:
-                id_str = str(slave_id)
-            s = "*MSLINK\r\n" + f"{master_id},{id_str}," + "".join(
-                str(int(x)) for x in boundary_info) + f",{group_name}\r\n"
+        if isinstance(slave_id, list):
+            id_str = QtDataHelper.parse_int_list_to_str(slave_id)
+        else:
+            id_str = str(slave_id)
+        s = "*MSLINK\r\n" + f"{master_id},{id_str}," + "".join(
+            str(int(x)) for x in boundary_info) + f",{group_name}\r\n"
 
-            QtServer.send_command(s, "QDAT")
-        except Exception as ex:
-            raise Exception(ex)
+        QtServer.send_command(s, "QDAT")
 
     @staticmethod
     def add_beam_constraint(beam_id: int, info_i: list[bool] = None, info_j: list[bool] = None,
@@ -273,17 +261,14 @@ class MdbBoundary:
             mdb.add_beam_constraint(beam_id=2,info_i=[True,True,True,False,False,False],info_j=[True,True,True,False,False,False])
         Returns: 无
         """
-        try:
-            if info_i is None or len(info_i) != 6:
-                raise Exception("操作错误，要求输入I端约束列表长度为6")
-            if info_j is None or len(info_j) != 6:
-                raise Exception("操作错误，要求输入J端约束列表长度为6")
-            s = "*RESTRAINTS\r\n" + f"{beam_id}," + "".join(str(int(x)) for x in info_i) + "," + "".join(
-                str(int(y)) for y in info_j) + f",{group_name}\r\n"
+        if info_i is None or len(info_i) != 6:
+            raise Exception("操作错误，要求输入I端约束列表长度为6")
+        if info_j is None or len(info_j) != 6:
+            raise Exception("操作错误，要求输入J端约束列表长度为6")
+        s = "*RESTRAINTS\r\n" + f"{beam_id}," + "".join(str(int(x)) for x in info_i) + "," + "".join(
+            str(int(y)) for y in info_j) + f",{group_name}\r\n"
 
-            QtServer.send_command(s, "QDAT")
-        except Exception as ex:
-            raise Exception(ex)
+        QtServer.send_command(s, "QDAT")
 
     @staticmethod
     def add_constraint_equation(name: str, sec_node: int, sec_dof: int = 1,
@@ -300,13 +285,11 @@ class MdbBoundary:
             mdb.add_beam_constraint(beam_id=2,info_i=[True,True,True,False,False,False],info_j=[True,True,True,False,False,False])
         Returns: 无
         """
-        try:
-            s = "*EQUATION\r\n" + f"{name},{group_name},{sec_node},{sec_dof}," + ",".join(
-                f"{tuples}" for tuples in master_info) + "\r\n"
+        s = "*EQUATION\r\n" + f"{name},{group_name},{sec_node},{sec_dof}," + ",".join(
+            f"{tuples}" for tuples in master_info) + "\r\n"
 
-            QtServer.send_command(s, "QDAT")
-        except Exception as ex:
-            raise Exception(ex)
+        QtServer.send_command(s, "QDAT")
+
 
     @staticmethod
     def add_node_axis(node_id: int, input_type: int = 1, coord_info: list = None):
@@ -322,21 +305,17 @@ class MdbBoundary:
             mdb.add_node_axis(input_type=3,node_id=1,coord_info=[[0,0,1],[0,1,0]])
         Returns: 无
         """
-        try:
-            s = "*LOCALAXIS\r\n" + f"{node_id},"
-            if coord_info is None:
-                raise Exception("操作错误，输入坐标系信息不能为空")
-            tran_info = coord_info
-            if input_type == 1:
-                tran_info = QtDataHelper.convert_angle_to_vectors(coord_info)
-            elif input_type == 2:
-                tran_info = QtDataHelper.convert_three_points_to_vectors(coord_info)
-            s += f"V1({','.join(f'{axis:g}' for axis in tran_info[0])}),V2({','.join(f'{axis:g}' for axis in tran_info[1])})\r\n"
+        s = "*LOCALAXIS\r\n" + f"{node_id},"
+        if coord_info is None:
+            raise ValueError("操作错误，输入坐标系信息不能为空")
+        tran_info = coord_info
+        if input_type == 1:
+            tran_info = QtDataHelper.convert_angle_to_vectors(coord_info)
+        elif input_type == 2:
+            tran_info = QtDataHelper.convert_three_points_to_vectors(coord_info)
+        s += f"V1({','.join(f'{axis:g}' for axis in tran_info[0])}),V2({','.join(f'{axis:g}' for axis in tran_info[1])})\r\n"
+        QtServer.send_command(s, "QDAT")
 
-            QtServer.send_command(s, "QDAT")
-        except Exception as ex:
-            pass
-            raise Exception(ex)
 
     @staticmethod
     def remove_effective_width(element_ids, group_name: str = "默认边界组"):

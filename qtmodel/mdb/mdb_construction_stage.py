@@ -1,7 +1,7 @@
 import json
 from typing import Optional, List, Union
-from ..core.data_helper import QtDataHelper
-from ..core.qt_server import QtServer
+from qtmodel.core.data_helper import QtDataHelper
+from qtmodel.core.qt_server import QtServer
 
 
 class MdbConstructionStage:
@@ -46,27 +46,24 @@ class MdbConstructionStage:
                 active_boundaries=[("默认边界组",1)],active_loads=[("默认荷载组1",0)])
         Returns: 无
         """
-        try:
-            s = "*STAGE\r\n"
-            s += f"ID={index},{name},{duration},{tendon_cancel_loss:g},{constraint_cancel_type}\r\n"
-            if active_structures is not None:
-                s += f"AELEM={','.join(','.join(str(x) if not isinstance(x, (int, float)) else f'{x:g}' for x in row) for row in active_structures)}\r\n"
-            if delete_structures is not None:
-                s += f"DELEM={','.join(map(str, delete_structures))}\r\n"
-            if active_boundaries is not None:
-                s += f"ABNDR={','.join(','.join(map(str, row)) for row in active_boundaries)}\r\n"
-            if delete_boundaries is not None:
-                s += f"DBNDR={','.join(map(str, delete_boundaries))}\r\n"
-            if active_loads is not None:
-                s += f"ALOAD={','.join(','.join(map(str, row)) for row in active_loads)}\r\n"
-            if delete_loads is not None:
-                s += f"DLOAD={','.join(','.join(map(str, row)) for row in delete_loads)}\r\n"
-            if temp_loads is not None:
-                s += f"TEPLOAD={','.join(map(str, temp_loads))}\r\n"
-            # print(s)
-            QtServer.send_command(s, "QDAT")
-        except Exception as ex:
-            raise Exception(f"添加施工阶段:{name}错误,{ex}")
+        s = "*STAGE\r\n"
+        s += f"ID={index},{name},{duration},{tendon_cancel_loss:g},{constraint_cancel_type}\r\n"
+        if active_structures is not None:
+            s += f"AELEM={','.join(','.join(str(x) if not isinstance(x, (int, float)) else f'{x:g}' for x in row) for row in active_structures)}\r\n"
+        if delete_structures is not None:
+            s += f"DELEM={','.join(map(str, delete_structures))}\r\n"
+        if active_boundaries is not None:
+            s += f"ABNDR={','.join(','.join(map(str, row)) for row in active_boundaries)}\r\n"
+        if delete_boundaries is not None:
+            s += f"DBNDR={','.join(map(str, delete_boundaries))}\r\n"
+        if active_loads is not None:
+            s += f"ALOAD={','.join(','.join(map(str, row)) for row in active_loads)}\r\n"
+        if delete_loads is not None:
+            s += f"DLOAD={','.join(','.join(map(str, row)) for row in delete_loads)}\r\n"
+        if temp_loads is not None:
+            s += f"TEPLOAD={','.join(map(str, temp_loads))}\r\n"
+        QtServer.send_command(s, "QDAT")
+
 
     @staticmethod
     def update_weight_stage(name: str = "", structure_group_name: str = "", weight_stage_id: int = 1):
@@ -80,19 +77,17 @@ class MdbConstructionStage:
            mdb.update_weight_stage(name="施工阶段1",structure_group_name="默认结构组",weight_stage_id=1)
         Returns: 无
         """
-        try:
-            # 创建参数字典
-            params = {
-                "version": QtServer.QT_VERSION,  # 版本控制
-                "name": name,
-                "structure_group_name": structure_group_name,
-                "weight_stage_id": weight_stage_id,
-            }
-            json_string = json.dumps(params, indent=2)
-            # 假设这里需要将命令发送到服务器或进行其他操作
-            QtServer.send_command(header="UPDATE-WEIGHT-STAGE", command=json_string)
-        except Exception as ex:
-            raise Exception(f"更新施工阶段自重:{name}错误,{ex}")
+        # 创建参数字典
+        params = {
+            "version": QtServer.QT_VERSION,  # 版本控制
+            "name": name,
+            "structure_group_name": structure_group_name,
+            "weight_stage_id": weight_stage_id,
+        }
+        json_string = json.dumps(params, indent=2)
+        # 假设这里需要将命令发送到服务器或进行其他操作
+        QtServer.send_command(header="UPDATE-WEIGHT-STAGE", command=json_string)
+
 
     @staticmethod
     def update_construction_stage(name: str = "", new_name="", duration: int = 0,
