@@ -2902,57 +2902,6 @@ mdb.update_bulking_setting(do_analysis=True,mode_count=3,variable_cases=["工况
 ```  
 # 视图与结果提取 
 ##  获取材料
-### get_concrete_material
-获取混凝土材料信息
-> 参数:  
-> ids: 材料号支持XtoYbyN形式字符串,默认时输出全部材料  
-```Python
-# 示例代码
-from qtmodel import *
-odb.get_concrete_material() # 获取所有材料信息
-#Returns:  list[dict]
-```  
-### get_steel_plate_material
-获取钢材材料信息
-> 参数:  
-> ids: 材料号支持XtoYbyN形式字符串,默认时输出全部材料  
-```Python
-# 示例代码
-from qtmodel import *
-odb.get_steel_plate_material() # 获取所有钢材材料信息
-#Returns:  list[dict]
-```  
-### get_pre_stress_bar_material
-获取钢材材料信息
-> 参数:  
-> ids: 材料号,默认时输出全部材料  
-```Python
-# 示例代码
-from qtmodel import *
-odb.get_pre_stress_bar_material() # 获取所有预应力材料信息
-#Returns:  list[dict]
-```  
-### get_steel_bar_material
-获取钢筋材料信息
-> 参数:  
-> ids: 材料号,默认None时输出全部材料  
-```Python
-# 示例代码
-from qtmodel import *
-odb.get_steel_bar_material() # 获取所有钢筋材料信息
-#Returns:  list[dict]
-```  
-### get_user_define_material
-获取自定义材料信息
-> 参数:  
-> ids: 材料号支持XtoYbyN形式字符串,默认None时输出全部材料  
-```Python
-# 示例代码
-from qtmodel import *
-odb.get_user_define_material() # 获取所有自定义材料信息
-odb.get_user_define_material("1to10") # 获取所有自定义材料信息
-#Returns:  list[dict]
-```  
 ### get_material_data
 获取材料信息
 > 参数:  
@@ -2968,16 +2917,7 @@ odb.get_material_data() # 获取所有材料信息
 ```Python
 # 示例代码
 from qtmodel import *
-odb.get_thickness_data(1)
-#Returns:
-```  
-### get_all_thickness_data
-获取所有板厚信息
-> 参数:  
-```Python
-# 示例代码
-from qtmodel import *
-odb.get_all_thickness_data()
+odb.get_thickness_data()
 #Returns: 包含信息为list[dict]
 ```  
 ##  获取节点信息
