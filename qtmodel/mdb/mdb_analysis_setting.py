@@ -29,7 +29,7 @@ class MdbAnalysisSetting:
         Returns: 无
         """
         try:
-            s = "*PRJ-SET\r\n" + f"{gravity},{temperature}\r\n"
+            s = "*PJT-SET\r\n" + f"{gravity},{temperature}\r\n"
             # 映射 参数 -> KEY 名
             mapping = {
                 "PROJECT": project,

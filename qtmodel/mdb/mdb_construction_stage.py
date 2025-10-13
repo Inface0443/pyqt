@@ -101,7 +101,7 @@ class MdbConstructionStage:
                                   tendon_cancel_loss: float = 0,
                                   constraint_cancel_type: int = 2):
         """
-        todo 更新施工阶段信息
+        更新施工阶段信息
         Args:
            name:施工阶段信息
            new_name:新施工阶段名

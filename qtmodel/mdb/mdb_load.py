@@ -1,4 +1,6 @@
 import json
+
+from qtmodel.core.data_helper import QtDataHelper
 from qtmodel.core.qt_server import QtServer
 from typing import Union, List
 
@@ -42,7 +44,7 @@ class MdbLoad:
     @staticmethod
     def update_sink_group(name: str = "", new_name: str = "", sink: float = 0.1, node_ids: (Union[int, List[int]]) = None):
         """
-        todo 更新沉降组
+        更新沉降组
         Args:
              name: 沉降组名
              new_name: 新沉降组名,默认不修改
@@ -56,14 +58,14 @@ class MdbLoad:
             "name": name,
             "new_name": new_name,
             "sink": sink,
-            "node_ids": node_ids,
+            "node_ids": QtDataHelper.parse_ids_to_array(node_ids), # 传出参数一定为list[int]
         }
         return QtServer.send_dict("UPDATE-SINK-GROUP", payload)
 
     @staticmethod
     def update_load_case(name: str, new_name: str = "", case_type: str = "施工阶段荷载"):
         """
-        todo 更新荷载工况
+        更新荷载工况
         Args:
            name:工况名
            new_name:新工况名
@@ -82,26 +84,26 @@ class MdbLoad:
         return QtServer.send_dict("UPDATE-LOAD-CASE", payload)
 
     @staticmethod
-    def update_load_group(name: str, new_name: str = ""):
+    def update_load_group_name(name: str, new_name: str = ""):
         """
-        todo 根据荷载组名称添加荷载组
+        根据荷载组名称更新荷载组
         Args:
            name: 荷载组名称
            new_name: 荷载组名称
         Example:
-          mdb.update_load_group(name="荷载组1",new_name="荷载组2")
+          mdb.update_load_group_name(name="荷载组1",new_name="荷载组2")
         Returns: 无
         """
         payload = {
             "name": name,
             "new_name": new_name,
         }
-        return QtServer.send_dict("UPDATE-LOAD-GROUP", payload)
+        return QtServer.send_dict("UPDATE-LOAD-GROUP-NAME", payload)
 
     @staticmethod
     def remove_load_case(index: int = -1, name: str = ""):
         """
-        todo 删除荷载工况,参数均为默认时删除全部荷载工况
+        删除荷载工况,参数均为默认时删除全部荷载工况
         Args:
             index:荷载编号
             name:荷载名
@@ -120,7 +122,7 @@ class MdbLoad:
     @staticmethod
     def remove_load_group(name: str = ""):
         """
-        todo 根据荷载组名称删除荷载组,参数为默认时删除所有荷载组
+        根据荷载组名称删除荷载组,参数为默认时删除所有荷载组
         Args:
              name: 荷载组名称
         Example:
@@ -166,7 +168,7 @@ class MdbLoad:
     @staticmethod
     def remove_load_combine(index: int = -1, name: str = ""):
         """
-        todo 删除荷载组合
+        删除荷载组合
         Args:
             index: 默认时则按照name删除荷载组合
             name:指定删除荷载组合名

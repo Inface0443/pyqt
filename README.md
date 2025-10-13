@@ -1,4 +1,4 @@
-> 最新版本 V1.1.9 - 2025-09-30 
+> 最新版本 V1.1.11 - 2025-10-13 
 > pip install --upgrade qtmodel -i https://pypi.org/simple
 - 新增更新结构组接口 
 # 建模操作 
@@ -2606,7 +2606,7 @@ mdb.update_weight_stage(name="施工阶段1",structure_group_name="默认结构�
 #Returns: 无
 ```  
 ### update_construction_stage
-todo 更新施工阶段信息
+更新施工阶段信息
 > 参数:  
 > name:施工阶段信息  
 > new_name:新施工阶段名  
