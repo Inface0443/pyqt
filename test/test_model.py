@@ -1456,46 +1456,46 @@ def add_load_combines():
 
 if __name__ == '__main__':
     mdb.set_url("http://10.33.176.44:61076/")
-    # mdb.initial()
+    mdb.initial()
     operate_dir = r"D:\模型"
-    # mdb.save_file(rf"{operate_dir}\djq.bfmd")
-    # # 打开之前保存的.pkl文件
-    # # with open(rf"{operate_dir}\data1.txt", 'rb') as f:
-    # #     # 使用pickle.load从文件中读取数据
-    # #     loaded_data = pickle.load(f)
-    # # # 打印读取的数据
-    # # EM=loaded_data['EM']
-    # # vehicle_velocity=loaded_data['vehicle_velocity']
-    # # vehicle_axle_information=loaded_data['vehicle_axle_information']
-    # # print("EM:", EM)
-    # # print("vehicle_velocity",vehicle_velocity)
-    # # print("vehicle_axle_information",vehicle_axle_information)
-    # add_materials()  # 添加材料
-    # add_sections()  # 添加截面
-    # add_structures()  # 添加节点和单元
-    # add_structure_groups()  # 添加结构组
-    # add_tapper_section_groups()  # 添加变截面组
-    # add_boundary_groups()  # 添加边界组
-    # add_load_groups()  # 添加荷载组
-    # add_general_supports()  # 添加一般支承
-    # add_master_slaves()  # 添加主从约束
-    # add_elastic_links()  # 添加弹性连接
-    # add_second_dead_loads()  # 添加二期恒载
-    # add_train_sway_force()  # 添加列车摇摆力
-    # add_temperature_loads()  # 添加温度荷载
-    # add_lateral_wind_loads()  # 添加横向风荷载
-    # add_ultimate_lateral_wind_loads()  # 添加极限横向风荷载
-    # add_train_braking_forces()  # 添加列车制动力
-    # add_basic_displacement()  # 定义基础变位
-    # add_load_to_mass()  # 荷载转化为质量
-    # add_time_varying_load()  # 定义时变荷载
-    # add_earthquake_spectrums()  # 添加地震反应谱
-    # add_construction_stages()  # 添加施工阶段
-    # add_live_loads()  # 添加移动活载
-    # odb.remove_display()
-    # add_load_combines()  #
-    # mdb.update_model()
-    # mdb.do_solve()  # 求解
+    mdb.save_file(rf"{operate_dir}\djq.bfmd")
+    # 打开之前保存的.pkl文件
+    # with open(rf"{operate_dir}\data1.txt", 'rb') as f:
+    #     # 使用pickle.load从文件中读取数据
+    #     loaded_data = pickle.load(f)
+    # # 打印读取的数据
+    # EM=loaded_data['EM']
+    # vehicle_velocity=loaded_data['vehicle_velocity']
+    # vehicle_axle_information=loaded_data['vehicle_axle_information']
+    # print("EM:", EM)
+    # print("vehicle_velocity",vehicle_velocity)
+    # print("vehicle_axle_information",vehicle_axle_information)
+    add_materials()  # 添加材料
+    add_sections()  # 添加截面
+    add_structures()  # 添加节点和单元
+    add_structure_groups()  # 添加结构组
+    add_tapper_section_groups()  # 添加变截面组
+    add_boundary_groups()  # 添加边界组
+    add_load_groups()  # 添加荷载组
+    add_general_supports()  # 添加一般支承
+    add_master_slaves()  # 添加主从约束
+    add_elastic_links()  # 添加弹性连接
+    add_second_dead_loads()  # 添加二期恒载
+    add_train_sway_force()  # 添加列车摇摆力
+    add_temperature_loads()  # 添加温度荷载
+    add_lateral_wind_loads()  # 添加横向风荷载
+    add_ultimate_lateral_wind_loads()  # 添加极限横向风荷载
+    add_train_braking_forces()  # 添加列车制动力
+    add_basic_displacement()  # 定义基础变位
+    add_load_to_mass()  # 荷载转化为质量
+    add_time_varying_load()  # 定义时变荷载
+    add_earthquake_spectrums()  # 添加地震反应谱
+    add_construction_stages()  # 添加施工阶段
+    add_live_loads()  # 添加移动活载
+    odb.remove_display()
+    add_load_combines()  #
+    mdb.update_model()
+    mdb.do_solve()  # 求解
     vib_nd = odb.get_vibration_modal_results(mode=1)
     print("节点振型向量:", vib_nd)
     part_fac = odb.get_period_and_vibration_results()
