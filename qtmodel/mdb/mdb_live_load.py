@@ -201,7 +201,6 @@ class MdbLiveLoad:
             else:
                 s += f"YES,{special_code}\r\n"
             s += "\r\n".join((f"{veh_name},{coeff:g}," + ",".join(lanes)) for veh_name, coeff, lanes in sub_case)
-            # print(s)
             QtServer.send_command(s, "QDAT")
         except Exception as ex:
             raise Exception(ex)
