@@ -48,19 +48,19 @@ class MdbConstructionStage:
         """
         s = "*STAGE\r\n"
         s += f"ID={index},{name},{duration},{tendon_cancel_loss:g},{constraint_cancel_type}\r\n"
-        if active_structures is not None:
+        if active_structures is not None and len(active_structures) > 0:
             s += f"AELEM={','.join(','.join(str(x) if not isinstance(x, (int, float)) else f'{x:g}' for x in row) for row in active_structures)}\r\n"
-        if delete_structures is not None:
+        if delete_structures is not None and len(delete_structures) > 0:
             s += f"DELEM={','.join(map(str, delete_structures))}\r\n"
-        if active_boundaries is not None:
+        if active_boundaries is not None and len(active_boundaries) > 0:
             s += f"ABNDR={','.join(','.join(map(str, row)) for row in active_boundaries)}\r\n"
-        if delete_boundaries is not None:
+        if delete_boundaries is not None and len(delete_boundaries) > 0:
             s += f"DBNDR={','.join(map(str, delete_boundaries))}\r\n"
-        if active_loads is not None:
+        if active_loads is not None and len(active_loads) > 0:
             s += f"ALOAD={','.join(','.join(map(str, row)) for row in active_loads)}\r\n"
-        if delete_loads is not None:
+        if delete_loads is not None and len(delete_loads) > 0:
             s += f"DLOAD={','.join(','.join(map(str, row)) for row in delete_loads)}\r\n"
-        if temp_loads is not None:
+        if temp_loads is not None and len(temp_loads) > 0:
             s += f"TEPLOAD={','.join(map(str, temp_loads))}\r\n"
         QtServer.send_command(s, "QDAT")
 

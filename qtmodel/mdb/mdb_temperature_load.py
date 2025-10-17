@@ -24,12 +24,8 @@ class MdbTemperatureLoad:
             mdb.add_custom_temperature(case_name="荷载工况1",element_id=1,orientation=1,temperature_data=[(1,1,20),(1,2,10)])
         Returns: 无
         """
-        if element_id is None:
-            id_str = ""
-        elif isinstance(element_id, list):  # 列表转化为XtoYbyN
-            id_str = QtDataHelper.parse_int_list_to_str(element_id)
-        else:
-            id_str = str(element_id)
+        element_id = QtDataHelper.parse_ids_to_array(element_id)
+        id_str = QtDataHelper.parse_int_list_to_str(element_id)
         s = "*USER-TEMP\r\n" + f"{id_str},{case_name},{group_name},{orientation},"
         s += ",".join(f"({','.join(f'{x:g}' for x in data)})" for data in temperature_data) + "\r\n"
         # print(s)
@@ -49,12 +45,8 @@ class MdbTemperatureLoad:
             mdb.add_element_temperature(element_id=1,case_name="自重",temperature=1,group_name="默认荷载组")
         Returns: 无
         """
-        if element_id is None:
-            id_str = ""
-        elif isinstance(element_id, list):  # 列表转化为XtoYbyN
-            id_str = QtDataHelper.parse_int_list_to_str(element_id)
-        else:
-            id_str = str(element_id)
+        element_id = QtDataHelper.parse_ids_to_array(element_id)
+        id_str = QtDataHelper.parse_int_list_to_str(element_id)
         s = "*ELE-TEMP\r\n" + f"{id_str},{case_name},{group_name},{temperature:g}\r\n"
         # print(s)
         QtServer.send_command(s, "QDAT")
@@ -93,12 +85,8 @@ class MdbTemperatureLoad:
         Returns: 无
         """
         s = ""
-        if element_id is None:
-            id_str = ""
-        elif isinstance(element_id, list):  # 列表转化为XtoYbyN
-            id_str = QtDataHelper.parse_int_list_to_str(element_id)
-        else:
-            id_str = str(element_id)
+        element_id = QtDataHelper.parse_ids_to_array(element_id)
+        id_str = QtDataHelper.parse_int_list_to_str(element_id)
         if element_type == 1:  # 1-梁单元
             s = "*BEAMGRD-TEMP\r\n" + f"{id_str},{case_name},{group_name},{section_oriental},{temperature:g}" + "\r\n"
         elif element_type == 2:  # 2-板单元
@@ -127,12 +115,8 @@ class MdbTemperatureLoad:
             mdb.add_beam_section_temperature(element_id=1,case_name="工况1",code_index=1,sec_type=1,t1=-4.2,t2=-1)
         Returns: 无
         """
-        if element_id is None:
-            id_str = ""
-        elif isinstance(element_id, list):  # 列表转化为XtoYbyN
-            id_str = QtDataHelper.parse_int_list_to_str(element_id)
-        else:
-            id_str = str(element_id)
+        element_id = QtDataHelper.parse_ids_to_array(element_id)
+        id_str = QtDataHelper.parse_int_list_to_str(element_id)
         s = "*SEC-TEMP\r\n" + f"{id_str},{case_name},{group_name},{code_index},{sec_type},{t1:g},{t2:g},{t3:g},{t4:g},{thick:g}" + "\r\n"
         # print(s)
         QtServer.send_command(s, "QDAT")
@@ -152,12 +136,8 @@ class MdbTemperatureLoad:
             mdb.add_index_temperature(element_id=1,case_name="工况1",temperature=20,index=2)
         Returns: 无
         """
-        if element_id is None:
-            id_str = ""
-        elif isinstance(element_id, list):  # 列表转化为XtoYbyN
-            id_str = QtDataHelper.parse_int_list_to_str(element_id)
-        else:
-            id_str = str(element_id)
+        element_id = QtDataHelper.parse_ids_to_array(element_id)
+        id_str = QtDataHelper.parse_int_list_to_str(element_id)
         tem_dir = 1  # 目前仅支持截面高度方向温度加载
         s = "*INDEX-TEMP\r\n" + f"{id_str},{case_name},{group_name},{tem_dir},{temperature:g},{index:g}" + "\r\n"
         # print(s)
@@ -177,12 +157,8 @@ class MdbTemperatureLoad:
             mdb.add_top_plate_temperature(element_id=1,case_name="工况1",temperature=40,group_name="默认荷载组")
         Returns: 无
         """
-        if element_id is None:
-            id_str = ""
-        elif isinstance(element_id, list):  # 列表转化为XtoYbyN
-            id_str = QtDataHelper.parse_int_list_to_str(element_id)
-        else:
-            id_str = str(element_id)
+        element_id = QtDataHelper.parse_ids_to_array(element_id)
+        id_str = QtDataHelper.parse_int_list_to_str(element_id)
         s = "*TOPPLATE-TEMP\r\n" + f"{id_str},{case_name},{group_name},{temperature:g}" + "\r\n"
         # print(s)
         QtServer.send_command(s, "QDAT")
@@ -333,12 +309,8 @@ class MdbTemperatureLoad:
         """
         if parameters is None:
             raise Exception("操作错误，制造误差名称信息不能为空")
-        if element_id is None:
-            id_str = ""
-        elif isinstance(element_id, list):  # 列表转化为XtoYbyN
-            id_str = QtDataHelper.parse_int_list_to_str(element_id)
-        else:
-            id_str = str(element_id)
+        element_id = QtDataHelper.parse_ids_to_array(element_id)
+        id_str = QtDataHelper.parse_int_list_to_str(element_id)
         s = "*DEVLOAD\r\n" + f"{id_str},{case_name},{group_name},"
         if isinstance(parameters, str):
             s += f"{parameters}\r\n"

@@ -1,4 +1,6 @@
 import json
+import time
+
 from qtmodel.core.qt_server import QtServer
 from typing import List
 
@@ -95,6 +97,8 @@ class MdbProject:
         Returns: 无
         """
         QtServer.send_command(header="DO-SOLVE")
+        # 设置缓冲时间
+        time.sleep(3)
 
     @staticmethod
     def initial():
