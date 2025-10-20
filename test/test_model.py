@@ -1695,3 +1695,4 @@ if __name__ == '__main__':
     #     #使用os.path.join()构建完整文件路径
     #     file_path = os.path.join(base_path, filename)
     #     odb.plot_displacement_result(file_path,component=2,case_name="ST:时变荷载",stage_id=-1,show_deformed=True, deformed_scale=1.0, deformed_actual= False )
+    mdb.add_tendon_elements(ids="1")

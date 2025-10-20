@@ -299,7 +299,7 @@ class MdbTendon:
     @staticmethod
     def update_element_component_type(ids=None, component_type: int = 2):
         """
-        todo 赋予单元构件类型
+        赋予单元构件类型
         Args:
             ids: 钢束构件所在单元编号集合且支持XtoYbyN形式字符串
             component_type:0-钢结构构件 1-钢筋混凝土构件 2-预应力混凝土构件
@@ -308,7 +308,7 @@ class MdbTendon:
         Returns: 无
         """
         payload = {
-            "ids": ids,
+            "ids": QtDataHelper.parse_ids_to_array(ids),
             "component_type": component_type,
         }
         return QtServer.send_dict("UPDATE-ELEMENT-COMPONENT-TYPE", payload)
@@ -316,7 +316,7 @@ class MdbTendon:
     @staticmethod
     def update_tendon_group(name: str, new_name: str = ""):
         """
-        todo 更新钢束组名
+        更新钢束组名
         Args:
             name:原钢束组名
             new_name:新钢束组名
@@ -333,7 +333,7 @@ class MdbTendon:
     @staticmethod
     def remove_tendon(name: str = "", index: int = -1):
         """
-        todo 按照名称或编号删除钢束,默认时删除所有钢束
+        按照名称或编号删除钢束,默认时删除所有钢束
         Args:
              name:钢束名称
              index:钢束编号
@@ -352,7 +352,7 @@ class MdbTendon:
     @staticmethod
     def remove_tendon_property(name: str = "", index: int = -1):
         """
-        todo 按照名称或编号删除钢束组,默认时删除所有钢束组
+        按照名称或编号删除钢束组,默认时删除所有钢束组
         Args:
              name:钢束组名称
              index:钢束组编号
@@ -371,7 +371,7 @@ class MdbTendon:
     @staticmethod
     def remove_pre_stress(tendon_name: str = ""):
         """
-        todo 删除预应力
+        删除预应力
         Args:
              tendon_name:钢束组,默认则删除所有预应力荷载
         Example:
@@ -385,7 +385,7 @@ class MdbTendon:
     @staticmethod
     def remove_tendon_group(name: str = ""):
         """
-        todo 按照钢束组名称或钢束组编号删除钢束组，两参数均为默认时删除所有钢束组
+        按照钢束组名称或钢束组编号删除钢束组，两参数均为默认时删除所有钢束组
         Args:
              name:钢束组名称,默认自动识别 (可选参数)
         Example:
