@@ -1,4 +1,4 @@
-> 最新版本 V1.1.11 - 2025-10-13 
+> 最新版本 V1.1.11 - 2025-10-20 
 > pip install --upgrade qtmodel -i https://pypi.org/simple
 - 新增更新结构组接口 
 # 建模操作 
@@ -1252,7 +1252,7 @@ control_points=[(0,-1,0),(10,-1,0)],point_insert=(1,1,1),track_group="轨迹线�
 #Returns: 无
 ```  
 ### update_element_component_type
-todo 赋予单元构件类型
+赋予单元构件类型
 > 参数:  
 > ids: 钢束构件所在单元编号集合且支持XtoYbyN形式字符串  
 > component_type:0-钢结构构件 1-钢筋混凝土构件 2-预应力混凝土构件  
@@ -1263,7 +1263,7 @@ mdb.update_element_component_type(ids=[1,2,3,4],component_type=2)
 #Returns: 无
 ```  
 ### update_tendon_group
-todo 更新钢束组名
+更新钢束组名
 > 参数:  
 > name:原钢束组名  
 > new_name:新钢束组名  
@@ -1274,7 +1274,7 @@ mdb.update_tendon_group("钢束组1","钢束组2")
 #Returns: 无
 ```  
 ### remove_tendon
-todo 按照名称或编号删除钢束,默认时删除所有钢束
+按照名称或编号删除钢束,默认时删除所有钢束
 > 参数:  
 > name:钢束名称  
 > index:钢束编号  
@@ -1287,7 +1287,7 @@ mdb.remove_tendon()
 #Returns: 无
 ```  
 ### remove_tendon_property
-todo 按照名称或编号删除钢束组,默认时删除所有钢束组
+按照名称或编号删除钢束组,默认时删除所有钢束组
 > 参数:  
 > name:钢束组名称  
 > index:钢束组编号  
@@ -1300,7 +1300,7 @@ mdb.remove_tendon_property()
 #Returns: 无
 ```  
 ### remove_pre_stress
-todo 删除预应力
+删除预应力
 > 参数:  
 > tendon_name:钢束组,默认则删除所有预应力荷载  
 ```Python
@@ -1311,7 +1311,7 @@ mdb.remove_pre_stress()
 #Returns: 无
 ```  
 ### remove_tendon_group
-todo 按照钢束组名称或钢束组编号删除钢束组，两参数均为默认时删除所有钢束组
+按照钢束组名称或钢束组编号删除钢束组，两参数均为默认时删除所有钢束组
 > 参数:  
 > name:钢束组名称,默认自动识别 (可选参数)  
 ```Python
