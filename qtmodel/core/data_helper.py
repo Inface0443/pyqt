@@ -133,7 +133,7 @@ class QtDataHelper:
             s = QtDataHelper.str_steel_beam(sec_info, rib_info, rib_place)
         elif sec_type == "特性截面":
             s = ",".join(f"{x:g}" for x in sec_info) + "\r\n"
-        elif sec_type == "自定义组合梁":
+        elif sec_type.startswith("自定义组合"):
             s = QtDataHelper.str_custom_compound_beam(mat_combine, loop_segments, secondary_loop_segments)
         elif sec_type.endswith("组合梁") or sec_type in ("钢管砼", "钢箱砼", "哑铃型钢管混凝土", "哑铃型钢管混凝土竖向"):
             s = QtDataHelper.str_compound_section(sec_info, mat_combine)

@@ -59,7 +59,7 @@ class MdbSection:
                 _布置具体部位(箱型钢梁) 1-上左 2-上中 3-上右 4-左腹板 5-右腹板 6-下左 7-下中 8-下右
             loop_segments:线圈坐标集合 list[dict] dict示例:{"main":[(x1,y1),(x2,y2)...],"sub1":[(x1,y1),(x2,y2)...],"sub2":[(x1,y1),(x2,y2)...]}
             sec_lines:线宽集合[(x1,y1,x2,y3,thick),]
-            secondary_loop_segments:辅材线圈坐标集合 list[dict] (同loop_segments)
+            secondary_loop_segments:辅材线圈坐标集合 list[dict] (同loop_segments)，请注意以左下角为组合截面原点建立截面
             sec_property:截面特性(参考UI界面共计29个参数)，可选参数，指定截面特性时不进行截面计算
             bias_type:偏心类型 默认中心
             center_type:中心类型 默认质心
