@@ -1,4 +1,4 @@
-> 最新版本 V1.1.11 - 2025-10-20 
+> 最新版本 V1.1.12 - 2025-10-30 
 > pip install --upgrade qtmodel -i https://pypi.org/simple
 - 新增更新结构组接口 
 # 建模操作 
@@ -577,7 +577,7 @@ mdb.remove_thickness(name="板厚1")
 > _布置具体部位(箱型钢梁) 1-上左 2-上中 3-上右 4-左腹板 5-右腹板 6-下左 7-下中 8-下右  
 > loop_segments:线圈坐标集合 list[dict] dict示例:{"main":[(x1,y1),(x2,y2)...],"sub1":[(x1,y1),(x2,y2)...],"sub2":[(x1,y1),(x2,y2)...]}  
 > sec_lines:线宽集合[(x1,y1,x2,y3,thick),]  
-> secondary_loop_segments:辅材线圈坐标集合 list[dict] (同loop_segments)  
+> secondary_loop_segments:辅材线圈坐标集合 list[dict] (同loop_segments)，建议以左下角为组合截面原点建立截面  
 > sec_property:截面特性(参考UI界面共计29个参数)，可选参数，指定截面特性时不进行截面计算  
 > bias_type:偏心类型 默认中心  
 > center_type:中心类型 默认质心  
@@ -3082,6 +3082,7 @@ odb.get_all_section_data()
 获取截面详细信息,截面特性详见UI自定义特性截面
 > 参数:  
 > sec_id: 目标截面编号  
+> position: 目标截面为变截面时0-首端 1-末端  
 ```Python
 # 示例代码
 from qtmodel import *
@@ -3106,6 +3107,31 @@ odb.get_section_property(1)
 from qtmodel import *
 odb.get_section_ids()
 #Returns: list[int]
+```  
+### get_section_property_by_loops
+通过多组线圈获取截面特性
+> 参数:  
+```Python
+# 示例代码
+from qtmodel import *
+dict_item1 = {"main": [[9.25, 0.0], [18.4, 0.0], [18.5, 0.0], [18.5, 2.5], [9.25, 2.5], [0.0, 2.5], [0.0, 0.0], [0.1, 0.0]],
+"sub1": [[6.35, 0.5], [2.55, 0.5], [2.55, 1.0], [2.55, 2.0], [6.35, 2.0]],
+"sub2": [[9.25, 0.5], [11.55, 0.5], [11.55, 2.0], [9.25, 2.0], [6.95, 2.0], [6.95, 0.5]],
+"sub3": [[12.15, 0.5], [15.95, 0.5], [15.95, 1.0], [15.95, 2.0], [12.15, 2.0]]}
+odb.get_section_property_by_loops([dict_item1])
+#Returns: dict
+```  
+### get_section_property_by_lines
+通过线宽数据获取截面特性
+> 参数:  
+```Python
+# 示例代码
+from qtmodel import *
+sec_lines = [[0.0, 2.284, 5.51093, 2.284, 0.016], [0.152479, 2.284, 0.200597, 2.04341, 0.008],
+[0.200597, 2.04341, 0.201664, 2.0389, 0.008], [0.201664, 2.0389, 0.203149, 2.03451, 0.008],
+[0.203149, 2.03451, 0.205006, 2.03026, 0.008]]
+odb.get_section_property_by_lines(sec_lines)
+#Returns: dict
 ```  
 ##  获取模型边界信息
 ### get_boundary_group_names
