@@ -1,4 +1,6 @@
+import json
 import math
+from typing import Union
 
 
 class NodeDisplacement:
@@ -652,4 +654,104 @@ class ElasticBucklingResult:
         return obj_dict
 
     def __repr__(self):
+        return self.__str__()
+
+
+class TendonLossResult:
+    """
+    预应力钢筋损失（简化）
+    对应 C# PreStressBarLoss:
+      - BarId                → bar_id
+      - BeamId               → beam_id
+      - BeamEndMark          → position
+      - EffectiveStress      → effective_s
+      - InstantaneousLoss    → instance_s
+      - ExceptInstantaneous  → except_s
+      - Effective/Instantaneous Ratio → ratio
+    """
+
+    def __init__(
+            self,
+            tendon_name: str,
+            beam_id: int,
+            position: Union[str, int],
+            eff_s: float,
+            inst_s: float,
+            except_s: float
+    ):
+        self.tendon_name = tendon_name
+        self.beam_id = beam_id
+        self.position = position  # 例如: 'I'/'J' 或 1/2
+        self.effective_s = float(eff_s)  # 考虑所有损失后的应力
+        self.instance_s = float(inst_s)  # 排除瞬时损失后的应力（你的 C# 字段名语义如此）
+        self.except_s = float(except_s)  # 弹性变形/收缩徐变/松弛 的合计损失（排除瞬时）
+
+        # 对应 C# 的 EffectiveToInstantaneousLossRatio
+        self.ratio = (self.effective_s / self.instance_s) if abs(self.instance_s) > 0.0 else 0.0
+
+    def to_dict(self):
+        return {
+            "tendon_name": self.tendon_name,
+            "beam_id": self.beam_id,
+            "position": self.position,
+            "effective_s": self.effective_s,
+            "instance_s": self.instance_s,
+            "except_s": self.except_s,
+            "ratio": self.ratio,
+        }
+
+    def __str__(self):
+        # 保持可读输出，同时兼容中文
+        return json.dumps(self.to_dict(), ensure_ascii=False)
+
+    def __repr__(self):
+        # 与 __str__ 一致，便于调试打印
+        return self.__str__()
+
+
+class TendonLengthResult:
+    """
+    预应力伸长量结果
+    """
+    def __init__(
+            self,
+            tendon_name: str,
+            start_stage: int,
+            stress_length: float,
+            un_stress_length: float,
+            effect_stress_i: float,
+            effect_stress_j: float,
+            elongation_i: float,
+            elongation_j: float,
+            elongation: float
+    ):
+        self.tendon_name = tendon_name
+        self.start_stage = start_stage
+        self.stress_length = stress_length
+        self.un_stress_length = un_stress_length
+        self.effect_stress_i = effect_stress_i
+        self.effect_stress_j = effect_stress_j
+        self.elongation_i = elongation_i
+        self.elongation_j = elongation_j
+        self.elongation = elongation
+
+    def to_dict(self):
+        return {
+            "tendon_name": self.tendon_name,
+            "start_stage": self.start_stage,
+            "stress_length": self.stress_length,
+            "un_stress_length": self.un_stress_length,
+            "effect_stress_i": self.effect_stress_i,
+            "effect_stress_j": self.effect_stress_j,
+            "elongation_i": self.elongation_i,
+            "elongation_j": self.elongation_j,
+            "elongation": self.elongation,
+        }
+
+    def __str__(self):
+        # 保持可读输出，同时兼容中文
+        return json.dumps(self.to_dict(), ensure_ascii=False)
+
+    def __repr__(self):
+        # 与 __str__ 一致，便于调试打印
         return self.__str__()

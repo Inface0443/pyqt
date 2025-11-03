@@ -42,7 +42,7 @@ class OdbResultData:
     @staticmethod
     def get_deformation(ids, envelop_type=1,
                         stage_id: int = 1, result_kind: int = 1, increment_type: int = 1,
-                        case_name="", is_time_history: bool = False,is_local=False) -> str:
+                        case_name="", is_time_history: bool = False, is_local=False) -> str:
         """
         获取节点变形结果,支持单个节点和节点列表
         Args:
@@ -306,4 +306,50 @@ class OdbResultData:
             "mode": mode
         }
         return QtServer.send_dict("GET-BUCKLING-MODAL-RESULTS", payload)
+
+    @staticmethod
+    def get_tendon_loss_results(name: str, stage_id: int = 1) -> str:
+        """
+        获取预应力钢束损失
+        Args:
+            name: 钢束名称
+            stage_id: 阶段编号，默认 1
+        Example:
+            odb.get_tendon_loss_results(name="T1", stage_id=2)
+        Returns:
+            str: JSON 字符串（list[dict]），包含该钢束在指定阶段的损失结果
+        """
+        payload = {
+            "name": name,
+            "stage_id": stage_id,
+        }
+        return QtServer.send_dict("GET-TENDON-LOSS-RESULTS", payload)
+
+    @staticmethod
+    def get_tendon_position_result(name: str) -> str:
+        """
+        获取预应力钢束坐标
+        Args:
+            name: 钢束名称
+        Example:
+            odb.get_tendon_position_result(name="T1")
+        Returns:
+            str: JSON 字符串（list[dict]），包含该钢束的坐标/几何信息
+        """
+        payload = {
+            "name": name,
+        }
+        return QtServer.send_dict("GET-TENDON-POSITION-RESULT", payload)
+
+    @staticmethod
+    def get_tendon_length_result() -> str:
+        """
+        获取预应力伸长量
+        Args: 无
+        Example:
+            odb.get_tendon_length_result()
+        Returns:
+            str: JSON 字符串（list[dict]），包含伸长量结果列表/明细
+        """
+        return QtServer.send_dict("GET-TENDON-LENGTH-RESULT", None)
 # endregion

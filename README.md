@@ -1,6 +1,6 @@
-> 最新版本 V1.1.12 - 2025-10-30 
+> 最新版本 V1.1.13 - 2025-11-03 
 > pip install --upgrade qtmodel -i https://pypi.org/simple
-- 新增更新结构组接口 
+- 增加钢束预应力结果读取
 # 建模操作 
 ##  节点操作
 ### add_nodes
@@ -3559,6 +3559,36 @@ odb.get_buckling_eigenvalue()
 from qtmodel import *
 odb.get_buckling_modal_results(mode=1)
 #Returns: 返回json字符串，list[dict]包含该模态下屈曲模态向量列表
+```  
+### get_tendon_loss_results
+获取预应力钢束损失
+> 参数:  
+> name: 钢束名称  
+> stage_id: 阶段编号，默认 1  
+```Python
+# 示例代码
+from qtmodel import *
+odb.get_tendon_loss_results(name="T1", stage_id=2)
+#Returns:
+```  
+### get_tendon_position_result
+获取预应力钢束坐标
+> 参数:  
+> name: 钢束名称  
+```Python
+# 示例代码
+from qtmodel import *
+odb.get_tendon_position_result(name="T1")
+#Returns:
+```  
+### get_tendon_length_result
+获取预应力伸长量
+> 参数:  
+```Python
+# 示例代码
+from qtmodel import *
+odb.get_tendon_length_result()
+#Returns:
 ```  
 ##  绘制模型结果
 ### plot_reaction_result
