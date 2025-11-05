@@ -1,6 +1,6 @@
-> 最新版本 V1.1.13 - 2025-11-03 
+> 最新版本 V1.1.14 - 2025-11-05 
 > pip install --upgrade qtmodel -i https://pypi.org/simple
-- 增加钢束预应力结果读取
+- 新增跨度信息提取接口
 # 建模操作 
 ##  节点操作
 ### add_nodes
@@ -3047,6 +3047,27 @@ odb.get_element_type(element_id=1) # 获取1号单元类型
 # 示例代码
 from qtmodel import *
 odb.get_group_elements(group_name="默认结构组")
+#Returns: list[int]
+```  
+##  跨度信息
+### get_span_supports
+获取跨度信息的支承节点号
+> 参数:  
+> span_info_name: 跨度信息名  
+```Python
+# 示例代码
+from qtmodel import *
+odb.get_span_supports(span_info_name="跨度")
+#Returns: list[int]
+```  
+### get_span_elements
+获取跨度信息的支承节点号
+> 参数:  
+> span_info_name: 跨度信息名  
+```Python
+# 示例代码
+from qtmodel import *
+odb.get_span_elements(span_info_name="跨度")
 #Returns: list[int]
 ```  
 ##  获取截面信息

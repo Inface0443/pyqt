@@ -169,3 +169,31 @@ class OdbModelStructure:
         return QtServer.send_dict("GET-GROUP-ELEMENTS", payload)
 
     # endregion
+
+    # region 跨度信息
+    @staticmethod
+    def get_span_supports(span_info_name: str = ""):
+        """
+        获取跨度信息的支承节点号
+        Args:
+            span_info_name: 跨度信息名
+        Example:
+            odb.get_span_supports(span_info_name="跨度")
+        Returns: list[int]
+        """
+        payload = {"spaninfo_name": span_info_name}
+        return QtServer.send_dict("GET-SPANINFO-SUPPORTS", payload)
+
+    @staticmethod
+    def get_span_elements(span_info_name: str = ""):
+        """
+        获取跨度信息的支承节点号
+        Args:
+            span_info_name: 跨度信息名
+        Example:
+            odb.get_span_elements(span_info_name="跨度")
+        Returns: list[int]
+        """
+        payload = {"spaninfo_name": span_info_name}
+        return QtServer.send_dict("GET-SPANINFO-ELEMENTS", payload)
+    # endregion

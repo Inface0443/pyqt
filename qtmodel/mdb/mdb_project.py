@@ -169,7 +169,9 @@ class MdbProject:
             "command_type": command_type,
         }
         json_string = json.dumps(params, indent=2)
-        return QtServer.send_command(header="INP-COMMAND", command=json_string)
+        result= QtServer.send_command(header="INP-COMMAND", command=json_string)
+        QtServer.send_command(header="UPDATE")
+        return result
 
     @staticmethod
     def import_file(file_path: str):
