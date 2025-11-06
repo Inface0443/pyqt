@@ -1,6 +1,6 @@
-> 最新版本 V1.2.1 - 2025-11-06 
+> 最新版本 V1.3.1 - 2025-11-06 
 > pip install --upgrade qtmodel -i https://pypi.org/simple
-- 新增更新结构组接口 
+- 新增多个截面 
 # 建模操作 
 ##  节点操作
 ### add_nodes
