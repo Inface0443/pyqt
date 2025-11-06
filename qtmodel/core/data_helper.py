@@ -91,9 +91,9 @@ class QtDataHelper:
             sec_type=sec_type,
             sec_info=sec_data.get("sec_info", []),
             symmetry=sec_data.get("symmetry", True),
-            charm_info=sec_data.get("charm_info", None),
+            chamfer_info=sec_data.get("charm_info", None),
             sec_right=sec_data.get("sec_right", None),
-            charm_right=sec_data.get("charm_right", None),
+            chamfer_right=sec_data.get("charm_right", None),
             box_num=sec_data.get("box_num", 3),
             box_height=sec_data.get("box_height", 2),
             box_other_info=sec_data.get("box_other_info", None),
@@ -112,9 +112,9 @@ class QtDataHelper:
             sec_type: str = "矩形",
             sec_info: list[float] = None,
             symmetry: bool = True,
-            charm_info: list[str] = None,
+            chamfer_info: list[str] = None,
             sec_right: list[float] = None,
-            charm_right: list[str] = None,
+            chamfer_right: list[str] = None,
             box_num: int = 3,
             box_height: float = 2,
             box_other_info: dict[str, list[float]] = None,
@@ -127,8 +127,10 @@ class QtDataHelper:
             secondary_loop_segments: list[dict] = None):
         """仅返回字符串片段,需要拼接"""
         if sec_type == "混凝土箱梁":
-            s = QtDataHelper.str_concrete_box_beam(symmetry, sec_info, box_num, box_height, charm_info, sec_right, charm_right, box_other_info,
+            s = QtDataHelper.str_concrete_box_beam(symmetry, sec_info, box_num, box_height, chamfer_info, sec_right, chamfer_right, box_other_info,
                                                    box_other_right)
+        elif sec_type == "箱梁边腹板" or sec_type == "箱梁中腹板" :
+            s =",".join(f"{x:g}" for x in sec_info) + "\r\n" + ",".join(f"({s})" for s in chamfer_info)
         elif sec_type == "工字钢梁" or sec_type == "箱型钢梁":
             s = QtDataHelper.str_steel_beam(sec_info, rib_info, rib_place)
         elif sec_type == "特性截面":
