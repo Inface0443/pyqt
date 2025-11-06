@@ -18,9 +18,9 @@ class MdbSection:
             sec_type: str = "矩形",
             sec_info: list[float] = None,
             symmetry: bool = True,
-            charm_info: list[str] = None,
+            chamfer_info: list[str] = None,
             sec_right: list[float] = None,
-            charm_right: list[str] = None,
+            chamfer_right: list[str] = None,
             box_num: int = 3,
             box_height: float = 2,
             box_other_info: dict[str, list[float]] = None,
@@ -45,9 +45,9 @@ class MdbSection:
             sec_type:参数截面类型名称(详见UI界面)
             sec_info:截面信息 (必要参数)
             symmetry:混凝土截面是否对称 (仅混凝土箱梁截面需要)
-            charm_info:混凝土截面倒角信息 (仅混凝土箱梁截面需要)
+            chamfer_info:混凝土截面倒角信息 (仅混凝土箱梁截面需要)
             sec_right:混凝土截面右半信息 (对称时可忽略，仅混凝土箱梁截面需要)
-            charm_right:混凝土截面右半倒角信息 (对称时可忽略，仅混凝土箱梁截面需要)
+            chamfer_right:混凝土截面右半倒角信息 (对称时可忽略，仅混凝土箱梁截面需要)
             box_num: 混凝土箱室数 (仅混凝土箱梁截面需要)
             box_height: 混凝土箱梁梁高 (仅混凝土箱梁截面需要)
             box_other_info: 混凝土箱梁额外信息(键包括"i1" "B0" "B4" "T4" 值为列表)
@@ -70,7 +70,7 @@ class MdbSection:
             mdb.add_section(name="截面1",sec_type="矩形",sec_info=[2,4],bias_type="中心")
             mdb.add_section(name="截面2",sec_type="混凝土箱梁",box_height=2,box_num=3,
                 sec_info=[0.2,0.4,0.1,0.13,3,1,2,1,0.02,0,12,5,6,0.28,0.3,0.5,0.5,0.5,0.2],
-                charm_info=["1*0.2,0.1*0.2","0.5*0.15,0.3*0.2","0.4*0.2","0.5*0.2"])
+                chamfer_info=["1*0.2,0.1*0.2","0.5*0.15,0.3*0.2","0.4*0.2","0.5*0.2"])
             mdb.add_section(name="钢梁截面1",sec_type="工字钢梁",sec_info=[0,0,0.5,0.5,0.5,0.5,0.7,0.02,0.02,0.02])
             mdb.add_section(name="钢梁截面2",sec_type="箱型钢梁",sec_info=[0,0.15,0.25,0.5,0.25,0.15,0.4,0.15,0.7,0.02,0.02,0.02,0.02],
                 rib_info = {"板肋1": [0.1,0.02],"T形肋1":[0.1,0.02,0.02,0.02]},
@@ -91,9 +91,9 @@ class MdbSection:
             sec_type,
             sec_info,
             symmetry,
-            charm_info,
+            chamfer_info,
             sec_right,
-            charm_right,
+            chamfer_right,
             box_num,
             box_height,
             box_other_info,

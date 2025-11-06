@@ -20,7 +20,7 @@ class MdbProject:
         QtServer.QT_MERGE = is_open
 
     @staticmethod
-    def set_version(version: str = "1.2.3"):
+    def set_version(version: str = "1.2.4"):
         """
         控制导入qdat版本
         Args:无
