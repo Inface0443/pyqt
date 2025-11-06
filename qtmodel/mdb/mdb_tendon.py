@@ -70,7 +70,7 @@ class MdbTendon:
                       control_points: Optional[list[tuple[float, float, float, float]]] = None,
                       point_insert: tuple[float, float, float] = None,
                       tendon_direction: Optional[tuple[float, float, float]] = None,
-                      rotation_angle: float = 0, track_group: str = "默认结构组", projection: bool = True):
+                      rotation_angle: float = 0,rotate_bias:tuple[float,float]=None, track_group: str = "默认结构组", projection: bool = True):
         """
         添加三维钢束
         Args:
@@ -84,6 +84,7 @@ class MdbTendon:
              point_insert: 定位方式 (直线时为插入点坐标[x,y,z]  轨迹线时[插入端(1-I 2-J),插入方向(1-ij 2-ji),插入单元id])
              tendon_direction:直线钢束X方向向量  默认为x轴即[1,0,0] (轨迹线不用赋值)
              rotation_angle:绕钢束旋转角度
+             rotate_bias:绕钢束旋转偏心X、Y
              track_group:轨迹线结构组名  (直线时不用赋值)
              projection:直线钢束投影 (默认为true)
         Example:
@@ -93,6 +94,8 @@ class MdbTendon:
                     control_points=[(0,0,-1,0),(10,0,-1,0)],point_insert=(1,1,1),track_group="轨迹线结构组1")
         Returns: 无
         """
+        if rotate_bias is None:
+            rotate_bias = (0,0)
         if tendon_direction is None:
             tendon_direction = (1, 0, 0)
         if control_points is None:
@@ -103,10 +106,11 @@ class MdbTendon:
         s = "*TDN-PROFILE\r\n" + f"NAME={name},{property_name},{group_name},{num},{line_type},"
         if position_type == 1:
             s += "STRAIGHT,2,3D\r\n"
-            s += f"({','.join(f'{x}' for x in point_insert)}),({','.join(f'{x:g}' for x in tendon_direction)}),{rotation_angle:g},{prj_str}\r\n"
+            s += (f"({','.join(f'{x}' for x in point_insert)}),({','.join(f'{x:g}' for x in tendon_direction)}),"
+                  f"{rotation_angle:g},{rotate_bias[0]},{rotate_bias[1]},{prj_str}\r\n")
         elif position_type == 2:
             s += "TRACK,2,3D\r\n"
-            s += f"{track_group},{point_insert[0]},{point_insert[2]},{point_insert[1]},{rotation_angle:g}\r\n"
+            s += f"{track_group},{point_insert[0]},{point_insert[2]},{point_insert[1]},{rotation_angle:g},{rotate_bias[0]},{rotate_bias[1]}\r\n"
         s += ",".join(f"({','.join(f'{v:g}' for v in point)})" for point in control_points) + "\r\n"
         QtServer.send_command(s, "QDAT")
 
@@ -118,7 +122,7 @@ class MdbTendon:
                       control_points_lateral: Optional[list[tuple[float, float, float]]] = None,
                       point_insert: tuple[float, float, float] = None,
                       tendon_direction: Optional[tuple[float, float, float]] = None,
-                      rotation_angle: float = 0, track_group: str = "默认结构组", projection: bool = True):
+                      rotation_angle: float = 0,rotate_bias:tuple[float,float]=None, track_group: str = "默认结构组", projection: bool = True):
         """
         添加三维钢束
         Args:
@@ -134,6 +138,7 @@ class MdbTendon:
              point_insert: 定位方式 (直线时为插入点坐标[x,y,z]  轨迹线时[插入端(1-I 2-J),插入方向(1-ij 2-ji),插入单元id])
              tendon_direction:直线钢束X方向向量  默认为x轴即[1,0,0] (轨迹线不用赋值)
              rotation_angle:绕钢束旋转角度
+             rotate_bias:绕钢束旋转偏心X、Y
              track_group:轨迹线结构组名  (直线时不用赋值)
              projection:直线钢束投影 (默认为true)
         Example:
@@ -154,10 +159,11 @@ class MdbTendon:
             s = "*TDN-PROFILE\r\n" + f"NAME={name},{property_name},{group_name},{num},{line_type},"
             if position_type == 1:
                 s += f"STRAIGHT,{symmetry},2D\r\n"
-                s += f"({','.join(f'{x}' for x in point_insert)}),({','.join(f'{x:g}' for x in tendon_direction)}),{rotation_angle:g},{prj_str}\r\n"
+                s += (f"({','.join(f'{x}' for x in point_insert)}),({','.join(f'{x:g}' for x in tendon_direction)}),{rotation_angle:g},"
+                      f"{rotate_bias[0]},{rotate_bias[1]},{prj_str}\r\n")
             elif position_type == 2:
                 s += f"TRACK,{symmetry},2D\r\n"
-                s += f"{track_group},{point_insert[0]},{point_insert[2]},{point_insert[1]},{rotation_angle:g}\r\n"
+                s += f"{track_group},{point_insert[0]},{point_insert[2]},{point_insert[1]},{rotation_angle:g},{rotate_bias[0]},{rotate_bias[1]}\r\n"
             s += "Z=" + ",".join(f"({','.join(f'{v}' for v in point)})" for point in control_points) + "\r\n"
             if control_points_lateral is not None:
                 s += "Y=" + ",".join(

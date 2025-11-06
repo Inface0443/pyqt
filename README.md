@@ -1,6 +1,6 @@
-> 最新版本 V1.3.1 - 2025-11-06 
+> 最新版本 V1.2.2 - 2025-11-06 
 > pip install --upgrade qtmodel -i https://pypi.org/simple
-- 新增多个截面 
+- 新增更新结构组接口 
 # 建模操作 
 ##  节点操作
 ### add_nodes
@@ -1144,6 +1144,7 @@ steel_detail=[0.00014,0.10,0.25,0.0015],loos_detail=(1,1,1))
 > point_insert: 定位方式 (直线时为插入点坐标[x,y,z]  轨迹线时[插入端(1-I 2-J),插入方向(1-ij 2-ji),插入单元id])  
 > tendon_direction:直线钢束X方向向量  默认为x轴即[1,0,0] (轨迹线不用赋值)  
 > rotation_angle:绕钢束旋转角度  
+> rotate_bias:绕钢束旋转偏心X、Y  
 > track_group:轨迹线结构组名  (直线时不用赋值)  
 > projection:直线钢束投影 (默认为true)  
 ```Python
@@ -1170,6 +1171,7 @@ control_points=[(0,0,-1,0),(10,0,-1,0)],point_insert=(1,1,1),track_group="轨迹
 > point_insert: 定位方式 (直线时为插入点坐标[x,y,z]  轨迹线时[插入端(1-I 2-J),插入方向(1-ij 2-ji),插入单元id])  
 > tendon_direction:直线钢束X方向向量  默认为x轴即[1,0,0] (轨迹线不用赋值)  
 > rotation_angle:绕钢束旋转角度  
+> rotate_bias:绕钢束旋转偏心X、Y  
 > track_group:轨迹线结构组名  (直线时不用赋值)  
 > projection:直线钢束投影 (默认为true)  
 ```Python

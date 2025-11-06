@@ -3,7 +3,7 @@ from datetime import datetime
 
 class Readme:
     """用于生成帮助文档"""
-    version = "V1.3.1"
+    version = "V1.2.2"
     _data_str = []
 
     @staticmethod
