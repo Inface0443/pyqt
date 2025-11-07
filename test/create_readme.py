@@ -4,6 +4,7 @@ from datetime import datetime
 class Readme:
     """用于生成帮助文档"""
     version = "V1.2.2"
+    version_qdat = "V1.2.4"
     _data_str = []
 
     @staticmethod
@@ -89,7 +90,8 @@ class Readme:
     @staticmethod
     def print_md_file_context():
         # 获取当前日期和时间
-        Readme.print_str(f"> 最新版本 {Readme.version} - {datetime.now().date()} ")
+        Readme.print_str(f"> 最新qtmodel版本 {Readme.version} - {datetime.now().date()} ")
+        Readme.print_str(f"> 最新qdat数据版本 {Readme.version_qdat} ")
         Readme.print_str("> pip install --upgrade qtmodel -i https://pypi.org/simple")
         Readme.print_str("- 新增更新结构组接口 ")
         Readme.print_str("# 建模操作 ")
