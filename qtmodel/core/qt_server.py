@@ -7,7 +7,7 @@ class QtServer:
     URL: str = "http://localhost:55125/pythonForQt/"
     MERGE_STR: str = ""
     QT_MERGE: bool = False  # 是否合并发送
-    QT_VERSION: str = "1.2.4"
+    QT_VERSION: str = "1.2.4"  # 匹配的qdat版本
 
     @staticmethod
     def send_command(command: str = "", header: str = ""):

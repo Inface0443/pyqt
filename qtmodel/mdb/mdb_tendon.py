@@ -70,7 +70,8 @@ class MdbTendon:
                       control_points: Optional[list[tuple[float, float, float, float]]] = None,
                       point_insert: tuple[float, float, float] = None,
                       tendon_direction: Optional[tuple[float, float, float]] = None,
-                      rotation_angle: float = 0,rotate_bias:tuple[float,float]=None, track_group: str = "默认结构组", projection: bool = True):
+                      rotation_angle: float = 0,rotate_bias:tuple[float,float]=None,
+                      track_group: str = "默认结构组", projection: bool = True):
         """
         添加三维钢束
         Args:
@@ -104,13 +105,14 @@ class MdbTendon:
             raise Exception("操作错误，钢束插入点信息不能为空且长度必须为3")
         prj_str = "YES" if projection else "NO"
         s = "*TDN-PROFILE\r\n" + f"NAME={name},{property_name},{group_name},{num},{line_type},"
+        rotate_bias_info = f",{rotate_bias[0]},{rotate_bias[1]}" if int(QtServer.QT_VERSION.replace(".","")) < 124 else ""
         if position_type == 1:
             s += "STRAIGHT,2,3D\r\n"
             s += (f"({','.join(f'{x}' for x in point_insert)}),({','.join(f'{x:g}' for x in tendon_direction)}),"
-                  f"{rotation_angle:g},{rotate_bias[0]},{rotate_bias[1]},{prj_str}\r\n")
+                  f"{rotation_angle:g}{rotate_bias_info},{prj_str}\r\n")
         elif position_type == 2:
             s += "TRACK,2,3D\r\n"
-            s += f"{track_group},{point_insert[0]},{point_insert[2]},{point_insert[1]},{rotation_angle:g},{rotate_bias[0]},{rotate_bias[1]}\r\n"
+            s += f"{track_group},{point_insert[0]},{point_insert[2]},{point_insert[1]},{rotation_angle:g}{rotate_bias_info}\r\n"
         s += ",".join(f"({','.join(f'{v:g}' for v in point)})" for point in control_points) + "\r\n"
         QtServer.send_command(s, "QDAT")
 
@@ -157,18 +159,18 @@ class MdbTendon:
                 raise Exception("操作错误，钢束插入点信息不能为空且长度必须为3")
             prj_str = "YES" if projection else "NO"
             s = "*TDN-PROFILE\r\n" + f"NAME={name},{property_name},{group_name},{num},{line_type},"
+            rotate_bias_info = f",{rotate_bias[0]},{rotate_bias[1]}" if int(QtServer.QT_VERSION.replace(".", "")) < 124 else ""
             if position_type == 1:
                 s += f"STRAIGHT,{symmetry},2D\r\n"
-                s += (f"({','.join(f'{x}' for x in point_insert)}),({','.join(f'{x:g}' for x in tendon_direction)}),{rotation_angle:g},"
-                      f"{rotate_bias[0]},{rotate_bias[1]},{prj_str}\r\n")
+                s += (f"({','.join(f'{x}' for x in point_insert)}),({','.join(f'{x:g}' for x in tendon_direction)}),"
+                      f"{rotation_angle:g}{rotate_bias_info},{prj_str}\r\n")
             elif position_type == 2:
                 s += f"TRACK,{symmetry},2D\r\n"
-                s += f"{track_group},{point_insert[0]},{point_insert[2]},{point_insert[1]},{rotation_angle:g},{rotate_bias[0]},{rotate_bias[1]}\r\n"
+                s += f"{track_group},{point_insert[0]},{point_insert[2]},{point_insert[1]},{rotation_angle:g}{rotate_bias_info}\r\n"
             s += "Z=" + ",".join(f"({','.join(f'{v}' for v in point)})" for point in control_points) + "\r\n"
             if control_points_lateral is not None:
                 s += "Y=" + ",".join(
                     f"({','.join(f'{y:g}' for y in point)})" for point in control_points_lateral) + "\r\n"
-            # print(s)
             QtServer.send_command(s, "QDAT")
         except Exception as ex:
             raise Exception(f"添加二维钢束:{name}失败,{ex}")

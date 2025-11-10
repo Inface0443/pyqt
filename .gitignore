@@ -34,3 +34,4 @@ qtmodel/odb/__pycache__/odb_view.cpython-39.pyc
 test/72+120+72-建模.ipynb
 test/test_solve.ipynb
 /QtCsharp/
+/test/buckling_curve.py
