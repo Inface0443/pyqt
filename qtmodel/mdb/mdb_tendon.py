@@ -105,7 +105,8 @@ class MdbTendon:
             raise Exception("操作错误，钢束插入点信息不能为空且长度必须为3")
         prj_str = "YES" if projection else "NO"
         s = "*TDN-PROFILE\r\n" + f"NAME={name},{property_name},{group_name},{num},{line_type},"
-        rotate_bias_info = f",{rotate_bias[0]},{rotate_bias[1]}" if int(QtServer.QT_VERSION.replace(".","")) < 124 else ""
+        # Qdat1.2.4版本升级增加数据旋转偏心
+        rotate_bias_info = f",{rotate_bias[0]},{rotate_bias[1]}" if int(QtServer.QT_VERSION.replace(".","")) >= 124 else ""
         if position_type == 1:
             s += "STRAIGHT,2,3D\r\n"
             s += (f"({','.join(f'{x}' for x in point_insert)}),({','.join(f'{x:g}' for x in tendon_direction)}),"
@@ -159,7 +160,8 @@ class MdbTendon:
                 raise Exception("操作错误，钢束插入点信息不能为空且长度必须为3")
             prj_str = "YES" if projection else "NO"
             s = "*TDN-PROFILE\r\n" + f"NAME={name},{property_name},{group_name},{num},{line_type},"
-            rotate_bias_info = f",{rotate_bias[0]},{rotate_bias[1]}" if int(QtServer.QT_VERSION.replace(".", "")) < 124 else ""
+            # Qdat1.2.4版本升级增加数据旋转偏心
+            rotate_bias_info = f",{rotate_bias[0]},{rotate_bias[1]}" if int(QtServer.QT_VERSION.replace(".", "")) >= 124 else ""
             if position_type == 1:
                 s += f"STRAIGHT,{symmetry},2D\r\n"
                 s += (f"({','.join(f'{x}' for x in point_insert)}),({','.join(f'{x:g}' for x in tendon_direction)}),"
