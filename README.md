@@ -1,5 +1,5 @@
-> 最新第三方库qtmodel版本 V1.2.2 - 2025-11-07 
-> 最新qdat数据库版本 V1.2.4 
+> 最新qtmodel版本 V2.1.1 - 2025-11-10 
+> 最新qdat数据版本 V1.2.4 
 > pip install --upgrade qtmodel -i https://pypi.org/simple
 - 新增更新结构组接口 
 # 建模操作 
