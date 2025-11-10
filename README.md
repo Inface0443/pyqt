@@ -1,7 +1,7 @@
 > 最新qtmodel版本 V2.1.1 - 2025-11-10 
 > 最新qdat数据版本 V1.2.4 
 > pip install --upgrade qtmodel -i https://pypi.org/simple
-- 新增更新结构组接口 
+- 升级qdat版本，此版本支持定义钢束旋转偏心
 # 建模操作 
 ##  节点操作
 ### add_nodes
