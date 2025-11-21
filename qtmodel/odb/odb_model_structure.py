@@ -1,5 +1,8 @@
+import json
+
 from qtmodel.core.qt_server import QtServer
 from qtmodel.core.data_helper import QtDataHelper
+from qtmodel.core.model_db import Node
 
 
 class OdbModelStructure:
@@ -59,7 +62,9 @@ class OdbModelStructure:
         Returns:  包含信息为list[dict] or dict
         """
         payload = {"ids": QtDataHelper.parse_ids_to_array(ids)} if ids is not None else None
-        return QtServer.send_dict("GET-NODE-DATA", payload)
+        json_str = QtServer.send_dict("GET-NODE-DATA", payload)
+        nodes = Node.from_json(json_str)
+        return Node.to_json(nodes)
 
     # endregion
 

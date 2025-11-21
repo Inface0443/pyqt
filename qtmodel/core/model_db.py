@@ -1,3 +1,7 @@
+import json
+from typing import List, Iterable
+
+
 class Node:
     def __init__(self, node_id: int, x: float, y: float, z: float):
         """
@@ -12,6 +16,85 @@ class Node:
         self.x = x
         self.y = y
         self.z = z
+
+    # ========= 单个 Node 的序列化 / 反序列化 =========
+
+    def to_dict(self) -> dict:
+        """把一个 Node 对象转成可 JSON 序列化的字典"""
+        return {
+            "node_id": self.node_id,
+            "x": self.x,
+            "y": self.y,
+            "z": self.z,
+        }
+
+    @classmethod
+    def from_dict(cls, d: dict) -> "Node":
+        """
+        从字典构造 Node
+
+        兼容两种形状：
+        1) {"node_id": 1, "x": 0.0, "y": 1.2, "z": 3.4}   # Python 自己生成
+        2) {"Item1": 1, "Item2": 0.0, "Item3": 1.2, "Item4": 3.4}  # C# Tuple 序列化
+        """
+        if "node_id" in d:  # 我们自己存的格式
+            return cls(
+                int(d["node_id"]),
+                float(d["x"]),
+                float(d["y"]),
+                float(d["z"]),
+            )
+        elif "Item1" in d:  # C# Tuple 默认格式
+            return cls(
+                int(d["Item1"]),
+                float(d["Item2"]),
+                float(d["Item3"]),
+                float(d["Item4"]),
+            )
+        else:
+            raise ValueError(f"无法从字典构造 Node: {d!r}")
+
+    # ========= List[Node] 的序列化 / 反序列化 =========
+
+    @staticmethod
+    def to_json(nodes: Iterable["Node"]) -> str:
+        """
+        把 List[Node] 序列化为 JSON 字符串
+        形状类似：
+        [
+          {"node_id": 1, "x": 0.0, "y": 1.2, "z": 3.4},
+          ...
+        ]
+        """
+        return json.dumps([n.to_dict() for n in nodes], ensure_ascii=False)
+
+    @staticmethod
+    def from_json(json_str: str) -> List["Node"]:
+        """
+        从 JSON 字符串反序列化为 List[Node]
+
+        兼容：
+        1) Python 导出的 [{"node_id": ..., "x": ..., "y": ..., "z": ...}, ...]
+        2) C# 导出的 [{"Item1": 1, "Item2": 0.0, "Item3": 1.2, "Item4": 3.4}, ...]
+        3) 如果是 [[id, x, y, z], ...] 也做一下兜底兼容
+        """
+        data = json.loads(json_str)
+        if not isinstance(data, list):
+            raise ValueError("json_str 必须是 JSON 数组")
+
+        nodes: List[Node] = []
+        for item in data:
+            if isinstance(item, dict):
+                node = Node.from_dict(item)
+            elif isinstance(item, (list, tuple)) and len(item) == 4:
+                node_id, x, y, z = item
+                node = Node(int(node_id), float(x), float(y), float(z))
+            else:
+                raise ValueError(f"不支持的节点数据格式: {item!r}")
+
+            nodes.append(node)
+
+        return nodes
 
     def __str__(self):
         obj_dict = {

@@ -131,7 +131,7 @@ class QtDataHelper:
                                                    box_other_right)
         elif sec_type == "箱梁边腹板" or sec_type == "箱梁中腹板" :
             s =",".join(f"{x:g}" for x in sec_info) + "\r\n" + ",".join(f"({s})" for s in chamfer_info)
-        elif sec_type == "工字钢梁" or sec_type == "箱型钢梁":
+        elif sec_type == "工字钢梁" or sec_type == "箱型钢梁" or sec_type == "单箱多室钢梁":
             s = QtDataHelper.str_steel_beam(sec_info, rib_info, rib_place)
         elif sec_type == "特性截面":
             s = ",".join(f"{x:g}" for x in sec_info) + "\r\n"
