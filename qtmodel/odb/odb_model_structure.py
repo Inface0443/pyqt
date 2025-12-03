@@ -1,5 +1,4 @@
 import json
-
 from qtmodel.core.qt_server import QtServer
 from qtmodel.core.data_helper import QtDataHelper
 from qtmodel.core.model_db import Node
@@ -173,6 +172,18 @@ class OdbModelStructure:
         payload = {"group_name": group_name}
         return QtServer.send_dict("GET-GROUP-ELEMENTS", payload)
 
+    @staticmethod
+    def get_element_weight(ids=None):
+        """
+        根据单元编号获取单元重量
+        Args:
+            ids: 单元编号支持整数或整数列表且支持XtoYbyN形式字符串，默认获取所有单元重量
+        Example:
+            odb.get_element_weight(ids=1)
+        Returns: dict<int,double>类型的json格式字符串
+        """
+        payload = {"ids": QtDataHelper.parse_ids_to_array(ids)}
+        return QtServer.send_dict("GET-ELEMENT-WEIGHT", payload)
     # endregion
 
     # region 跨度信息
