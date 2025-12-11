@@ -147,8 +147,7 @@ class QtDataHelper:
 
     @staticmethod
     def parse_int_list_to_str(ids: Union[int, List[int], str]) -> str:
-        """列表转XtoYbyZ
-        """
+        """将列表转XtoYbyZ字符串"""
         if ids is None or isinstance(ids, str):
             return "" if ids is None else str(ids)
         if isinstance(ids, int):
@@ -255,55 +254,6 @@ class QtDataHelper:
         return [v1, v2]
 
     @staticmethod
-    def parse_number_string(input_str: str) -> Optional[List[int]]:
-        """
-        将带“to/by”的字符串解析为 int 列表。
-        规则与给定 C# 版本一致：
-          - 以空白分隔各段；段内若包含 'to' 则按 'start to end [by step]' 解析
-          - 仅支持紧凑写法：例如 '3to10by2' 或 '3to10'（不支持 '3 to 10 by 2'）
-          - step 缺省为 1；返回为包含端点的等差序列（若整除）
-          - 对于无法解析的段、step<=0、end<start 的段会跳过
-          - 空或全空白字符串返回 None
-        """
-        if input_str is None:
-            return None
-        s = input_str.strip()
-        if s == "":
-            return None
-
-        ids: List[int] = []
-        tokens = s.split()
-        for tok in tokens:
-            if "to" in tok:
-                # 按 'to'/'by' 拆分；例如 '3to10by2' -> ['3','10','2']
-                parts = re.split(r'to|by', tok)
-                if len(parts) >= 2:
-                    try:
-                        start = int(parts[0])
-                        end = int(parts[1])
-                    except ValueError:
-                        continue
-                    step = 1
-                    if len(parts) > 2:
-                        try:
-                            step = int(parts[2])
-                        except ValueError:
-                            step = 1
-                    if step <= 0 or end < start:
-                        continue
-                    count = (end - start) // step + 1
-                    ids.extend(start + n * step for n in range(count))
-            else:
-                try:
-                    ids.append(int(tok))
-                except ValueError:
-                    continue
-
-        return ids
-
-
-
-    @staticmethod
     def live_load_set_line(code: int, calc_type: int, groups: list[str]):
         """用于更新移动荷载分析设置"""
         if groups is None:
@@ -315,13 +265,59 @@ class QtDataHelper:
         """
         支持整形、列表、XtoYbyZ形式字符串 统一解析为 int 列表
         """
-        result_ids: List[int] = []
+        def parse_number_string(input_str: str) -> Optional[List[int]]:
+            """
+            将带“to/by”的字符串解析为 int 列表。
+            规则与给定 C# 版本一致：
+              - 以空白分隔各段；段内若包含 'to' 则按 'start to end [by step]' 解析
+              - 仅支持紧凑写法：例如 '3to10by2' 或 '3to10'（不支持 '3 to 10 by 2'）
+              - step 缺省为 1；返回为包含端点的等差序列（若整除）
+              - 对于无法解析的段、step<=0、end<start 的段会跳过
+              - 空或全空白字符串返回 None
+            """
+            if input_str is None:
+                return None
+            s = input_str.strip()
+            if s == "":
+                return None
+
+            results: List[int] = []
+            tokens = s.split()
+            for tok in tokens:
+                if "to" in tok:
+                    # 按 'to'/'by' 拆分；例如 '3to10by2' -> ['3','10','2']
+                    parts = re.split(r'to|by', tok)
+                    if len(parts) >= 2:
+                        try:
+                            start = int(parts[0])
+                            end = int(parts[1])
+                        except ValueError:
+                            continue
+                        step = 1
+                        if len(parts) > 2:
+                            try:
+                                step = int(parts[2])
+                            except ValueError:
+                                step = 1
+                        if step <= 0 or end < start:
+                            continue
+                        count = (end - start) // step + 1
+                        results.extend(start + n * step for n in range(count))
+                else:
+                    try:
+                        results.append(int(tok))
+                    except ValueError:
+                        continue
+
+            return results
+
+        result_ids = []
         if ids is None:
             return result_ids
         if isinstance(ids, int):
             result_ids.append(ids)
         elif isinstance(ids, str):
-            result_ids.extend(QtDataHelper.parse_number_string(ids))
+            result_ids.extend(parse_number_string(ids))
         else:
             result_ids.extend(ids)
         if len(result_ids) == 0 and allow_empty is False:

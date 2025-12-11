@@ -24,12 +24,14 @@ class MdbTemperatureLoad:
             mdb.add_custom_temperature(case_name="荷载工况1",element_id=1,orientation=1,temperature_data=[(1,1,20),(1,2,10)])
         Returns: 无
         """
-        element_id = QtDataHelper.parse_ids_to_array(element_id)
-        id_str = QtDataHelper.parse_int_list_to_str(element_id)
-        s = "*USER-TEMP\r\n" + f"{id_str},{case_name},{group_name},{orientation},"
-        s += ",".join(f"({','.join(f'{x:g}' for x in data)})" for data in temperature_data) + "\r\n"
-        # print(s)
-        QtServer.send_command(s, "QDAT")
+        payload = {
+            "element_id": QtDataHelper.parse_ids_to_array(element_id),
+            "case_name": case_name,
+            "group_name": group_name,
+            "orientation": orientation,
+            "temperature_data": temperature_data,
+        }
+        return QtServer.send_dict("ADD-CUSTOM-TEMPERATURE", payload)
 
     @staticmethod
     def add_element_temperature(element_id, case_name: str = "", temperature: float = 1,
@@ -45,11 +47,13 @@ class MdbTemperatureLoad:
             mdb.add_element_temperature(element_id=1,case_name="自重",temperature=1,group_name="默认荷载组")
         Returns: 无
         """
-        element_id = QtDataHelper.parse_ids_to_array(element_id)
-        id_str = QtDataHelper.parse_int_list_to_str(element_id)
-        s = "*ELE-TEMP\r\n" + f"{id_str},{case_name},{group_name},{temperature:g}\r\n"
-        # print(s)
-        QtServer.send_command(s, "QDAT")
+        payload = {
+            "element_id": QtDataHelper.parse_ids_to_array(element_id),
+            "case_name": case_name,
+            "temperature": temperature,
+            "group_name": group_name,
+        }
+        return QtServer.send_dict("ADD-ELEMENT-TEMPERATURE", payload)
 
     @staticmethod
     def add_system_temperature(case_name: str = "", temperature: float = 1, group_name: str = "默认荷载组"):
@@ -63,9 +67,12 @@ class MdbTemperatureLoad:
             mdb.add_system_temperature(case_name="荷载工况",temperature=20,group_name="默认荷载组")
         Returns: 无
         """
-        s = "*SYSTEM-TEMP\r\n" + f"{case_name},{group_name},{temperature:g}\r\n"
-        # print(s)
-        QtServer.send_command(s, "QDAT")
+        payload = {
+            "case_name": case_name,
+            "temperature": temperature,
+            "group_name": group_name,
+        }
+        return QtServer.send_dict("ADD-SYSTEM-TEMPERATURE", payload)
 
     @staticmethod
     def add_gradient_temperature(element_id, case_name: str = "",
@@ -84,15 +91,15 @@ class MdbTemperatureLoad:
             mdb.add_gradient_temperature(element_id=2,case_name="荷载工况2",group_name="荷载组名2",temperature=10,element_type=2)
         Returns: 无
         """
-        s = ""
-        element_id = QtDataHelper.parse_ids_to_array(element_id)
-        id_str = QtDataHelper.parse_int_list_to_str(element_id)
-        if element_type == 1:  # 1-梁单元
-            s = "*BEAMGRD-TEMP\r\n" + f"{id_str},{case_name},{group_name},{section_oriental},{temperature:g}" + "\r\n"
-        elif element_type == 2:  # 2-板单元
-            s = "*PLATEGRD-TEMP\r\n" + f"{id_str},{case_name},{group_name},{temperature:g}" + "\r\n"
-        # print(s)
-        QtServer.send_command(s, "QDAT")
+        payload = {
+            "element_id": QtDataHelper.parse_ids_to_array(element_id),
+            "case_name": case_name,
+            "temperature": temperature,
+            "section_oriental": section_oriental,
+            "element_type": element_type,
+            "group_name": group_name,
+        }
+        return QtServer.send_dict("ADD-GRADIENT-TEMPERATURE", payload)
 
     @staticmethod
     def add_beam_section_temperature(element_id, case_name: str = "", code_index: int = 1,
@@ -115,11 +122,19 @@ class MdbTemperatureLoad:
             mdb.add_beam_section_temperature(element_id=1,case_name="工况1",code_index=1,sec_type=1,t1=-4.2,t2=-1)
         Returns: 无
         """
-        element_id = QtDataHelper.parse_ids_to_array(element_id)
-        id_str = QtDataHelper.parse_int_list_to_str(element_id)
-        s = "*SEC-TEMP\r\n" + f"{id_str},{case_name},{group_name},{code_index},{sec_type},{t1:g},{t2:g},{t3:g},{t4:g},{thick:g}" + "\r\n"
-        # print(s)
-        QtServer.send_command(s, "QDAT")
+        payload = {
+            "element_id": QtDataHelper.parse_ids_to_array(element_id),
+            "case_name": case_name,
+            "code_index": code_index,
+            "sec_type": sec_type,
+            "t1": t1,
+            "t2": t2,
+            "t3": t3,
+            "t4": t4,
+            "thick": thick,
+            "group_name": group_name,
+        }
+        return QtServer.send_dict("ADD-BEAM-SECTION-TEMPERATURE", payload)
 
     @staticmethod
     def add_index_temperature(element_id, case_name: str = "", temperature: float = 0, index: float = 1,
@@ -136,12 +151,14 @@ class MdbTemperatureLoad:
             mdb.add_index_temperature(element_id=1,case_name="工况1",temperature=20,index=2)
         Returns: 无
         """
-        element_id = QtDataHelper.parse_ids_to_array(element_id)
-        id_str = QtDataHelper.parse_int_list_to_str(element_id)
-        tem_dir = 1  # 目前仅支持截面高度方向温度加载
-        s = "*INDEX-TEMP\r\n" + f"{id_str},{case_name},{group_name},{tem_dir},{temperature:g},{index:g}" + "\r\n"
-        # print(s)
-        QtServer.send_command(s, "QDAT")
+        payload = {
+            "element_id": QtDataHelper.parse_ids_to_array(element_id),
+            "case_name": case_name,
+            "temperature": temperature,
+            "index": index,
+            "group_name": group_name,
+        }
+        return QtServer.send_dict("ADD-INDEX-TEMPERATURE", payload)
 
     @staticmethod
     def add_top_plate_temperature(element_id, case_name: str = "", temperature: float = 0,
@@ -157,16 +174,18 @@ class MdbTemperatureLoad:
             mdb.add_top_plate_temperature(element_id=1,case_name="工况1",temperature=40,group_name="默认荷载组")
         Returns: 无
         """
-        element_id = QtDataHelper.parse_ids_to_array(element_id)
-        id_str = QtDataHelper.parse_int_list_to_str(element_id)
-        s = "*TOPPLATE-TEMP\r\n" + f"{id_str},{case_name},{group_name},{temperature:g}" + "\r\n"
-        # print(s)
-        QtServer.send_command(s, "QDAT")
+        payload = {
+            "element_id": QtDataHelper.parse_ids_to_array(element_id),
+            "case_name": case_name,
+            "temperature": temperature,
+            "group_name": group_name,
+        }
+        return QtServer.send_dict("ADD-TOP-PLATE-TEMPERATURE", payload)
 
     @staticmethod
     def remove_element_temperature(element_id, case_name: str):
         """
-        todo 删除指定单元温度
+        删除指定单元温度
         Args:
             element_id:单元编号，支持数或列表且支持XtoYbyN形式字符串
             case_name:荷载工况名
@@ -183,7 +202,7 @@ class MdbTemperatureLoad:
     @staticmethod
     def remove_top_plate_temperature(element_id, case_name: str):
         """
-        todo 删除梁单元顶板温度
+        删除梁单元顶板温度
         Args:
             element_id:单元编号，支持数或列表且支持XtoYbyN形式字符串
             case_name:荷载工况名
@@ -200,7 +219,7 @@ class MdbTemperatureLoad:
     @staticmethod
     def remove_beam_section_temperature(element_id, case_name: str):
         """
-        todo 删除指定梁或板单元梁截面温度
+        删除指定梁或板单元梁截面温度
         Args:
             case_name:荷载工况名
             element_id:单元编号，支持数或列表且支持XtoYbyN形式字符串
@@ -217,7 +236,7 @@ class MdbTemperatureLoad:
     @staticmethod
     def remove_gradient_temperature(element_id, case_name: str):
         """
-        todo 删除梁或板单元梯度温度
+        删除梁或板单元梯度温度
         Args:
             element_id:单元编号，支持数或列表且支持XtoYbyN形式字符串
             case_name:荷载工况名
@@ -234,7 +253,7 @@ class MdbTemperatureLoad:
     @staticmethod
     def remove_custom_temperature(element_id, case_name: str):
         """
-        todo 删除梁单元自定义温度
+        删除梁单元自定义温度
         Args:
             element_id:单元编号，支持数或列表且支持XtoYbyN形式字符串
             case_name:荷载工况名
@@ -251,7 +270,7 @@ class MdbTemperatureLoad:
     @staticmethod
     def remove_index_temperature(element_id, case_name: str):
         """
-        todo 删除梁单元指数温度且支持XtoYbyN形式字符串
+        删除梁单元指数温度且支持XtoYbyN形式字符串
         Args:
             element_id:单元编号，支持数或列表且支持XtoYbyN形式字符串
             case_name:荷载工况名
@@ -282,13 +301,11 @@ class MdbTemperatureLoad:
             mdb.add_deviation_parameter(name="板端制造误差",parameters=[1,0,0,0,0])
         Returns: 无
         """
-        if parameters is None:
-            raise Exception("操作错误，制造误差信息不能为空")
-        if len(parameters) != 7 and len(parameters) != 5:
-            raise Exception("操作错误，制造误差信息数量有误，请核查数据")
-        s = "*DEVPARAM\r\n" + f"{name},{','.join(f'{x:g}' for x in parameters)}" + "\r\n"
-        # print(s)
-        QtServer.send_command(s, "QDAT")
+        payload = {
+            "name": name,
+            "parameters": parameters,
+        }
+        return QtServer.send_dict("ADD-DEVIATION-PARAMETER", payload)
 
     @staticmethod
     def add_deviation_load(element_id, case_name: str = "",
@@ -307,22 +324,23 @@ class MdbTemperatureLoad:
             mdb.add_deviation_load(element_id=2,case_name="工况1",parameters=["板端误差1","板端误差2","板端误差3","板端误差4"])
         Returns: 无
         """
-        if parameters is None:
-            raise Exception("操作错误，制造误差名称信息不能为空")
-        element_id = QtDataHelper.parse_ids_to_array(element_id)
-        id_str = QtDataHelper.parse_int_list_to_str(element_id)
-        s = "*DEVLOAD\r\n" + f"{id_str},{case_name},{group_name},"
         if isinstance(parameters, str):
-            s += f"{parameters}\r\n"
-        elif isinstance(parameters, list):
-            s += ",".join(f"{s}" for s in parameters) + "\r\n"
-        # print(s)
-        QtServer.send_command(s, "QDAT")
+            param_list = [parameters] if parameters else []
+        else:
+            param_list = parameters
+
+        payload = {
+            "element_id": QtDataHelper.parse_ids_to_array(element_id),
+            "case_name": case_name,
+            "parameters": param_list,
+            "group_name": group_name,
+        }
+        return QtServer.send_dict("ADD-DEVIATION-LOAD", payload)
 
     @staticmethod
     def update_deviation_parameter(name: str = "", new_name: str = "", element_type: int = 1, parameters: list[float] = None):
         """
-        todo 更新制造误差参数
+        更新制造误差参数
         Args:
             name:名称
             new_name:新名称，默认不修改名称
@@ -346,7 +364,7 @@ class MdbTemperatureLoad:
     @staticmethod
     def remove_deviation_parameter(name: str, para_type: int = 1):
         """
-        todo 删除指定制造偏差参数
+        删除指定制造偏差参数
         Args:
             name:制造偏差参数名
             para_type:制造偏差类型 1-梁单元  2-板单元
@@ -363,7 +381,7 @@ class MdbTemperatureLoad:
     @staticmethod
     def remove_deviation_load(element_id, case_name: str, group_name: str = "默认荷载组"):
         """
-        todo 删除指定制造偏差荷载
+        删除指定制造偏差荷载
         Args:
             element_id:单元编号，支持数或列表且支持XtoYbyN形式字符串
             case_name:荷载工况名

@@ -131,12 +131,14 @@ mdb.add_elements(ele_data=[
 ### update_local_orientation
 反转杆系单元局部方向
 > 参数:  
-> ids: 杆系单元编号,支持整形、列表、XtoYbyZ形式字符串  
+> ids: 杆系单元编号,支持整形、列表、XtoYbyZ形式字符串
+
 ```Python
 # 示例代码
 from qtmodel import *
-mdb.update_local_orientation(1)
-#Returns: 无
+
+mdb.revert_local_orientation(1)
+# Returns: 无
 ```  
 ### update_element_id
 更改单元编号
@@ -228,13 +230,15 @@ mdb.update_element_node(2,[1,2,3,4])
 删除指定编号的单元,默认则删除所有单元
 > 参数:  
 > ids: 单元编号,支持整形、列表、XtoYbyZ形式字符串  
-> remove_free: 是否删除自由节点  
+> remove_free: 是否删除自由节点
+
 ```Python
 # 示例代码
 from qtmodel import *
-mdb.remove_element()
-mdb.remove_element(ids=1)
-#Returns: 无
+
+mdb.remove_elements()
+mdb.remove_elements(ids=1)
+# Returns: 无
 ```  
 ### renumber_elements
 单元编号重排序，默认按1升序重排所有节点

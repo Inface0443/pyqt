@@ -3,6 +3,35 @@ from qtmodel.core.qt_server import QtServer
 
 class OdbModelLoad:
     """获取模型数据"""
+
+    # region 钢束信息
+    @staticmethod
+    def get_tendon_property(name:str):
+        """
+        获取预应力荷载
+        Args:
+            name: 根据钢束特性名获取钢束特性
+        Example:
+            odb.get_tendon_property(name="钢束特性1")
+        Returns: 包含信息为list[dict]
+        """
+        payload = {"name": name}
+        return QtServer.send_dict("GET-TENDON-PROPERTY", payload)
+
+    @staticmethod
+    def get_tendon_data(name:str):
+        """
+        获取预应力荷载
+        Args:
+            name: 根据钢束名获取钢束信息
+        Example:
+            odb.get_tendon_data(name="钢束1")
+        Returns: 包含信息为list[dict]
+        """
+        payload = {"name": name}
+        return QtServer.send_dict("GET-TENDON-DATA", payload)
+    # endregion
+
     # region 荷载信息
     @staticmethod
     def get_case_names():

@@ -1,4 +1,3 @@
-import json
 from qtmodel.core.qt_server import QtServer
 from qtmodel.core.data_helper import QtDataHelper
 from typing import Optional
@@ -28,7 +27,6 @@ class MdbStructure:
         Returns: 无
         """
         params = {
-            "version": QtServer.QT_VERSION,  # 版本控制
             "node_data": node_data,
             "intersected": intersected,
             "is_merged": is_merged,
@@ -36,8 +34,7 @@ class MdbStructure:
             "numbering_type": numbering_type,
             "start_id": start_id
         }
-        json_string = json.dumps(params, indent=2)
-        QtServer.send_command(header="ADD-NODES", command=json_string)
+        QtServer.send_dict(header="ADD-NODES", payload=params)
 
     @staticmethod
     def update_node(node_id: int, new_id: int = -1, x: float = 1, y: float = 1, z: float = 1):
@@ -93,7 +90,10 @@ class MdbStructure:
         if ids is None:
             # merge all nodes
             return QtServer.send_dict("MERGE-NODES")
-        payload = {"tolerance": tolerance, "ids": QtDataHelper.parse_ids_to_array(ids)}
+        payload = {
+            "tolerance": tolerance,
+            "ids": QtDataHelper.parse_ids_to_array(ids)
+        }
         return QtServer.send_dict("MERGE-NODES", payload)
 
     @staticmethod
@@ -175,25 +175,21 @@ class MdbStructure:
             mdb.add_element(index=1,ele_type=1,node_ids=[1,2],beta_angle=1,mat_id=1,sec_id=1)
         Returns: 无
         """
-        if node_ids is None and ele_type != 4:
-            raise Exception("操作错误,请输入此单元所需节点列表,[i,j]")
-        if node_ids is None and ele_type == 4:
-            raise Exception("操作错误,请输入此板单元所需节点列表,[i,j,k,l]")
-        s = "*ELEMENT\r\n"
-        if ele_type in (1, 2):  # 1-梁 2-杆
-            s += f"{index},{ele_type},{mat_id},{sec_id},{beta_angle},{node_ids[0]},{node_ids[1]}" + "\r\n"
-        elif ele_type == 3:  # 3-索
-            s += f"{index},{ele_type},{mat_id},{sec_id},{beta_angle},{node_ids[0]},{node_ids[1]},{initial_type},{initial_value:g}" + "\r\n"
-        elif ele_type == 4:  # 4-板
-            s += f"{index},{ele_type},{mat_id},{sec_id},{beta_angle},{node_ids[0]},{node_ids[1]},{node_ids[2]},{node_ids[3]},{plate_type}" + "\r\n"
-
-        if QtServer.QT_MERGE:
-            QtServer.MERGE_STR += s  # 开启合并发送时需要调用update_model生效
-        else:
-            QtServer.send_command(s, "QDAT")
+        payload = {
+            "index": index,
+            "ele_type": ele_type,
+            "node_ids": QtDataHelper.parse_ids_to_array(node_ids),
+            "beta_angle": beta_angle,
+            "mat_id": mat_id,
+            "sec_id": sec_id,
+            "initial_type": initial_type,
+            "initial_value": initial_value,
+            "plate_type": plate_type,
+        }
+        return QtServer.send_dict("ADD-ELEMENT", payload)
 
     @staticmethod
-    def add_elements(ele_data: list = None):
+    def add_elements(ele_data: list[list[float]] = None):
         """
         根据单元编号和单元类型添加单元
         Args:
@@ -209,21 +205,23 @@ class MdbStructure:
                 [4,4,1,1,0,1,2,3,4,0]])
         Returns: 无
         """
-        s = "*ELEMENT\r\n" + "\r\n".join(",".join(str(x) for x in row) for row in ele_data) + "\r\n"
-        QtServer.send_command(s, "QDAT")
+        payload = {
+            "ele_data": ele_data,
+        }
+        return QtServer.send_dict("ADD-ELEMENTS", payload)
 
     @staticmethod
-    def update_local_orientation(ids=None):
+    def revert_local_orientation(ids=None):
         """
         反转杆系单元局部方向
         Args:
             ids: 杆系单元编号,支持整形、列表、XtoYbyZ形式字符串
         Example:
-            mdb.update_local_orientation(1)
+            mdb.revert_local_orientation(1)
         Returns: 无
         """
         payload = {"ids": QtDataHelper.parse_ids_to_array(ids)}
-        return QtServer.send_dict("UPDATE-LOCAL-ORIENTATION", payload)
+        return QtServer.send_dict("REVERT-LOCAL-ORIENTATION", payload)
 
     @staticmethod
     def update_element_id(old_id: int, new_id: int):
@@ -345,15 +343,15 @@ class MdbStructure:
         return QtServer.send_dict("UPDATE-ELEMENT-NODE", payload)
 
     @staticmethod
-    def remove_element(ids=None, remove_free: bool = False):
+    def remove_elements(ids=None, remove_free: bool = False):
         """
         删除指定编号的单元,默认则删除所有单元
         Args:
             ids: 单元编号,支持整形、列表、XtoYbyZ形式字符串
             remove_free: 是否删除自由节点
         Example:
-            mdb.remove_element()
-            mdb.remove_element(ids=1)
+            mdb.remove_elements()
+            mdb.remove_elements(ids=1)
         Returns: 无
         """
         if ids is None:
@@ -399,23 +397,12 @@ class MdbStructure:
             mdb.add_structure_group(name="新建结构组2",node_ids="1to10 11to21by2",element_ids=[1,2])
         Returns: 无
         """
-        if node_ids is None:
-            node_str = ""
-        elif isinstance(node_ids, list):  # 列表转化为XtoYbyN
-            node_str = QtDataHelper.parse_int_list_to_str(node_ids)
-        else:  # 已经是XtoYbyN
-            node_str = str(node_ids)
-
-        if element_ids is None:
-            elem_str = ""
-        elif isinstance(element_ids, list):
-            elem_str = QtDataHelper.parse_int_list_to_str(element_ids)
-        else:
-            elem_str = str(element_ids)
-
-        s = "*STRGROUP\r\n" + f"{name},{node_str},{elem_str}" + "\r\n"
-
-        QtServer.send_command(s, "QDAT")
+        payload = {
+            "name": name,
+            "node_ids": QtDataHelper.parse_ids_to_array(node_ids),
+            "element_ids": QtDataHelper.parse_ids_to_array(element_ids),
+        }
+        return QtServer.send_dict("ADD-STRUCTURE-GROUP", payload)
 
     @staticmethod
     def update_structure_group_name(name: str = "", new_name: str = ""):
@@ -433,8 +420,7 @@ class MdbStructure:
             "name": name,
             "new_name": new_name
         }
-        json_string = json.dumps(params, indent=2, ensure_ascii=False)
-        QtServer.send_command(header="UPDATE-STRUCTURE-GROUP-NAME", command=json_string)
+        QtServer.send_dict("UPDATE-STRUCTURE-GROUP-NAME", params)
 
     @staticmethod
     def update_structure_group(name: str = "", new_name: str = "", node_ids=None, element_ids=None):
@@ -450,14 +436,12 @@ class MdbStructure:
         Returns: 无
         """
         params = {
-            "version": QtServer.QT_VERSION,  # 版本控制
             "name": name,
             "new_name": new_name,
             "node_ids": QtDataHelper.parse_ids_to_array(node_ids),
             "element_ids": QtDataHelper.parse_ids_to_array(element_ids)
         }
-        json_string = json.dumps(params, indent=2, ensure_ascii=False)
-        QtServer.send_command(header="UPDATE-STRUCTURE-GROUP", command=json_string)
+        QtServer.send_dict("UPDATE-STRUCTURE-GROUP", params)
 
     @staticmethod
     def remove_structure_group(name: str = ""):
@@ -470,15 +454,12 @@ class MdbStructure:
             mdb.remove_structure_group()
         Returns: 无
         """
-        if name != "":
-            params = {
-                "version": QtServer.QT_VERSION,  # 版本控制
-                "name": name
-            }
-            json_string = json.dumps(params, indent=2, ensure_ascii=False)
-            QtServer.send_command(header="REMOVE-STRUCTURE-GROUP", command=json_string)
-        else:
-            QtServer.send_command(header="REMOVE-ALL-STRUCTURE-GROUP")
+        params = {
+            "version": QtServer.QT_VERSION,  # 版本控制
+            "name": name
+        }
+        QtServer.send_dict(header="REMOVE-STRUCTURE-GROUP", payload=params)
+
 
     @staticmethod
     def add_structure_to_group(name: str = "", node_ids=None, element_ids=None):
@@ -493,13 +474,11 @@ class MdbStructure:
         Returns: 无
         """
         params = {
-            "version": QtServer.QT_VERSION,  # 版本控制
             "name": name,
             "node_ids": QtDataHelper.parse_ids_to_array(node_ids),
             "element_ids": QtDataHelper.parse_ids_to_array(element_ids)
         }
-        json_string = json.dumps(params, indent=2, ensure_ascii=False)
-        QtServer.send_command(header="ADD-STRUCTURE-TO-GROUP", command=json_string)
+        QtServer.send_dict("ADD-STRUCTURE-TO-GROUP", params)
 
     @staticmethod
     def remove_structure_from_group(name: str = "", node_ids=None, element_ids=None):
@@ -514,12 +493,10 @@ class MdbStructure:
         Returns: 无
         """
         params = {
-            "version": QtServer.QT_VERSION,  # 版本控制
             "name": name,
             "node_ids": QtDataHelper.parse_ids_to_array(node_ids),
             "element_ids": QtDataHelper.parse_ids_to_array(element_ids)
         }
-        json_string = json.dumps(params, indent=2, ensure_ascii=False)
-        QtServer.send_command(header="REMOVE-STRUCTURE-FROM-GROUP", command=json_string)
+        QtServer.send_dict("REMOVE-STRUCTURE-FROM-GROUP", params)
 
     # endregion

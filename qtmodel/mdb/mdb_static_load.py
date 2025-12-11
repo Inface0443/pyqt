@@ -1,4 +1,3 @@
-import json
 from qtmodel.core.qt_server import QtServer
 from typing import Union, List
 from qtmodel.core.data_helper import QtDataHelper
@@ -25,17 +24,14 @@ class MdbStaticLoad:
             mdb.add_nodal_force(node_id="1to100",case_name="荷载工况1",load_info=[1,1,1,1,1,1],group_name="默认结构组")
         Returns: 无
         """
-        if load_info is None or len(load_info) != 6:
-            raise Exception("操作错误，节点荷载列表信息不能为空，且其长度必须为6")
-        if node_id is None:
-            node_str = ""
-        elif isinstance(node_id, list):  # 列表转化为XtoYbyN
-            node_str = QtDataHelper.parse_int_list_to_str(node_id)
-        else:
-            node_str = str(node_id)
-        s = "*NODALLOAD\r\n" + f"{node_str},{case_name},{group_name}," + ",".join(
-            f"{x:g}" for x in load_info) + "\r\n"
-        QtServer.send_command(s, "QDAT")
+        payload = {
+            "node_id":QtDataHelper.parse_ids_to_array(node_id),
+            "case_name": case_name,
+            "load_info": load_info,
+            "group_name": group_name,
+        }
+        return QtServer.send_dict("ADD-NODAL-FORCE", payload)
+
 
     @staticmethod
     def add_node_displacement(node_id, case_name: str = "",
@@ -55,15 +51,13 @@ class MdbStaticLoad:
         """
         if load_info is None or len(load_info) != 6:
             raise Exception("操作错误，节点位移列表信息不能为空，且其长度必须为6")
-        if node_id is None:
-            node_str = ""
-        elif isinstance(node_id, list):  # 列表转化为XtoYbyN
-            node_str = QtDataHelper.parse_int_list_to_str(node_id)
-        else:
-            node_str = str(node_id)
-        s = "*NODALDISP\r\n" + f"{node_str},{case_name},{group_name}," + ",".join(
-            f"{x:g}" for x in load_info) + "\r\n"
-        QtServer.send_command(s, "QDAT")
+        payload = {
+            "node_id": QtDataHelper.parse_ids_to_array(node_id),
+            "case_name": case_name,
+            "load_info": load_info,
+            "group_name": group_name,
+        }
+        return QtServer.send_dict("ADD-NODE-DISPLACEMENT", payload)
 
     @staticmethod
     def add_beam_element_load(element_id, case_name: str = "", load_type: int = 1, coord_system: int = 3,
@@ -89,20 +83,8 @@ class MdbStaticLoad:
             mdb.add_beam_element_load(element_id="1to100",case_name="荷载工况1",load_type=3,list_x=[0.4,0.8],list_load=[100,200])
         Returns: 无
         """
-        if element_id is None:
-            elem_ids = []
-        elif isinstance(element_id, int):
-            elem_ids = [element_id]
-        elif isinstance(element_id, list):
-            elem_ids = element_id
-        elif isinstance(element_id, str):
-            parsed = QtDataHelper.parse_number_string(element_id)
-            elem_ids = parsed if parsed is not None else []
-        else:
-            raise ValueError(f"Unsupported element_id type: {type(element_id)}")
         params = {
-            "version": QtServer.QT_VERSION,  # 版本控制
-            "element_id": elem_ids,
+            "element_id":QtDataHelper.parse_ids_to_array(element_id),
             "case_name": case_name,
             "load_type": load_type,
             "coord_system": coord_system,
@@ -113,8 +95,7 @@ class MdbStaticLoad:
             "load_bias": list(load_bias),
             "projected": projected,
         }
-        json_string = json.dumps(params, indent=2, ensure_ascii=False)
-        QtServer.send_command(header="ADD-BEAM-ELEMENT-LOAD", command=json_string)
+        QtServer.send_dict(header="ADD-BEAM-ELEMENT-LOAD",payload=params)
 
 
     @staticmethod
@@ -132,14 +113,19 @@ class MdbStaticLoad:
             mdb.add_pre_stress(case_name="荷载工况名",tendon_name="钢束1",force=1390000)
         Returns: 无
         """
-        tend_list = []
         if isinstance(tendon_name, str):
-            tend_list.append(tendon_name)
+            tendon_list = [tendon_name] if tendon_name else []
         else:
-            tend_list = tendon_name
-        s = "*PRESTRESS\r\n" + "\r\n".join(
-            f"{tend},{case_name},{group_name},{tension_type},{force}" for tend in tend_list) + "\r\n"
-        QtServer.send_command(s, "QDAT")
+            tendon_list = tendon_name
+
+        payload = {
+            "case_name": case_name,
+            "tendon_name": tendon_list,
+            "tension_type": tension_type,
+            "force": force,
+            "group_name": group_name,
+        }
+        return QtServer.send_dict("ADD-PRE-STRESS", payload)
 
 
     @staticmethod
@@ -159,14 +145,16 @@ class MdbStaticLoad:
             mdb.add_initial_tension_load(element_id=1,case_name="工况1",tension=100,tension_type=1)
         Returns: 无
         """
-        if element_id is None:
-            elem_str = ""
-        elif isinstance(element_id, list):  # 列表转化为XtoYbyN
-            elem_str = QtDataHelper.parse_int_list_to_str(element_id)
-        else:
-            elem_str = str(element_id)
-        s = "*INITTENSION\r\n" + f"{elem_str},{case_name},{group_name},{tension:g},{tension_type},{application_type},{stiffness:g}\r\n"
-        QtServer.send_command(s, "QDAT")
+        payload = {
+            "element_id": QtDataHelper.parse_ids_to_array(element_id),
+            "case_name": case_name,
+            "group_name": group_name,
+            "tension": tension,
+            "tension_type": tension_type,
+            "application_type": application_type,
+            "stiffness": stiffness,
+        }
+        return QtServer.send_dict("ADD-INITIAL-TENSION-LOAD", payload)
 
     @staticmethod
     def add_cable_length_load(element_id, case_name: str = "", group_name: str = "默认荷载组", length: float = 0,
@@ -183,14 +171,14 @@ class MdbStaticLoad:
             mdb.add_cable_length_load(element_id=1,case_name="工况1",length=1,tension_type=1)
         Returns: 无
         """
-        if element_id is None:
-            elem_str = ""
-        elif isinstance(element_id, list):  # 列表转化为XtoYbyN
-            elem_str = QtDataHelper.parse_int_list_to_str(element_id)
-        else:
-            elem_str = str(element_id)
-        s = "*CABLELENLOAD\r\n" + f"{elem_str},{case_name},{group_name},{length},{tension_type}\r\n"
-        QtServer.send_command(s, "QDAT")
+        payload = {
+            "element_id": QtDataHelper.parse_ids_to_array(element_id),
+            "case_name": case_name,
+            "group_name": group_name,
+            "length": length,
+            "tension_type": tension_type,
+        }
+        return QtServer.send_dict("ADD-CABLE-LENGTH-LOAD", payload)
 
     @staticmethod
     def add_plate_element_load(element_id, case_name: str = "",
@@ -212,27 +200,22 @@ class MdbStaticLoad:
             mdb.add_plate_element_load(element_id=1,case_name="工况1",load_type=1,group_name="默认荷载组",list_load=[1000],list_xy=(0.2,0.5))
         Returns: 无
         """
-        if element_id is None:
-            elem_str = ""
-        elif isinstance(element_id, list):  # 列表转化为XtoYbyN
-            elem_str = QtDataHelper.parse_int_list_to_str(element_id)
+        if isinstance(list_load, (int, float)):
+            load_values = [float(list_load)]
         else:
-            elem_str = str(element_id)
-        if isinstance(list_load, float):
-            list_load = [list_load]
-        s = "*PLATELOAD\r\n" + f"{elem_str},{case_name},{group_name},"
-        if load_type == 2 or load_type == 4 or load_type == 6:
-            raise Exception("操作错误，板单元暂不支持弯矩荷载")
-        elif load_type == 1:
-            s += f"{load_type},{coord_system},{list_xy[0]:g},{list_xy[1]:g},{list_load[0]:g}\r\n"
-        elif (load_type == 3) and (load_place != 0):
-            s += f"{load_type},{coord_system},{load_place},{list_load[0]:g},{list_load[1]:g}\r\n"
-        elif (load_type == 3 and load_place == 0) or (load_type == 5):
-            load_type = 5
-            s += f"{load_type},{coord_system},{list_load[0]:g},{list_load[1]:g},{list_load[2]:g},{list_load[3]:g}\r\n"
-        else:
-            raise Exception("操作错误，板单元暂不支持该类型荷载")
-        QtServer.send_command(s, "QDAT")
+            load_values = list_load
+
+        payload = {
+            "element_id": QtDataHelper.parse_ids_to_array(element_id),
+            "case_name": case_name,
+            "load_type": load_type,
+            "load_place": load_place,
+            "coord_system": coord_system,
+            "group_name": group_name,
+            "list_load": load_values,
+            "list_xy": list_xy,
+        }
+        return QtServer.send_dict("ADD-PLATE-ELEMENT-LOAD", payload)
 
 
     @staticmethod
@@ -288,7 +271,7 @@ class MdbStaticLoad:
         Returns: 无
         """
         payload = {
-            "id": index,
+            "index": index,
             "case_name": case_name,
             "type_name": type_name,
             "point1": point1,
@@ -304,7 +287,7 @@ class MdbStaticLoad:
     def update_distribute_plane_load_type(name: str = "", new_name: str = "", load_type: int = 1, point_list: list[list[float]] = None,
                                           load: float = 0, copy_x: str = None, copy_y: str = None, describe: str = ""):
         """
-        todo  更新板单元类型
+        更新板单元面荷载类型
         Args:
             name:荷载类型名称
             new_name:新名称，默认不修改名称
@@ -334,7 +317,7 @@ class MdbStaticLoad:
     @staticmethod
     def remove_nodal_force(node_id, case_name: str = "", group_name="默认荷载组"):
         """
-        todo 删除节点荷载
+        删除节点荷载
         Args:
              node_id:节点编号且支持XtoYbyN形式字符串
              case_name:荷载工况名
@@ -353,7 +336,7 @@ class MdbStaticLoad:
     @staticmethod
     def remove_nodal_displacement(node_id, case_name: str = "", group_name="默认荷载组"):
         """
-        todo 删除节点位移荷载
+        删除节点位移荷载
         Args:
             node_id:节点编号,支持数或列表且支持XtoYbyN形式字符串
             case_name:荷载工况名
@@ -372,7 +355,7 @@ class MdbStaticLoad:
     @staticmethod
     def remove_initial_tension_load(element_id, case_name: str, group_name: str = "默认荷载组"):
         """
-        todo 删除初始拉力
+        删除初始拉力
         Args:
             element_id:单元编号支持数或列表且支持XtoYbyN形式字符串
             case_name:荷载工况名
@@ -391,7 +374,7 @@ class MdbStaticLoad:
     @staticmethod
     def remove_beam_element_load(element_id, case_name: str = "", load_type: int = 1, group_name="默认荷载组"):
         """
-        todo 删除梁单元荷载
+        删除梁单元荷载
         Args:
             element_id:单元号支持数或列表且支持XtoYbyN形式字符串
             case_name:荷载工况名
@@ -412,7 +395,7 @@ class MdbStaticLoad:
     @staticmethod
     def remove_plate_element_load(element_id, case_name: str, load_type: int, group_name="默认荷载组"):
         """
-        todo 删除指定荷载工况下指定单元的板单元荷载
+        删除指定荷载工况下指定单元的板单元荷载
         Args:
             element_id:单元编号，支持数或列表且支持XtoYbyN形式字符串
             case_name:荷载工况名
@@ -433,7 +416,7 @@ class MdbStaticLoad:
     @staticmethod
     def remove_cable_length_load(element_id, case_name: str, group_name: str = "默认荷载组"):
         """
-        todo 删除索长张拉
+        删除索长张拉
         Args:
             element_id:单元号支持数或列表且支持XtoYbyN形式字符串
             case_name:荷载工况名
@@ -450,25 +433,25 @@ class MdbStaticLoad:
         return QtServer.send_dict("REMOVE-CABLE-LENGTH-LOAD", payload)
 
     @staticmethod
-    def remove_plane_load(index: int = -1):
+    def remove_distribute_plane_load(index: int = -1):
         """
-        todo 根据荷载编号删除分配面荷载
+        根据荷载编号删除分配面荷载
         Args:
             index: 指定荷载编号，默认则删除所有分配面荷载
         Example:
-            mdb.remove_plane_load()
-            mdb.remove_plane_load(index=1)
+            mdb.remove_distribute_plane_load()
+            mdb.remove_distribute_plane_load(index=1)
         Returns: 无
         """
         payload = {
-            "id": index,
+            "index": index,
         }
-        return QtServer.send_dict("REMOVE-PLANE-LOAD", payload)
+        return QtServer.send_dict("REMOVE-DISTRIBUTE-PLANE-LOAD", payload)
 
     @staticmethod
     def remove_distribute_plane_load_type(name: str = -1):
         """
-        todo 删除分配面荷载类型
+        删除分配面荷载类型
         Args:
             name: 指定荷载类型，默认则删除所有分配面荷载
         Example:

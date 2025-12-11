@@ -113,12 +113,10 @@ class MdbLiveLoad:
         Returns: 无
         """
         try:
-            if isinstance(node_ids, str):
-                node_ids = QtDataHelper.parse_number_string(node_ids)
             params = {
                 "version": QtServer.QT_VERSION,
                 "name": name,
-                "node_ids": node_ids,
+                "node_ids":QtDataHelper.parse_ids_to_array(node_ids),
                 "order_by_x": order_by_x,
             }
             json_string = json.dumps(params, indent=2)
