@@ -22,8 +22,11 @@ class MdbLoad:
             mdb.add_load_case(name="工况1",case_type="施工阶段荷载")
         Returns: 无
         """
-        s = "*LOADCASE\r\n" + f"{name},{case_type}\r\n"
-        QtServer.send_command(s, "QDAT")
+        payload = {
+            "name": name,
+            "case_type": case_type,
+        }
+        return QtServer.send_dict("ADD-LOAD-CASE", payload)
 
     @staticmethod
     def add_load_group(name: str = ""):
@@ -35,11 +38,10 @@ class MdbLoad:
             mdb.add_load_group(name="荷载组1")
         Returns: 无
         """
-        if name != "":
-            s = "*LOADGROUP\r\n" + f"{name}\r\n"
-        else:
-            s = ""
-        QtServer.send_command(s, "QDAT")
+        payload = {
+            "name": name,
+        }
+        return QtServer.send_dict("ADD-LOAD-GROUP", payload)
 
     @staticmethod
     def update_sink_group(name: str = "", new_name: str = "", sink: float = 0.1, node_ids: (Union[int, List[int]]) = None):
@@ -154,15 +156,13 @@ class MdbLoad:
         Returns: 无
         """
         params = {
-            "version": QtServer.QT_VERSION,  # 版本控制
             "index": index,
             "name": name,
             "combine_type": combine_type,
             "describe": describe,
             "combine_info": combine_info or [],
         }
-        json_string = json.dumps(params, indent=2, ensure_ascii=False)
-        QtServer.send_command(header="ADD-LOAD-COMBINE", command=json_string)
+        return QtServer.send_dict(header="ADD-LOAD-COMBINE", payload=params)
 
 
     @staticmethod
