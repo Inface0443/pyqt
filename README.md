@@ -1,7 +1,7 @@
-> 最新qtmodel版本 V2.1.1 - 2025-11-10 
+> 最新qtmodel版本 V2.1.2 - 2025-12-12 
 > 最新qdat数据版本 V1.2.4 
 > pip install --upgrade qtmodel -i https://pypi.org/simple
-- 升级qdat版本，此版本支持定义钢束旋转偏心
+- 新增更新结构组接口 
 # 建模操作 
 ##  节点操作
 ### add_nodes
@@ -128,17 +128,15 @@ mdb.add_elements(ele_data=[
 [4,4,1,1,0,1,2,3,4,0]])
 #Returns: 无
 ```  
-### update_local_orientation
+### revert_local_orientation
 反转杆系单元局部方向
 > 参数:  
-> ids: 杆系单元编号,支持整形、列表、XtoYbyZ形式字符串
-
+> ids: 杆系单元编号,支持整形、列表、XtoYbyZ形式字符串  
 ```Python
 # 示例代码
 from qtmodel import *
-
 mdb.revert_local_orientation(1)
-# Returns: 无
+#Returns: 无
 ```  
 ### update_element_id
 更改单元编号
@@ -226,19 +224,17 @@ mdb.update_element_node(1,[1,2])
 mdb.update_element_node(2,[1,2,3,4])
 #Returns: 无
 ```  
-### remove_element
+### remove_elements
 删除指定编号的单元,默认则删除所有单元
 > 参数:  
 > ids: 单元编号,支持整形、列表、XtoYbyZ形式字符串  
-> remove_free: 是否删除自由节点
-
+> remove_free: 是否删除自由节点  
 ```Python
 # 示例代码
 from qtmodel import *
-
 mdb.remove_elements()
 mdb.remove_elements(ids=1)
-# Returns: 无
+#Returns: 无
 ```  
 ### renumber_elements
 单元编号重排序，默认按1升序重排所有节点
@@ -331,7 +327,7 @@ mdb.remove_structure_from_group(name="现有结构组1",node_ids=[1,2,3,4],eleme
 添加材料
 > 参数:  
 > index:材料编号,默认为最大Id+1  
-> name:材料名称  
+> name:材料名称，默认覆盖添加  
 > mat_type: 材料类型,1-混凝土 2-钢材 3-预应力 4-钢筋 5-自定义 6-组合材料  
 > standard:规范序号,参考UI 默认从1开始  
 > database:数据库名称  
@@ -353,7 +349,8 @@ mdb.add_material(index=1,name="自定义材料1",mat_type=5,data_info=[3.5e10,2.
 > 参数:  
 > index:材料编号,默认为最大Id+1  
 > name: 收缩徐变名  
-> code_index: 1-公规JTG3362-2018  2-公规JTGD62-2004 3-公规JTJ023-85 4-铁规TB10092-2017 5-地铁GB50157-2013  6-老化理论  7-BS5400_4_1990  8-AASHTO_LRFD_2017    1000-AASHTO_LRFD_2017  
+> code_index: 1-公规JTG3362-2018  2-公规JTGD62-2004 3-公规JTJ023-85 4-铁规TB10092-2017  
+> 5-地铁GB50157-2013  6-老化理论  7-BS5400_4_1990  8-AASHTO_LRFD_2017    1000-AASHTO_LRFD_2017  
 > time_parameter: 对应规范的收缩徐变参数列表,默认不改变规范中信息 (可选参数)  
 > creep_data: 徐变数据 [(函数名,龄期)...]  
 > shrink_data: 收缩函数名  
@@ -388,58 +385,8 @@ mdb.add_shrink_function(name="收缩函数名",shrink_data=[(5,0.5),(100,0.75)])
 mdb.add_shrink_function(name="收缩函数名",scale_factor=1.2)
 #Returns: 无
 ```  
-### update_material
-todo 更新材料
-> 参数:  
-> name:旧材料名称  
-> new_name:新材料名称,默认不更改名称  
-> new_id:新材料Id,默认不更改Id  
-> mat_type: 材料类型,1-混凝土 2-钢材 3-预应力 4-钢筋 5-自定义 6-组合材料  
-> standard:规范序号,参考UI 默认从1开始  
-> database:数据库名称  
-> construct_factor:构造系数  
-> modified:是否修改默认材料参数,默认不修改 (可选参数)  
-> data_info:材料参数列表[弹性模量,容重,泊松比,热膨胀系数] (可选参数)  
-> creep_id:徐变材料id (可选参数)  
-> f_cuk: 立方体抗压强度标准值 (可选参数)  
-> composite_info: 主材名和辅材名 (仅组合材料需要)  
-```Python
-# 示例代码
-from qtmodel import *
-mdb.update_material(name="混凝土材料1",mat_type=1,standard=1,database="C50")
-mdb.update_material(name="自定义材料1",mat_type=5,data_info=[3.5e10,2.5e4,0.2,1.5e-5])
-#Returns: 无
-```  
-### update_creep_function
-todo 更新徐变函数
-> 参数:  
-> name:徐变函数名  
-> new_name: 新徐变函数名，默认不改变函数名  
-> creep_data:徐变数据，默认不改变函数名 [(时间,徐变系数)...]  
-> scale_factor:缩放系数  
-```Python
-# 示例代码
-from qtmodel import *
-mdb.add_creep_function(name="徐变函数名",creep_data=[(5,0.5),(100,0.75)])
-#Returns: 无
-```  
-### update_shrink_function
-todo 更新收缩函数
-> 参数:  
-> name:收缩函数名  
-> new_name:收缩函数名  
-> shrink_data:收缩数据,默认不改变数据 [(时间,收缩系数)...]  
-> scale_factor:缩放系数  
-```Python
-# 示例代码
-from qtmodel import *
-mdb.update_shrink_function(name="收缩函数名",new_name="函数名2")
-mdb.update_shrink_function(name="收缩函数名",shrink_data=[(5,0.5),(100,0.75)])
-mdb.update_shrink_function(name="收缩函数名",scale_factor=1.2)
-#Returns: 无
-```  
 ### remove_shrink_function
-todo 删除收缩函数
+删除收缩函数
 > 参数:  
 > name:收缩函数名  
 ```Python
@@ -449,7 +396,7 @@ mdb.remove_shrink_function(name="收缩函数名")
 #Returns: 无
 ```  
 ### remove_creep_function
-todo 删除徐变函数
+删除徐变函数
 > 参数:  
 > name:徐变函数名  
 ```Python
@@ -459,7 +406,7 @@ mdb.remove_creep_function(name="徐变函数名")
 #Returns: 无
 ```  
 ### update_material_time_parameter
-todo 将收缩徐变参数连接到材料
+将收缩徐变参数连接到材料
 > 参数:  
 > name: 材料名  
 > time_parameter_name: 收缩徐变名称  
@@ -471,7 +418,7 @@ mdb.update_material_time_parameter(name="C60",time_parameter_name="收缩徐变1
 #Returns: 无
 ```  
 ### update_material_id
-todo 更新材料编号
+更新材料编号
 > 参数:  
 > name:材料名称  
 > new_id:新编号  
@@ -481,8 +428,19 @@ from qtmodel import *
 mdb.update_material_id(name="材料1",new_id=2)
 #Returns: 无
 ```  
+### update_time_parameter_id
+更新时间依存材料编号
+> 参数:  
+> name:时间依存材名称  
+> new_id:新时间依存材编号  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.update_time_parameter_id(name="时间依存材料1",new_id=2)
+#Returns: 无
+```  
 ### remove_material
-todo 删除指定材料
+删除指定材料
 > 参数:  
 > index:指定材料编号，默认则删除所有材料  
 > name: 指定材料名，材料名为空时按照index删除  
@@ -494,7 +452,7 @@ mdb.remove_material(index=1)
 #Returns: 无
 ```  
 ### update_material_construction_factor
-todo 更新材料构造系数
+更新材料构造系数
 > 参数:  
 > name:指定材料编号，默认则删除所有材料  
 > factor:指定材料编号，默认则删除所有材料  
@@ -505,7 +463,7 @@ mdb.update_material_construction_factor(name="材料1",factor=1.0)
 #Returns: 无
 ```  
 ### remove_time_parameter
-todo 删除指定时间依存材料
+删除指定时间依存材料
 > 参数:  
 > name: 指定收缩徐变材料名  
 ```Python
@@ -536,7 +494,7 @@ mdb.add_thickness(name="厚度2", t=0.2,thick_type=1,rib_pos=0,dist_v=0.1,rib_v=
 #Returns: 无
 ```  
 ### update_thickness_id
-todo 更新板厚编号
+更新板厚编号
 > 参数:  
 > index: 板厚id  
 > new_id: 新板厚id  
@@ -547,7 +505,7 @@ mdb.update_thickness_id(1,2)
 #Returns: 无
 ```  
 ### remove_thickness
-todo 删除板厚
+删除板厚
 > 参数:  
 > index:板厚编号,默认时删除所有板厚信息  
 > name:默认按照编号删除,如果不为空则按照名称删除  
@@ -561,7 +519,7 @@ mdb.remove_thickness(name="板厚1")
 ```  
 ##  截面
 ### add_section
-添加单一截面信息,如果截面存在则自动覆盖
+添加单一截面信息,如果截面号存在则自动覆盖添加
 > 参数:  
 > index: 截面编号,默认自动识别  
 > name:截面名称  
@@ -604,7 +562,7 @@ rib_place = [(1, 0, 0.1, "板肋1", 2, "默认名称1"),
 #Returns: 无
 ```  
 ### add_single_section
-以字典形式添加单一截面
+以字典形式添加单一截面,如果截面号存在则自动覆盖添加
 > 参数:  
 > index:截面编号  
 > name:截面名称  
@@ -618,7 +576,7 @@ sec_data={"sec_info":[1,2],"bias_type":"中心"})
 #Returns: 无
 ```  
 ### add_tapper_section
-添加变截面,字典参数参考单一截面,如果截面存在则自动覆盖
+添加变截面,字典参数参考单一截面,如果截面号存在则自动覆盖添加
 > 参数:  
 > index:截面编号  
 > name:截面名称  
@@ -668,42 +626,8 @@ from qtmodel import *
 mdb.add_tapper_section_by_id(name="变截面1",begin_id=1,end_id=2)
 #Returns: 无
 ```  
-### update_single_section
-todo 以字典形式添加单一截面
-> 参数:  
-> index:截面编号  
-> new_id:新截面编号，默认为-1时不修改截面编号  
-> name:截面名称  
-> sec_type:截面类型  
-> sec_data:截面信息字典，键值参考添加add_section方法参数  
-```Python
-# 示例代码
-from qtmodel import *
-mdb.update_single_section(index=1,name="变截面1",sec_type="矩形",
-sec_data={"sec_info":[1,2],"bias_type":"中心"})
-#Returns: 无
-```  
-### update_tapper_section
-todo 添加变截面,字典参数参考单一截面,如果截面存在则自动覆盖
-> 参数:  
-> index:截面编号  
-> new_id:新截面编号，默认不修改截面编号  
-> name:截面名称  
-> sec_type:截面类型  
-> sec_begin:截面始端编号  
-> sec_end:截面末端编号  
-> shear_consider:考虑剪切变形  
-> sec_normalize:变截面线段线圈重新排序  
-```Python
-# 示例代码
-from qtmodel import *
-mdb.add_tapper_section(index=1,name="变截面1",sec_type="矩形",
-sec_begin={"sec_info":[1,2],"bias_type":"中心"},
-sec_end={"sec_info":[2,2],"bias_type":"中心"})
-#Returns: 无
-```  
 ### update_section_bias
-todo 更新截面偏心
+更新截面偏心
 > 参数:  
 > index:截面编号  
 > bias_type:偏心类型  
@@ -719,7 +643,7 @@ mdb.update_section_bias(index=1,bias_type="自定义",bias_point=[0.1,0.2])
 #Returns: 无
 ```  
 ### update_section_property
-todo 更新截面特性
+更新截面特性
 > 参数:  
 > index:截面号  
 > sec_property:截面特性值参考UI共计26个数值  
@@ -731,7 +655,7 @@ mdb.update_section_property(index=1,sec_property=[i for i in range(1,27)])
 #Returns: 无
 ```  
 ### update_section_id
-todo 更新截面编号
+更新截面编号
 > 参数:  
 > index: 原编号  
 > new_id: 新编号  
@@ -799,7 +723,7 @@ mdb.add_tapper_section_from_group("变截面组1")
 #Returns: 无
 ```  
 ### update_tapper_section_group
-todo 更新变截面组
+更新变截面组
 > 参数:  
 > name:变截面组组名  
 > new_name: 新变截面组名  
@@ -822,7 +746,7 @@ mdb.update_tapper_section_group(name="变截面组2",ids="1t0100")
 #Returns: 无
 ```  
 ### remove_tapper_section_group
-todo  删除变截面组，默认删除所有变截面组
+删除变截面组，默认删除所有变截面组
 > 参数:  
 > name:变截面组名称  
 ```Python
@@ -1117,15 +1041,15 @@ mdb.add_tendon_group(name="钢束组1")
 添加钢束特性
 > 参数:  
 > name:钢束特性名  
-> tendon_type: 0-PRE 1-POST  
+> tendon_type: 0-PRE 1-POST 2-体外  
 > material_name: 钢材材料所属名称  
 > duct_type: 1-金属波纹管  2-塑料波纹管  3-铁皮管  4-钢管  5-抽芯成型  
 > steel_type: 1-钢绞线  2-螺纹钢筋  
 > steel_detail: 钢束详细信息  
 > _钢绞线[钢束面积,孔道直径,摩阻系数,偏差系数]_  
 > _螺纹钢筋[钢筋直径,钢束面积,孔道直径,摩阻系数,偏差系数,张拉方式(1-一次张拉 2-超张拉)]_  
-> loos_detail: 松弛信息[规范,张拉,松弛] (仅钢绞线需要,默认为[1,1,1])  
-> _规范:1-公规 2-铁规_  
+> loos_detail: 松弛信息[公规,张拉,松弛]/[铁规，松弛]/[英规,Kp,松弛天数]/[美规,KL] (仅钢绞线需要,默认为[1,1,1])  
+> _规范:1-公规 2-铁规_ 3-不考虑松弛 4-英规 5-美规  
 > _张拉方式:1-一次张拉 2-超张拉_  
 > _松弛类型：1-一般松弛 2-低松弛_  
 > slip_info: 滑移信息[始端距离,末端距离] 默认为[0.006, 0.006]  
@@ -1133,7 +1057,7 @@ mdb.add_tendon_group(name="钢束组1")
 # 示例代码
 from qtmodel import *
 mdb.add_tendon_property(name="钢束1",tendon_type=0,material_name="预应力材料",duct_type=1,steel_type=1,
-steel_detail=[0.00014,0.10,0.25,0.0015],loos_detail=(1,1,1))
+steel_detail=[0.00014,0.10,0.25,0.0015],loos_detail=[1,1,1])
 #Returns: 无
 ```  
 ### add_tendon_3d
@@ -1171,7 +1095,7 @@ control_points=[(0,0,-1,0),(10,0,-1,0)],point_insert=(1,1,1),track_group="轨迹
 > line_type:1-导线点  2-折线点  
 > position_type: 定位方式 1-直线  2-轨迹线  
 > symmetry: 对称点 0-左端点 1-右端点 2-不对称  
-> control_points: 控制点信息[(x1,z1,r1),(x2,z2,r2)....] 三维[(x1,y1,z1,r1),(x2,y2,z2,r2)....]  
+> control_points: 控制点信息[(x1,z1,r1),(x2,z2,r2)....]  
 > control_points_lateral: 控制点横弯信息[(x1,y1,r1),(x2,y2,r2)....]，无横弯时不必输入  
 > point_insert: 定位方式 (直线时为插入点坐标[x,y,z]  轨迹线时[插入端(1-I 2-J),插入方向(1-ij 2-ji),插入单元id])  
 > tendon_direction:直线钢束X方向向量  默认为x轴即[1,0,0] (轨迹线不用赋值)  
@@ -1199,7 +1123,7 @@ mdb.add_tendon_elements(ids=[1,2,4,6])
 #Returns: 无
 ```  
 ### update_tendon_property_material
-todo 更新钢束特性材料
+更新钢束特性材料
 > 参数:  
 > name:钢束特性名  
 > material_name:材料名  
@@ -1210,11 +1134,11 @@ mdb.update_tendon_property_material("特性1",material_name="材料1")
 #Returns:无
 ```  
 ### update_tendon_property
-todo 更新钢束特性
+更新钢束特性
 > 参数:  
 > name:钢束特性名  
 > new_name:新钢束特性名,默认不修改  
-> tendon_type: 0-PRE 1-POST  
+> tendon_type: 0-PRE 1-POST 2-体外  
 > material_name: 钢材材料名  
 > duct_type: 1-金属波纹管  2-塑料波纹管  3-铁皮管  4-钢管  5-抽芯成型  
 > steel_type: 1-钢绞线  2-螺纹钢筋  
@@ -1231,7 +1155,7 @@ steel_detail=[0.00014,0.10,0.25,0.0015],loos_detail=(1,1,1))
 #Returns:无
 ```  
 ### update_tendon
-todo 更新三维钢束
+更新三维钢束
 > 参数:  
 > name:钢束名称  
 > new_name:新钢束名称  
@@ -1242,10 +1166,11 @@ todo 更新三维钢束
 > line_type:1-导线点  2-折线点  
 > position_type: 定位方式 1-直线  2-轨迹线  
 > symmetry: 对称点 0-左端点 1-右端点 2-不对称  
-> control_points: 控制点信息二维[(x1,z1,r1),(x2,z2,r2)....]  
-> control_points_lateral: 控制点横弯信息[(x1,y1,r1),(x2,y2,r2)....]，无横弯时不必输入  
+> control_points: 控制点信息二维[(x1,z1,r1),(x2,z2,r2)....] 三维[(x1,y1,z1,r1),(x2,y2,z2,r2)....]  
+> control_points_lateral: 控制点横弯信息[(x1,y1,r1),(x2,y2,r2)....]，无横弯或三维时不必输入  
 > point_insert: 定位方式 (直线时为插入点坐标[x,y,z]  轨迹线时[插入端(1-I 2-J),插入方向(1-ij 2-ji),插入单元id])  
 > tendon_direction:直线钢束X方向向量  默认为x轴即[1,0,0] (轨迹线不用赋值)  
+> rotate_bias:绕钢束旋转偏心X、Y  
 > rotation_angle:绕钢束旋转角度  
 > track_group:轨迹线结构组名  (直线时不用赋值)  
 > projection:直线钢束投影 (默认为true)  
@@ -1474,7 +1399,7 @@ point2=(1,0,0),point3=(0,1,0),group_name="默认荷载组")
 #Returns: 无
 ```  
 ### update_distribute_plane_load_type
-todo  更新板单元类型
+更新板单元面荷载类型
 > 参数:  
 > name:荷载类型名称  
 > new_name:新名称，默认不修改名称  
@@ -1492,7 +1417,7 @@ mdb.update_distribute_plane_load_type(name="荷载类型2",load_type=2,point_lis
 #Returns: 无
 ```  
 ### remove_nodal_force
-todo 删除节点荷载
+删除节点荷载
 > 参数:  
 > node_id:节点编号且支持XtoYbyN形式字符串  
 > case_name:荷载工况名  
@@ -1504,7 +1429,7 @@ mdb.remove_nodal_force(case_name="荷载工况1",node_id=1,group_name="默认荷
 #Returns: 无
 ```  
 ### remove_nodal_displacement
-todo 删除节点位移荷载
+删除节点位移荷载
 > 参数:  
 > node_id:节点编号,支持数或列表且支持XtoYbyN形式字符串  
 > case_name:荷载工况名  
@@ -1516,7 +1441,7 @@ mdb.remove_nodal_displacement(case_name="荷载工况1",node_id=1,group_name="�
 #Returns: 无
 ```  
 ### remove_initial_tension_load
-todo 删除初始拉力
+删除初始拉力
 > 参数:  
 > element_id:单元编号支持数或列表且支持XtoYbyN形式字符串  
 > case_name:荷载工况名  
@@ -1528,7 +1453,7 @@ mdb.remove_initial_tension_load(element_id=1,case_name="工况1",group_name="默
 #Returns: 无
 ```  
 ### remove_beam_element_load
-todo 删除梁单元荷载
+删除梁单元荷载
 > 参数:  
 > element_id:单元号支持数或列表且支持XtoYbyN形式字符串  
 > case_name:荷载工况名  
@@ -1541,7 +1466,7 @@ mdb.remove_beam_element_load(case_name="工况1",element_id=1,load_type=1,group_
 #Returns: 无
 ```  
 ### remove_plate_element_load
-todo 删除指定荷载工况下指定单元的板单元荷载
+删除指定荷载工况下指定单元的板单元荷载
 > 参数:  
 > element_id:单元编号，支持数或列表且支持XtoYbyN形式字符串  
 > case_name:荷载工况名  
@@ -1554,7 +1479,7 @@ mdb.remove_plate_element_load(case_name="工况1",element_id=1,load_type=1,group
 #Returns: 无
 ```  
 ### remove_cable_length_load
-todo 删除索长张拉
+删除索长张拉
 > 参数:  
 > element_id:单元号支持数或列表且支持XtoYbyN形式字符串  
 > case_name:荷载工况名  
@@ -1565,19 +1490,19 @@ from qtmodel import *
 mdb.remove_cable_length_load(case_name="工况1",element_id=1, group_name= "默认荷载组")
 #Returns: 无
 ```  
-### remove_plane_load
-todo 根据荷载编号删除分配面荷载
+### remove_distribute_plane_load
+根据荷载编号删除分配面荷载
 > 参数:  
 > index: 指定荷载编号，默认则删除所有分配面荷载  
 ```Python
 # 示例代码
 from qtmodel import *
-mdb.remove_plane_load()
-mdb.remove_plane_load(index=1)
+mdb.remove_distribute_plane_load()
+mdb.remove_distribute_plane_load(index=1)
 #Returns: 无
 ```  
 ### remove_distribute_plane_load_type
-todo 删除分配面荷载类型
+删除分配面荷载类型
 > 参数:  
 > name: 指定荷载类型，默认则删除所有分配面荷载  
 ```Python
@@ -2437,7 +2362,7 @@ mdb.add_top_plate_temperature(element_id=1,case_name="工况1",temperature=40,gr
 #Returns: 无
 ```  
 ### remove_element_temperature
-todo 删除指定单元温度
+删除指定单元温度
 > 参数:  
 > element_id:单元编号，支持数或列表且支持XtoYbyN形式字符串  
 > case_name:荷载工况名  
@@ -2448,7 +2373,7 @@ mdb.remove_element_temperature(case_name="荷载工况1",element_id=1)
 #Returns: 无
 ```  
 ### remove_top_plate_temperature
-todo 删除梁单元顶板温度
+删除梁单元顶板温度
 > 参数:  
 > element_id:单元编号，支持数或列表且支持XtoYbyN形式字符串  
 > case_name:荷载工况名  
@@ -2459,7 +2384,7 @@ mdb.remove_top_plate_temperature(case_name="荷载工况1",element_id=1)
 #Returns: 无
 ```  
 ### remove_beam_section_temperature
-todo 删除指定梁或板单元梁截面温度
+删除指定梁或板单元梁截面温度
 > 参数:  
 > case_name:荷载工况名  
 > element_id:单元编号，支持数或列表且支持XtoYbyN形式字符串  
@@ -2470,7 +2395,7 @@ mdb.remove_beam_section_temperature(case_name="工况1",element_id=1)
 #Returns: 无
 ```  
 ### remove_gradient_temperature
-todo 删除梁或板单元梯度温度
+删除梁或板单元梯度温度
 > 参数:  
 > element_id:单元编号，支持数或列表且支持XtoYbyN形式字符串  
 > case_name:荷载工况名  
@@ -2481,7 +2406,7 @@ mdb.remove_gradient_temperature(case_name="工况1",element_id=1)
 #Returns: 无
 ```  
 ### remove_custom_temperature
-todo 删除梁单元自定义温度
+删除梁单元自定义温度
 > 参数:  
 > element_id:单元编号，支持数或列表且支持XtoYbyN形式字符串  
 > case_name:荷载工况名  
@@ -2492,7 +2417,7 @@ mdb.remove_custom_temperature(case_name="工况1",element_id=1)
 #Returns: 无
 ```  
 ### remove_index_temperature
-todo 删除梁单元指数温度且支持XtoYbyN形式字符串
+删除梁单元指数温度且支持XtoYbyN形式字符串
 > 参数:  
 > element_id:单元编号，支持数或列表且支持XtoYbyN形式字符串  
 > case_name:荷载工况名  
@@ -2534,7 +2459,7 @@ mdb.add_deviation_load(element_id=2,case_name="工况1",parameters=["板端误�
 #Returns: 无
 ```  
 ### update_deviation_parameter
-todo 更新制造误差参数
+更新制造误差参数
 > 参数:  
 > name:名称  
 > new_name:新名称，默认不修改名称  
@@ -2550,7 +2475,7 @@ mdb.update_deviation_parameter(name="板端制造误差",element_type=1,paramete
 #Returns: 无
 ```  
 ### remove_deviation_parameter
-todo 删除指定制造偏差参数
+删除指定制造偏差参数
 > 参数:  
 > name:制造偏差参数名  
 > para_type:制造偏差类型 1-梁单元  2-板单元  
@@ -2561,7 +2486,7 @@ mdb.remove_deviation_parameter(name="参数1",para_type=1)
 #Returns: 无
 ```  
 ### remove_deviation_load
-todo 删除指定制造偏差荷载
+删除指定制造偏差荷载
 > 参数:  
 > element_id:单元编号，支持数或列表且支持XtoYbyN形式字符串  
 > case_name:荷载工况名  
@@ -3056,6 +2981,16 @@ from qtmodel import *
 odb.get_group_elements(group_name="默认结构组")
 #Returns: list[int]
 ```  
+### get_element_weight
+根据单元编号获取单元重量
+> 参数:  
+> ids: 单元编号支持整数或整数列表且支持XtoYbyN形式字符串，默认获取所有单元重量  
+```Python
+# 示例代码
+from qtmodel import *
+odb.get_element_weight(ids=1)
+#Returns: dict<int,double>类型的json格式字符串
+```  
 ##  跨度信息
 ### get_span_supports
 获取跨度信息的支承节点号
@@ -3249,6 +3184,27 @@ odb.get_constraint_equation_data()
 from qtmodel import *
 odb.get_effective_width(group_name="边界组1")
 #Returns:  list[dict]
+```  
+##  钢束信息
+### get_tendon_property
+获取预应力荷载
+> 参数:  
+> name: 根据钢束特性名获取钢束特性  
+```Python
+# 示例代码
+from qtmodel import *
+odb.get_tendon_property(name="钢束特性1")
+#Returns: 包含信息为list[dict]
+```  
+### get_tendon_data
+获取预应力荷载
+> 参数:  
+> name: 根据钢束名获取钢束信息  
+```Python
+# 示例代码
+from qtmodel import *
+odb.get_tendon_data(name="钢束1")
+#Returns: 包含信息为list[dict]
 ```  
 ##  荷载信息
 ### get_case_names

@@ -1,6 +1,4 @@
-import json
 import time
-
 from qtmodel.core.qt_server import QtServer
 from typing import List
 
@@ -40,7 +38,7 @@ class MdbProject:
             mdb.undo_model()
         Returns: 无
         """
-        QtServer.send_command(header="UNDO")
+        QtServer.send_dict(header="UNDO")
 
     @staticmethod
     def redo_model():
@@ -51,7 +49,7 @@ class MdbProject:
             mdb.redo_model()
         Returns: 无
         """
-        QtServer.send_command(header="REDO")
+        QtServer.send_dict(header="REDO")
 
     @staticmethod
     def update_model():
@@ -74,7 +72,7 @@ class MdbProject:
             mdb.update_to_pre()
         Returns: 无
         """
-        QtServer.send_command(header="UPDATE-TO-PRE")
+        QtServer.send_dict(header="UPDATE-TO-PRE")
 
     @staticmethod
     def update_to_post():
@@ -85,7 +83,7 @@ class MdbProject:
             mdb.update_to_post()
         Returns: 无
         """
-        QtServer.send_command(header="UPDATE-TO-POST")
+        QtServer.send_dict(header="UPDATE-TO-POST")
 
     @staticmethod
     def do_solve():
@@ -96,7 +94,7 @@ class MdbProject:
             mdb.do_solve()
         Returns: 无
         """
-        QtServer.send_command(header="DO-SOLVE")
+        QtServer.send_dict(header="DO-SOLVE")
         # 设置缓冲时间
         time.sleep(3)
 
@@ -109,7 +107,7 @@ class MdbProject:
             mdb.initial()
         Returns: 无
         """
-        QtServer.send_command(header="INITIAL")
+        QtServer.send_dict(header="INITIAL")
 
     @staticmethod
     def open_file(file_path: str):
@@ -134,7 +132,7 @@ class MdbProject:
             mdb.close_project()
         Returns: 无
         """
-        QtServer.send_command(header="CLOSE-PROJECT")
+        QtServer.send_dict(header="CLOSE-PROJECT")
 
     @staticmethod
     def save_file(file_path: str = ""):
@@ -168,9 +166,7 @@ class MdbProject:
             "command": command,
             "command_type": command_type,
         }
-        json_string = json.dumps(params, indent=2)
-        result= QtServer.send_command(header="INP-COMMAND", command=json_string)
-        QtServer.send_command(header="UPDATE")
+        result = QtServer.send_dict(header="INP-COMMAND", payload=params)
         return result
 
     @staticmethod
@@ -205,8 +201,7 @@ class MdbProject:
             "type_kind": type_kind,
             "group_name": group_name,
         }
-        json_string = json.dumps(params, indent=2)
-        content = QtServer.send_command(header="EXP-FILE", command=json_string)
+        content = QtServer.send_dict(header="EXP-FILE", payload=params)
         with open(file_path, 'w', encoding='utf-8') as file:
             file.write(content)
 
@@ -221,7 +216,7 @@ class MdbProject:
         Returns: 无
         """
         # 创建参数字典
-        content = QtServer.send_command(header="EXP-QT-HELPER")
+        content = QtServer.send_dict(header="EXP-QT-HELPER")
         with open(file_path, 'w', encoding='utf-8') as file:
             file.write(content)
     # endregion

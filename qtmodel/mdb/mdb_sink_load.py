@@ -21,72 +21,66 @@ class MdbSinkLoad:
             mdb.add_sink_group(name="沉降1",sink=0.1,node_ids=[1,2,3])
         Returns: 无
         """
-        if isinstance(node_ids, int):
-            node_ids = [node_ids]
-        if node_ids is None:
-            id_str = ""
-        elif isinstance(node_ids, list):
-            id_str = QtDataHelper.parse_int_list_to_str(node_ids)
-        else:
-            id_str = str(node_ids)
-        s = "*SINK-GROUP\r\n" + f"{name},{sink:g},{id_str}\r\n"
-        QtServer.send_command(s, "QDAT")
-
+        """
+           添加沉降分组
+           """
+        payload = {
+            "name": name,
+            "sink": sink,
+            "node_ids": QtDataHelper.parse_ids_to_array(node_ids),
+        }
+        return QtServer.send_dict("ADD-SINK-GROUP", payload)
 
     @staticmethod
     def add_sink_case(name: str, sink_groups: (Union[str, List[str]]) = None):
         """
-        添加沉降工况
-        Args:
-            name:荷载工况名
-            sink_groups:沉降组名，支持字符串或列表
-        Example:
-            mdb.add_sink_case(name="沉降工况1",sink_groups=["沉降1","沉降2"])
-        Returns: 无
+          添加沉降工况
         """
         if isinstance(sink_groups, str):
-            sink_groups = [sink_groups]
-        s = "*SINK-CASE\r\n" + f"{name},{','.join(sink_groups)}\r\n"
-        QtServer.send_command(s, "QDAT")
+            groups = [sink_groups] if sink_groups else []
+        else:
+            groups = sink_groups
+
+        payload = {
+            "name": name,
+            "sink_groups": groups,
+        }
+        return QtServer.send_dict("ADD-SINK-CASE", payload)
 
     @staticmethod
     def add_concurrent_reaction(names: Union[str, List[str]]):
         """
-        添加并发反力组
-        Args:
-             names: 结构组名称集合
-        Example:
-            mdb.add_concurrent_reaction(names=["默认结构组"])
-        Returns: 无
+        添加并行反力组合（并行反力工况之类）
         """
-        if names is None:
-            raise ValueError("操作错误，添加并发反力组时结构组名称不能为空")
         if isinstance(names, str):
-            names = [names]
-        s = "*CCT-REACT\r\n" + ",".join(names) + "\r\n"
-        QtServer.send_command(s, "QDAT")
+            name_list = [names] if names else []
+        else:
+            name_list = names
+
+        payload = {
+            "names": name_list,
+        }
+        return QtServer.send_dict("ADD-CONCURRENT-REACTION", payload)
 
     @staticmethod
     def add_concurrent_force(names: Union[str, List[str]]):
         """
-        创建并发内力组
-        Args:
-            names: 结构组名称集合
-        Example:
-            mdb.add_concurrent_force(names=["默认结构组"])
-        Returns: 无
-        """
+           添加并行内力工况
+           """
         if isinstance(names, str):
-            names = [names]
-        s = "*CCT-FORCE\r\n" + ",".join(names) + "\r\n"
-        QtServer.send_command(s, "QDAT")
+            name_list = [names] if names else []
+        else:
+            name_list = names
 
-
+        payload = {
+            "names": name_list,
+        }
+        return QtServer.send_dict("ADD-CONCURRENT-FORCE", payload)
 
     @staticmethod
     def update_sink_case(name: str, new_name: str = "", sink_groups: (Union[str, List[str]]) = None):
         """
-        todo 更新沉降工况
+        更新沉降工况
         Args:
             name:荷载工况名
             new_name: 新沉降组名,默认不修改
@@ -102,12 +96,10 @@ class MdbSinkLoad:
         }
         return QtServer.send_dict("UPDATE-SINK-CASE", payload)
 
-
-
     @staticmethod
     def remove_sink_group(name: str = ""):
         """
-        todo 按照名称删除沉降组
+        按照名称删除沉降组
         Args:
              name:沉降组名,默认删除所有沉降组
         Example:
@@ -123,7 +115,7 @@ class MdbSinkLoad:
     @staticmethod
     def remove_sink_case(name=""):
         """
-        todo 按照名称删除沉降工况,不输入名称时默认删除所有沉降工况
+        按照名称删除沉降工况,不输入名称时默认删除所有沉降工况
         Args:
             name:沉降工况名
         Example:
@@ -136,12 +128,10 @@ class MdbSinkLoad:
         }
         return QtServer.send_dict("REMOVE-SINK-CASE", payload)
 
-
-
     @staticmethod
     def remove_concurrent_reaction():
         """
-        todo 删除所有并发反力组
+        删除所有并发反力组
         Args:无
         Example:
             mdb.remove_concurrent_reaction()
@@ -153,7 +143,7 @@ class MdbSinkLoad:
     @staticmethod
     def remove_concurrent_force():
         """
-        todo 删除所有并发内力组
+        删除所有并发内力组
         Args: 无
         Example:
             mdb.remove_concurrent_force()
@@ -161,6 +151,4 @@ class MdbSinkLoad:
         """
         payload = {}
         return QtServer.send_dict("REMOVE-CONCURRENT-FORCE", payload)
-
-
     # endregion

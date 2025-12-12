@@ -1,3 +1,5 @@
+from typing import Union
+
 from qtmodel.core.qt_server import QtServer
 
 
@@ -96,7 +98,7 @@ class OdbModelSection:
         return QtServer.send_dict("GET-SECTION-PROPERTY-BY-LOOPS", payload)
 
     @staticmethod
-    def get_section_property_by_lines(sec_lines: list[tuple[float, float, float, float, float]] = None):
+    def get_section_property_by_lines(sec_lines:Union[list[tuple[float, float, float, float, float]],list[list[float]]]  = None):
         """
         通过线宽数据获取截面特性
         Args:无

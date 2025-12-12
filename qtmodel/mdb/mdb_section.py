@@ -1,9 +1,5 @@
-import json
-from typing import Union
-
 from qtmodel.core.data_helper import QtDataHelper
 from qtmodel.core.qt_server import QtServer
-
 
 class MdbSection:
     """
@@ -27,9 +23,9 @@ class MdbSection:
             box_other_right: dict[str, list[float]] = None,
             mat_combine: list[float] = None,
             rib_info: dict[str, list[float]] = None,
-            rib_place:Union[list[tuple[int, int, float, str, int, str]],list]  = None,
+            rib_place:list[tuple[int, int, float, str, int, str]]  = None,
             loop_segments: list[dict] = None,
-            sec_lines: Union[list[tuple[float, float, float, float, float]],list]= None,
+            sec_lines: list[tuple[float, float, float, float, float]]= None,
             secondary_loop_segments: list[dict] = None,
             sec_property: list[float] = None,
             bias_type: str = "中心",
@@ -38,7 +34,7 @@ class MdbSection:
             bias_x: float = 0,
             bias_y: float = 0):
         """
-        添加单一截面信息,如果截面存在则自动覆盖
+        添加单一截面信息,如果截面号存在则自动覆盖添加
         Args:
             index: 截面编号,默认自动识别
             name:截面名称
@@ -78,38 +74,38 @@ class MdbSection:
                             (1, 0, 0.2, "板肋1", 2, "默认名称1")])
         Returns: 无
             """
-        if (bias_x, bias_y) != (0, 0):
-            bias = f"{bias_x:g},{bias_y:g}"
-        else:
-            bias = f"{center_type},{bias_type}"
-        s = ""
-        if sec_property is not None:
-            s += "*SEC-PROPERTY\r\n" + f"ID={index},{name},1,{'YES' if shear_consider else 'NO'},{bias}\r\n"
-            s += ",".join(f"{x:g}" for x in sec_property) + "\r\n"
-        s += "*SEC-INFO\r\n" + f"ID={index},{name},{sec_type},{'YES' if shear_consider else 'NO'},{bias}\r\n"
-        s += QtDataHelper.str_section(
-            sec_type,
-            sec_info,
-            symmetry,
-            chamfer_info,
-            sec_right,
-            chamfer_right,
-            box_num,
-            box_height,
-            box_other_info,
-            box_other_right,
-            mat_combine,
-            rib_info,
-            rib_place,
-            loop_segments,
-            sec_lines,
-            secondary_loop_segments)
-        QtServer.send_command(s, "QDAT")
+        payload = {
+            "index": index,
+            "name": name,
+            "sec_type": sec_type,
+            "sec_info": sec_info,
+            "symmetry": symmetry,
+            "chamfer_info": chamfer_info,
+            "sec_right": sec_right,
+            "chamfer_right": chamfer_right,
+            "box_num": box_num,
+            "box_height": box_height,
+            "box_other_info": box_other_info,
+            "box_other_right": box_other_right,
+            "mat_combine": mat_combine,
+            "rib_info": rib_info,
+            "rib_place": rib_place,
+            "loop_segments": loop_segments,
+            "sec_lines": sec_lines,
+            "secondary_loop_segments": secondary_loop_segments,
+            "sec_property": sec_property,
+            "bias_type": bias_type,
+            "center_type": center_type,
+            "shear_consider": shear_consider,
+            "bias_x": bias_x,
+            "bias_y": bias_y,
+        }
+        return QtServer.send_dict("ADD-SECTION", payload)
 
     @staticmethod
     def add_single_section(index: int = -1, name: str = "", sec_type: str = "矩形", sec_data: dict = None):
         """
-        以字典形式添加单一截面
+        以字典形式添加单一截面,如果截面号存在则自动覆盖添加
         Args:
             index:截面编号
             name:截面名称
@@ -120,30 +116,41 @@ class MdbSection:
                 sec_data={"sec_info":[1,2],"bias_type":"中心"})
         Returns: 无
         """
-        shear_consider = sec_data.get("shear_consider", True)
-        bias_type = sec_data.get("bias_type", "中心")
-        center_type = sec_data.get("center_type", "质心")
-        bias_x = sec_data.get("bias_x", 0)
-        bias_y = sec_data.get("bias_y", 0)
-        if (bias_x, bias_y) != (0, 0):
-            bias = f"{bias_x:g},{bias_y:g}"
-        else:
-            bias = f"{center_type},{bias_type}"
-        sec_property: Union[list[float], None] = sec_data.get("sec_property", None)
-        s = ""
-        if sec_property is not None:
-            s += "*SEC-PROPERTY\r\n" + f"ID={index},{name},1,{'YES' if shear_consider else 'NO'},{bias}\r\n"
-            s += ",".join(f"{x:g}" for x in sec_property) + "\r\n"
-        s += "*SEC-INFO\r\n" + f"ID={index},{name},{sec_type},{'YES' if shear_consider else 'NO'},{bias}\r\n"
-        s += QtDataHelper.get_str_by_data(sec_type, sec_data)
-        QtServer.send_command(s, "QDAT")
+        sec_data = sec_data or {}
+        payload = {
+            "index": index,
+            "name": name,
+            "sec_type": sec_type,
+            # === 完全对应 add_section 的参数，缺就用默认 ===
+            "sec_info": sec_data.get("sec_info", None),
+            "symmetry": sec_data.get("symmetry", True),
+            "chamfer_info": sec_data.get("chamfer_info", None),
+            "sec_right": sec_data.get("sec_right", None),
+            "chamfer_right": sec_data.get("chamfer_right", None),
+            "box_num": sec_data.get("box_num", 3),
+            "box_height": sec_data.get("box_height", 2.0),
+            "box_other_info": sec_data.get("box_other_info", None),
+            "box_other_right": sec_data.get("box_other_right", None),
+            "mat_combine": sec_data.get("mat_combine", None),
+            "rib_info": sec_data.get("rib_info", None),
+            "rib_place": sec_data.get("rib_place", None),
+            "loop_segments": sec_data.get("loop_segments", None),
+            "sec_lines": sec_data.get("sec_lines", None),
+            "secondary_loop_segments": sec_data.get("secondary_loop_segments", None),
+            "sec_property": sec_data.get("sec_property", None),
+            "bias_type": sec_data.get("bias_type", "中心"),
+            "center_type": sec_data.get("center_type", "质心"),
+            "shear_consider": sec_data.get("shear_consider", True),
+            "bias_x": sec_data.get("bias_x", 0.0),
+            "bias_y": sec_data.get("bias_y", 0.0),
+        }
+        return QtServer.send_dict("ADD-SECTION", payload)
 
     @staticmethod
     def add_tapper_section(index: int, name: str = "", sec_type: str = "矩形", sec_begin: dict = None,
-                           sec_end: dict = None,
-                           shear_consider: bool = True, sec_normalize: bool = False):
+                           sec_end: dict = None, shear_consider: bool = True, sec_normalize: bool = False):
         """
-        添加变截面,字典参数参考单一截面,如果截面存在则自动覆盖
+        添加变截面,字典参数参考单一截面,如果截面号存在则自动覆盖添加
         Args:
             index:截面编号
             name:截面名称
@@ -158,49 +165,16 @@ class MdbSection:
                 sec_end={"sec_info":[2,2],"bias_type":"中心"})
         Returns: 无
         """
-        bias_type_i = sec_begin.get("bias_type", "中心")
-        center_type_i = sec_begin.get("center_type", "质心")
-        bias_x_i = sec_begin.get("bias_x", 0)
-        bias_y_i = sec_begin.get("bias_y", 0)
-        sec_property_i: Union[list[float], None] = sec_begin.get("sec_property", None)
-        bias_type_j = sec_end.get("bias_type", "中心")
-        center_type_j = sec_end.get("center_type", "质心")
-        bias_x_j = sec_end.get("bias_x", 0)
-        bias_y_j = sec_end.get("bias_y", 0)
-        sec_property_j: Union[list[float], None] = sec_end.get("sec_property", None)
-
-        if (bias_x_i, bias_y_i) != (0, 0):
-            bias1 = f"{bias_x_i:g},{bias_y_i:g}"
-        else:
-            bias1 = f"{center_type_i},{bias_type_i}"
-        if (bias_x_j, bias_y_j) != (0, 0):
-            bias2 = f"{bias_x_j:g},{bias_y_j:g}"
-        else:
-            bias2 = f"{center_type_j},{bias_type_j}"
-        s = ""
-        # 先导入截面特性，以免重复计算截面
-        if sec_property_i is not None and sec_property_j is not None:
-            s += "*SEC-PROPERTY\r\n" + f"ID={index},{name},2,{'YES' if shear_consider else 'NO'},{bias1},{bias2}\r\n"
-            s += ",".join(f"{x:g}" for x in sec_property_i) + "\r\n"
-            s += ",".join(f"{x:g}" for x in sec_property_j) + "\r\n"
-
-        # 再导入截面信息
-        s += ("*SEC-INFO\r\n" +
-              f"ID={index},{name},{sec_type}-变截面,{'YES' if shear_consider else 'NO'},{bias1},{bias2}\r\n")
-        # I 端截面
-        s += "I=\r\n"
-        s += QtDataHelper.get_str_by_data(sec_type, sec_begin)
-        # J 端截面
-        s += "J=\r\n"
-        s += QtDataHelper.get_str_by_data(sec_type, sec_end)
-        QtServer.send_command(s, "QDAT")
-        if sec_normalize:
-            params = {
-                "version": QtServer.QT_VERSION,
-                "index": index,
-            }
-            json_string = json.dumps(params, indent=2)
-            QtServer.send_command(json_string, "NORMALIZE-SEC")
+        payload = {
+            "index": index,
+            "name": name,
+            "sec_type": sec_type,
+            "sec_begin": sec_begin,
+            "sec_end": sec_end,
+            "shear_consider": shear_consider,
+            "sec_normalize": sec_normalize,
+        }
+        return QtServer.send_dict("ADD-TAPPER-SECTION", payload)
 
 
     @staticmethod
@@ -213,7 +187,7 @@ class MdbSection:
         Returns: 无
         """
         try:
-            QtServer.send_command(header="CALC-SEC")
+            QtServer.send_dict(header="CALC-SEC")
         except Exception as ex:
             raise Exception(ex)
 
@@ -227,7 +201,7 @@ class MdbSection:
         Returns: 无
         """
         try:
-            QtServer.send_command(header="REMOVE-UNUSED-SEC")
+            QtServer.send_dict(header="REMOVE-UNUSED-SEC")
         except Exception as ex:
             raise Exception(ex)
 
@@ -258,66 +232,10 @@ class MdbSection:
         return QtServer.send_dict("ADD-TAPPER-SEC-BY-ID", payload)
 
     @staticmethod
-    def update_single_section(index: int, new_id: int = -1, name: str = "", sec_type: str = "矩形", sec_data: dict = None):
-        """
-        todo 以字典形式添加单一截面
-        Args:
-            index:截面编号
-            new_id:新截面编号，默认为-1时不修改截面编号
-            name:截面名称
-            sec_type:截面类型
-            sec_data:截面信息字典，键值参考添加add_section方法参数
-        Example:
-            mdb.update_single_section(index=1,name="变截面1",sec_type="矩形",
-                sec_data={"sec_info":[1,2],"bias_type":"中心"})
-        Returns: 无
-        """
-        payload = {
-            "index": index,
-            "new_id": new_id,
-            "name": name,
-            "sec_type": sec_type,
-            "sec_data": sec_data,
-        }
-        return QtServer.send_dict("UPDATE-SINGLE-SEC", payload)
-
-    @staticmethod
-    def update_tapper_section(index: int, new_id: int = -1, name: str = "", sec_type: str = "矩形", sec_begin: dict = None, sec_end: dict = None,
-                              shear_consider: bool = True, sec_normalize: bool = False):
-        """
-        todo 添加变截面,字典参数参考单一截面,如果截面存在则自动覆盖
-        Args:
-            index:截面编号
-            new_id:新截面编号，默认不修改截面编号
-            name:截面名称
-            sec_type:截面类型
-            sec_begin:截面始端编号
-            sec_end:截面末端编号
-            shear_consider:考虑剪切变形
-            sec_normalize:变截面线段线圈重新排序
-        Example:
-            mdb.add_tapper_section(index=1,name="变截面1",sec_type="矩形",
-                sec_begin={"sec_info":[1,2],"bias_type":"中心"},
-                sec_end={"sec_info":[2,2],"bias_type":"中心"})
-        Returns: 无
-        """
-        payload = {
-            "index": index,
-            "new_id": new_id,
-            "name": name,
-            "sec_type": sec_type,
-            "sec_begin": sec_begin,
-            "sec_end": sec_end,
-            "shear_consider": shear_consider,
-            "sec_normalize": sec_normalize,
-        }
-        return QtServer.send_dict("UPDATE-TAPPER-SEC", payload)
-
-    @staticmethod
     def update_section_bias(index: int = 1, bias_type: str = "中心", center_type: str = "质心", shear_consider: bool = True,
                             bias_point: list[float] = None, side_i: bool = True):
         """
-        todo 更新截面偏心
+        更新截面偏心
         Args:
              index:截面编号
              bias_type:偏心类型
@@ -343,7 +261,7 @@ class MdbSection:
     @staticmethod
     def update_section_property(index: int, sec_property: list[float], side_i: bool = True):
         """
-        todo 更新截面特性
+        更新截面特性
         Args:
             index:截面号
             sec_property:截面特性值参考UI共计26个数值
@@ -362,7 +280,7 @@ class MdbSection:
     @staticmethod
     def update_section_id(index: int, new_id: int):
         """
-        todo 更新截面编号
+        更新截面编号
         Args:
             index: 原编号
             new_id: 新编号
@@ -390,7 +308,7 @@ class MdbSection:
         Returns: 无
         """
         payload = {"index": QtDataHelper.parse_ids_to_array(ids),}
-        return QtServer.send_dict("REMOVE-SEC", payload)
+        return QtServer.send_dict("REMOVE-SECTION", payload)
 
     # endregion
 
@@ -419,21 +337,18 @@ class MdbSection:
             mdb.add_tapper_section_group(ids=[1,2,3,4],name="参数化变截面组",parameter_info={"梁高(H)":"1,2,I,0"})
         Returns: 无
         """
-        if ids is None:
-            id_str = ""
-        elif isinstance(ids, list):  # 列表转化为XtoYbyN
-            id_str = QtDataHelper.parse_int_list_to_str(ids)
-        else:
-            id_str = str(ids)
-        if parameter_info is None:
-            s = "*TSGROUP\r\n" + f"{name},{id_str},{factor_w:g},{ref_w},{dis_w:g},{factor_h:g},{ref_h},{dis_h:g}\r\n"
-
-            QtServer.send_command(s, "QDAT")
-        if parameter_info is not None:
-            s = "*PARA-TSGROUP\r\n" + f"NAME={name},{id_str}\r\n"
-            for key, value in parameter_info.items():
-                s += f"{key}={value}\r\n"
-            QtServer.send_command(s, "QDAT")
+        payload = {
+            "ids": QtDataHelper.parse_ids_to_array(ids),
+            "name": name,
+            "factor_w": factor_w,
+            "factor_h": factor_h,
+            "ref_w": ref_w,
+            "ref_h": ref_h,
+            "dis_w": dis_w,
+            "dis_h": dis_h,
+            "parameter_info": parameter_info,
+        }
+        return QtServer.send_dict("ADD-TAPPER-SECTION-GROUP", payload)
 
 
     @staticmethod
@@ -473,7 +388,7 @@ class MdbSection:
                                     ref_w: int = 0, ref_h: int = 0, dis_w: float = 0, dis_h: float = 0,
                                     parameter_info: dict[str, str] = None):
         """
-        todo 更新变截面组
+        更新变截面组
         Args:
              name:变截面组组名
              new_name: 新变截面组名
@@ -510,7 +425,7 @@ class MdbSection:
     @staticmethod
     def remove_tapper_section_group(name: str = ""):
         """
-        todo  删除变截面组，默认删除所有变截面组
+        删除变截面组，默认删除所有变截面组
         Args:
             name:变截面组名称
         Example:
