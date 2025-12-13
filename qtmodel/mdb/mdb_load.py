@@ -1,5 +1,3 @@
-import json
-
 from qtmodel.core.data_helper import QtDataHelper
 from qtmodel.core.qt_server import QtServer
 from typing import Union, List

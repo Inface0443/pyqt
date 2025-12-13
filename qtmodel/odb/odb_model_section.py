@@ -82,7 +82,7 @@ class OdbModelSection:
         return QtServer.send_dict("GET-SECTION-IDS", None)
 
     @staticmethod
-    def get_section_property_by_loops(loop_segments: list[dict] = None):
+    def get_section_property_by_loops(loop_segments: list[dict[str,list[list[float]] ]] = None):
         """
         通过多组线圈获取截面特性
         Args:无

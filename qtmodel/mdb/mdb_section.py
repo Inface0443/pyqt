@@ -24,9 +24,9 @@ class MdbSection:
             mat_combine: list[float] = None,
             rib_info: dict[str, list[float]] = None,
             rib_place:list[tuple[int, int, float, str, int, str]]  = None,
-            loop_segments: list[dict] = None,
+            loop_segments: list[dict[str,list[list[float]] ]] = None,
             sec_lines: list[tuple[float, float, float, float, float]]= None,
-            secondary_loop_segments: list[dict] = None,
+            secondary_loop_segments: list[dict[str,list[list[float]] ]] = None,
             sec_property: list[float] = None,
             bias_type: str = "中心",
             center_type: str = "质心",
@@ -53,8 +53,8 @@ class MdbSection:
             rib_place:肋板位置 list[tuple[布置具体部位,参考点0-下/左,距参考点间距,肋板名，加劲肋位置0-上/左 1-下/右 2-两侧,加劲肋名]]
                 _布置具体部位(工字钢梁) 1-上左 2-上右 3-腹板 4-下左 5-下右
                 _布置具体部位(箱型钢梁) 1-上左 2-上中 3-上右 4-左腹板 5-右腹板 6-下左 7-下中 8-下右
-            loop_segments:线圈坐标集合 list[dict] dict示例:{"main":[(x1,y1),(x2,y2)...],"sub1":[(x1,y1),(x2,y2)...],"sub2":[(x1,y1),(x2,y2)...]}
-            sec_lines:线宽集合[(x1,y1,x2,y3,thick),]
+            loop_segments:线圈坐标集合 list[dict] dict示例:{"main":[[x1,y1],[x2,y2]...],"sub1":[[x1,y1],[x2,y2]...],"sub2":[[x1,y1],[x2,y2]...]}
+            sec_lines:线宽集合[[x1,y1,x2,y3,thick],]
             secondary_loop_segments:辅材线圈坐标集合 list[dict] (同loop_segments)，建议以左下角为组合截面原点建立截面
             sec_property:截面特性(参考UI界面共计29个参数)，可选参数，指定截面特性时不进行截面计算
             bias_type:偏心类型 默认中心
@@ -70,8 +70,7 @@ class MdbSection:
             mdb.add_section(name="钢梁截面1",sec_type="工字钢梁",sec_info=[0,0,0.5,0.5,0.5,0.5,0.7,0.02,0.02,0.02])
             mdb.add_section(name="钢梁截面2",sec_type="箱型钢梁",sec_info=[0,0.15,0.25,0.5,0.25,0.15,0.4,0.15,0.7,0.02,0.02,0.02,0.02],
                 rib_info = {"板肋1": [0.1,0.02],"T形肋1":[0.1,0.02,0.02,0.02]},
-                rib_place = [(1, 0, 0.1, "板肋1", 2, "默认名称1"),
-                            (1, 0, 0.2, "板肋1", 2, "默认名称1")])
+                rib_place = [(1, 0, 0.1, "板肋1", 2, "默认名称1"),(1, 0, 0.2, "板肋1", 2, "默认名称1")])
         Returns: 无
             """
         payload = {

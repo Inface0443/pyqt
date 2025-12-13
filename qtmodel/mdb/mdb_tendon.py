@@ -72,7 +72,7 @@ class MdbTendon:
                       rotation_angle: float = 0, rotate_bias: tuple[float, float] = None,
                       track_group: str = "默认结构组", projection: bool = True):
         """
-        添加三维钢束
+        添加三维钢束，支持覆盖添加
         Args:
              name:钢束名称
              property_name:钢束特性名称
@@ -121,7 +121,7 @@ class MdbTendon:
                       rotation_angle: float = 0, rotate_bias: tuple[float, float] = None,
                       track_group: str = "默认结构组", projection: bool = True):
         """
-        添加三维钢束
+        添加三维钢束，支持覆盖添加
         Args:
              name:钢束名称
              property_name:钢束特性名称
@@ -233,59 +233,21 @@ class MdbTendon:
         return QtServer.send_dict("UPDATE-TENDON-PROPERTY", payload)
 
     @staticmethod
-    def update_tendon(name: str, new_name: str = "", tendon_2d: bool = True, property_name: str = "", group_name: str = "默认钢束组",
-                      num: int = 1, line_type: int = 1, symmetry: int = 2, control_points: list = None,
-                      control_points_lateral: list[tuple[float, float, float]] = None,
-                      position_type: int = 1, point_insert: tuple[float, float, float] = None,
-                      tendon_direction: tuple[float, float, float] = None, rotate_bias: tuple[float, float] = None,
-                      rotation_angle: float = 0, track_group: str = "默认结构组", projection: bool = True):
+    def update_tendon_name(name: str, new_name: str = ""):
         """
-        更新三维钢束
+        更新钢束名称
         Args:
-            name:钢束名称
-            new_name:新钢束名称
-            tendon_2d:是否为2维钢束
-            property_name:钢束特性名称
-            group_name:默认钢束组
-            num:根数
-            line_type:1-导线点  2-折线点
-            position_type: 定位方式 1-直线  2-轨迹线
-            symmetry: 对称点 0-左端点 1-右端点 2-不对称
-            control_points: 控制点信息二维[(x1,z1,r1),(x2,z2,r2)....] 三维[(x1,y1,z1,r1),(x2,y2,z2,r2)....]
-            control_points_lateral: 控制点横弯信息[(x1,y1,r1),(x2,y2,r2)....]，无横弯或三维时不必输入
-            point_insert: 定位方式 (直线时为插入点坐标[x,y,z]  轨迹线时[插入端(1-I 2-J),插入方向(1-ij 2-ji),插入单元id])
-            tendon_direction:直线钢束X方向向量  默认为x轴即[1,0,0] (轨迹线不用赋值)
-            rotate_bias:绕钢束旋转偏心X、Y
-            rotation_angle:绕钢束旋转角度
-            track_group:轨迹线结构组名  (直线时不用赋值)
-            projection:直线钢束投影 (默认为true)
+            name:原钢束名
+            new_name:新钢束名
         Example:
-           mdb.update_tendon(name="BB1",property_name="22-15",num=2,position_type=1,
-                   control_points=[(0,-1,0),(10,-1,0)],point_insert=(0,0,0))
-           mdb.update_tendon(name="BB1",property_name="22-15",num=2,position_type=2,
-                   control_points=[(0,-1,0),(10,-1,0)],point_insert=(1,1,1),track_group="轨迹线结构组1")
+            mdb.update_tendon_name("钢束1","钢束2")
         Returns: 无
         """
         payload = {
             "name": name,
             "new_name": new_name,
-            "tendon_2d": tendon_2d,
-            "property_name": property_name,
-            "group_name": group_name,
-            "num": num,
-            "line_type": line_type,
-            "position_type": position_type,
-            "symmetry": symmetry,
-            "control_points": control_points,
-            "control_points_lateral": control_points_lateral,
-            "point_insert": point_insert,
-            "tendon_direction": tendon_direction,
-            "rotation_angle": rotation_angle,
-            "rotate_bias": rotate_bias,
-            "track_group": track_group,
-            "projection": projection,
         }
-        return QtServer.send_dict("UPDATE-TENDON", payload)
+        return QtServer.send_dict("UPDATE-TENDON-NAME", payload)
 
     @staticmethod
     def update_element_component_type(ids=None, component_type: int = 2):

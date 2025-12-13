@@ -256,7 +256,7 @@ class MdbProperty:
     def add_thickness(index: int = -1, name: str = "", t: float = 0,
                       thick_type: int = 0, bias_info: tuple[int, float] = None,
                       rib_pos: int = 0, dist_v: float = 0, dist_l: float = 0,
-                      rib_v:list[float]=None, rib_l:list[float]=None):
+                      rib_v:list[float]=None, rib_l:list[float]=None,calc_type:int=0):
         """
         添加板厚
         Args:
@@ -270,6 +270,7 @@ class MdbProperty:
             dist_l: 横向截面肋板间距
             rib_v: 纵向肋板信息
             rib_l: 横向肋板信息
+            calc_type: 0-加劲肋采用梁单元  1-等效板厚
         Example:
             mdb.add_thickness(name="厚度1", t=0.2,thick_type=0,bias_info=(0,0.8))
             mdb.add_thickness(name="厚度2", t=0.2,thick_type=1,rib_pos=0,dist_v=0.1,rib_v=[1,1,0.02,0.02])
@@ -286,6 +287,7 @@ class MdbProperty:
             "dist_l": dist_l,
             "rib_v": rib_v,
             "rib_l": rib_l,
+            "calc_type": calc_type,
         }
         return QtServer.send_dict("ADD-THICKNESS", payload)
 

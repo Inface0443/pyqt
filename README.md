@@ -1,4 +1,4 @@
-> 最新qtmodel版本 V2.1.2 - 2025-12-12 
+> 最新qtmodel版本 V2.1.2 - 2025-12-13 
 > 最新qdat数据版本 V1.2.4 
 > pip install --upgrade qtmodel -i https://pypi.org/simple
 - 新增更新结构组接口 
@@ -486,6 +486,7 @@ mdb.remove_time_parameter("收缩徐变材料1")
 > dist_l: 横向截面肋板间距  
 > rib_v: 纵向肋板信息  
 > rib_l: 横向肋板信息  
+> calc_type: 0-加劲肋采用梁单元  1-等效板厚  
 ```Python
 # 示例代码
 from qtmodel import *
@@ -538,8 +539,8 @@ mdb.remove_thickness(name="板厚1")
 > rib_place:肋板位置 list[tuple[布置具体部位,参考点0-下/左,距参考点间距,肋板名，加劲肋位置0-上/左 1-下/右 2-两侧,加劲肋名]]  
 > _布置具体部位(工字钢梁) 1-上左 2-上右 3-腹板 4-下左 5-下右  
 > _布置具体部位(箱型钢梁) 1-上左 2-上中 3-上右 4-左腹板 5-右腹板 6-下左 7-下中 8-下右  
-> loop_segments:线圈坐标集合 list[dict] dict示例:{"main":[(x1,y1),(x2,y2)...],"sub1":[(x1,y1),(x2,y2)...],"sub2":[(x1,y1),(x2,y2)...]}  
-> sec_lines:线宽集合[(x1,y1,x2,y3,thick),]  
+> loop_segments:线圈坐标集合 list[dict] dict示例:{"main":[[x1,y1],[x2,y2]...],"sub1":[[x1,y1],[x2,y2]...],"sub2":[[x1,y1],[x2,y2]...]}  
+> sec_lines:线宽集合[[x1,y1,x2,y3,thick],]  
 > secondary_loop_segments:辅材线圈坐标集合 list[dict] (同loop_segments)，建议以左下角为组合截面原点建立截面  
 > sec_property:截面特性(参考UI界面共计29个参数)，可选参数，指定截面特性时不进行截面计算  
 > bias_type:偏心类型 默认中心  
@@ -557,8 +558,7 @@ chamfer_info=["1*0.2,0.1*0.2","0.5*0.15,0.3*0.2","0.4*0.2","0.5*0.2"])
 mdb.add_section(name="钢梁截面1",sec_type="工字钢梁",sec_info=[0,0,0.5,0.5,0.5,0.5,0.7,0.02,0.02,0.02])
 mdb.add_section(name="钢梁截面2",sec_type="箱型钢梁",sec_info=[0,0.15,0.25,0.5,0.25,0.15,0.4,0.15,0.7,0.02,0.02,0.02,0.02],
 rib_info = {"板肋1": [0.1,0.02],"T形肋1":[0.1,0.02,0.02,0.02]},
-rib_place = [(1, 0, 0.1, "板肋1", 2, "默认名称1"),
-(1, 0, 0.2, "板肋1", 2, "默认名称1")])
+rib_place = [(1, 0, 0.1, "板肋1", 2, "默认名称1"),(1, 0, 0.2, "板肋1", 2, "默认名称1")])
 #Returns: 无
 ```  
 ### add_single_section
@@ -1061,7 +1061,7 @@ steel_detail=[0.00014,0.10,0.25,0.0015],loos_detail=[1,1,1])
 #Returns: 无
 ```  
 ### add_tendon_3d
-添加三维钢束
+添加三维钢束，支持覆盖添加
 > 参数:  
 > name:钢束名称  
 > property_name:钢束特性名称  
@@ -1086,7 +1086,7 @@ control_points=[(0,0,-1,0),(10,0,-1,0)],point_insert=(1,1,1),track_group="轨迹
 #Returns: 无
 ```  
 ### add_tendon_2d
-添加三维钢束
+添加三维钢束，支持覆盖添加
 > 参数:  
 > name:钢束名称  
 > property_name:钢束特性名称  
@@ -1154,33 +1154,15 @@ mdb.update_tendon_property(name="钢束1",tendon_type=0,material_name="材料1",
 steel_detail=[0.00014,0.10,0.25,0.0015],loos_detail=(1,1,1))
 #Returns:无
 ```  
-### update_tendon
-更新三维钢束
+### update_tendon_name
+更新钢束名称
 > 参数:  
-> name:钢束名称  
-> new_name:新钢束名称  
-> tendon_2d:是否为2维钢束  
-> property_name:钢束特性名称  
-> group_name:默认钢束组  
-> num:根数  
-> line_type:1-导线点  2-折线点  
-> position_type: 定位方式 1-直线  2-轨迹线  
-> symmetry: 对称点 0-左端点 1-右端点 2-不对称  
-> control_points: 控制点信息二维[(x1,z1,r1),(x2,z2,r2)....] 三维[(x1,y1,z1,r1),(x2,y2,z2,r2)....]  
-> control_points_lateral: 控制点横弯信息[(x1,y1,r1),(x2,y2,r2)....]，无横弯或三维时不必输入  
-> point_insert: 定位方式 (直线时为插入点坐标[x,y,z]  轨迹线时[插入端(1-I 2-J),插入方向(1-ij 2-ji),插入单元id])  
-> tendon_direction:直线钢束X方向向量  默认为x轴即[1,0,0] (轨迹线不用赋值)  
-> rotate_bias:绕钢束旋转偏心X、Y  
-> rotation_angle:绕钢束旋转角度  
-> track_group:轨迹线结构组名  (直线时不用赋值)  
-> projection:直线钢束投影 (默认为true)  
+> name:原钢束名  
+> new_name:新钢束名  
 ```Python
 # 示例代码
 from qtmodel import *
-mdb.update_tendon(name="BB1",property_name="22-15",num=2,position_type=1,
-control_points=[(0,-1,0),(10,-1,0)],point_insert=(0,0,0))
-mdb.update_tendon(name="BB1",property_name="22-15",num=2,position_type=2,
-control_points=[(0,-1,0),(10,-1,0)],point_insert=(1,1,1),track_group="轨迹线结构组1")
+mdb.update_tendon_name("钢束1","钢束2")
 #Returns: 无
 ```  
 ### update_element_component_type
