@@ -89,10 +89,14 @@ class MdbSinkLoad:
             mdb.update_sink_case(name="沉降工况1",sink_groups=["沉降1","沉降2"])
         Returns: 无
         """
+        if isinstance(sink_groups, str):
+            name_list = [sink_groups] if sink_groups else []
+        else:
+            name_list = sink_groups
         payload = {
             "name": name,
             "new_name": new_name,
-            "sink_groups": sink_groups,
+            "sink_groups": name_list,
         }
         return QtServer.send_dict("UPDATE-SINK-CASE", payload)
 

@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Union
 
 from qtmodel.core.data_helper import QtDataHelper
 from qtmodel.core.qt_server import QtServer
@@ -28,7 +28,7 @@ class MdbTendon:
     @staticmethod
     def add_tendon_property(name: str = "", tendon_type: int = 0, material_name: str = "", duct_type: int = 1,
                             steel_type: int = 1, steel_detail: list[float] = None,
-                            loos_detail: Optional[list] = None,
+                            loos_detail: Optional[Union[list,tuple]] = None,
                             slip_info: Optional[tuple[float, float]] = None):
         """
         添加钢束特性
