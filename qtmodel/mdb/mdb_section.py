@@ -1,3 +1,5 @@
+from typing import Union
+
 from qtmodel.core.data_helper import QtDataHelper
 from qtmodel.core.qt_server import QtServer
 
@@ -23,10 +25,10 @@ class MdbSection:
             box_other_right: dict[str, list[float]] = None,
             mat_combine: list[float] = None,
             rib_info: dict[str, list[float]] = None,
-            rib_place:list[tuple[int, int, float, str, int, str]]  = None,
-            loop_segments: list[dict[str,list[list[float]] ]] = None,
-            sec_lines: list[tuple[float, float, float, float, float]]= None,
-            secondary_loop_segments: list[dict[str,list[list[float]] ]] = None,
+            rib_place:Union[list[tuple[int, int, float, str, int, str]],list[list]]  = None,
+            loop_segments: Union[list[dict[str,list[list[float]]]] ,list[dict[str,list[tuple]]]]= None,
+            sec_lines: Union[list[tuple[float, float, float, float, float]],list[list[float]]]= None,
+            secondary_loop_segments: Union[list[dict[str,list[list[float]]]] ,list[dict[str,list[tuple]]]] = None,
             sec_property: list[float] = None,
             bias_type: str = "中心",
             center_type: str = "质心",
