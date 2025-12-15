@@ -1,7 +1,7 @@
 import json
 from qtmodel.core.data_helper import QtDataHelper
 from qtmodel.core.qt_server import QtServer
-from typing import Union, List, Optional
+from typing import  Optional
 
 
 class MdbDynamicLoad:
@@ -317,7 +317,7 @@ class MdbDynamicLoad:
                                          info_z: Optional[list[float]] = None,
                                          weight: float = 0, pin_stiffness: float = 0, pin_yield: float = 0, description: str = "") -> None:
         """
-        todo 更新边界单元特性，输入参数单位默认为N、m
+        更新边界单元特性，输入参数单位默认为N、m
         Args:
             name: 原边界单元特性名称
             new_name: 更新后边界单元特性名称，默认时不修改
@@ -354,7 +354,7 @@ class MdbDynamicLoad:
     def update_boundary_element_link(index: int, property_name: str = "", node_i: int = 1, node_j: int = 2,
                                      beta: float = 0, node_system: int = 0, group_name: str = "默认边界组") -> None:
         """
-        todo 更新边界单元连接
+        更新边界单元连接
         Args:
             index: 根据边界单元连接id选择待更新对象
             property_name: 边界单元特性名
@@ -384,7 +384,7 @@ class MdbDynamicLoad:
                                  tolerance: float = 1e-4, damp_type: int = 0, single_damping: list[float] = None,
                                  group_damping: list[tuple[str, float, float, float]] = None) -> None:
         """
-        todo 更新时程工况
+        更新时程工况
         Args:
             name: 时程工况号
             new_name: 时程工况名
@@ -424,7 +424,7 @@ class MdbDynamicLoad:
     def update_time_history_function(name: str, new_name: str = "", factor: float = 1.0, kind: int = 0,
                                      function_info: list[tuple[float, float]] = None) -> None:
         """
-        todo 更新时程函数
+        更新时程函数
         Args:
             name: 更新前函数名
             new_name: 更新后函数名，默认不更新名称
@@ -448,7 +448,7 @@ class MdbDynamicLoad:
     def update_nodal_dynamic_load(index: int = -1, node_id: int = 1, case_name: str = "", function_name: str = "",
                                   direction: int = 1, factor: float = 1, time: float = 1) -> None:
         """
-        todo 更新节点动力荷载
+        更新节点动力荷载
         Args:
             index: 待修改荷载编号
             node_id: 节点号
@@ -478,7 +478,7 @@ class MdbDynamicLoad:
                              info_y: Optional[tuple[str, float, float]] = None,
                              info_z: Optional[tuple[str, float, float]] = None) -> None:
         """
-        todo 更新地面加速度
+        更新地面加速度
         Args:
             index: 地面加速度编号
             case_name: 时程工况名
@@ -502,7 +502,7 @@ class MdbDynamicLoad:
     @staticmethod
     def remove_time_history_load_case(name: str) -> None:
         """
-        todo 通过时程工况名删除时程工况
+        通过时程工况名删除时程工况
         Args:
             name: 时程工况名
         Example:
@@ -515,7 +515,7 @@ class MdbDynamicLoad:
     @staticmethod
     def remove_time_history_function(ids=None, name: str = "") -> None:
         """
-        todo 通过函数编号删除时程函数
+        通过函数编号删除时程函数
         Args:
             ids: 删除时程函数编号集合支持XtoYbyN形式，默认为空时则按照名称删除
             name: 编号集合为空时则按照名称删除
@@ -534,7 +534,7 @@ class MdbDynamicLoad:
     @staticmethod
     def remove_load_to_mass(name: str = ""):
         """
-        todo 删除荷载转为质量,默认删除所有荷载转质量
+        删除荷载转为质量,默认删除所有荷载转质量
         Args:
             name:荷载工况名
         Example:
@@ -547,7 +547,7 @@ class MdbDynamicLoad:
     @staticmethod
     def remove_nodal_mass(node_id=None):
         """
-        todo 删除节点质量
+        删除节点质量
         Args:
              node_id:节点号,自动忽略不存在的节点质量
         Example:
@@ -562,7 +562,7 @@ class MdbDynamicLoad:
     @staticmethod
     def remove_boundary_element_property(name: str) -> None:
         """
-        todo 删除边界单元特性
+        删除边界单元特性
         Args: 无
         Example:
             mdb.remove_boundary_element_property(name="特性名")
@@ -574,7 +574,7 @@ class MdbDynamicLoad:
     @staticmethod
     def remove_boundary_element_link(ids=None) -> None:
         """
-        todo 删除边界单元连接
+        删除边界单元连接
         Args:
             ids:所删除的边界单元连接号且支持XtoYbyN形式字符串
         Example:
@@ -588,7 +588,7 @@ class MdbDynamicLoad:
     @staticmethod
     def remove_ground_motion(name: str) -> None:
         """
-        todo 删除地面加速度
+        删除地面加速度
         Args:
             name: 工况名称
         Example:
@@ -601,7 +601,7 @@ class MdbDynamicLoad:
     @staticmethod
     def remove_nodal_dynamic_load(ids=None) -> None:
         """
-        todo 删除节点动力荷载
+        删除节点动力荷载
         Args:
             ids:所删除的节点动力荷载编号且支持XtoYbyN形式字符串
         Example:
@@ -673,7 +673,7 @@ class MdbDynamicLoad:
     def update_spectrum_function(name: str = "", new_name: str = "", factor: float = 1.0, kind: int = 0,
                                  function_info: list[tuple[float, float]] = None) -> None:
         """
-        todo 更新反应谱函数
+        更新反应谱函数
         Args:
             name: 函数名称
             new_name: 新函数名称
@@ -699,7 +699,7 @@ class MdbDynamicLoad:
                              info_y: Optional[tuple[str, float]] = None,
                              info_z: Optional[tuple[str, float]] = None) -> None:
         """
-        todo 更新反应谱工况
+        更新反应谱工况
         Args:
             name: 工况名称
             new_name: 新工况名称
@@ -726,7 +726,7 @@ class MdbDynamicLoad:
     @staticmethod
     def remove_spectrum_case(name: str) -> None:
         """
-        todo 删除反应谱工况
+        删除反应谱工况
         Args:
             name: 工况名称
         Example:
@@ -739,7 +739,7 @@ class MdbDynamicLoad:
     @staticmethod
     def remove_spectrum_function(ids=None, name: str = "") -> None:
         """
-        todo 删除反应谱函数
+        删除反应谱函数
         Args:
             ids: 删除反应谱工况函数编号集合支持XtoYbyN形式，默认为空时则按照名称删除
             name: 编号集合为空时则按照名称删除

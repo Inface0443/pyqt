@@ -1,5 +1,3 @@
-from akshare import InvalidParameterError
-
 from qtmodel.core.qt_server import QtServer
 from typing import Union, List
 from qtmodel.core.data_helper import QtDataHelper
@@ -304,7 +302,7 @@ class MdbTemperatureLoad:
         Returns: 无
         """
         if parameters is None:
-            raise InvalidParameterError("输入参数有误，请核查制造偏差参数")
+            raise ValueError("输入参数有误，请核查制造偏差参数")
         payload = {
             "name": name,
             "parameters": parameters,

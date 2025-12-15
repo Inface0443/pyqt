@@ -1,7 +1,6 @@
-import json
 from qtmodel.core.qt_server import QtServer
 from qtmodel.core.data_helper import QtDataHelper
-from typing import Union
+from typing import Union, List, Tuple
 
 
 class MdbBoundary:
@@ -12,7 +11,8 @@ class MdbBoundary:
     # region 边界操作
     @staticmethod
     def add_effective_width(element_ids, factor_i: float, factor_j: float, dz_i: float, dz_j: float,
-                            group_name: str = "默认边界组"):
+                            group_name: str = "默认边界组",factor_i_z: float = 0,factor_j_z: float = 0,
+                            dy_i: float = 0, dy_j: float = 0,factor_i_ax: float = 0,factor_j_ax: float = 0):
         """
         添加有效宽度系数
         Args:
@@ -21,22 +21,34 @@ class MdbBoundary:
            factor_j:J端截面Iy折减系数
            dz_i:I端截面形心变换量
            dz_j:J端截面形心变换量
+           factor_i_z:J端截面形心变换量
+           factor_j_z:J端截面形心变换量
+           dy_i:J端截面形心变换量
+           dy_j:J端截面形心变换量
+           factor_i_ax:J端截面形心变换量
+           factor_j_ax:J端截面形心变换量
            group_name:边界组名
         Example:
            mdb.add_effective_width(element_ids=[1,2,3,4],factor_i=0.1,factor_j=0.1,dz_i=0.1,dz_j=0.1)
            mdb.add_effective_width(element_ids="1to4",factor_i=0.1,factor_j=0.1,dz_i=0.1,dz_j=0.1)
         Returns: 无
         """
-        try:
-            if isinstance(element_ids, list):
-                id_str = QtDataHelper.parse_int_list_to_str(element_ids)
-            else:
-                id_str = str(element_ids)
-            s = "*EFCFACTOR\r\n" + f"{id_str},{factor_i},{factor_j},{dz_i},{dz_j},{group_name}\r\n"
+        payload = {
+            "element_ids": QtDataHelper.parse_ids_to_array(element_ids),
+            "factor_i": float(factor_i),
+            "factor_j": float(factor_j),
+            "dz_i": float(dz_i),
+            "dz_j": float(dz_j),
+            "group_name": group_name,
 
-            QtServer.send_command(s, "QDAT")
-        except Exception as ex:
-            raise Exception(ex)
+            "factor_i_z": float(factor_i_z),
+            "factor_j_z": float(factor_j_z),
+            "dy_i": float(dy_i),
+            "dy_j": float(dy_j),
+            "factor_i_ax": float(factor_i_ax),
+            "factor_j_ax": float(factor_j_ax),
+        }
+        return QtServer.send_dict("ADD-EFFECTIVE-WIDTH", payload)
 
     @staticmethod
     def add_boundary_group(name: str = ""):
@@ -48,32 +60,27 @@ class MdbBoundary:
             mdb.add_boundary_group(name="边界组1")
         Returns: 无
         """
-        try:
-            s = "*BNDRGROUP\r\n" + f"{name}\r\n"
-
-            QtServer.send_command(s, "QDAT")
-        except Exception as ex:
-            raise Exception(ex)
+        payload = {
+            "name": name,
+        }
+        return QtServer.send_dict("ADD-BOUNDARY-GROUP", payload)
 
     @staticmethod
     def add_general_elastic_support_property(name: str = "", data_matrix: list[float] = None):
         """
-        添加一般弹性支承特性
+        添加一般弹性支承特性，默认单位为N,m
         Args:
-            name:一般弹性支承特性名称
+            name:一般弹性支承特性名称，支持覆盖添加
             data_matrix:一般弹性支承刚度矩阵(数据需按列输入至列表,共计21个参数)
         Example:
             mdb.add_general_elastic_support_property(name = "特性1", data_matrix=[i for i in range(1,22)])
         Returns: 无
         """
-        if data_matrix is None or len(data_matrix) != 21:
-            raise Exception("添加一般弹性支承失败,矩阵参数有误(数据需按列输入至列表)")
-        try:
-            s = "*GSPRTYPE\r\n" + f"{name}," + ",".join(f"{x:g}" for x in data_matrix) + "\r\n"
-
-            QtServer.send_command(s, "QDAT")
-        except Exception as ex:
-            raise Exception(ex)
+        payload = {
+            "name": name,
+            "data_matrix": data_matrix,
+        }
+        return QtServer.send_dict("ADD-GENERAL-ELASTIC-SUPPORT-PROPERTY", payload)
 
     @staticmethod
     def add_general_elastic_support(node_id=None, property_name: str = "", group_name: str = "默认边界组"):
@@ -87,16 +94,12 @@ class MdbBoundary:
             mdb.add_general_elastic_support(node_id=1, property_name = "特性1",group_name="边界组1")
         Returns: 无
         """
-        try:
-            if isinstance(node_id, list):
-                id_str = QtDataHelper.parse_int_list_to_str(node_id)
-            else:
-                id_str = str(node_id)
-            s = "*GSPRING\r\n" + f"{id_str},{property_name},{group_name}\r\n"
-
-            QtServer.send_command(s, "QDAT")
-        except Exception as ex:
-            raise Exception(ex)
+        payload = {
+            "node_id": QtDataHelper.parse_ids_to_array(node_id),
+            "property_name": property_name,
+            "group_name": group_name,
+        }
+        return QtServer.send_dict("ADD-GENERAL-ELASTIC-SUPPORT", payload)
 
     @staticmethod
     def add_general_support(node_id: Union[int, str, list[int]] = 1, boundary_info: Union[list[bool], list[int]] = None,
@@ -113,19 +116,15 @@ class MdbBoundary:
             mdb.add_general_support(node_id="1to100", boundary_info=[1,1,1,0,0,0])
         Returns: 无
         """
-        if boundary_info is None or len(boundary_info) != 6:
-            raise ValueError("操作错误，要求输入一般支承列表长度为6")
-        # 若是数值列表（int/float），先按阈值转换为 bool
-        if all(isinstance(x, (int, float, bool)) for x in boundary_info) and \
-                any(isinstance(x, (int, float)) and not isinstance(x, bool) for x in boundary_info):
-            boundary_info = [bool(x > 0.5) for x in boundary_info]
-        if isinstance(node_id, list):
-            id_str = QtDataHelper.parse_int_list_to_str(node_id)
-        else:
-            id_str = str(node_id)
-        s = "*GSUPPORT\r\n" + f"{id_str}," + "".join(str(int(x)) for x in boundary_info) + f",{group_name}\r\n"
-
-        QtServer.send_command(s, "QDAT")
+        if boundary_info is None:
+            boundary_info = [1, 1, 1, 0, 0, 0]
+        boundary_info_norm = [True if x>0.5 else False for x in boundary_info]
+        payload = {
+            "node_id": QtDataHelper.parse_ids_to_array(node_id),
+            "boundary_info": boundary_info_norm,
+            "group_name": group_name,
+        }
+        return QtServer.send_dict("ADD-GENERAL-SUPPORT", payload)
 
 
     @staticmethod
@@ -144,19 +143,16 @@ class MdbBoundary:
             mdb.add_elastic_support(node_id=1,support_type=3,boundary_info=[1,1e6])
         Returns: 无
         """
-        if isinstance(node_id, list):
-            id_str = QtDataHelper.parse_int_list_to_str(node_id)
-        else:
-            id_str = str(node_id)
-        s = "*ESUPPORT\r\n" + f"{id_str},"
-        if support_type == 1 and (boundary_info is None or len(boundary_info) != 6):
-            raise Exception("操作错误，要求输入弹性支承边界信息长度为6")
-        elif support_type in (2, 3) and (boundary_info is None or len(boundary_info) != 2):
-            raise Exception("操作错误，要求输入弹性支承边界信息长度为2")
-        else:
-            s += f"{support_type},{group_name}," + ",".join(f"{x:g}" for x in boundary_info) + "\r\n"
-
-        QtServer.send_command(s, "QDAT")
+        if boundary_info is None:
+            boundary_info = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+        boundary_info = [float(x) for x in boundary_info]
+        payload = {
+            "node_id": QtDataHelper.parse_ids_to_array(node_id),
+            "support_type": support_type,
+            "boundary_info": boundary_info,
+            "group_name": group_name,
+        }
+        return QtServer.send_dict("ADD-ELASTIC-SUPPORT", payload)
 
 
     @staticmethod
@@ -181,8 +177,11 @@ class MdbBoundary:
             mdb.add_elastic_link(link_type=3,start_id=1,end_id=2,kx=1e6)
         Returns: 无
         """
-        params = {
-            "version": QtServer.QT_VERSION,  # 版本控制
+        if boundary_info is None:
+            boundary_info = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+        boundary_info = [float(x) for x in boundary_info]
+
+        payload = {
             "index": index,
             "link_type": link_type,
             "start_id": start_id,
@@ -193,41 +192,37 @@ class MdbBoundary:
             "dis_ratio": dis_ratio,
             "kx": kx,
         }
-        json_string = json.dumps(params, indent=2)
-        QtServer.send_command(header="ADD-ELASTIC-LINK", command=json_string)
-
+        return QtServer.send_dict("ADD-ELASTIC-LINK", payload)
 
     @staticmethod
-    def add_master_slave_links(node_ids: list[tuple[int, int]] = None, boundary_info: list[bool] = None,
+    def add_master_slave_links(node_ids: List[Tuple[int, int]] = None,
+                               boundary_info: List[bool] = None,
                                group_name: str = "默认边界组"):
         """
-        批量添加主从约束，不指定编号默认为最大编号加1
+        添加多个主节点对应的主从约束
         Args:
-             node_ids:主节点号和从节点号，主节点号位于首位
-             boundary_info:边界信息 [X,Y,Z,Rx,Ry,Rz] ture-固定 false-自由
-             group_name:边界组名
+            node_ids: [(masterNodeId, slaveNodeId), ...]
+            boundary_info: 约束自由度列表 [Ux, Uy, Uz, Rx, Ry, Rz]，True=约束/耦合，False=不约束
+            group_name: 边界组名
         Example:
-            mdb.add_master_slave_links(node_ids=[(1,2),(1,3),(4,5),(4,6)],boundary_info=[True,True,True,False,False,False])
-        Returns: 无
+            mdb.add_master_slave_links(node_ids=[(1,2),(3,4)], boundary_info=[True,True,True,False,False,False])
         """
-        s = "*MSLINK\r\n"
-        # 按照主节点分组
-        master_slave_dict = {}
-        for master_id, slave_id in node_ids:
-            if master_id not in master_slave_dict:
-                master_slave_dict[master_id] = []
-            master_slave_dict[master_id].append(slave_id)
-        for master_id, slave_ids in master_slave_dict.items():
-            ids_str = QtDataHelper.parse_int_list_to_str(slave_ids)
-            s += f"{master_id},{ids_str}," + "".join(str(int(x)) for x in boundary_info) + f",{group_name}\r\n"
-
-        QtServer.send_command(s, "QDAT")
+        if boundary_info is None or len(boundary_info) != 6:
+            raise ValueError("约束自由度列表长度需为6")
+        if node_ids is None:
+            node_ids = []
+        payload = {
+            "node_ids": node_ids,
+            "boundary_info": boundary_info,
+            "group_name": group_name,
+        }
+        return QtServer.send_dict("ADD-MASTER-SLAVE-LINKS", payload)
 
     @staticmethod
-    def add_master_slave_link(master_id: int, slave_id=None,
+    def add_master_slave_link(master_id: int, slave_id: Union[int, str, List[int]] = None,
                               boundary_info: list[bool] = None, group_name: str = "默认边界组"):
         """
-        添加主从约束
+        添加单个主节点对应的主从约束
         Args:
              master_id:主节点号
              slave_id:从节点号，支持整数或整数型列表且支持XtoYbyN形式字符串
@@ -238,14 +233,13 @@ class MdbBoundary:
             mdb.add_master_slave_link(master_id=1,slave_id="2to3",boundary_info=[True,True,True,False,False,False])
         Returns: 无
         """
-        if isinstance(slave_id, list):
-            id_str = QtDataHelper.parse_int_list_to_str(slave_id)
-        else:
-            id_str = str(slave_id)
-        s = "*MSLINK\r\n" + f"{master_id},{id_str}," + "".join(
-            str(int(x)) for x in boundary_info) + f",{group_name}\r\n"
-
-        QtServer.send_command(s, "QDAT")
+        payload = {
+            "master_id": int(master_id),
+            "slave_id": QtDataHelper.parse_ids_to_array(slave_id),
+            "boundary_info": boundary_info,
+            "group_name": group_name,
+        }
+        return QtServer.send_dict("ADD-MASTER-SLAVE-LINK", payload)
 
     @staticmethod
     def add_beam_constraint(beam_id: int, info_i: list[bool] = None, info_j: list[bool] = None,
@@ -261,14 +255,18 @@ class MdbBoundary:
             mdb.add_beam_constraint(beam_id=2,info_i=[True,True,True,False,False,False],info_j=[True,True,True,False,False,False])
         Returns: 无
         """
-        if info_i is None or len(info_i) != 6:
-            raise Exception("操作错误，要求输入I端约束列表长度为6")
-        if info_j is None or len(info_j) != 6:
-            raise Exception("操作错误，要求输入J端约束列表长度为6")
-        s = "*RESTRAINTS\r\n" + f"{beam_id}," + "".join(str(int(x)) for x in info_i) + "," + "".join(
-            str(int(y)) for y in info_j) + f",{group_name}\r\n"
+        if info_i is None:
+            info_i = [False, False, False, False, False, False]
+        if info_j is None:
+            info_j = [False, False, False, False, False, False]
 
-        QtServer.send_command(s, "QDAT")
+        payload = {
+            "beam_id": int(beam_id),
+            "info_i": list(info_i),
+            "info_j": list(info_j),
+            "group_name": group_name,
+        }
+        return QtServer.send_dict("ADD-BEAM-CONSTRAINT", payload)
 
     @staticmethod
     def add_constraint_equation(name: str, sec_node: int, sec_dof: int = 1,
@@ -285,37 +283,100 @@ class MdbBoundary:
             mdb.add_beam_constraint(beam_id=2,info_i=[True,True,True,False,False,False],info_j=[True,True,True,False,False,False])
         Returns: 无
         """
-        s = "*EQUATION\r\n" + f"{name},{group_name},{sec_node},{sec_dof}," + ",".join(
-            f"{tuples}" for tuples in master_info) + "\r\n"
+        """
+           约束方程：sec_node 的 sec_dof = Σ( master_node 的 master_dof * factor )
+           master_info: [(master_node_id, master_dof, factor), ...]
+           """
+        if master_info is None:
+            master_info = []
+        # 建议转成 list[list]，JSON 更直观、C#更好解析
+        master_list = [[int(n), int(d), float(k)] for (n, d, k) in master_info]
 
-        QtServer.send_command(s, "QDAT")
-
+        payload = {
+            "name": name,
+            "sec_node": int(sec_node),
+            "sec_dof": int(sec_dof),
+            "master_info": master_list,
+            "group_name": group_name,
+        }
+        return QtServer.send_dict("ADD-CONSTRAINT-EQUATION", payload)
 
     @staticmethod
-    def add_node_axis(node_id: int, input_type: int = 1, coord_info: list = None):
+    def add_node_axis(node_id: int, input_type: int = 1, coord_info: list[list[float]] = None,angle_info:tuple[float,float,float]=None):
         """
         添加节点坐标
         Args:
              node_id:节点号
              input_type:输入方式 1-角度 2-三点  3-向量
-             coord_info:局部坐标信息 -List<float>(角)  -List<List<float>>(三点 or 向量)
+             coord_info:局部坐标信息  -List<List<float>>(三点 or 向量)
+             angle_info:角度信息
         Example:
-            mdb.add_node_axis(input_type=1,node_id=1,coord_info=[45,45,45])
+            mdb.add_node_axis(input_type=1,node_id=1,angle_info=(45,45,45))
             mdb.add_node_axis(input_type=2,node_id=1,coord_info=[[0,0,1],[0,1,0],[1,0,0]])
             mdb.add_node_axis(input_type=3,node_id=1,coord_info=[[0,0,1],[0,1,0]])
         Returns: 无
         """
-        s = "*LOCALAXIS\r\n" + f"{node_id},"
         if coord_info is None:
-            raise ValueError("操作错误，输入坐标系信息不能为空")
-        tran_info = coord_info
-        if input_type == 1:
-            tran_info = QtDataHelper.convert_angle_to_vectors(coord_info)
-        elif input_type == 2:
-            tran_info = QtDataHelper.convert_three_points_to_vectors(coord_info)
-        s += f"V1({','.join(f'{axis:g}' for axis in tran_info[0])}),V2({','.join(f'{axis:g}' for axis in tran_info[1])})\r\n"
-        QtServer.send_command(s, "QDAT")
+            coord_info = []
 
+        payload = {
+            "node_id": int(node_id),
+            "input_type": int(input_type),
+            "coord_info": coord_info,
+            "angle_info": angle_info,
+        }
+        return QtServer.send_dict("ADD-NODE-AXIS", payload)
+
+    @staticmethod
+    def update_boundary_group(name: str, new_name: str):
+        """
+        更改边界组名
+        Args:
+            name:边界组名
+            new_name:新边界组名
+        Example:
+            mdb.update_boundary_group("旧边界组","新边界组")
+        Returns: 无
+        """
+        payload = {
+            "name": name,
+            "new_name": new_name,
+        }
+        return QtServer.send_dict("UPDATE-BOUNDARY-GROUP", payload)
+
+    @staticmethod
+    def update_node_axis_id(node_id: int, new_id: int):
+        """
+        更新节点局部坐标系编号（仅改编号，不改坐标系内容）
+        Args:
+            node_id: 原节点号（被更新的节点）
+            new_id:  新节点号（更新后的节点号）
+        Example:
+            mdb.update_node_axis_id(node_id=10, new_id=20)
+        Returns: 无
+        """
+        payload = {
+            "node_id": int(node_id),
+            "new_id": int(new_id),
+        }
+        return QtServer.send_dict("UPDATE-NODE-AXIS-ID", payload)
+
+    @staticmethod
+    def update_general_elastic_support_property_name(name: str, new_name: str):
+        """
+        更新一般弹性支承特性名称（仅改名）
+        Args:
+            name: 原特性名
+            new_name: 新特性名
+        Example:
+            mdb.update_general_elastic_support_property_name(name="特性1", new_name="特性2")
+        Returns: 无
+        """
+        payload = {
+            "name": name,
+            "new_name": new_name,
+        }
+        return QtServer.send_dict("UPDATE-GENERAL-ELASTIC-SUPPORT-PROPERTY-NAME", payload)
 
     @staticmethod
     def remove_effective_width(element_ids, group_name: str = "默认边界组"):
@@ -335,22 +396,7 @@ class MdbBoundary:
         }
         return QtServer.send_dict("REMOVE-EFFECTIVE-WIDTH", payload)
 
-    @staticmethod
-    def update_boundary_group(name: str, new_name: str):
-        """
-        更改边界组名
-        Args:
-            name:边界组名
-            new_name:新边界组名
-        Example:
-            mdb.update_boundary_group("旧边界组","新边界组")
-        Returns: 无
-        """
-        payload = {
-            "name": name,
-            "new_name": new_name,
-        }
-        return QtServer.send_dict("UPDATE-BOUNDARY-GROUP", payload)
+
 
     @staticmethod
     def remove_boundary_group(name: str = ""):
@@ -401,25 +447,6 @@ class MdbBoundary:
         return QtServer.send_dict("REMOVE-BOUNDARY", payload)
 
     @staticmethod
-    def update_general_elastic_support_property(name: str = "", new_name: str = "", data_matrix: list[float] = None):
-        """
-        添加一般弹性支承特性
-        Args:
-            name:原一般弹性支承特性名称
-            new_name:现一般弹性支承特性名称
-            data_matrix:一般弹性支承刚度矩阵(数据需按列输入至列表,共计21个参数)
-        Example:
-            mdb.update_general_elastic_support_property(name = "特性1",new_name="特性2", data_matrix=[i for i in range(1,22)])
-        Returns: 无
-        """
-        payload = {
-            "name": name,
-            "new_name": new_name,
-            "data_matrix": data_matrix,
-        }
-        return QtServer.send_dict("UPDATE-GENERAL-ELASTIC-SUPPORT-PROPERTY", payload)
-
-    @staticmethod
     def remove_general_elastic_support_property(name: str = ""):
         """
         添加一般弹性支承特性
@@ -433,34 +460,11 @@ class MdbBoundary:
         return QtServer.send_dict("REMOVE-GENERAL-ELASTIC-SUPPORT-PROPERTY", payload)
 
     @staticmethod
-    def update_node_axis(node_id: int, new_id: int = 1, input_type: int = 1, coord_info: list = None):
+    def remove_node_axis(node_id: int=-1):
         """
-        添加节点坐标
+        删除节点局部坐标
         Args:
-            node_id:节点号
-            new_id:新节点号
-            input_type:输入方式 1-角度 2-三点  3-向量
-            coord_info:局部坐标信息 -List<float>(角)  -List<List<float>>(三点 or 向量)
-        Example:
-            mdb.update_node_axis(node_id=1,new_id=1,input_type=1,coord_info=[45,45,45])
-            mdb.update_node_axis(node_id=2,new_id=2,input_type=2,coord_info=[[0,0,1],[0,1,0],[1,0,0]])
-            mdb.update_node_axis(node_id=3,new_id=3,input_type=3,coord_info=[[0,0,1],[0,1,0]])
-        Returns: 无
-        """
-        payload = {
-            "node_id": node_id,
-            "new_id": new_id,
-            "input_type": input_type,
-            "coord_info": coord_info,
-        }
-        return QtServer.send_dict("UPDATE-NODE-AXIS", payload)
-
-    @staticmethod
-    def remove_node_axis(node_id: int):
-        """
-        添加节点坐标
-        Args:
-             node_id:节点号
+             node_id:节点号，不为正数时则删除所有节点局部坐标
         Example:
             mdb.remove_node_axis(node_id=1)
         Returns: 无
