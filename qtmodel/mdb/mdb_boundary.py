@@ -206,6 +206,7 @@ class MdbBoundary:
             group_name: 边界组名
         Example:
             mdb.add_master_slave_links(node_ids=[(1,2),(3,4)], boundary_info=[True,True,True,False,False,False])
+        Returns: 无
         """
         if boundary_info is None or len(boundary_info) != 6:
             raise ValueError("约束自由度列表长度需为6")
@@ -259,7 +260,6 @@ class MdbBoundary:
             info_i = [False, False, False, False, False, False]
         if info_j is None:
             info_j = [False, False, False, False, False, False]
-
         payload = {
             "beam_id": int(beam_id),
             "info_i": list(info_i),
@@ -283,15 +283,9 @@ class MdbBoundary:
             mdb.add_beam_constraint(beam_id=2,info_i=[True,True,True,False,False,False],info_j=[True,True,True,False,False,False])
         Returns: 无
         """
-        """
-           约束方程：sec_node 的 sec_dof = Σ( master_node 的 master_dof * factor )
-           master_info: [(master_node_id, master_dof, factor), ...]
-           """
         if master_info is None:
             master_info = []
-        # 建议转成 list[list]，JSON 更直观、C#更好解析
         master_list = [[int(n), int(d), float(k)] for (n, d, k) in master_info]
-
         payload = {
             "name": name,
             "sec_node": int(sec_node),

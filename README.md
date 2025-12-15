@@ -1,4 +1,4 @@
-> 最新qtmodel版本 V2.1.2 - 2025-12-13 
+> 最新qtmodel版本 V2.1.2 - 2025-12-15 
 > 最新qdat数据版本 V1.2.4 
 > pip install --upgrade qtmodel -i https://pypi.org/simple
 - 新增更新结构组接口 
@@ -765,6 +765,12 @@ mdb.remove_tapper_section_group("变截面组1")
 > factor_j:J端截面Iy折减系数  
 > dz_i:I端截面形心变换量  
 > dz_j:J端截面形心变换量  
+> factor_i_z:J端截面形心变换量  
+> factor_j_z:J端截面形心变换量  
+> dy_i:J端截面形心变换量  
+> dy_j:J端截面形心变换量  
+> factor_i_ax:J端截面形心变换量  
+> factor_j_ax:J端截面形心变换量  
 > group_name:边界组名  
 ```Python
 # 示例代码
@@ -784,9 +790,9 @@ mdb.add_boundary_group(name="边界组1")
 #Returns: 无
 ```  
 ### add_general_elastic_support_property
-添加一般弹性支承特性
+添加一般弹性支承特性，默认单位为N,m
 > 参数:  
-> name:一般弹性支承特性名称  
+> name:一般弹性支承特性名称，支持覆盖添加  
 > data_matrix:一般弹性支承刚度矩阵(数据需按列输入至列表,共计21个参数)  
 ```Python
 # 示例代码
@@ -856,19 +862,19 @@ mdb.add_elastic_link(link_type=3,start_id=1,end_id=2,kx=1e6)
 #Returns: 无
 ```  
 ### add_master_slave_links
-批量添加主从约束，不指定编号默认为最大编号加1
+添加多个主节点对应的主从约束
 > 参数:  
-> node_ids:主节点号和从节点号，主节点号位于首位  
-> boundary_info:边界信息 [X,Y,Z,Rx,Ry,Rz] ture-固定 false-自由  
-> group_name:边界组名  
+> node_ids: [(masterNodeId, slaveNodeId), ...]  
+> boundary_info: 约束自由度列表 [Ux, Uy, Uz, Rx, Ry, Rz]，True=约束/耦合，False=不约束  
+> group_name: 边界组名  
 ```Python
 # 示例代码
 from qtmodel import *
-mdb.add_master_slave_links(node_ids=[(1,2),(1,3),(4,5),(4,6)],boundary_info=[True,True,True,False,False,False])
+mdb.add_master_slave_links(node_ids=[(1,2),(3,4)], boundary_info=[True,True,True,False,False,False])
 #Returns: 无
 ```  
 ### add_master_slave_link
-添加主从约束
+添加单个主节点对应的主从约束
 > 参数:  
 > master_id:主节点号  
 > slave_id:从节点号，支持整数或整数型列表且支持XtoYbyN形式字符串  
@@ -913,13 +919,47 @@ mdb.add_beam_constraint(beam_id=2,info_i=[True,True,True,False,False,False],info
 > 参数:  
 > node_id:节点号  
 > input_type:输入方式 1-角度 2-三点  3-向量  
-> coord_info:局部坐标信息 -List<float>(角)  -List<List<float>>(三点 or 向量)  
+> coord_info:局部坐标信息  -List<List<float>>(三点 or 向量)  
+> angle_info:角度信息  
 ```Python
 # 示例代码
 from qtmodel import *
-mdb.add_node_axis(input_type=1,node_id=1,coord_info=[45,45,45])
+mdb.add_node_axis(input_type=1,node_id=1,angle_info=(45,45,45))
 mdb.add_node_axis(input_type=2,node_id=1,coord_info=[[0,0,1],[0,1,0],[1,0,0]])
 mdb.add_node_axis(input_type=3,node_id=1,coord_info=[[0,0,1],[0,1,0]])
+#Returns: 无
+```  
+### update_boundary_group
+更改边界组名
+> 参数:  
+> name:边界组名  
+> new_name:新边界组名  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.update_boundary_group("旧边界组","新边界组")
+#Returns: 无
+```  
+### update_node_axis_id
+更新节点局部坐标系编号（仅改编号，不改坐标系内容）
+> 参数:  
+> node_id: 原节点号（被更新的节点）  
+> new_id:  新节点号（更新后的节点号）  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.update_node_axis_id(node_id=10, new_id=20)
+#Returns: 无
+```  
+### update_general_elastic_support_property_name
+更新一般弹性支承特性名称（仅改名）
+> 参数:  
+> name: 原特性名  
+> new_name: 新特性名  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.update_general_elastic_support_property_name(name="特性1", new_name="特性2")
 #Returns: 无
 ```  
 ### remove_effective_width
@@ -932,17 +972,6 @@ mdb.add_node_axis(input_type=3,node_id=1,coord_info=[[0,0,1],[0,1,0]])
 from qtmodel import *
 mdb.remove_effective_width(element_ids=[1,2,3,4],group_name="边界组1")
 mdb.remove_effective_width(element_ids="1to4",group_name="边界组1")
-#Returns: 无
-```  
-### update_boundary_group
-更改边界组名
-> 参数:  
-> name:边界组名  
-> new_name:新边界组名  
-```Python
-# 示例代码
-from qtmodel import *
-mdb.update_boundary_group("旧边界组","新边界组")
 #Returns: 无
 ```  
 ### remove_boundary_group
@@ -979,18 +1008,6 @@ mdb.remove_boundary(remove_id=11, kind="一般弹性连接",group_name="边界�
 mdb.remove_boundary(remove_id=12, kind="约束方程",group_name="边界组1", extra_name="约束方程名")
 #Returns: 无
 ```  
-### update_general_elastic_support_property
-添加一般弹性支承特性
-> 参数:  
-> name:原一般弹性支承特性名称  
-> new_name:现一般弹性支承特性名称  
-> data_matrix:一般弹性支承刚度矩阵(数据需按列输入至列表,共计21个参数)  
-```Python
-# 示例代码
-from qtmodel import *
-mdb.update_general_elastic_support_property(name = "特性1",new_name="特性2", data_matrix=[i for i in range(1,22)])
-#Returns: 无
-```  
 ### remove_general_elastic_support_property
 添加一般弹性支承特性
 > 参数:  
@@ -1001,25 +1018,10 @@ from qtmodel import *
 mdb.remove_general_elastic_support_property(name = "特性1")
 #Returns: 无
 ```  
-### update_node_axis
-添加节点坐标
-> 参数:  
-> node_id:节点号  
-> new_id:新节点号  
-> input_type:输入方式 1-角度 2-三点  3-向量  
-> coord_info:局部坐标信息 -List<float>(角)  -List<List<float>>(三点 or 向量)  
-```Python
-# 示例代码
-from qtmodel import *
-mdb.update_node_axis(node_id=1,new_id=1,input_type=1,coord_info=[45,45,45])
-mdb.update_node_axis(node_id=2,new_id=2,input_type=2,coord_info=[[0,0,1],[0,1,0],[1,0,0]])
-mdb.update_node_axis(node_id=3,new_id=3,input_type=3,coord_info=[[0,0,1],[0,1,0]])
-#Returns: 无
-```  
 ### remove_node_axis
-添加节点坐标
+删除节点局部坐标
 > 参数:  
-> node_id:节点号  
+> node_id:节点号，不为正数时则删除所有节点局部坐标  
 ```Python
 # 示例代码
 from qtmodel import *
@@ -1980,7 +1982,7 @@ mdb.add_nodal_mass(node_id=1,mass_info=(100,0,0,0))
 #Returns: 无
 ```  
 ### update_boundary_element_property
-todo 更新边界单元特性，输入参数单位默认为N、m
+更新边界单元特性，输入参数单位默认为N、m
 > 参数:  
 > name: 原边界单元特性名称  
 > new_name: 更新后边界单元特性名称，默认时不修改  
@@ -1999,7 +2001,7 @@ mdb.update_boundary_element_property(name="old_prop",kind="粘滞阻尼器",info
 #Returns: 无
 ```  
 ### update_boundary_element_link
-todo 更新边界单元连接
+更新边界单元连接
 > 参数:  
 > index: 根据边界单元连接id选择待更新对象  
 > property_name: 边界单元特性名  
@@ -2015,7 +2017,7 @@ mdb.update_boundary_element_link(index=1,property_name="边界单元特性名",n
 #Returns: 无
 ```  
 ### update_time_history_case
-todo 更新时程工况
+更新时程工况
 > 参数:  
 > name: 时程工况号  
 > new_name: 时程工况名  
@@ -2038,7 +2040,7 @@ group_damping=[("concrete", 0.1, 0.5, 0.05), ("steel", 0.1, 0.5, 0.02)])
 #Returns: 无
 ```  
 ### update_time_history_function
-todo 更新时程函数
+更新时程函数
 > 参数:  
 > name: 更新前函数名  
 > new_name: 更新后函数名，默认不更新名称  
@@ -2052,7 +2054,7 @@ mdb.update_time_history_function(name="old_func",factor=1.5,kind=1,function_info
 #Returns: 无
 ```  
 ### update_nodal_dynamic_load
-todo 更新节点动力荷载
+更新节点动力荷载
 > 参数:  
 > index: 待修改荷载编号  
 > node_id: 节点号  
@@ -2068,7 +2070,7 @@ mdb.update_nodal_dynamic_load(index=1,node_id=101,case_name="Earthquake_X",funct
 #Returns: 无
 ```  
 ### update_ground_motion
-todo 更新地面加速度
+更新地面加速度
 > 参数:  
 > index: 地面加速度编号  
 > case_name: 时程工况名  
@@ -2083,7 +2085,7 @@ info_x=("EQ_X_func", 1.0, 0.0),info_y=("EQ_Y_func", 0.8, 0.0),info_z=("EQ_Z_func
 #Returns: 无
 ```  
 ### remove_time_history_load_case
-todo 通过时程工况名删除时程工况
+通过时程工况名删除时程工况
 > 参数:  
 > name: 时程工况名  
 ```Python
@@ -2093,7 +2095,7 @@ mdb.remove_time_history_load_case("工况名")
 #Returns: 无
 ```  
 ### remove_time_history_function
-todo 通过函数编号删除时程函数
+通过函数编号删除时程函数
 > 参数:  
 > ids: 删除时程函数编号集合支持XtoYbyN形式，默认为空时则按照名称删除  
 > name: 编号集合为空时则按照名称删除  
@@ -2106,7 +2108,7 @@ mdb.remove_time_history_function(name="函数名")
 #Returns: 无
 ```  
 ### remove_load_to_mass
-todo 删除荷载转为质量,默认删除所有荷载转质量
+删除荷载转为质量,默认删除所有荷载转质量
 > 参数:  
 > name:荷载工况名  
 ```Python
@@ -2116,7 +2118,7 @@ mdb.remove_load_to_mass(name="荷载工况")
 #Returns: 无
 ```  
 ### remove_nodal_mass
-todo 删除节点质量
+删除节点质量
 > 参数:  
 > node_id:节点号,自动忽略不存在的节点质量  
 ```Python
@@ -2128,7 +2130,7 @@ mdb.remove_nodal_mass(node_id="1to5")
 #Returns: 无
 ```  
 ### remove_boundary_element_property
-todo 删除边界单元特性
+删除边界单元特性
 > 参数:  
 ```Python
 # 示例代码
@@ -2137,7 +2139,7 @@ mdb.remove_boundary_element_property(name="特性名")
 #Returns: 无
 ```  
 ### remove_boundary_element_link
-todo 删除边界单元连接
+删除边界单元连接
 > 参数:  
 > ids:所删除的边界单元连接号且支持XtoYbyN形式字符串  
 ```Python
@@ -2148,7 +2150,7 @@ mdb.remove_boundary_element_link(ids=[1,2,3,4])
 #Returns: 无
 ```  
 ### remove_ground_motion
-todo 删除地面加速度
+删除地面加速度
 > 参数:  
 > name: 工况名称  
 ```Python
@@ -2158,7 +2160,7 @@ mdb.remove_ground_motion("时程工况名")
 #Returns: 无
 ```  
 ### remove_nodal_dynamic_load
-todo 删除节点动力荷载
+删除节点动力荷载
 > 参数:  
 > ids:所删除的节点动力荷载编号且支持XtoYbyN形式字符串  
 ```Python
@@ -2198,7 +2200,7 @@ mdb.add_spectrum_case(name="反应谱工况",info_x=("函数1",1.0))
 #Returns: 无
 ```  
 ### update_spectrum_function
-todo 更新反应谱函数
+更新反应谱函数
 > 参数:  
 > name: 函数名称  
 > new_name: 新函数名称  
@@ -2212,7 +2214,7 @@ mdb.update_spectrum_function( name="函数名称", factor=1.2, kind=1, function_
 #Returns: 无
 ```  
 ### update_spectrum_case
-todo 更新反应谱工况
+更新反应谱工况
 > 参数:  
 > name: 工况名称  
 > new_name: 新工况名称  
@@ -2228,7 +2230,7 @@ mdb.update_spectrum_case(name="RS1",kind=1,info_x=("函数X", 1.0),info_y=("函�
 #Returns: 无
 ```  
 ### remove_spectrum_case
-todo 删除反应谱工况
+删除反应谱工况
 > 参数:  
 > name: 工况名称  
 ```Python
@@ -2238,7 +2240,7 @@ mdb.remove_spectrum_case("工况名")
 #Returns: 无
 ```  
 ### remove_spectrum_function
-todo 删除反应谱函数
+删除反应谱函数
 > 参数:  
 > ids: 删除反应谱工况函数编号集合支持XtoYbyN形式，默认为空时则按照名称删除  
 > name: 编号集合为空时则按照名称删除  
