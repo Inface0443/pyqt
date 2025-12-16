@@ -1,4 +1,3 @@
-import json
 from typing import Optional, List, Union
 from qtmodel.core.data_helper import QtDataHelper
 from qtmodel.core.qt_server import QtServer
@@ -46,23 +45,21 @@ class MdbConstructionStage:
                 active_boundaries=[("默认边界组",1)],active_loads=[("默认荷载组1",0)])
         Returns: 无
         """
-        s = "*STAGE\r\n"
-        s += f"ID={index},{name},{duration},{tendon_cancel_loss:g},{constraint_cancel_type}\r\n"
-        if active_structures is not None and len(active_structures) > 0:
-            s += f"AELEM={','.join(','.join(str(x) if not isinstance(x, (int, float)) else f'{x:g}' for x in row) for row in active_structures)}\r\n"
-        if delete_structures is not None and len(delete_structures) > 0:
-            s += f"DELEM={','.join(map(str, delete_structures))}\r\n"
-        if active_boundaries is not None and len(active_boundaries) > 0:
-            s += f"ABNDR={','.join(','.join(map(str, row)) for row in active_boundaries)}\r\n"
-        if delete_boundaries is not None and len(delete_boundaries) > 0:
-            s += f"DBNDR={','.join(map(str, delete_boundaries))}\r\n"
-        if active_loads is not None and len(active_loads) > 0:
-            s += f"ALOAD={','.join(','.join(map(str, row)) for row in active_loads)}\r\n"
-        if delete_loads is not None and len(delete_loads) > 0:
-            s += f"DLOAD={','.join(','.join(map(str, row)) for row in delete_loads)}\r\n"
-        if temp_loads is not None and len(temp_loads) > 0:
-            s += f"TEPLOAD={','.join(map(str, temp_loads))}\r\n"
-        QtServer.send_command(s, "QDAT")
+        payload = {
+            "name": name,
+            "duration": int(duration),
+            "active_structures": active_structures,
+            "delete_structures": delete_structures,
+            "active_boundaries": active_boundaries,
+            "delete_boundaries": delete_boundaries,
+            "active_loads": active_loads,
+            "delete_loads": delete_loads,
+            "temp_loads": temp_loads,
+            "index": int(index),
+            "tendon_cancel_loss": float(tendon_cancel_loss),
+            "constraint_cancel_type": int(constraint_cancel_type),
+        }
+        return QtServer.send_dict("ADD-CONSTRUCTION-STAGE", payload)
 
 
     @staticmethod
@@ -79,14 +76,12 @@ class MdbConstructionStage:
         """
         # 创建参数字典
         params = {
-            "version": QtServer.QT_VERSION,  # 版本控制
             "name": name,
             "structure_group_name": structure_group_name,
             "weight_stage_id": weight_stage_id,
         }
-        json_string = json.dumps(params, indent=2)
         # 假设这里需要将命令发送到服务器或进行其他操作
-        QtServer.send_command(header="UPDATE-WEIGHT-STAGE", command=json_string)
+        QtServer.send_dict(header="UPDATE-WEIGHT-STAGE", payload=params)
 
 
     @staticmethod

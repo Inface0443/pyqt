@@ -14,20 +14,15 @@ class MdbProject:
         QtServer.URL = url
 
     @staticmethod
-    def set_merge_str(is_open: bool):
-        QtServer.QT_MERGE = is_open
-
-    @staticmethod
-    def set_version(version: str = "1.2.4"):
+    def set_version(version: str = QtServer.QT_VERSION):
         """
-        控制导入qdat版本
+        控制第三方库版本
         Args:无
         Example:
             mdb.set_version()
         Returns: 无
         """
         QtServer.QT_VERSION = version
-        QtServer.send_command(f"*VERSION\r\n{QtServer.QT_VERSION}", "QDAT")
 
     @staticmethod
     def undo_model():
@@ -60,8 +55,7 @@ class MdbProject:
             mdb.update_model()
         Returns: 无
         """
-        QtServer.send_command(QtServer.MERGE_STR, "UPDATE")
-        QtServer.MERGE_STR = ""
+        QtServer.send_dict(header="UPDATE")
 
     @staticmethod
     def update_to_pre():
@@ -162,7 +156,6 @@ class MdbProject:
             raise Exception("仅支持command_type(1-桥通命令 2-mct命令 )")
         # 创建参数字典
         params = {
-            "version": QtServer.QT_VERSION,
             "command": command,
             "command_type": command_type,
         }

@@ -2,12 +2,9 @@ import json
 from typing import Optional
 import requests
 
-
 class QtServer:
     URL: str = "http://localhost:55125/pythonForQt/"
-    MERGE_STR: str = ""
-    QT_MERGE: bool = False  # 是否合并发送
-    QT_VERSION: str = "1.2.4"  # 匹配的qdat版本
+    QT_VERSION: str = "2.1.2"
 
     @staticmethod
     def send_command(command: str = "", header: str = ""):
