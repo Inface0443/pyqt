@@ -36,6 +36,7 @@ class MdbDynamicLoad:
         Example:
             mdb.add_nodal_mass(node_id=1, mass_info=(1.0, 2.0, 3.0, 0.0))
             mdb.add_nodal_mass(node_id="1to10", mass_info=(1.0, 1.0, 1.0, 0.0))
+        Returns: 无
         """
         if mass_info is None:
             raise ValueError("节点质量信息不可为空")
@@ -322,7 +323,7 @@ class MdbDynamicLoad:
             name: 原边界单元特性名称
             new_name: 更新后边界单元特性名称，默认时不修改
         Example:
-            mdb.update_boundary_element_property_name(name="边界特性1",new_name=“边界特性2”)
+            mdb.update_boundary_element_property_name(name="边界特性1",new_name="边界特性2")
         Returns: 无
         """
         payload = {
@@ -360,70 +361,38 @@ class MdbDynamicLoad:
         return QtServer.send_dict("UPDATE-BOUNDARY-ELEMENT-LINK", payload)
 
     @staticmethod
-    def update_time_history_case(name: str = "", new_name: str = "", description: str = "", analysis_kind: int = 0,
-                                 nonlinear_groups: list[str] = None, duration: float = 1, time_step: float = 0.01, min_step: float = 1e-4,
-                                 tolerance: float = 1e-4, damp_type: int = 0, single_damping: list[float] = None,
-                                 group_damping: list[tuple[str, float, float, float]] = None) -> None:
+    def update_time_history_case_name(name: str = "", new_name: str = "") -> None:
         """
         更新时程工况
         Args:
             name: 时程工况号
             new_name: 时程工况名
-            description: 描述
-            analysis_kind: 分析类型(0-线性 1-边界非线性)
-            nonlinear_groups: 非线性结构组列表
-            duration: 分析时间
-            time_step: 分析时间步长
-            min_step: 最小收敛步长
-            tolerance: 收敛容限
-            damp_type: 组阻尼类型(0-不计阻尼 1-单一阻尼 2-组阻尼)
-            single_damping: 单一阻尼信息列表(周期1,周期2,频率1,频率2)
-            group_damping: 组阻尼信息列表[(材料名1,周期1,周期2,阻尼比),(材料名2,周期1,周期2,阻尼比)...]
         Example:
-            mdb.update_time_history_case(name="TH1",analysis_kind=1,
-                nonlinear_groups=["结构组1", "结构组2"],duration=30.0,time_step=0.02,damp_type=2,
-                group_damping=[("concrete", 0.1, 0.5, 0.05), ("steel", 0.1, 0.5, 0.02)])
+            mdb.update_time_history_case_name(name="TH1",new_name="TH2")
         Returns: 无
         """
         payload = {
             "name": name,
             "new_name": new_name,
-            "description": description,
-            "analysis_kind": analysis_kind,
-            "nonlinear_groups": nonlinear_groups or [],
-            "duration": duration,
-            "time_step": time_step,
-            "min_step": min_step,
-            "tolerance": tolerance,
-            "damp_type": damp_type,
-            "single_damping": single_damping or [],
-            "group_damping": group_damping or [],
         }
-        return QtServer.send_dict("UPDATE-TIME-HISTORY-CASE", payload)
+        return QtServer.send_dict("UPDATE-TIME-HISTORY-CASE-NAME", payload)
 
     @staticmethod
-    def update_time_history_function(name: str, new_name: str = "", factor: float = 1.0, kind: int = 0,
-                                     function_info: list[tuple[float, float]] = None) -> None:
+    def update_time_history_function_name(name: str, new_name: str = "") -> None:
         """
         更新时程函数
         Args:
             name: 更新前函数名
             new_name: 更新后函数名，默认不更新名称
-            factor: 放大系数
-            kind: 0-无量纲 1-加速度 2-力 3-力矩
-            function_info: 函数信息[(时间1,数值1),(时间2,数值2)]
         Example:
-            mdb.update_time_history_function(name="old_func",factor=1.5,kind=1,function_info=[(0.0, 0.0), (0.1, 0.5)])
+            mdb.update_time_history_function_name(name="函数名1",new_name="函数名2")
         Returns: 无
         """
         payload = {
             "name": name,
             "new_name": new_name,
-            "factor": factor,
-            "kind": kind,
-            "function_info": function_info,
         }
-        return QtServer.send_dict("UPDATE-TIME-HISTORY-FUNCTION", payload)
+        return QtServer.send_dict("UPDATE-TIME-HISTORY-FUNCTION-NAME", payload)
 
     @staticmethod
     def update_nodal_dynamic_load(index: int = -1, node_id: int = 1, case_name: str = "", function_name: str = "",
@@ -656,7 +625,7 @@ class MdbDynamicLoad:
             new_name: 新函数名称
 
         Example:
-            mdb.update_spectrum_function(name="函数名1",new_name="函数名2")
+            mdb.update_spectrum_function_name(name="函数名1",new_name="函数名2")
         Returns: 无
         """
         if name == new_name or new_name == "":

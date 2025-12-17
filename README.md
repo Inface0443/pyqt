@@ -1,4 +1,4 @@
-> 最新qtmodel版本 V2.1.2 - 2025-12-15 
+> 最新qtmodel版本 V2.1.2 - 2025-12-17 
 > 最新qdat数据版本 V1.2.4 
 > pip install --upgrade qtmodel -i https://pypi.org/simple
 - 新增更新结构组接口 
@@ -1645,114 +1645,63 @@ mdb.add_metro_relative_factor(name="活载工况1",cross_factors=[1.2,1,0.78,0.6
 longitude_factor=1,impact_factor=1)
 #Returns: 无
 ```  
-### update_standard_vehicle
-todo 更新标准车辆
+### update_vehicle_name
+更新标准车辆
 > 参数:  
 > name: 车辆荷载名称  
 > new_name: 新车辆荷载名称,默认不修改  
-> standard_code: 荷载规范  
-> _1-中国铁路桥涵规范(TB10002-2017)  
-> _2-城市桥梁设计规范(CJJ11-2019)  
-> _3-公路工程技术标准(JTJ 001-97)  
-> _4-公路桥涵设计通规(JTG D60-2004  
-> _5-公路桥涵设计通规(JTG D60-2015)  
-> _6-城市轨道交通桥梁设计规范(GB/T51234-2017)  
-> _7-市域铁路设计规范2017(T/CRS C0101-2017)  
-> load_type: 荷载类型,支持类型参考软件内界面  
-> load_length: 默认为0即不限制荷载长度  (铁路桥涵规范2017 所需参数)  
-> factor: 默认为1.0(铁路桥涵规范2017 ZH荷载所需参数)  
-> n:车厢数: 默认6节车厢 (城市轨道交通桥梁规范2017 所需参数)  
-> calc_fatigue:计算公路疲劳 (公路桥涵设计通规2015 所需参数)  
 ```Python
 # 示例代码
 from qtmodel import *
-mdb.update_standard_vehicle("高速铁路",standard_code=1,load_type="高速铁路")
-#Returns: 无
-```  
-### update_user_vehicle
-todo 更新自定义标准车辆
-> 参数:  
-> name: 车辆荷载名称  
-> new_name: 新车辆荷载名称，默认不修改  
-> load_type: 荷载类型,支持类型 -车辆/车道荷载 列车普通活载 城市轻轨活载 旧公路人群荷载 轮重集合  
-> p: 荷载Pk或Pi列表  
-> q: 均布荷载Qk或荷载集度dW  
-> dis:荷载距离Li列表  
-> load_length: 荷载长度  (列车普通活载 所需参数)  
-> n:车厢数: 默认6节车厢 (列车普通活载 所需参数)  
-> empty_load:空载 (列车普通活载、城市轻轨活载 所需参数)  
-> width:宽度 (旧公路人群荷载 所需参数)  
-> wheelbase:轮间距 (轮重集合 所需参数)  
-> min_dis:车轮距影响面最小距离 (轮重集合 所需参数))  
-> unit_force:荷载单位 默认为"N"  
-> unit_length:长度单位 默认为"M"  
-```Python
-# 示例代码
-from qtmodel import *
-mdb.update_user_vehicle(name="车道荷载",load_type="车道荷载",p=270000,q=10500)
+mdb.update_vehicle_name(name ="高速铁路1",new_name = "高速铁路2")
 #Returns: 无
 ```  
 ### update_influence_plane
-todo 更新影响面
+更新影响面
 > 参数:  
 > name:影响面名称  
 > new_name:更改后影响面名称，若无更改则默认  
-> tandem_names:节点纵列名称组  
 ```Python
 # 示例代码
 from qtmodel import *
-mdb.update_influence_plane(name="影响面1",tandem_names=["节点纵列1","节点纵列2"])
+mdb.update_influence_plane_name(name="影响面1",new_name="影响面2")
 #Returns: 无
 ```  
-### update_lane_line
-todo 更新车道线
+### update_lane_line_name
+更新车道线
 > 参数:  
 > name:车道线名称  
 > new_name:更改后车道名,默认为不更改  
-> influence_name:影响面名称  
-> tandem_name:节点纵列名  
-> offset:偏移  
-> lane_width:车道宽度  
-> optimize:是否允许车辆摆动  
-> direction:0-向前  1-向后  
 ```Python
 # 示例代码
 from qtmodel import *
-mdb.update_lane_line(name="车道1",influence_name="影响面1",tandem_name="节点纵列1",offset=0,lane_width=3.1)
+mdb.update_lane_line_name(name="车道1",new_name="车道2")
 #Returns: 无
 ```  
-### update_node_tandem
-todo 更新节点纵列,默认以最小X对应节点作为纵列起点
+### update_node_tandem_name
+更新节点纵列,默认以最小X对应节点作为纵列起点
 > 参数:  
 > name:节点纵列名  
 > new_name: 新节点纵列名，默认不修改  
-> node_ids:节点列表,支持XtoYbyN形式字符串  
-> order_by_x:是否开启自动排序，按照X坐标从小到大排序  
 ```Python
 # 示例代码
 from qtmodel import *
-mdb.update_node_tandem(name="节点纵列1",node_ids=[1,2,3,4,5])
-mdb.update_node_tandem(name="节点纵列1",node_ids="1to100")
+mdb.update_node_tandem_name(name="节点纵列1",new_name="节点纵列2")
 #Returns: 无
 ```  
-### update_live_load_case
-todo 更新移动荷载工况
+### update_live_load_case_name
+更新移动荷载工况
 > 参数:  
 > name:活载工况名  
-> new_name:新移动荷载名,默认不修改  
-> influence_plane:影响线名  
-> span:跨度  
-> sub_case:子工况信息 [(车辆名称,系数,["车道1","车道2"])...]  
-> trailer_code:考虑挂车时挂车车辆名  
-> special_code:考虑特载时特载车辆名  
+> new_name:新移动荷载名  
 ```Python
 # 示例代码
 from qtmodel import *
-mdb.update_live_load_case(name="活载工况1",influence_plane="影响面1",span=100,sub_case=[("车辆名称",1.0,["车道1","车道2"]),])
+mdb.update_live_load_case_name(name="活载工况1",new_name="活载工况2")
 #Returns: 无
 ```  
 ### remove_vehicle
-todo 删除车辆信息
+删除车辆信息
 > 参数:  
 > index:车辆编号  
 > name:车辆名称  
@@ -1764,7 +1713,7 @@ mdb.remove_vehicle(index=1)
 #Returns: 无
 ```  
 ### remove_node_tandem
-todo 按照节点纵列编号/节点纵列名 删除节点纵列
+按照节点纵列编号/节点纵列名 删除节点纵列
 > 参数:  
 > index:节点纵列编号  
 > name:节点纵列名  
@@ -1776,7 +1725,7 @@ mdb.remove_node_tandem(name="节点纵列1")
 #Returns: 无
 ```  
 ### remove_influence_plane
-todo 按照影响面编号/影响面名称 删除影响面
+按照影响面编号/影响面名称 删除影响面
 > 参数:  
 > index:影响面编号  
 > name:影响面名称  
@@ -1788,7 +1737,7 @@ mdb.remove_influence_plane(name="影响面1")
 #Returns: 无
 ```  
 ### remove_lane_line
-todo 按照车道线编号或车道线名称 删除车道线
+按照车道线编号或车道线名称 删除车道线
 > 参数:  
 > index:车道线编号，默认时则按照名称删除车道线  
 > name:车道线名称  
@@ -1800,7 +1749,7 @@ mdb.remove_lane_line(name="车道线1")
 #Returns: 无
 ```  
 ### remove_live_load_case
-todo 删除移动荷载工况，默认值时则按照工况名删除
+删除移动荷载工况，默认值时则按照工况名删除
 > 参数:  
 > index:移动荷载工况编号  
 > name:移动荷载工况名  
@@ -1826,12 +1775,13 @@ mdb.add_load_to_mass(name="荷载工况",factor=1)
 ### add_nodal_mass
 添加节点质量
 > 参数:  
-> node_id:节点编号，支持单个编号和编号列表  
-> mass_info:[m,rmX,rmY,rmZ]  
+> node_id: 节点号（支持 int / list[int] / "1to100" 这类字符串，按你现有 QtDataHelper 解析）  
+> mass_info: (mx, my, mz, mrx) 四个值（示例，按你软件定义为准）  
 ```Python
 # 示例代码
 from qtmodel import *
-mdb.add_nodal_mass(node_id=1,mass_info=(100,0,0,0))
+mdb.add_nodal_mass(node_id=1, mass_info=(1.0, 2.0, 3.0, 0.0))
+mdb.add_nodal_mass(node_id="1to10", mass_info=(1.0, 1.0, 1.0, 0.0))
 #Returns: 无
 ```  
 ### add_boundary_element_property
@@ -1981,23 +1931,15 @@ from qtmodel import *
 mdb.add_nodal_mass(node_id=1,mass_info=(100,0,0,0))
 #Returns: 无
 ```  
-### update_boundary_element_property
-更新边界单元特性，输入参数单位默认为N、m
+### update_boundary_element_property_name
+更新边界单元特性名
 > 参数:  
 > name: 原边界单元特性名称  
 > new_name: 更新后边界单元特性名称，默认时不修改  
-> kind: 类型名，支持:粘滞阻尼器、支座摩阻、滑动摩擦摆(具体参考界面数据名)  
-> info_x: 自由度X信息(参考界面数据，例如粘滞阻尼器为[阻尼系数,速度指数]，支座摩阻为[安装方向0/1,弹性刚度/摩擦系数,恒载支承力N])  
-> info_y: 自由度Y信息  
-> info_z: 自由度Z信息  
-> weight: 重量（单位N）  
-> pin_stiffness: 剪力销刚度  
-> pin_yield: 剪力销屈服力  
-> description: 说明  
 ```Python
 # 示例代码
 from qtmodel import *
-mdb.update_boundary_element_property(name="old_prop",kind="粘滞阻尼器",info_x=[0.5, 0.5],weight=1000.0)
+mdb.update_boundary_element_property_name(name="边界特性1",new_name="边界特性2")
 #Returns: 无
 ```  
 ### update_boundary_element_link
@@ -2199,34 +2141,26 @@ from qtmodel import *
 mdb.add_spectrum_case(name="反应谱工况",info_x=("函数1",1.0))
 #Returns: 无
 ```  
-### update_spectrum_function
+### update_spectrum_function_name
 更新反应谱函数
 > 参数:  
 > name: 函数名称  
 > new_name: 新函数名称  
-> factor: 反应谱调整系数  
-> kind: 0-无量纲 1-加速度 2-位移  
-> function_info: 函数信息[(时间1,数值1),(时间2,数值2)]  
 ```Python
 # 示例代码
 from qtmodel import *
-mdb.update_spectrum_function( name="函数名称", factor=1.2, kind=1, function_info=[(0.0, 0.0), (0.5, 0.8), (1.0, 1.2)])
+mdb.update_spectrum_function_name(name="函数名1",new_name="函数名2")
 #Returns: 无
 ```  
-### update_spectrum_case
+### update_spectrum_case_name
 更新反应谱工况
 > 参数:  
 > name: 工况名称  
 > new_name: 新工况名称  
-> description: 描述  
-> kind: 组合方式 1-求模 2-求和  
-> info_x: 反应谱X向信息 (X方向函数名,系数)  
-> info_y: Y向信息  
-> info_z: Z向信息  
 ```Python
 # 示例代码
 from qtmodel import *
-mdb.update_spectrum_case(name="RS1",kind=1,info_x=("函数X", 1.0),info_y=("函数Y", 0.85) )
+mdb.update_spectrum_case_name(name="工况名1",new_name="工况名2")
 #Returns: 无
 ```  
 ### remove_spectrum_case

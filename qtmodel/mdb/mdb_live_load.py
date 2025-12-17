@@ -30,6 +30,10 @@ class MdbLiveLoad:
             mdb.add_standard_vehicle("高速铁路",standard_code=1,load_type="高速铁路")
         Returns: 无
         """
+        if calc_fatigue is None:
+            calc_fatigue = [False, False, False]
+        if isinstance(calc_fatigue,bool):
+            calc_fatigue = [calc_fatigue]
         payload = {
             "name": name,
             "standard_code": standard_code,
@@ -65,7 +69,7 @@ class MdbLiveLoad:
         """
         if dis is None:
             dis = []
-        if p is isinstance(float, int):
+        if  isinstance(p, int):
             p = [p]
         payload = {
             "name": name,
@@ -291,41 +295,25 @@ class MdbLiveLoad:
         return QtServer.send_dict("ADD-METRO-RELATIVE-FACTOR", payload)
 
     @staticmethod
-    def update_standard_vehicle_name(name: str, new_name: str = ""):
+    def update_vehicle_name(name: str, new_name: str = ""):
         """
         更新标准车辆
         Args:
              name: 车辆荷载名称
              new_name: 新车辆荷载名称,默认不修改
         Example:
-            mdb.update_standard_vehicle_name(name ="高速铁路1",new_name = "高速铁路2")
+            mdb.update_vehicle_name(name ="高速铁路1",new_name = "高速铁路2")
         Returns: 无
         """
         payload = {
             "name": name,
             "new_name": new_name,
         }
-        return QtServer.send_dict("UPDATE-STANDARD-VEHICLE", payload)
+        return QtServer.send_dict("UPDATE-VEHICLE-NAME", payload)
+
 
     @staticmethod
-    def update_user_vehicle_name(name: str, new_name: str = ""):
-        """
-        更新自定义标准车辆
-        Args:
-             name: 车辆荷载名称
-             new_name: 新车辆荷载名称，默认不修改
-        Example:
-            mdb.update_user_vehicle(name="车道荷载1",new_name="车道荷载2")
-        Returns: 无
-        """
-        payload = {
-            "name": name,
-            "new_name": new_name,
-        }
-        return QtServer.send_dict("UPDATE-USER-VEHICLE", payload)
-
-    @staticmethod
-    def update_influence_plane(name: str, new_name: str = ""):
+    def update_influence_plane_name(name: str, new_name: str = ""):
         """
         更新影响面
         Args:
