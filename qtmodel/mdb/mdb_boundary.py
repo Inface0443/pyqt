@@ -208,10 +208,12 @@ class MdbBoundary:
             mdb.add_master_slave_links(node_ids=[(1,2),(3,4)], boundary_info=[True,True,True,False,False,False])
         Returns: 无
         """
-        if boundary_info is None or len(boundary_info) != 6:
-            raise ValueError("约束自由度列表长度需为6")
+        if boundary_info is None:
+            boundary_info = [True, True, True, True, True, True]
+        if len(boundary_info) != 6:
+            raise ValueError("主从约束边界信息有误，请核查边界数据")
         if node_ids is None:
-            node_ids = []
+            raise ValueError("主从约束节点有误，请核查主从节点数据列表")
         payload = {
             "node_ids": node_ids,
             "boundary_info": boundary_info,
@@ -227,13 +229,17 @@ class MdbBoundary:
         Args:
              master_id:主节点号
              slave_id:从节点号，支持整数或整数型列表且支持XtoYbyN形式字符串
-             boundary_info:边界信息 [X,Y,Z,Rx,Ry,Rz] ture-固定 false-自由
+             boundary_info:边界信息 [X,Y,Z,Rx,Ry,Rz] ture-固定 false-自由 默认全部固定
              group_name:边界组名
         Example:
             mdb.add_master_slave_link(master_id=1,slave_id=[2,3],boundary_info=[True,True,True,False,False,False])
             mdb.add_master_slave_link(master_id=1,slave_id="2to3",boundary_info=[True,True,True,False,False,False])
         Returns: 无
         """
+        if boundary_info is None:
+            boundary_info = [True,True,True,True,True,True]
+        if len(boundary_info) != 6:
+            raise ValueError("主从约束边界信息有误，请核查边界数据")
         payload = {
             "master_id": int(master_id),
             "slave_id": QtDataHelper.parse_ids_to_array(slave_id),

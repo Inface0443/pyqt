@@ -172,23 +172,11 @@ class MdbLiveLoad:
             mdb.add_live_load_case(name="活载工况1",influence_plane="影响面1",span=100,sub_case=[("车辆名称",1.0,["车道1","车道2"]),])
         Returns: 无
         """
-        if sub_case is None:
-            sub_case = []
-            # 将元组列表转换为字典列表，便于序列化
-        sub_case_dicts = []
-        for case in sub_case:
-            if len(case) == 3:
-                lane_name, factor, tandem_list = case
-                sub_case_dicts.append({
-                    "lane_name": lane_name,
-                    "factor": factor,
-                    "tandem_list": tandem_list
-                })
         payload = {
             "name": name,
             "influence_plane": influence_plane,
             "span": span,
-            "sub_case": sub_case_dicts,
+            "sub_case": sub_case,
             "trailer_code": trailer_code,
             "special_code": special_code,
             "is_save": is_save,

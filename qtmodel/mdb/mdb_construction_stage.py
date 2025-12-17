@@ -17,7 +17,7 @@ class MdbConstructionStage:
                                delete_boundaries: Optional[list[str]] = None,
                                active_loads: Optional[list[tuple[str, int]]] = None,
                                delete_loads: Optional[list[tuple[str, int]]] = None,
-                               temp_loads: Optional[list[str]] = None, index=-1,
+                               temp_loads: Optional[list[str]] = None, index:int=-1,
                                tendon_cancel_loss: float = 0,
                                constraint_cancel_type: int = 2):
         """
@@ -37,7 +37,7 @@ class MdbConstructionStage:
            delete_loads:钝化荷载组信息 [(荷载组1,时间),...]
                                _时间 0-开始 1-结束
            temp_loads:临时荷载信息 [荷载组1，荷载组2,..]
-           index:施工阶段插入位置,从0开始,默认添加到最后
+           index:施工阶段号，从1开始计数
            tendon_cancel_loss:钝化预应力单元后预应力损失
            constraint_cancel_type:钝化梁端约束释放计算方法1-变形法 2-无应力法
         Example:
@@ -285,7 +285,7 @@ class MdbConstructionStage:
         Returns:无
         """
         payload = {
-            "element_id": element_id,
+            "element_id":QtDataHelper.parse_ids_to_array(element_id) ,
             "name": name,
         }
         return QtServer.send_dict("ADD-ELEMENT-TO-CONNECTION-STAGE", payload)
