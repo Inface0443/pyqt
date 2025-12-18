@@ -4,12 +4,12 @@ from qtmodel.core.qt_server import QtServer
 class OdbModelStage:
     # region 获取施工阶段信息
     @staticmethod
-    def get_stage_name():
+    def get_stage_names():
         """
         获取所有施工阶段名称
         Args: 无
         Example:
-            odb.get_stage_name()
+            odb.get_stage_names()
         Returns: 包含信息为list[int]
         """
         return QtServer.send_dict("GET-STAGE-NAMES", None)

@@ -302,7 +302,8 @@ class MdbBoundary:
         return QtServer.send_dict("ADD-CONSTRAINT-EQUATION", payload)
 
     @staticmethod
-    def add_node_axis(node_id: int, input_type: int = 1, coord_info: list[list[float]] = None,angle_info:tuple[float,float,float]=None):
+    def add_node_axis(node_id: int, input_type: int = 1, coord_info: list[list[float]] = None,
+                      angle_info:Union[tuple[float,float,float],list[float]]=None):
         """
         添加节点坐标
         Args:

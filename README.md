@@ -878,7 +878,7 @@ mdb.add_master_slave_links(node_ids=[(1,2),(3,4)], boundary_info=[True,True,True
 > 参数:  
 > master_id:主节点号  
 > slave_id:从节点号，支持整数或整数型列表且支持XtoYbyN形式字符串  
-> boundary_info:边界信息 [X,Y,Z,Rx,Ry,Rz] ture-固定 false-自由  
+> boundary_info:边界信息 [X,Y,Z,Rx,Ry,Rz] ture-固定 false-自由 默认全部固定  
 > group_name:边界组名  
 ```Python
 # 示例代码
@@ -1656,7 +1656,7 @@ from qtmodel import *
 mdb.update_vehicle_name(name ="高速铁路1",new_name = "高速铁路2")
 #Returns: 无
 ```  
-### update_influence_plane
+### update_influence_plane_name
 更新影响面
 > 参数:  
 > name:影响面名称  
@@ -1675,7 +1675,7 @@ mdb.update_influence_plane_name(name="影响面1",new_name="影响面2")
 ```Python
 # 示例代码
 from qtmodel import *
-mdb.update_lane_line_name(name="车道1",new_name="车道2")
+mdb.update_lane_line(name="车道1",new_name="车道2")
 #Returns: 无
 ```  
 ### update_node_tandem_name
@@ -1958,41 +1958,26 @@ from qtmodel import *
 mdb.update_boundary_element_link(index=1,property_name="边界单元特性名",node_i=101,node_j=102,beta=30.0)
 #Returns: 无
 ```  
-### update_time_history_case
+### update_time_history_case_name
 更新时程工况
 > 参数:  
 > name: 时程工况号  
 > new_name: 时程工况名  
-> description: 描述  
-> analysis_kind: 分析类型(0-线性 1-边界非线性)  
-> nonlinear_groups: 非线性结构组列表  
-> duration: 分析时间  
-> time_step: 分析时间步长  
-> min_step: 最小收敛步长  
-> tolerance: 收敛容限  
-> damp_type: 组阻尼类型(0-不计阻尼 1-单一阻尼 2-组阻尼)  
-> single_damping: 单一阻尼信息列表(周期1,周期2,频率1,频率2)  
-> group_damping: 组阻尼信息列表[(材料名1,周期1,周期2,阻尼比),(材料名2,周期1,周期2,阻尼比)...]  
 ```Python
 # 示例代码
 from qtmodel import *
-mdb.update_time_history_case(name="TH1",analysis_kind=1,
-nonlinear_groups=["结构组1", "结构组2"],duration=30.0,time_step=0.02,damp_type=2,
-group_damping=[("concrete", 0.1, 0.5, 0.05), ("steel", 0.1, 0.5, 0.02)])
+mdb.update_time_history_case_name(name="TH1",new_name="TH2")
 #Returns: 无
 ```  
-### update_time_history_function
+### update_time_history_function_name
 更新时程函数
 > 参数:  
 > name: 更新前函数名  
 > new_name: 更新后函数名，默认不更新名称  
-> factor: 放大系数  
-> kind: 0-无量纲 1-加速度 2-力 3-力矩  
-> function_info: 函数信息[(时间1,数值1),(时间2,数值2)]  
 ```Python
 # 示例代码
 from qtmodel import *
-mdb.update_time_history_function(name="old_func",factor=1.5,kind=1,function_info=[(0.0, 0.0), (0.1, 0.5)])
+mdb.update_time_history_function_name(name="函数名1",new_name="函数名2")
 #Returns: 无
 ```  
 ### update_nodal_dynamic_load
@@ -2433,7 +2418,7 @@ mdb.remove_deviation_load(case_name="工况1",element_id=1,group_name="荷载组
 > delete_loads:钝化荷载组信息 [(荷载组1,时间),...]  
 > _时间 0-开始 1-结束  
 > temp_loads:临时荷载信息 [荷载组1，荷载组2,..]  
-> index:施工阶段插入位置,从0开始,默认添加到最后  
+> index:施工阶段号，从1开始计数  
 > tendon_cancel_loss:钝化预应力单元后预应力损失  
 > constraint_cancel_type:钝化梁端约束释放计算方法1-变形法 2-无应力法  
 ```Python
@@ -3233,13 +3218,13 @@ odb.get_deviation_load(case_name="荷载工况1")
 #Returns: 包含信息为list[dict]
 ```  
 ##  获取施工阶段信息
-### get_stage_name
+### get_stage_names
 获取所有施工阶段名称
 > 参数:  
 ```Python
 # 示例代码
 from qtmodel import *
-odb.get_stage_name()
+odb.get_stage_names()
 #Returns: 包含信息为list[int]
 ```  
 ### get_elements_of_stage
@@ -3875,13 +3860,13 @@ from qtmodel import *
 odb.set_unit(unit_force="N",unit_length="M")
 #Returns: 无
 ```  
-### remove_display
+### reset_display
 删除当前所有显示,包括边界荷载钢束等全部显示
 > 参数:  
 ```Python
 # 示例代码
 from qtmodel import *
-odb.remove_display()
+odb.reset_display()
 #Returns: 无
 ```  
 ### save_png

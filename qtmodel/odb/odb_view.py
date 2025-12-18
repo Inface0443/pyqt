@@ -135,15 +135,15 @@ class OdbView:
         return QtServer.send_dict("SET-UNIT", payload)
 
     @staticmethod
-    def remove_display():
+    def reset_display():
         """
         删除当前所有显示,包括边界荷载钢束等全部显示
         Args: 无
         Example:
-           odb.remove_display()
+           odb.reset_display()
         Returns: 无
         """
-        return QtServer.send_dict("DISPLAY-RESET", None)
+        return QtServer.send_dict("RESET-DISPLAY", None)
 
     @staticmethod
     def save_png(file_path: str):
@@ -189,7 +189,7 @@ class OdbView:
         payload = {
             "stage": stage
         }
-        return QtServer.send_dict("CHANGE-STAGE", payload)
+        return QtServer.send_dict("CHANGE-CONSTRUCT-STAGE", payload)
 
     @staticmethod
     def get_current_png() -> str:

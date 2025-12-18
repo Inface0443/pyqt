@@ -634,7 +634,7 @@ class MdbDynamicLoad:
             "name": name,
             "new_name": new_name,
         }
-        return QtServer.send_dict("UPDATE-SPECTRUM-FUNCTION", payload)
+        return QtServer.send_dict("UPDATE-SPECTRUM-FUNCTION-NAME", payload)
 
     @staticmethod
     def update_spectrum_case_name(name: str, new_name: str = "") -> None:
@@ -653,7 +653,7 @@ class MdbDynamicLoad:
             "name": name,
             "new_name": new_name,
         }
-        return QtServer.send_dict("UPDATE-SPECTRUM-CASE", payload)
+        return QtServer.send_dict("UPDATE-SPECTRUM-CASE-NAME", payload)
 
     @staticmethod
     def remove_spectrum_case(name: str) -> None:

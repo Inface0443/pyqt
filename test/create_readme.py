@@ -1,4 +1,5 @@
 from datetime import datetime
+import re
 
 
 class Readme:
@@ -128,5 +129,25 @@ class Readme:
     def print_str(data):
         Readme._data_str.append(data)
 
+with open('csharp_case.txt', 'r', encoding='utf-8') as f:
+    csharp_str = f.read()
 
+# 方法1：使用正则表达式直接提取
+def extract_case_names(text):
+    pattern = r'case\s+"([^"]+)":\s*return\s+[^;]+;'
+    matches = re.findall(pattern, text, re.IGNORECASE)
+    return matches
+
+# 使用方法
+case_names_a = extract_case_names(csharp_str)
+# print(case_names_a)
+result1=[]
 Readme.print_md_file_context()
+for item in Readme._data_str:
+    if item.startswith("###"):
+       result1.append(item.replace("_","-").upper()[3:].strip())
+print(len(result1))
+# 使用集合差集运算
+diff = set(result1) - set(case_names_a)
+result = list(diff)
+print(result)  # ['GET-DEFORMATION', 'GET-ELEMENT-STRESS']

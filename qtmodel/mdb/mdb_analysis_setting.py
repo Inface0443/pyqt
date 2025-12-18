@@ -37,7 +37,7 @@ class MdbAnalysisSetting:
             "temperature": temperature,
             "description": description,
         }
-        return QtServer.send_dict("UPDATE-PJT-SET", payload)
+        return QtServer.send_dict("UPDATE-PROJECT-SETTING", payload)
 
     @staticmethod
     def update_global_setting(solver_type: int = 0, calculation_type: int = 2, thread_count: int = 12):
@@ -56,7 +56,7 @@ class MdbAnalysisSetting:
             "calculation_type": calculation_type,
             "thread_count": thread_count,
         }
-        return QtServer.send_dict("UPDATE-GLB-SET", payload)
+        return QtServer.send_dict("UPDATE-GLOBAL-SETTING", payload)
 
     @staticmethod
     def update_construction_stage_setting(do_analysis: bool = True, to_end_stage: bool = True,
@@ -96,7 +96,7 @@ class MdbAnalysisSetting:
             "creep_load_type": creep_load_type,
             "sub_step_info": list(sub_step_info) if sub_step_info else None,
         }
-        return QtServer.send_dict("UPDATE-CS-SET", payload)
+        return QtServer.send_dict("UPDATE-CONSTRUCTION-STAGE-SETTING", payload)
 
     @staticmethod
     def update_live_load_setting(lateral_spacing: float = 0.1, vertical_spacing: float = 1, damper_calc_type: int = -1,
@@ -168,7 +168,7 @@ class MdbAnalysisSetting:
             "link_groups": link_groups,
             "constrain_groups": constrain_groups,
         }
-        return QtServer.send_dict("UPDATE-LIV-SET", payload)
+        return QtServer.send_dict("UPDATE-LIVE-LOAD-SETTING", payload)
 
     @staticmethod
     def update_non_linear_setting(non_linear_type: int = 1, non_linear_method: int = 1, max_loading_steps: int = 1,
@@ -196,7 +196,7 @@ class MdbAnalysisSetting:
             "accuracy_of_displacement": accuracy_of_displacement,
             "accuracy_of_force": accuracy_of_force,
         }
-        return QtServer.send_dict("UPDATE-NON-SET", payload)
+        return QtServer.send_dict("UPDATE-NON-LINEAR-SETTING", payload)
 
     @staticmethod
     def update_operation_stage_setting(do_analysis: bool = True, final_stage: str = "",
@@ -222,7 +222,7 @@ class MdbAnalysisSetting:
             "sink_load_cases": sink_load_cases,
             "live_load_cases": live_load_cases,
         }
-        return QtServer.send_dict("UPDATE-OP-SET", payload)
+        return QtServer.send_dict("UPDATE-OPERATION-STAGE-SETTING", payload)
 
     @staticmethod
     def update_self_vibration_setting(do_analysis: bool = True, method: int = 1, matrix_type: int = 0,
@@ -244,7 +244,7 @@ class MdbAnalysisSetting:
             "matrix_type": matrix_type,
             "mode_num": mode_num,
         }
-        return QtServer.send_dict("UPDATE-VB-SET", payload)
+        return QtServer.send_dict("UPDATE-SELF-VIBRATION-SETTING", payload)
 
     @staticmethod
     def update_response_spectrum_setting(do_analysis: bool = True, kind: int = 1, by_mode: bool = False,
@@ -268,7 +268,7 @@ class MdbAnalysisSetting:
             "by_mode": by_mode,
             "damping_ratio": damping_ratio,
         }
-        return QtServer.send_dict("UPDATE-RS-SET", payload)
+        return QtServer.send_dict("UPDATE-RESPONSE-SPECTRUM-SETTING", payload)
 
     @staticmethod
     def update_time_history_setting(do_analysis: bool = True, output_all: bool = True, groups: Optional[list[str]] = None):
@@ -287,7 +287,7 @@ class MdbAnalysisSetting:
             "output_all": output_all,
             "groups": groups,
         }
-        return QtServer.send_dict("UPDATE-TH-SET", payload)
+        return QtServer.send_dict("UPDATE-TIME-HISTORY-SETTING", payload)
 
     @staticmethod
     def update_bulking_setting(do_analysis: bool = True, mode_count: int = 3, stage_id: int = -1,
@@ -318,6 +318,6 @@ class MdbAnalysisSetting:
             "constant_cases": constant_cases,
             "variable_cases": variable_cases,
         }
-        return QtServer.send_dict("UPDATE-BUK-SET", payload)
+        return QtServer.send_dict("UPDATE-BULKING-SETTING", payload)
 
     # endregion

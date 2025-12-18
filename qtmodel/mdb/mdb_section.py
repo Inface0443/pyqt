@@ -188,7 +188,7 @@ class MdbSection:
         Returns: 无
         """
         try:
-            QtServer.send_dict(header="CALC-SEC")
+            QtServer.send_dict(header="CALCULATE-SECTION-PROPERTY")
         except Exception as ex:
             raise Exception(ex)
 
@@ -202,7 +202,7 @@ class MdbSection:
         Returns: 无
         """
         try:
-            QtServer.send_dict(header="REMOVE-UNUSED-SEC")
+            QtServer.send_dict(header="REMOVE-UNUSED-SECTIONS")
         except Exception as ex:
             raise Exception(ex)
 
@@ -230,7 +230,7 @@ class MdbSection:
             "shear_consider": shear_consider,
             "sec_normalize": sec_normalize,
         }
-        return QtServer.send_dict("ADD-TAPPER-SEC-BY-ID", payload)
+        return QtServer.send_dict("ADD-TAPPER-SECTION-BY-ID", payload)
 
     @staticmethod
     def update_section_bias(index: int = 1, bias_type: str = "中心", center_type: str = "质心", shear_consider: bool = True,
@@ -257,7 +257,7 @@ class MdbSection:
             "bias_point": bias_point,
             "side_i": side_i,
         }
-        return QtServer.send_dict("UPDATE-SEC-BIAS", payload)
+        return QtServer.send_dict("UPDATE-SECTION-BIAS", payload)
 
     @staticmethod
     def update_section_property(index: int, sec_property: list[float], side_i: bool = True):
@@ -276,7 +276,7 @@ class MdbSection:
             "sec_property": sec_property,
             "side_i": side_i,
         }
-        return QtServer.send_dict("UPDATE-SEC-PROPERTY", payload)
+        return QtServer.send_dict("UPDATE-SECTION-PROPERTY", payload)
 
     @staticmethod
     def update_section_id(index: int, new_id: int):
@@ -293,7 +293,7 @@ class MdbSection:
             "index": index,
             "new_id": new_id,
         }
-        return QtServer.send_dict("UPDATE-SEC-ID", payload)
+        return QtServer.send_dict("UPDATE-SECTION-ID", payload)
 
 
 
@@ -368,7 +368,7 @@ class MdbSection:
             "name": name,
             "ids": QtDataHelper.parse_ids_to_array(ids),
         }
-        return QtServer.send_dict("ADD-ELEMENTS-TO-TAPPER-SEC-GROUP", payload)
+        return QtServer.send_dict("ADD-ELEMENTS-TO-TAPPER-SECTION-GROUP", payload)
 
     @staticmethod
     def add_tapper_section_from_group(name: str = ""):
@@ -382,7 +382,7 @@ class MdbSection:
         Returns: 无
         """
         payload = {"name": name}
-        return QtServer.send_dict("ADD-TAPPER-SEC-FROM-GROUP", payload)
+        return QtServer.send_dict("ADD-TAPPER-SECTION-FROM-GROUP", payload)
 
     @staticmethod
     def update_tapper_section_group(name: str, new_name="", ids=None, factor_w: float = 1.0, factor_h: float = 1.0,
@@ -421,7 +421,7 @@ class MdbSection:
             "dis_h": dis_h,
             "parameter_info": parameter_info,
         }
-        return QtServer.send_dict("UPDATE-TAPPER-SEC-GROUP", payload)
+        return QtServer.send_dict("UPDATE-TAPPER-SECTION-GROUP", payload)
 
     @staticmethod
     def remove_tapper_section_group(name: str = ""):
@@ -435,5 +435,5 @@ class MdbSection:
         Returns:无
         """
         payload = {"name": name}
-        return QtServer.send_dict("REMOVE-TAPPER-SEC-GROUP", payload)
+        return QtServer.send_dict("REMOVE-TAPPER-SECTION-GROUP", payload)
     # endregion
