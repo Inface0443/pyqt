@@ -140,11 +140,11 @@ class MdbLoad:
     def add_load_combine(index: int = -1, name: str = "", combine_type: int = 1, describe: str = "",
                          combine_info: list[tuple[str, str, float]] = None):
         """
-        添加荷载组合
+        添加荷载组合，支持自动覆盖
         Args:
             index:荷载组合编号
             name:荷载组合名
-            combine_type:荷载组合类型 1-叠加  2-判别  3-包络 4-SRss 5-AbsSum
+            combine_type:荷载组合类型 1-叠加  2-判别  3-包络 4-SRss 5-AbsSum 6-除永久作用强制叠加其他判别叠加
             describe:描述
             combine_info:荷载组合信息 [(荷载工况类型,工况名,系数)...] 工况类型如下
                 _"ST"-静力荷载工况  "CS"-施工阶段荷载工况  "CB"-荷载组合

@@ -34,7 +34,7 @@ class MdbStaticLoad:
 
     @staticmethod
     def add_node_displacement(node_id, case_name: str = "",
-                              load_info: tuple[float, float, float, float, float, float] = None,
+                              load_info:Union[tuple[float, float, float, float, float, float],List[float]]  = None,
                               group_name: str = "默认荷载组"):
         """
         添加节点位移
