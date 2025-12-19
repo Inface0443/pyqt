@@ -6,56 +6,50 @@ class OdbModelLoad:
 
     # region 钢束信息
     @staticmethod
-    def get_tendon_property(name:str):
+    def get_tendon_property_data():
         """
-        获取预应力荷载
-        Args:
-            name: 根据钢束特性名获取钢束特性
+        获取所有钢束特性信息
+        Args: 无
         Example:
-            odb.get_tendon_property(name="钢束特性1")
+            odb.get_tendon_property_data()
         Returns: 包含信息为list[dict]
         """
-        payload = {"name": name}
-        return QtServer.send_dict("GET-TENDON-PROPERTY", payload)
+        return QtServer.send_dict("GET-TENDON-PROPERTY-DATA")
 
     @staticmethod
-    def get_tendon_data(name:str):
+    def get_tendon_data():
         """
-        获取预应力荷载
-        Args:
-            name: 根据钢束名获取钢束信息
+        获取所有钢塑和信息
+        Args: 无
         Example:
-            odb.get_tendon_data(name="钢束1")
+            odb.get_tendon_data()
         Returns: 包含信息为list[dict]
         """
-        payload = {"name": name}
-        return QtServer.send_dict("GET-TENDON-DATA", payload)
+        return QtServer.send_dict("GET-TENDON-DATA")
     # endregion
 
     # region 荷载信息
     @staticmethod
-    def get_case_names():
+    def get_load_case_names():
         """
         获取荷载工况名
         Args: 无
         Example:
-            odb.get_case_names()
+            odb.get_load_case_names()
         Returns: 包含信息为list[str]
         """
-        return QtServer.send_dict("GET-CASE-NAMES", None)
+        return QtServer.send_dict("GET-LOAD-CASE-NAMES", None)
 
     @staticmethod
-    def get_pre_stress_load(case_name: str):
+    def get_pre_stress_load_data():
         """
         获取预应力荷载
-        Args:
-            case_name: 荷载工况名
+        Args: 无
         Example:
-            odb.get_pre_stress_load(case_name="荷载工况1")
+            odb.get_pre_stress_load()
         Returns: 包含信息为list[dict]
         """
-        payload = {"case_name": case_name}
-        return QtServer.send_dict("GET-PRESTRESS-LOAD", payload)
+        return QtServer.send_dict("GET-PRE-STRESS-LOAD-DATA")
 
     @staticmethod
     def get_node_mass_data():
@@ -69,104 +63,90 @@ class OdbModelLoad:
         return QtServer.send_dict("GET-NODE-MASS-DATA", None)
 
     @staticmethod
-    def get_nodal_force_load(case_name: str):
+    def get_nodal_force_load_data():
         """
         获取节点力荷载
-        Args:
-            case_name: 荷载工况名
+        Args: 无
         Example:
-            odb.get_nodal_force_load(case_name="荷载工况1")
+            odb.get_nodal_force_load()
         Returns: 包含信息为list[dict]
         """
-        payload = {"case_name": case_name}
-        return QtServer.send_dict("GET-NODAL-FORCE-LOAD", payload)
+        return QtServer.send_dict("GET-NODAL-FORCE-LOAD-DATA")
 
     @staticmethod
-    def get_nodal_displacement_load(case_name: str):
+    def get_nodal_displacement_load_data():
         """
         获取节点位移荷载
-        Args:
-            case_name: 荷载工况名
+        Args: 无
         Example:
-            odb.get_nodal_displacement_load(case_name="荷载工况1")
+            odb.get_nodal_displacement_load_data()
         Returns: 包含信息为list[dict]
         """
-        payload = {"case_name": case_name}
-        return QtServer.send_dict("GET-NODAL-DISPLACEMENT-LOAD", payload)
+        return QtServer.send_dict("GET-NODAL-DISPLACEMENT-LOAD-DATA")
 
     @staticmethod
-    def get_beam_element_load(case_name: str):
+    def get_beam_element_load_data():
         """
         获取梁单元荷载
-        Args:
-            case_name: 荷载工况名
+        Args: 无
         Example:
-            odb.get_beam_element_load(case_name="荷载工况1")
+            odb.get_beam_element_load_data()
         Returns: 包含信息为list[dict]
         """
-        payload = {"case_name": case_name}
-        return QtServer.send_dict("GET-BEAM-ELEMENT-LOAD", payload)
+        return QtServer.send_dict("GET-BEAM-ELEMENT-LOAD-DATA")
 
     @staticmethod
-    def get_plate_element_load(case_name: str):
+    def get_plate_element_load_data():
         """
         获取梁单元荷载
-        Args:
-            case_name: 荷载工况名
+        Args: 无
         Example:
-            odb.get_beam_element_load(case_name="荷载工况1")
+            odb.get_plate_element_load_data()
         Returns: 包含信息为list[dict]
         """
-        payload = {"case_name": case_name}
-        return QtServer.send_dict("GET-PLATE-ELEMENT-LOAD", payload)
+        return QtServer.send_dict("GET-PLATE-ELEMENT-LOAD-DATA")
 
     @staticmethod
-    def get_initial_tension_load(case_name: str):
+    def get_initial_tension_load_data():
         """
         获取初拉力荷载数据
-        Args:
-            case_name: 荷载工况名
+        Args: 无
         Example:
-            odb.get_initial_tension_load(case_name="荷载工况1")
+            odb.get_initial_tension_load_data()
         Returns: 包含信息为list[dict]
         """
-        payload = {"case_name": case_name}
-        return QtServer.send_dict("GET-INITIAL-TENSION-LOAD", payload)
+        return QtServer.send_dict("GET-INITIAL-TENSION-LOAD-DATA")
 
     @staticmethod
-    def get_cable_length_load(case_name: str):
+    def get_cable_length_load_data():
         """
         获取指定荷载工况的初拉力荷载数据
-        Args:
-            case_name: 荷载工况名
+        Args: 无
         Example:
-            odb.get_cable_length_load(case_name="荷载工况1")
+            odb.get_cable_length_load()
         Returns: 包含信息为list[dict]
         """
-        payload = {"case_name": case_name}
-        return QtServer.send_dict("GET-CABLE-LENGTH-LOAD", payload)
+        return QtServer.send_dict("GET-CABLE-LENGTH-LOAD-DATA")
 
     @staticmethod
-    def get_deviation_parameter():
+    def get_deviation_parameters():
         """
         获取制造偏差参数
         Args: 无
         Example:
-            odb.get_deviation_parameter()
+            odb.get_deviation_parameters()
         Returns: 包含信息为list[dict]
         """
-        return QtServer.send_dict("GET-DEVIATION-PARAMETER", None)
+        return QtServer.send_dict("GET-DEVIATION-PARAMETERS", None)
 
     @staticmethod
-    def get_deviation_load(case_name: str):
+    def get_deviation_load_data():
         """
         获取指定荷载工况的制造偏差荷载
-        Args:
-            case_name:荷载工况名
+        Args: 无
         Example:
-            odb.get_deviation_load(case_name="荷载工况1")
+            odb.get_deviation_load_data()
         Returns: 包含信息为list[dict]
         """
-        payload = {"case_name": case_name}
-        return QtServer.send_dict("GET-DEVIATION-LOAD", payload)
+        return QtServer.send_dict("GET-DEVIATION-LOAD-DATA")
     # endregion

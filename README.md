@@ -1,4 +1,4 @@
-> 最新qtmodel版本 V2.1.2 - 2025-12-17 
+> 最新qtmodel版本 V2.1.2 - 2025-12-19 
 > 最新qdat数据版本 V1.2.4 
 > pip install --upgrade qtmodel -i https://pypi.org/simple
 - 新增更新结构组接口 
@@ -3165,7 +3165,7 @@ odb.get_nodal_displacement_load(case_name="荷载工况1")
 ```Python
 # 示例代码
 from qtmodel import *
-odb.get_beam_element_load(case_name="荷载工况1")
+odb.get_beam_element_load_data(case_name="荷载工况1")
 #Returns: 包含信息为list[dict]
 ```  
 ### get_plate_element_load
@@ -3195,7 +3195,7 @@ odb.get_initial_tension_load(case_name="荷载工况1")
 ```Python
 # 示例代码
 from qtmodel import *
-odb.get_cable_length_load(case_name="荷载工况1")
+odb.get_cable_length_load_data()
 #Returns: 包含信息为list[dict]
 ```  
 ### get_deviation_parameter
@@ -3204,7 +3204,7 @@ odb.get_cable_length_load(case_name="荷载工况1")
 ```Python
 # 示例代码
 from qtmodel import *
-odb.get_deviation_parameter()
+odb.get_deviation_parameters()
 #Returns: 包含信息为list[dict]
 ```  
 ### get_deviation_load
@@ -3214,7 +3214,7 @@ odb.get_deviation_parameter()
 ```Python
 # 示例代码
 from qtmodel import *
-odb.get_deviation_load(case_name="荷载工况1")
+odb.get_deviation_load_data()
 #Returns: 包含信息为list[dict]
 ```  
 ##  获取施工阶段信息

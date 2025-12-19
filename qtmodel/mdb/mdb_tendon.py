@@ -1,5 +1,4 @@
-from typing import Optional, Union
-
+from typing import Optional, Union, List
 from qtmodel.core.data_helper import QtDataHelper
 from qtmodel.core.qt_server import QtServer
 
@@ -28,7 +27,7 @@ class MdbTendon:
     @staticmethod
     def add_tendon_property(name: str = "", tendon_type: int = 0, material_name: str = "", duct_type: int = 1,
                             steel_type: int = 1, steel_detail: list[float] = None,
-                            loos_detail: Optional[Union[list,tuple]] = None,
+                            loos_detail: Optional[Union[list, tuple]] = None,
                             slip_info: Optional[tuple[float, float]] = None):
         """
         添加钢束特性
@@ -178,6 +177,35 @@ class MdbTendon:
             "ids": QtDataHelper.parse_ids_to_array(ids),
         }
         return QtServer.send_dict("ADD-TENDON-ELEMENTS", payload)
+
+    @staticmethod
+    def add_pre_stress(case_name: str = "", tendon_name: (Union[str, List[str]]) = "", tension_type: int = 2,
+                       force: float = 1395000, group_name: str = "默认荷载组"):
+        """
+        添加预应力
+        Args:
+             case_name:荷载工况名
+             tendon_name:钢束名,支持钢束名或钢束名列表
+             tension_type:预应力类型 (0-始端 1-末端 2-两端)
+             force:预应力
+             group_name:荷载组
+        Example:
+            mdb.add_pre_stress(case_name="荷载工况名",tendon_name="钢束1",force=1390000)
+        Returns: 无
+        """
+        if isinstance(tendon_name, str):
+            tendon_list = [tendon_name] if tendon_name else []
+        else:
+            tendon_list = tendon_name
+
+        payload = {
+            "case_name": case_name,
+            "tendon_name": tendon_list,
+            "tension_type": tension_type,
+            "force": force,
+            "group_name": group_name,
+        }
+        return QtServer.send_dict("ADD-PRE-STRESS", payload)
 
     @staticmethod
     def update_tendon_property_material(name: str, material_name: str):

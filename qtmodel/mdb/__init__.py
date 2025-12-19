@@ -14,12 +14,9 @@ from .mdb_temperature_load import MdbTemperatureLoad
 from .mdb_tendon import MdbTendon
 from .mdb_load import MdbLoad
 
-# version 1.1.11
-
 class Mdb(MdbProject, MdbStructure,MdbProperty, MdbSection,
           MdbBoundary,  MdbDynamicLoad,MdbConstructionStage,
-          MdbLoad,
-          MdbStaticLoad, MdbTendon, MdbAssistant,MdbSinkLoad,
+          MdbLoad,MdbStaticLoad, MdbTendon, MdbAssistant,MdbSinkLoad,
           MdbTemperatureLoad,MdbLiveLoad,MdbAnalysisSetting):
     """聚合所有 Mdb 能力的门面类（Facade）。"""
     pass

@@ -1,4 +1,3 @@
-import json
 from qtmodel.core.qt_server import QtServer
 from qtmodel.core.data_helper import QtDataHelper
 from qtmodel.core.model_db import Node
@@ -197,8 +196,8 @@ class OdbModelStructure:
             odb.get_span_supports(span_info_name="跨度")
         Returns: list[int]
         """
-        payload = {"spaninfo_name": span_info_name}
-        return QtServer.send_dict("GET-SPANINFO-SUPPORTS", payload)
+        payload = {"span_info_name": span_info_name}
+        return QtServer.send_dict("GET-SPAN-SUPPORTS", payload)
 
     @staticmethod
     def get_span_elements(span_info_name: str = ""):
@@ -210,6 +209,6 @@ class OdbModelStructure:
             odb.get_span_elements(span_info_name="跨度")
         Returns: list[int]
         """
-        payload = {"spaninfo_name": span_info_name}
-        return QtServer.send_dict("GET-SPANINFO-ELEMENTS", payload)
+        payload = {"span_name": span_info_name}
+        return QtServer.send_dict("GET-SPAN-ELEMENTS", payload)
     # endregion

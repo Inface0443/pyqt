@@ -19,56 +19,48 @@ class OdbModelBoundary:
         return QtServer.send_dict("GET-BOUNDARY-GROUP-NAMES", None)
 
     @staticmethod
-    def get_general_support_data(group_name: str = None):
+    def get_general_support_data():
         """
         获取一般支承信息
-        Args:
-             group_name:默认输出所有边界组信息
+        Args: 无
         Example:
             odb.get_general_support_data()
         Returns: 包含信息为list[dict]
         """
-        payload = {"group_name": group_name} if group_name is not None else None
-        return QtServer.send_dict("GET-GENERAL-SUPPORT-DATA", payload)
+        return QtServer.send_dict("GET-GENERAL-SUPPORT-DATA")
 
     @staticmethod
-    def get_elastic_link_data(group_name: str = None):
+    def get_elastic_link_data():
         """
         获取弹性连接信息
-        Args:
-            group_name:默认输出所有边界组信息
+        Args: 无
         Example:
             odb.get_elastic_link_data()
         Returns: 包含信息为list[dict]
         """
-        payload = {"group_name": group_name} if group_name is not None else None
-        return QtServer.send_dict("GET-ELASTIC-LINK-DATA", payload)
+        return QtServer.send_dict("GET-ELASTIC-LINK-DATA")
 
     @staticmethod
-    def get_elastic_support_data(group_name: str = None):
+    def get_elastic_support_data():
         """
         获取弹性支承信息
-        Args:
-            group_name:默认输出所有边界组信息
+        Args: 无
         Example:
             odb.get_elastic_support_data()
         Returns: 包含信息为list[dict]
         """
-        payload = {"group_name": group_name} if group_name is not None else None
-        return QtServer.send_dict("GET-ELASTIC-SUPPORT-DATA", payload)
+        return QtServer.send_dict("GET-ELASTIC-SUPPORT-DATA")
 
     @staticmethod
-    def get_master_slave_link_data(group_name: str = None):
+    def get_master_slave_link_data():
         """
         获取主从连接信息
-        Args:
-            group_name:默认输出所有边界组信息
+        Args: 无
         Example:
             odb.get_master_slave_link_data()
         Returns: 包含信息为list[dict]
         """
-        payload = {"group_name": group_name} if group_name is not None else None
-        return QtServer.send_dict("GET-MASTER-SLAVE-LINK-DATA", payload)
+        return QtServer.send_dict("GET-MASTER-SLAVE-LINK-DATA")
 
     @staticmethod
     def get_node_local_axis_data():
@@ -79,45 +71,39 @@ class OdbModelBoundary:
             odb.get_node_local_axis_data()
         Returns: 包含信息为list[dict]
         """
-        return QtServer.send_dict("GET-NODE-LOCAL-AXIS-DATA", None)
+        return QtServer.send_dict("GET-NODE-LOCAL-AXIS-DATA")
 
     @staticmethod
-    def get_beam_constraint_data(group_name: str = None):
+    def get_beam_constraint_data():
         """
-           获取节点坐标信息
-           Args:
-               group_name:默认输出所有边界组信息
-           Example:
-               odb.get_beam_constraint_data()
-           Returns: 包含信息为list[dict]或 dict
+        获取节点坐标信息
+        Args: 无
+        Example:
+           odb.get_beam_constraint_data()
+        Returns: 包含信息为list[dict]
         """
-        payload = {"group_name": group_name} if group_name is not None else None
-        return QtServer.send_dict("GET-BEAM-CONSTRAINT-DATA", payload)
+        return QtServer.send_dict("GET-BEAM-CONSTRAINT-DATA")
 
     @staticmethod
-    def get_constraint_equation_data(group_name: str = None):
+    def get_constraint_equation_data():
         """
-         获取约束方程信息
-         Args:
-             group_name:默认输出所有边界组信息
-         Example:
-             odb.get_constraint_equation_data()
-         Returns: 包含信息为list[dict]
-         """
-        payload = {"group_name": group_name} if group_name is not None else None
-        return QtServer.send_dict("GET-CONSTRAINT-EQUATION-DATA", payload)
+        获取约束方程信息
+        Args: 无
+        Example:
+            odb.get_constraint_equation_data()
+        Returns: 包含信息为list[dict]
+        """
+        return QtServer.send_dict("GET-CONSTRAINT-EQUATION-DATA")
 
     @staticmethod
-    def get_effective_width(group_name: str = None):
+    def get_effective_width_data():
         """
         获取有效宽度数据
-        Args:
-            group_name:边界组
+        Args: 无
         Example:
-            odb.get_effective_width(group_name="边界组1")
+            odb.get_effective_width_data()
         Returns:  list[dict]
         """
-        payload = {"group_name": group_name} if group_name is not None else None
-        return QtServer.send_dict("GET-EFFECTIVE-WIDTH", payload)
+        return QtServer.send_dict("GET-EFFECTIVE-WIDTH-DATA")
 
 # endregion

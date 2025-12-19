@@ -157,8 +157,7 @@ class MdbBoundary:
 
     @staticmethod
     def add_elastic_link(index: int = -1, link_type: int = 1, start_id: int = 1, end_id: int = 2, beta_angle: float = 0,
-                         boundary_info: list[float] = None,
-                         group_name: str = "默认边界组", dis_ratio: float = 0.5, kx: float = 0):
+                         boundary_info: list[float] = None, group_name: str = "默认边界组", dis_ratio: float = 0.5, kx: float = 0):
         """
         添加弹性连接，建议指定index(弹性连接编号)
         Args:
@@ -167,7 +166,7 @@ class MdbBoundary:
             start_id:起始节点号
             end_id:终节点号
             beta_angle:贝塔角
-            boundary_info:边界信息
+            boundary_info:边界信息 (仅一般弹性连接需要)
             group_name:边界组名
             dis_ratio:距i端距离比 (仅一般弹性连接需要)
             kx:受拉或受压刚度
@@ -180,7 +179,6 @@ class MdbBoundary:
         if boundary_info is None:
             boundary_info = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
         boundary_info = [float(x) for x in boundary_info]
-
         payload = {
             "index": index,
             "link_type": link_type,

@@ -1,381 +1,382 @@
-   // ================== 项目管理 ==================
-   case "SEND-MES": return UIOperator.UiOperator.SendToStatusBar(arg);
-   case "INITIAL": return ProjectActions.CreateProject();
-   case "DO-SOLVE": return ProjectOperator.ProjectOperator.DoSolve();
-   case "CLOSE-PROJECT": return ProjectOperator.ProjectOperator.CloseProject();
-   case "CLEAR-PROJECT": return ProjectOperator.ProjectOperator.ClearProject();
-   case "REDO": return ProjectOperator.ProjectOperator.RedoCommand();
-   case "UNDO": return ProjectOperator.ProjectOperator.UndoCommand();
-   case "SAVE-FILE": return ProjectOperator.ProjectOperator.SaveFile(arg);
-   case "INP-COMMAND": return ProjectOperator.ProjectOperator.ImportCommand(arg);
-   case "UPDATE": return UIOperator.UiOperator.Update();
-   case "INP-FILE": return ProjectOperator.ProjectOperator.ImportFile(arg);
-   case "EXP-FILE": return ProjectOperator.ProjectOperator.ExporterFile(arg);
-   case "OPEN-FILE": return ProjectOperator.ProjectOperator.OpenFile(arg);
-   case "UPDATE-TO-PRE": return UIOperator.UiOperator.UpdateToPre();
-   case "UPDATE-TO-POST": return UIOperator.UiOperator.UpdateToPost();
-   case "EXP-QT-HELPER": return ProjectOperator.ProjectOperator.ExportQtHelper();
-   case "GET-PROJECT-PATH": return ProjectManager.Projects.ProjectManager.Instance.ModelDatabaseFilePath;
+ // ================== 项目管理 ==================
+ case "SEND-MES": return UIOperator.UiOperator.SendToStatusBar(arg);
+ case "INITIAL": return ProjectActions.CreateProject();
+ case "DO-SOLVE": return ProjectOperator.ProjectOperator.DoSolve();
+ case "CLOSE-PROJECT": return ProjectOperator.ProjectOperator.CloseProject();
+ case "CLEAR-PROJECT": return ProjectOperator.ProjectOperator.ClearProject();
+ case "REDO": return ProjectOperator.ProjectOperator.RedoCommand();
+ case "UNDO": return ProjectOperator.ProjectOperator.UndoCommand();
+ case "SAVE-FILE": return ProjectOperator.ProjectOperator.SaveFile(arg);
+ case "INP-COMMAND": return ProjectOperator.ProjectOperator.ImportCommand(arg);
+ case "UPDATE": return UIOperator.UiOperator.Update();
+ case "INP-FILE": return ProjectOperator.ProjectOperator.ImportFile(arg);
+ case "EXP-FILE": return ProjectOperator.ProjectOperator.ExporterFile(arg);
+ case "OPEN-FILE": return ProjectOperator.ProjectOperator.OpenFile(arg);
+ case "UPDATE-TO-PRE": return UIOperator.UiOperator.UpdateToPre();
+ case "UPDATE-TO-POST": return UIOperator.UiOperator.UpdateToPost();
+ case "EXP-QT-HELPER": return ProjectOperator.ProjectOperator.ExportQtHelper();
+ case "GET-PROJECT-PATH": return ProjectManager.Projects.ProjectManager.Instance.ModelDatabaseFilePath;
 
-   // ================== 视图操作 ==================
-   case "DISPLAY-NODE-ID": return UIOperator.UiOperator.DisplayNodeId(arg);
-   case "DISPLAY-ELEMENT-ID": return UIOperator.UiOperator.DisplayElementId(arg);
-   case "SET-VIEW-CAMERA": return UIOperator.UiOperator.SetViewCamera(arg);
-   case "SET-VIEW-DIRECTION": return UIOperator.UiOperator.SetViewDirection(arg);
-   case "ACTIVATE-STRUCTURE": return UIOperator.UiOperator.ActivateStructure(arg);
-   case "SET-UNIT": return UIOperator.UiOperator.SetPlotUnit(arg);
-   case "RESET-DISPLAY": return UIOperator.UiOperator.ResetDisplay(arg);
-   case "SAVE-PNG": return UIOperator.UiOperator.SavePng(arg);
-   case "SET-RENDER": return UIOperator.UiOperator.SetRender(arg);
-   case "CHANGE-CONSTRUCT-STAGE": return UIOperator.UiOperator.ChangeConstructStage(arg);
-   case "GET-CURRENT-PNG": return GetResultData.GetResultData.GetCurrentPng();
+ // ================== 视图操作 ==================
+ case "DISPLAY-NODE-ID": return UIOperator.UiOperator.DisplayNodeId(arg);
+ case "DISPLAY-ELEMENT-ID": return UIOperator.UiOperator.DisplayElementId(arg);
+ case "SET-VIEW-CAMERA": return UIOperator.UiOperator.SetViewCamera(arg);
+ case "SET-VIEW-DIRECTION": return UIOperator.UiOperator.SetViewDirection(arg);
+ case "ACTIVATE-STRUCTURE": return UIOperator.UiOperator.ActivateStructure(arg);
+ case "SET-UNIT": return UIOperator.UiOperator.SetPlotUnit(arg);
+ case "RESET-DISPLAY": return UIOperator.UiOperator.ResetDisplay(arg);
+ case "SAVE-PNG": return UIOperator.UiOperator.SavePng(arg);
+ case "SET-RENDER": return UIOperator.UiOperator.SetRender(arg);
+ case "CHANGE-CONSTRUCT-STAGE": return UIOperator.UiOperator.ChangeConstructStage(arg);
+ case "GET-CURRENT-PNG": return GetResultData.GetResultData.GetCurrentPng();
 
-   //================================================
-   // ============ 获取模型json数据 · 结构 ============
-   case "GET-OVERLAP-NODES": return GetModelData.GetModelData.GetOverlapNodes(arg);
-   case "GET-OVERLAP-ELEMENTS": return GetModelData.GetModelData.GetOverlapElements(arg);
-   case "GET-NODE-ID": return GetModelData.GetModelData.GetNodeId(arg);
-   case "GET-GROUP-NODES": return GetModelData.GetModelData.GetGroupNodes(arg);
-   case "GET-GROUP-ELEMENTS": return GetModelData.GetModelData.GetGroupElements(arg);
-   case "GET-NODE-DATA": return GetModelData.GetModelData.GetNodeData(arg);
-   case "GET-ELEMENT-DATA": return GetModelData.GetModelData.GetElementData(arg);
-   case "GET-ELEMENTS-BY-POINT": return GetModelData.GetModelData.GetElementsByPoint(arg);
-   case "GET-ELEMENTS-BY-SECTION": return GetModelData.GetModelData.GetElementsBySection(arg);
-   case "GET-ELEMENTS-BY-MATERIAL": return GetModelData.GetModelData.GetElementsByMaterial(arg);
-   case "GET-STRUCTURE-GROUP-NAMES": return GetModelData.GetModelData.GetStructureGroupNames(arg);
-   case "GET-ELEMENT-TYPE": return GetModelData.GetModelData.GetElementType(arg);
-   case "GET-STRUCTURE-GROUP": return GetModelData.GetModelData.GetStructureGroup(arg);
-   case "GET-ELEMENT-WEIGHT": return GetModelData.GetModelData.GetElementWeight(arg);
-   // ============ 获取模型json数据 · 特性 ============
-   case "GET-STEELBOXS": return GetModelData.GetModelData.GetSteelBoxGirders();
-   case "GET-SEC-LINES": return GetModelData.GetModelData.GetGirderSectionLies(arg);
-   case "GET-GIRDER-CHECK-SEC-LINES": return GetCheckModelData.GetGirderCheckModelData.GetGirderCheckSecLines(arg);
-   case "GET-MATERIAL-DATA": return GetModelData.GetModelData.GetMaterialData();
-   case "GET-THICKNESS-DATA": return GetModelData.GetModelData.GetThicknessData();
-   case "GET-SECTION-PROPERTY": return GetModelData.GetModelData.GetSectionProperty(arg);
-   case "GET-SECTION-DATA": return GetModelData.GetModelData.GetSectionData(arg);
-   case "GET-SECTION-PROPERTY-BY-LOOPS": return GetModelData.GetModelData.GetSectionPropertyByLoops(arg);
-   case "GET-SECTION-PROPERTY-BY-LINES": return GetModelData.GetModelData.GetSectionPropertyByLines(arg);
-   // ============ 获取模型json数据 · 钢束 ============
-   case "GET_TENDON-NAMES": return GetModelData.GetModelData.GetTendonNames();
-   case "GET_TENDON-DATA": return GetModelData.GetModelData.GetTendonData();
-   // ============ 获取模型json数据 · 边界 ============
-   case "GET-EFFECTIVE-WIDTH": return GetModelData.GetModelData.GetEffectiveWidth(arg);
-   case "GET-BOUNDARY-GROUP-NAMES": return GetModelData.GetModelData.GetBoundaryGroupNames();
-   case "GET-GENERAL-SUPPORT-DATA": return GetModelData.GetModelData.GetGeneralSupportData(arg);
-   // ============ 获取模型json数据 · 施工阶段 ============
-   case "GET-STAGE-NAMES": return GetModelData.GetModelData.GetStageNames(arg);
-   case "GET-ELEMENTS-OF-STAGE": return GetModelData.GetModelData.GetElementsOfStage(arg);
-   case "GET-NODES-OF-STAGE": return GetModelData.GetModelData.GetNodesOfStage(arg);
-   case "GET-GROUPS-OF-STAGE": return GetModelData.GetModelData.GetGroupsOfStage(arg);
-   // ============ 获取模型json数据 · 跨度信息 ============
-   case "GET-SPANINFO-SUPPORTS": return GetModelData.GetModelData.GetSpanInfoSupportIds(arg);
-   case "GET-SPANINFO-ELEMENTS": return GetModelData.GetModelData.GetSpanInfoElementIds(arg);
-   // ============ 获取模型json数据 · 钢箱梁检算荷载组合 ============
-   case "GET-CHECK-COMPATIBLES": return GetModelData.GetCheckLoadData.GetCheckCaseCompatible();
-   case "GET-CHECK-LOAD-ELEMENT-FORCE": return GetModelData.GetCheckLoadData.GetCheckLoadElementForce(arg);
-   case "GET-STEEL-BOX-ELEMENT-SECTION-DATA": return GetModelData.GetCheckLoadData.GetSteelBoxElementSectionData(arg);
-   case "GET-STEEL-BOX-REDUCED-POINT-DATA": return GetModelData.GetCheckLoadData.GetSteelBoxElementReducedPointData(arg);
-   case "GET-STEEL-BOX-EFFECTIVE-WIDTH": return GetModelData.GetModelData.GetEffectiveWidth(arg);
-   case "GET-NODE-BY-ID": return GetModelData.GetModelData.GetNodeById(arg);
+ //================================================
+ // ============ 获取模型json数据 · 结构 ============
+ case "GET-OVERLAP-NODES": return GetModelData.GetModelData.GetOverlapNodes(arg);
+ case "GET-OVERLAP-ELEMENTS": return GetModelData.GetModelData.GetOverlapElements(arg);
+ case "GET-NODE-ID": return GetModelData.GetModelData.GetNodeId(arg);
+ case "GET-GROUP-NODES": return GetModelData.GetModelData.GetGroupNodes(arg);
+ case "GET-GROUP-ELEMENTS": return GetModelData.GetModelData.GetGroupElements(arg);
+ case "GET-NODE-DATA": return GetModelData.GetModelData.GetNodeData(arg);
+ case "GET-ELEMENT-DATA": return GetModelData.GetModelData.GetElementData(arg);
+ case "GET-ELEMENTS-BY-POINT": return GetModelData.GetModelData.GetElementsByPoint(arg);
+ case "GET-ELEMENTS-BY-SECTION": return GetModelData.GetModelData.GetElementsBySection(arg);
+ case "GET-ELEMENTS-BY-MATERIAL": return GetModelData.GetModelData.GetElementsByMaterial(arg);
+ case "GET-STRUCTURE-GROUP-NAMES": return GetModelData.GetModelData.GetStructureGroupNames(arg);
+ case "GET-ELEMENT-TYPE": return GetModelData.GetModelData.GetElementType(arg);
+ case "GET-STRUCTURE-GROUP": return GetModelData.GetModelData.GetStructureGroup(arg);
+ case "GET-ELEMENT-WEIGHT": return GetModelData.GetModelData.GetElementWeight(arg);
+ // ============ 获取模型json数据 · 特性 ============
+ case "GET-STEELBOXS": return GetModelData.GetModelData.GetSteelBoxGirders();
+ case "GET-SEC-LINES": return GetModelData.GetModelData.GetGirderSectionLies(arg);
+ case "GET-GIRDER-CHECK-SEC-LINES": return GetCheckModelData.GetGirderCheckModelData.GetGirderCheckSecLines(arg);
+ case "GET-MATERIAL-DATA": return GetModelData.GetModelData.GetMaterialData();
+ case "GET-THICKNESS-DATA": return GetModelData.GetModelData.GetThicknessData();
+ case "GET-SECTION-PROPERTY": return GetModelData.GetModelData.GetSectionProperty(arg);
+ case "GET-SECTION-DATA": return GetModelData.GetModelData.GetSectionData(arg);
+ case "GET-SECTION-PROPERTY-BY-LOOPS": return GetModelData.GetModelData.GetSectionPropertyByLoops(arg);
+ case "GET-SECTION-PROPERTY-BY-LINES": return GetModelData.GetModelData.GetSectionPropertyByLines(arg);
+ // ============ 获取模型json数据 · 钢束 ============
+ case "GET_TENDON-NAMES": return GetModelData.GetModelData.GetTendonNames();
+ case "GET_TENDON-DATA": return GetModelData.GetModelData.GetTendonData();
+ // ============ 获取模型json数据 · 边界 ============
+ case "GET-EFFECTIVE-WIDTH": return GetModelData.GetModelData.GetEffectiveWidth(arg);
+ case "GET-BOUNDARY-GROUP-NAMES": return GetModelData.GetModelData.GetBoundaryGroupNames();
+ case "GET-GENERAL-SUPPORT-DATA": return GetModelData.GetModelData.GetGeneralSupportData(arg);
+ // ============ 获取模型json数据 · 施工阶段 ============
+ case "GET-STAGE-NAMES": return GetModelData.GetModelData.GetStageNames(arg);
+ case "GET-ELEMENTS-OF-STAGE": return GetModelData.GetModelData.GetElementsOfStage(arg);
+ case "GET-NODES-OF-STAGE": return GetModelData.GetModelData.GetNodesOfStage(arg);
+ case "GET-GROUPS-OF-STAGE": return GetModelData.GetModelData.GetGroupsOfStage(arg);
+ // ============ 获取模型json数据 · 跨度信息 ============
+ case "GET-SPAN-SUPPORTS": return GetModelData.GetModelData.GetSpanInfoSupportIds(arg);
+ case "GET-SPAN-ELEMENTS": return GetModelData.GetModelData.GetSpanInfoElementIds(arg);
+ // ============ 获取模型json数据 · 钢箱梁检算荷载组合 ============
+ case "GET-CHECK-COMPATIBLES": return GetModelData.GetCheckLoadData.GetCheckCaseCompatible();
+ case "GET-CHECK-LOAD-ELEMENT-FORCE": return GetModelData.GetCheckLoadData.GetCheckLoadElementForce(arg);
+ case "GET-STEEL-BOX-ELEMENT-SECTION-DATA": return GetModelData.GetCheckLoadData.GetSteelBoxElementSectionData(arg);
+ case "GET-STEEL-BOX-REDUCED-POINT-DATA": return GetModelData.GetCheckLoadData.GetSteelBoxElementReducedPointData(arg);
+ case "GET-STEEL-BOX-EFFECTIVE-WIDTH": return GetModelData.GetModelData.GetEffectiveWidth(arg);
+ case "GET-NODE-BY-ID": return GetModelData.GetModelData.GetNodeById(arg);
 
-   // ================================================
-   // ================================================
-   // ============ 处理添加模型操作 ============
-   case "ADD-NODES": return AddModelData.AddModelData.AddNodes(arg);
-   case "ADD-ELEMENT": return AddModelData.AddModelData.AddElement(arg);
-   case "ADD-ELEMENTS": return AddModelData.AddModelData.AddElements(arg);
-   case "ADD-LOAD-COMBINE": return AddModelData.AddModelData.AddLoadCombine(arg);
-   case "ADD-STRUCTURE-TO-GROUP": return AddModelData.AddModelData.AddStructureToStructureGroup(arg);
+ // ================================================
+ // ================================================
+ // ============ 处理添加模型操作 ============
+ case "ADD-NODES": return AddModelData.AddModelData.AddNodes(arg);
+ case "ADD-ELEMENT": return AddModelData.AddModelData.AddElement(arg);
+ case "ADD-ELEMENTS": return AddModelData.AddModelData.AddElements(arg);
+ case "ADD-LOAD-COMBINE": return AddModelData.AddModelData.AddLoadCombine(arg);
+ case "ADD-STRUCTURE-TO-GROUP": return AddModelData.AddModelData.AddStructureToStructureGroup(arg);
 
-   // ============添加材料操作 ============
-   case "ADD-MATERIAL": return AddModelData.AddModelData.AddMaterial(arg);
-   case "ADD-TIME-PARAMETER": return AddModelData.AddModelData.AddTimeParameter(arg);
-   case "ADD-CREEP-FUNCTION": return AddModelData.AddModelData.AddCreepFunction(arg);
-   case "ADD-SHRINK-FUNCTION": return AddModelData.AddModelData.AddShrinkFunction(arg);
+ // ============添加材料操作 ============
+ case "ADD-MATERIAL": return AddModelData.AddModelData.AddMaterial(arg);
+ case "ADD-TIME-PARAMETER": return AddModelData.AddModelData.AddTimeParameter(arg);
+ case "ADD-CREEP-FUNCTION": return AddModelData.AddModelData.AddCreepFunction(arg);
+ case "ADD-SHRINK-FUNCTION": return AddModelData.AddModelData.AddShrinkFunction(arg);
 
-   // ============ 添加静力荷载 ============
-   case "ADD-TENDON-GROUP": return AddModelData.AddModelData.AddTendonGroup(arg);
-   case "ADD-TENDON-PROPERTY": return AddModelData.AddModelData.AddTendonProperty(arg);
-   case "ADD-TENDON-3D": return AddModelData.AddModelData.AddTendon3d(arg);
-   case "ADD-TENDON-2D": return AddModelData.AddModelData.AddTendon2d(arg);
-   case "ADD-TENDON-ELEMENTS": return AddModelData.AddModelData.AddTendonElements(arg);
-   case "ADD-NODAL-FORCE": return AddModelData.AddModelData.AddNodalForce(arg);
-   case "ADD-CUSTOM-TEMPERATURE": return AddModelData.AddModelData.AddCustomTemperature(arg);
-   case "ADD-ELEMENT-TEMPERATURE": return AddModelData.AddModelData.AddElementTemperature(arg);
-   case "ADD-SYSTEM-TEMPERATURE": return AddModelData.AddModelData.AddSystemTemperature(arg);
-   case "ADD-GRADIENT-TEMPERATURE": return AddModelData.AddModelData.AddGradientTemperature(arg);
-   case "ADD-BEAM-SECTION-TEMPERATURE": return AddModelData.AddModelData.AddBeamSectionTemperature(arg);
-   case "ADD-INDEX-TEMPERATURE": return AddModelData.AddModelData.AddIndexTemperature(arg);
-   case "ADD-TOP-PLATE-TEMPERATURE": return AddModelData.AddModelData.AddTopPlateTemperature(arg);
-   case "ADD-STRUCTURE-GROUP": return AddModelData.AddModelData.AddStructureGroup(arg);
-   case "ADD-NODE-DISPLACEMENT": return AddModelData.AddModelData.AddNodeDisplacement(arg);
-   case "ADD-BEAM-ELEMENT-LOAD": return AddModelData.AddModelData.AddBeamElementLoad(arg);
-   case "ADD-PRE-STRESS": return AddModelData.AddModelData.AddPreStress(arg);
-   case "ADD-INITIAL-TENSION-LOAD": return AddModelData.AddModelData.AddInitialTensionLoad(arg);
-   case "ADD-CABLE-LENGTH-LOAD": return AddModelData.AddModelData.AddCableLengthLoad(arg);
-   case "ADD-PLATE-ELEMENT-LOAD": return AddModelData.AddModelData.AddPlateElementLoad(arg);
-   case "ADD-DISTRIBUTE-PLANE-LOAD-TYPE": return AddModelData.AddModelData.AddDistributePlaneLoadType(arg);
-   case "ADD-DISTRIBUTE-PLANE-LOAD": return AddModelData.AddModelData.AddDistributePlaneLoad(arg);
-   case "ADD-SINK-GROUP": return AddModelData.AddModelData.AddSinkGroup(arg);
-   case "ADD-SINK-CASE": return AddModelData.AddModelData.AddSinkCase(arg);
-   case "ADD-CONCURRENT-REACTION": return AddModelData.AddModelData.AddConcurrentReaction(arg);
-   case "ADD-CONCURRENT-FORCE": return AddModelData.AddModelData.AddConcurrentForce(arg);
-   case "ADD-LOAD-CASE": return AddModelData.AddModelData.AddLoadCase(arg);
-   case "ADD-LOAD-GROUP": return AddModelData.AddModelData.AddLoadGroup(arg);
-   case "ADD-DEVIATION-PARAMETER": return AddModelData.AddModelData.AddDeviationParameter(arg);
-   case "ADD-DEVIATION-LOAD": return AddModelData.AddModelData.AddDeviationLoad(arg);
+ // ============ 添加静力荷载 ============
+ case "ADD-TENDON-GROUP": return AddModelData.AddModelData.AddTendonGroup(arg);
+ case "ADD-TENDON-PROPERTY": return AddModelData.AddModelData.AddTendonProperty(arg);
+ case "ADD-TENDON-3D": return AddModelData.AddModelData.AddTendon3d(arg);
+ case "ADD-TENDON-2D": return AddModelData.AddModelData.AddTendon2d(arg);
+ case "ADD-TENDON-ELEMENTS": return AddModelData.AddModelData.AddTendonElements(arg);
+ case "ADD-NODAL-FORCE": return AddModelData.AddModelData.AddNodalForce(arg);
+ case "ADD-CUSTOM-TEMPERATURE": return AddModelData.AddModelData.AddCustomTemperature(arg);
+ case "ADD-ELEMENT-TEMPERATURE": return AddModelData.AddModelData.AddElementTemperature(arg);
+ case "ADD-SYSTEM-TEMPERATURE": return AddModelData.AddModelData.AddSystemTemperature(arg);
+ case "ADD-GRADIENT-TEMPERATURE": return AddModelData.AddModelData.AddGradientTemperature(arg);
+ case "ADD-BEAM-SECTION-TEMPERATURE": return AddModelData.AddModelData.AddBeamSectionTemperature(arg);
+ case "ADD-INDEX-TEMPERATURE": return AddModelData.AddModelData.AddIndexTemperature(arg);
+ case "ADD-TOP-PLATE-TEMPERATURE": return AddModelData.AddModelData.AddTopPlateTemperature(arg);
+ case "ADD-STRUCTURE-GROUP": return AddModelData.AddModelData.AddStructureGroup(arg);
+ case "ADD-NODE-DISPLACEMENT": return AddModelData.AddModelData.AddNodeDisplacement(arg);
+ case "ADD-BEAM-ELEMENT-LOAD": return AddModelData.AddModelData.AddBeamElementLoad(arg);
+ case "ADD-PRE-STRESS": return AddModelData.AddModelData.AddPreStress(arg);
+ case "ADD-INITIAL-TENSION-LOAD": return AddModelData.AddModelData.AddInitialTensionLoad(arg);
+ case "ADD-CABLE-LENGTH-LOAD": return AddModelData.AddModelData.AddCableLengthLoad(arg);
+ case "ADD-PLATE-ELEMENT-LOAD": return AddModelData.AddModelData.AddPlateElementLoad(arg);
+ case "ADD-DISTRIBUTE-PLANE-LOAD-TYPE": return AddModelData.AddModelData.AddDistributePlaneLoadType(arg);
+ case "ADD-DISTRIBUTE-PLANE-LOAD": return AddModelData.AddModelData.AddDistributePlaneLoad(arg);
+ case "ADD-SINK-GROUP": return AddModelData.AddModelData.AddSinkGroup(arg);
+ case "ADD-SINK-CASE": return AddModelData.AddModelData.AddSinkCase(arg);
+ case "ADD-CONCURRENT-REACTION": return AddModelData.AddModelData.AddConcurrentReaction(arg);
+ case "ADD-CONCURRENT-FORCE": return AddModelData.AddModelData.AddConcurrentForce(arg);
+ case "ADD-LOAD-CASE": return AddModelData.AddModelData.AddLoadCase(arg);
+ case "ADD-LOAD-GROUP": return AddModelData.AddModelData.AddLoadGroup(arg);
+ case "ADD-DEVIATION-PARAMETER": return AddModelData.AddModelData.AddDeviationParameter(arg);
+ case "ADD-DEVIATION-LOAD": return AddModelData.AddModelData.AddDeviationLoad(arg);
 
-   // ================== 截面与变截面操作 Section ==================
-   // ----------- Add -----------
-   case "ADD-SECTION": return AddModelData.AddModelData.AddSection(arg);
-   case "ADD-TAPPER-SECTION": return AddModelData.AddModelData.AddTapperSection(arg);
-   case "ADD-TAPPER-SECTION-BY-ID": return AddModelData.AddModelData.AddTapperSectionById(arg);
-   case "ADD-TAPPER-SECTION-FROM-GROUP": return AddModelData.AddModelData.AddTapperSectionFromGroup(arg);
-   case "ADD-TAPPER-SECTION-GROUP": return AddModelData.AddModelData.AddTapperSectionGroup(arg);
-   case "ADD-ELEMENTS-TO-TAPPER-SECTION-GROUP": return AddModelData.AddModelData.AddElementsToTapperSectionGroup(arg);
-   case "ADD-THICKNESS": return AddModelData.AddModelData.AddThickness(arg);
-   // ----------- Update -----------
-   case "UPDATE-SECTION-PROPERTY": return UpdateModelData.UpdateModelData.UpdateSectionProperty(arg);
-   case "UPDATE-SECTION-BIAS": return UpdateModelData.UpdateModelData.UpdateSectionBias(arg);
-   case "NORMALIZE-SECTION": return UpdateModelData.UpdateModelData.NormalizeTapperSection(arg);
-   case "CALCULATE-SECTION-PROPERTY": return UpdateModelData.UpdateModelData.CalculateSectionProperty();
-   case "UPDATE-TAPPER-SECTION-GROUP": return UpdateModelData.UpdateModelData.UpdateTapperSectionGroup(arg);
-   case "UPDATE-SECTION-ID": return UpdateModelData.UpdateModelData.UpdateSectionId(arg);
-   // ----------- Remove -----------
-   case "REMOVE-SECTION": return RemoveModelData.RemoveModelData.RemoveSection(arg);
-   case "REMOVE-UNUSED-SECTIONS": return RemoveModelData.RemoveModelData.RemoveUnusedSections();
-   case "REMOVE-TAPPER-SECTION-GROUP": return RemoveModelData.RemoveModelData.RemoveTapperSectionGroup(arg);
+ // ================== 截面与变截面操作 Section ==================
+ // ----------- Add -----------
+ case "ADD-SECTION": return AddModelData.AddModelData.AddSection(arg);
+ case "ADD-SINGLE-SECTION": return AddModelData.AddModelData.AddSection(arg);
+ case "ADD-TAPPER-SECTION": return AddModelData.AddModelData.AddTapperSection(arg);
+ case "ADD-TAPPER-SECTION-BY-ID": return AddModelData.AddModelData.AddTapperSectionById(arg);
+ case "ADD-TAPPER-SECTION-FROM-GROUP": return AddModelData.AddModelData.AddTapperSectionFromGroup(arg);
+ case "ADD-TAPPER-SECTION-GROUP": return AddModelData.AddModelData.AddTapperSectionGroup(arg);
+ case "ADD-ELEMENTS-TO-TAPPER-SECTION-GROUP": return AddModelData.AddModelData.AddElementsToTapperSectionGroup(arg);
+ case "ADD-THICKNESS": return AddModelData.AddModelData.AddThickness(arg);
+ // ----------- Update -----------
+ case "UPDATE-SECTION-PROPERTY": return UpdateModelData.UpdateModelData.UpdateSectionProperty(arg);
+ case "UPDATE-SECTION-BIAS": return UpdateModelData.UpdateModelData.UpdateSectionBias(arg);
+ case "NORMALIZE-SECTION": return UpdateModelData.UpdateModelData.NormalizeTapperSection(arg);
+ case "CALCULATE-SECTION-PROPERTY": return UpdateModelData.UpdateModelData.CalculateSectionProperty();
+ case "UPDATE-TAPPER-SECTION-GROUP": return UpdateModelData.UpdateModelData.UpdateTapperSectionGroup(arg);
+ case "UPDATE-SECTION-ID": return UpdateModelData.UpdateModelData.UpdateSectionId(arg);
+ // ----------- Remove -----------
+ case "REMOVE-SECTION": return RemoveModelData.RemoveModelData.RemoveSection(arg);
+ case "REMOVE-UNUSED-SECTIONS": return RemoveModelData.RemoveModelData.RemoveUnusedSections();
+ case "REMOVE-TAPPER-SECTION-GROUP": return RemoveModelData.RemoveModelData.RemoveTapperSectionGroup(arg);
 
-   // ================== 边界操作 Boundary ==================
-   // ----------- Add -----------
-   case "ADD-EFFECTIVE-WIDTH": return AddModelData.AddModelData.AddEffectiveWidth(arg);
-   case "ADD-BOUNDARY-GROUP": return AddModelData.AddModelData.AddBoundaryGroup(arg);
-   case "ADD-GENERAL-ELASTIC-SUPPORT-PROPERTY": return AddModelData.AddModelData.AddGeneralElasticSupportProperty(arg);
-   case "ADD-GENERAL-ELASTIC-SUPPORT": return AddModelData.AddModelData.AddGeneralElasticSupport(arg);
-   case "ADD-GENERAL-SUPPORT": return AddModelData.AddModelData.AddGeneralSupport(arg);
-   case "ADD-ELASTIC-SUPPORT": return AddModelData.AddModelData.AddElasticSupport(arg);
-   case "ADD-ELASTIC-LINK": return AddModelData.AddModelData.AddElasticLink(arg);
-   case "ADD-MASTER-SLAVE-LINKS": return AddModelData.AddModelData.AddMasterSlaveLinks(arg);
-   case "ADD-MASTER-SLAVE-LINK": return AddModelData.AddModelData.AddMasterSlaveLink(arg);
-   case "ADD-BEAM-CONSTRAINT": return AddModelData.AddModelData.AddBeamConstraint(arg);
-   case "ADD-CONSTRAINT-EQUATION": return AddModelData.AddModelData.AddConstraintEquation(arg);
-   case "ADD-NODE-AXIS": return AddModelData.AddModelData.AddNodeAxis(arg);
-   // ----------- Update -----------
-   case "UPDATE-BOUNDARY-GROUP": return UpdateModelData.UpdateModelData.UpdateBoundaryGroup(arg);
-   case "UPDATE-NODE-AXIS-ID": return UpdateModelData.UpdateModelData.UpdateBoundaryGroup(arg);
-   case "UPDATE-GENERAL-ELASTIC-SUPPORT-PROPERTY-NAME": return UpdateModelData.UpdateModelData.UpdateGeneralElasticSupportPropertyName(arg);
-   // ----------- Remove -----------
-   case "REMOVE-EFFECTIVE-WIDTH": return RemoveModelData.RemoveModelData.RemoveEffectiveWidth(arg);
-   case "REMOVE-BOUNDARY-GROUP": return RemoveModelData.RemoveModelData.RemoveBoundaryGroup(arg);
-   case "REMOVE-ALL-BOUNDARY": return RemoveModelData.RemoveModelData.RemoveAllBoundary(arg);
-   case "REMOVE-BOUNDARY": return RemoveModelData.RemoveModelData.RemoveBoundary(arg);
-   case "REMOVE-GENERAL-ELASTIC-SUPPORT-PROPERTY": return RemoveModelData.RemoveModelData.RemoveGeneralElasticSupportProperty(arg);
-   case "REMOVE-NODE-AXIS": return RemoveModelData.RemoveModelData.RemoveNodeAxis(arg);
+ // ================== 边界操作 Boundary ==================
+ // ----------- Add -----------
+ case "ADD-EFFECTIVE-WIDTH": return AddModelData.AddModelData.AddEffectiveWidth(arg);
+ case "ADD-BOUNDARY-GROUP": return AddModelData.AddModelData.AddBoundaryGroup(arg);
+ case "ADD-GENERAL-ELASTIC-SUPPORT-PROPERTY": return AddModelData.AddModelData.AddGeneralElasticSupportProperty(arg);
+ case "ADD-GENERAL-ELASTIC-SUPPORT": return AddModelData.AddModelData.AddGeneralElasticSupport(arg);
+ case "ADD-GENERAL-SUPPORT": return AddModelData.AddModelData.AddGeneralSupport(arg);
+ case "ADD-ELASTIC-SUPPORT": return AddModelData.AddModelData.AddElasticSupport(arg);
+ case "ADD-ELASTIC-LINK": return AddModelData.AddModelData.AddElasticLink(arg);
+ case "ADD-MASTER-SLAVE-LINKS": return AddModelData.AddModelData.AddMasterSlaveLinks(arg);
+ case "ADD-MASTER-SLAVE-LINK": return AddModelData.AddModelData.AddMasterSlaveLink(arg);
+ case "ADD-BEAM-CONSTRAINT": return AddModelData.AddModelData.AddBeamConstraint(arg);
+ case "ADD-CONSTRAINT-EQUATION": return AddModelData.AddModelData.AddConstraintEquation(arg);
+ case "ADD-NODE-AXIS": return AddModelData.AddModelData.AddNodeAxis(arg);
+ // ----------- Update -----------
+ case "UPDATE-BOUNDARY-GROUP": return UpdateModelData.UpdateModelData.UpdateBoundaryGroup(arg);
+ case "UPDATE-NODE-AXIS-ID": return UpdateModelData.UpdateModelData.UpdateBoundaryGroup(arg);
+ case "UPDATE-GENERAL-ELASTIC-SUPPORT-PROPERTY-NAME": return UpdateModelData.UpdateModelData.UpdateGeneralElasticSupportPropertyName(arg);
+ // ----------- Remove -----------
+ case "REMOVE-EFFECTIVE-WIDTH": return RemoveModelData.RemoveModelData.RemoveEffectiveWidth(arg);
+ case "REMOVE-BOUNDARY-GROUP": return RemoveModelData.RemoveModelData.RemoveBoundaryGroup(arg);
+ case "REMOVE-ALL-BOUNDARY": return RemoveModelData.RemoveModelData.RemoveAllBoundary(arg);
+ case "REMOVE-BOUNDARY": return RemoveModelData.RemoveModelData.RemoveBoundary(arg);
+ case "REMOVE-GENERAL-ELASTIC-SUPPORT-PROPERTY": return RemoveModelData.RemoveModelData.RemoveGeneralElasticSupportProperty(arg);
+ case "REMOVE-NODE-AXIS": return RemoveModelData.RemoveModelData.RemoveNodeAxis(arg);
 
-   // ================== 动力荷载 DynamicLoad ==================
-   // ----------- Add -----------
-   case "ADD-LOAD-TO-MASS": return AddModelData.AddModelData.AddLoadToMass(arg);
-   case "ADD-NODAL-MASS": return AddModelData.AddModelData.AddNodalMass(arg);
-   case "ADD-BOUNDARY-ELEMENT-PROPERTY": return AddModelData.AddModelData.AddBoundaryElementProperty(arg);
-   case "ADD-BOUNDARY-ELEMENT-LINK": return AddModelData.AddModelData.AddBoundaryElementLink(arg);
-   case "ADD-NODAL-DYNAMIC-LOAD": return AddModelData.AddModelData.AddNodalDynamicLoad(arg);
-   case "ADD-GROUND-MOTION": return AddModelData.AddModelData.AddGroundMotion(arg);
-   case "ADD-TIME-HISTORY-CASE": return AddModelData.AddModelData.AddTimeHistoryCase(arg);
-   case "ADD-TIME-HISTORY-FUNCTION": return AddModelData.AddModelData.AddTimeHistoryFunction(arg);
-   case "ADD-SPECTRUM-FUNCTION": return AddModelData.AddModelData.AddSpectrumFunction(arg);
-   case "ADD-SPECTRUM-CASE": return AddModelData.AddModelData.AddSpectrumCase(arg);
-   case "ADD-VEHICLE-DYNAMIC-LOAD": return AddModelData.AddModelData.AddVehicleDynamicLoad(arg);
-   // ----------- Update -----------
-   case "UPDATE-LOAD-TO-MASS": return UpdateModelData.UpdateModelData.UpdateLoadToMass(arg);
-   case "UPDATE-NODAL-MASS": return UpdateModelData.UpdateModelData.UpdateNodalMass(arg);
-   case "UPDATE-BOUNDARY-ELEMENT-PROPERTY-NAME": return UpdateModelData.UpdateModelData.UpdateBoundaryElementPropertyName(arg);
-   case "UPDATE-BOUNDARY-ELEMENT-LINK": return UpdateModelData.UpdateModelData.UpdateBoundaryElementLink(arg);
-   case "UPDATE-TIME-HISTORY-CASE-NAME": return UpdateModelData.UpdateModelData.UpdateTimeHistoryCaseName(arg);
-   case "UPDATE-TIME-HISTORY-FUNCTION-NAME": return UpdateModelData.UpdateModelData.UpdateTimeHistoryFunctionName(arg);
-   case "UPDATE-NODAL-DYNAMIC-LOAD": return UpdateModelData.UpdateModelData.UpdateNodalDynamicLoad(arg);
-   case "UPDATE-GROUND-MOTION": return UpdateModelData.UpdateModelData.UpdateGroundMotion(arg);
-   case "UPDATE-SPECTRUM-FUNCTION-NAME": return UpdateModelData.UpdateModelData.UpdateSpectrumFunctionName(arg);
-   case "UPDATE-SPECTRUM-CASE-NAME": return UpdateModelData.UpdateModelData.UpdateSpectrumCaseName(arg);
-   // ----------- Remove -----------
-   case "REMOVE-TIME-HISTORY-LOAD-CASE": return RemoveModelData.RemoveModelData.RemoveTimeHistoryLoadCase(arg);
-   case "REMOVE-TIME-HISTORY-FUNCTION": return RemoveModelData.RemoveModelData.RemoveTimeHistoryFunction(arg);
-   case "REMOVE-LOAD-TO-MASS": return RemoveModelData.RemoveModelData.RemoveLoadToMass(arg);
-   case "REMOVE-NODAL-MASS": return RemoveModelData.RemoveModelData.RemoveNodalMass(arg);
-   case "REMOVE-BOUNDARY-ELEMENT-PROPERTY": return RemoveModelData.RemoveModelData.RemoveBoundaryElementProperty(arg);
-   case "REMOVE-BOUNDARY-ELEMENT-LINK": return RemoveModelData.RemoveModelData.RemoveBoundaryElementLink(arg);
-   case "REMOVE-GROUND-MOTION": return RemoveModelData.RemoveModelData.RemoveGroundMotion(arg);
-   case "REMOVE-NODAL-DYNAMIC-LOAD": return RemoveModelData.RemoveModelData.RemoveNodalDynamicLoad(arg);
-   case "REMOVE-SPECTRUM-CASE": return RemoveModelData.RemoveModelData.RemoveSpectrumCase(arg);
-   case "REMOVE-SPECTRUM-FUNCTION": return RemoveModelData.RemoveModelData.RemoveSpectrumFunction(arg);
+ // ================== 动力荷载 DynamicLoad ==================
+ // ----------- Add -----------
+ case "ADD-LOAD-TO-MASS": return AddModelData.AddModelData.AddLoadToMass(arg);
+ case "ADD-NODAL-MASS": return AddModelData.AddModelData.AddNodalMass(arg);
+ case "ADD-BOUNDARY-ELEMENT-PROPERTY": return AddModelData.AddModelData.AddBoundaryElementProperty(arg);
+ case "ADD-BOUNDARY-ELEMENT-LINK": return AddModelData.AddModelData.AddBoundaryElementLink(arg);
+ case "ADD-NODAL-DYNAMIC-LOAD": return AddModelData.AddModelData.AddNodalDynamicLoad(arg);
+ case "ADD-GROUND-MOTION": return AddModelData.AddModelData.AddGroundMotion(arg);
+ case "ADD-TIME-HISTORY-CASE": return AddModelData.AddModelData.AddTimeHistoryCase(arg);
+ case "ADD-TIME-HISTORY-FUNCTION": return AddModelData.AddModelData.AddTimeHistoryFunction(arg);
+ case "ADD-SPECTRUM-FUNCTION": return AddModelData.AddModelData.AddSpectrumFunction(arg);
+ case "ADD-SPECTRUM-CASE": return AddModelData.AddModelData.AddSpectrumCase(arg);
+ case "ADD-VEHICLE-DYNAMIC-LOAD": return AddModelData.AddModelData.AddVehicleDynamicLoad(arg);
+ // ----------- Update -----------
+ case "UPDATE-LOAD-TO-MASS": return UpdateModelData.UpdateModelData.UpdateLoadToMass(arg);
+ case "UPDATE-NODAL-MASS": return UpdateModelData.UpdateModelData.UpdateNodalMass(arg);
+ case "UPDATE-BOUNDARY-ELEMENT-PROPERTY-NAME": return UpdateModelData.UpdateModelData.UpdateBoundaryElementPropertyName(arg);
+ case "UPDATE-BOUNDARY-ELEMENT-LINK": return UpdateModelData.UpdateModelData.UpdateBoundaryElementLink(arg);
+ case "UPDATE-TIME-HISTORY-CASE-NAME": return UpdateModelData.UpdateModelData.UpdateTimeHistoryCaseName(arg);
+ case "UPDATE-TIME-HISTORY-FUNCTION-NAME": return UpdateModelData.UpdateModelData.UpdateTimeHistoryFunctionName(arg);
+ case "UPDATE-NODAL-DYNAMIC-LOAD": return UpdateModelData.UpdateModelData.UpdateNodalDynamicLoad(arg);
+ case "UPDATE-GROUND-MOTION": return UpdateModelData.UpdateModelData.UpdateGroundMotion(arg);
+ case "UPDATE-SPECTRUM-FUNCTION-NAME": return UpdateModelData.UpdateModelData.UpdateSpectrumFunctionName(arg);
+ case "UPDATE-SPECTRUM-CASE-NAME": return UpdateModelData.UpdateModelData.UpdateSpectrumCaseName(arg);
+ // ----------- Remove -----------
+ case "REMOVE-TIME-HISTORY-LOAD-CASE": return RemoveModelData.RemoveModelData.RemoveTimeHistoryLoadCase(arg);
+ case "REMOVE-TIME-HISTORY-FUNCTION": return RemoveModelData.RemoveModelData.RemoveTimeHistoryFunction(arg);
+ case "REMOVE-LOAD-TO-MASS": return RemoveModelData.RemoveModelData.RemoveLoadToMass(arg);
+ case "REMOVE-NODAL-MASS": return RemoveModelData.RemoveModelData.RemoveNodalMass(arg);
+ case "REMOVE-BOUNDARY-ELEMENT-PROPERTY": return RemoveModelData.RemoveModelData.RemoveBoundaryElementProperty(arg);
+ case "REMOVE-BOUNDARY-ELEMENT-LINK": return RemoveModelData.RemoveModelData.RemoveBoundaryElementLink(arg);
+ case "REMOVE-GROUND-MOTION": return RemoveModelData.RemoveModelData.RemoveGroundMotion(arg);
+ case "REMOVE-NODAL-DYNAMIC-LOAD": return RemoveModelData.RemoveModelData.RemoveNodalDynamicLoad(arg);
+ case "REMOVE-SPECTRUM-CASE": return RemoveModelData.RemoveModelData.RemoveSpectrumCase(arg);
+ case "REMOVE-SPECTRUM-FUNCTION": return RemoveModelData.RemoveModelData.RemoveSpectrumFunction(arg);
 
-   // ================== 移动荷载操作 LiveLoad ===================
-   // ----------- Add -----------
-   case "ADD-STANDARD-VEHICLE": return AddModelData.AddModelData.AddStandardVehicle(arg);
-   case "ADD-USER-VEHICLE": return AddModelData.AddModelData.AddUserVehicle(arg);
-   case "ADD-NODE-TANDEM": return AddModelData.AddModelData.AddNodeTandem(arg);
-   case "ADD-INFLUENCE-PLANE": return AddModelData.AddModelData.AddInfluencePlane(arg);
-   case "ADD-LANE-LINE": return AddModelData.AddModelData.AddLaneLine(arg);
-   case "ADD-LIVE-LOAD-CASE": return AddModelData.AddModelData.AddLiveLoadCase(arg);
-   case "ADD-CAR-RELATIVE-FACTOR": return AddModelData.AddModelData.AddCarRelativeFactor(arg);
-   case "ADD-TRAIN-RELATIVE-FACTOR": return AddModelData.AddModelData.AddTrainRelativeFactor(arg);
-   case "ADD-METRO-RELATIVE-FACTOR": return AddModelData.AddModelData.AddMetroRelativeFactor(arg);
-   // ----------- Update -----------
-   case "UPDATE-VEHICLE-NAME": return UpdateModelData.UpdateModelData.UpdateVehicleName(arg);
-   case "UPDATE-INFLUENCE-PLANE-NAME": return UpdateModelData.UpdateModelData.UpdateInfluencePlaneName(arg);
-   case "UPDATE-LANE-LINE-NAME": return UpdateModelData.UpdateModelData.UpdateLaneLineName(arg);
-   case "UPDATE-NODE-TANDEM-NAME": return UpdateModelData.UpdateModelData.UpdateNodeTandemName(arg);
-   case "UPDATE-LIVE-LOAD-CASE-NAME": return UpdateModelData.UpdateModelData.UpdateLiveLoadCaseName(arg);
-   // ----------- Remove -----------
-   case "REMOVE-VEHICLE": return RemoveModelData.RemoveModelData.RemoveVehicle(arg);
-   case "REMOVE-NODE-TANDEM": return RemoveModelData.RemoveModelData.RemoveNodeTandem(arg);
-   case "REMOVE-INFLUENCE-PLANE": return RemoveModelData.RemoveModelData.RemoveInfluencePlane(arg);
-   case "REMOVE-LANE-LINE": return RemoveModelData.RemoveModelData.RemoveLaneLine(arg);
-   case "REMOVE-LIVE-LOAD-CASE": return RemoveModelData.RemoveModelData.RemoveLiveLoadCase(arg);
+ // ================== 移动荷载操作 LiveLoad ===================
+ // ----------- Add -----------
+ case "ADD-STANDARD-VEHICLE": return AddModelData.AddModelData.AddStandardVehicle(arg);
+ case "ADD-USER-VEHICLE": return AddModelData.AddModelData.AddUserVehicle(arg);
+ case "ADD-NODE-TANDEM": return AddModelData.AddModelData.AddNodeTandem(arg);
+ case "ADD-INFLUENCE-PLANE": return AddModelData.AddModelData.AddInfluencePlane(arg);
+ case "ADD-LANE-LINE": return AddModelData.AddModelData.AddLaneLine(arg);
+ case "ADD-LIVE-LOAD-CASE": return AddModelData.AddModelData.AddLiveLoadCase(arg);
+ case "ADD-CAR-RELATIVE-FACTOR": return AddModelData.AddModelData.AddCarRelativeFactor(arg);
+ case "ADD-TRAIN-RELATIVE-FACTOR": return AddModelData.AddModelData.AddTrainRelativeFactor(arg);
+ case "ADD-METRO-RELATIVE-FACTOR": return AddModelData.AddModelData.AddMetroRelativeFactor(arg);
+ // ----------- Update -----------
+ case "UPDATE-VEHICLE-NAME": return UpdateModelData.UpdateModelData.UpdateVehicleName(arg);
+ case "UPDATE-INFLUENCE-PLANE-NAME": return UpdateModelData.UpdateModelData.UpdateInfluencePlaneName(arg);
+ case "UPDATE-LANE-LINE-NAME": return UpdateModelData.UpdateModelData.UpdateLaneLineName(arg);
+ case "UPDATE-NODE-TANDEM-NAME": return UpdateModelData.UpdateModelData.UpdateNodeTandemName(arg);
+ case "UPDATE-LIVE-LOAD-CASE-NAME": return UpdateModelData.UpdateModelData.UpdateLiveLoadCaseName(arg);
+ // ----------- Remove -----------
+ case "REMOVE-VEHICLE": return RemoveModelData.RemoveModelData.RemoveVehicle(arg);
+ case "REMOVE-NODE-TANDEM": return RemoveModelData.RemoveModelData.RemoveNodeTandem(arg);
+ case "REMOVE-INFLUENCE-PLANE": return RemoveModelData.RemoveModelData.RemoveInfluencePlane(arg);
+ case "REMOVE-LANE-LINE": return RemoveModelData.RemoveModelData.RemoveLaneLine(arg);
+ case "REMOVE-LIVE-LOAD-CASE": return RemoveModelData.RemoveModelData.RemoveLiveLoadCase(arg);
 
-   // ================== 施工阶段操作 STAGE ===================
-   // ----------- Add -----------
-   case "ADD-CONSTRUCTION-STAGE": return AddModelData.AddModelData.AddConstructionStage(arg);
-   case "ADD-ELEMENT-TO-CONNECTION-STAGE": return AddModelData.AddModelData.AddElementToConnectionStage(arg);
-   case "ADD-SECTION-CONNECTION-STAGE": return AddModelData.AddModelData.AddSectionConnectionStage(arg);
-   // ----------- Update -----------
-   case "UPDATE-CONSTRUCTION-STAGE": return UpdateModelData.UpdateModelData.UpdateConstructionStage(arg);
-   case "UPDATE-WEIGHT-STAGE": return UpdateModelData.UpdateModelData.UpdateWightStage(arg);
-   case "UPDATE-CONSTRUCTION-STAGE-ID": return UpdateModelData.UpdateModelData.UpdateConstructionStageId(arg);
-   case "UPDATE-ALL-STAGE-SETTING-TYPE": return UpdateModelData.UpdateModelData.UpdateAllStageSettingType(arg);
-   case "UPDATE-SECTION-CONNECTION-STAGE": return UpdateModelData.UpdateModelData.UpdateSectionConnectionStage(arg);
-   case "MERGE-ALL-STAGES": return UpdateModelData.UpdateModelData.MergeAllStages(arg);
-   // ----------- Remove -----------
-   case "REMOVE-SECTION-CONNECTION-STAGE": return RemoveModelData.RemoveModelData.RemoveSectionConnectionStage(arg);
-   case "REMOVE-CONSTRUCTION-STAGE": return RemoveModelData.RemoveModelData.RemoveConstructionStage(arg);
+ // ================== 施工阶段操作 STAGE ===================
+ // ----------- Add -----------
+ case "ADD-CONSTRUCTION-STAGE": return AddModelData.AddModelData.AddConstructionStage(arg);
+ case "ADD-ELEMENT-TO-CONNECTION-STAGE": return AddModelData.AddModelData.AddElementToConnectionStage(arg);
+ case "ADD-SECTION-CONNECTION-STAGE": return AddModelData.AddModelData.AddSectionConnectionStage(arg);
+ // ----------- Update -----------
+ case "UPDATE-CONSTRUCTION-STAGE": return UpdateModelData.UpdateModelData.UpdateConstructionStage(arg);
+ case "UPDATE-WEIGHT-STAGE": return UpdateModelData.UpdateModelData.UpdateWightStage(arg);
+ case "UPDATE-CONSTRUCTION-STAGE-ID": return UpdateModelData.UpdateModelData.UpdateConstructionStageId(arg);
+ case "UPDATE-ALL-STAGE-SETTING-TYPE": return UpdateModelData.UpdateModelData.UpdateAllStageSettingType(arg);
+ case "UPDATE-SECTION-CONNECTION-STAGE": return UpdateModelData.UpdateModelData.UpdateSectionConnectionStage(arg);
+ case "MERGE-ALL-STAGES": return UpdateModelData.UpdateModelData.MergeAllStages(arg);
+ // ----------- Remove -----------
+ case "REMOVE-SECTION-CONNECTION-STAGE": return RemoveModelData.RemoveModelData.RemoveSectionConnectionStage(arg);
+ case "REMOVE-CONSTRUCTION-STAGE": return RemoveModelData.RemoveModelData.RemoveConstructionStage(arg);
 
-   // ============ 项目分析设置操作 ===================
-   case "UPDATE-PROJECT-SETTING": return UpdateModelData.UpdateModelData.UpdateProjectSetting(arg);
-   case "UPDATE-GLOBAL-SETTING": return UpdateModelData.UpdateModelData.UpdateGlobalSetting(arg);
-   case "UPDATE-CONSTRUCTION-STAGE-SETTING": return UpdateModelData.UpdateModelData.UpdateConstructionStageSetting(arg);
-   case "UPDATE-LIVE-LOAD-SETTING": return UpdateModelData.UpdateModelData.UpdateLiveLoadSetting(arg);
-   case "UPDATE-NON-LINEAR-SETTING": return UpdateModelData.UpdateModelData.UpdateNonLinearSetting(arg);
-   case "UPDATE-OPERATION-STAGE-SETTING": return UpdateModelData.UpdateModelData.UpdateOperationStageSetting(arg);
-   case "UPDATE-SELF-VIBRATION-SETTING": return UpdateModelData.UpdateModelData.UpdateSelfVibrationSetting(arg);
-   case "UPDATE-RESPONSE-SPECTRUM-SETTING": return UpdateModelData.UpdateModelData.UpdateResponseSpectrumSetting(arg);
-   case "UPDATE-TIME-HISTORY-SETTING": return UpdateModelData.UpdateModelData.UpdateTimeHistorySetting(arg);
-   case "UPDATE-BULKING-SETTING": return UpdateModelData.UpdateModelData.UpdateBulkingSetting(arg);
-   // ============ 更新模型操作 · 节点 ============
-   case "UPDATE-NODE": return UpdateModelData.UpdateModelData.UpdateNode(arg);
-   case "UPDATE-NODE-ID": return UpdateModelData.UpdateModelData.UpdateNodeId(arg);
-   case "MERGE-NODES": return UpdateModelData.UpdateModelData.MergeNodes(arg);
-   case "MOVE-NODES": return UpdateModelData.UpdateModelData.MoveNodes(arg);
-   case "RENUMBER-NODES": return UpdateModelData.UpdateModelData.RenumberNodes(arg);
-   // ============ 更新模型操作 · 单元 ============
-   case "UPDATE-ELEMENT": return UpdateModelData.UpdateModelData.UpdateElement(arg);
-   case "UPDATE-ELEMENT-ID": return UpdateModelData.UpdateModelData.UpdateElementId(arg);
-   case "UPDATE-ELEMENT-MATERIAL": return UpdateModelData.UpdateModelData.UpdateElementMaterial(arg);
-   case "UPDATE-ELEMENT-BETA": return UpdateModelData.UpdateModelData.UpdateElementBetaAngle(arg);
-   case "UPDATE-FRAME-SECTION": return UpdateModelData.UpdateModelData.UpdateFrameSection(arg);
-   case "UPDATE-PLATE-THICK": return UpdateModelData.UpdateModelData.UpdatePlateThick(arg);
-   case "UPDATE-ELEMENT-NODE": return UpdateModelData.UpdateModelData.UpdateElementNode(arg);
-   case "RENUMBER-ELEMENTS": return UpdateModelData.UpdateModelData.RenumberElements(arg);
-   case "REVERT-LOCAL-ORIENTATION": return UpdateModelData.UpdateModelData.RevertLocalOrientation(arg);
-   // ============ 更新模型操作 · 材料 ============
-   case "UPDATE-TIME-PARAMETER-ID": return UpdateModelData.UpdateModelData.UpdateTimeParameterId(arg);
-   case "UPDATE-MATERIAL-ID": return UpdateModelData.UpdateModelData.UpdateMaterialId(arg);
-   case "UPDATE-MATERIAL-TIME-PARAMETER": return UpdateModelData.UpdateModelData.UpdateMaterialTimeParameter(arg);
-   case "UPDATE-MATERIAL-CONSTRUCTION-FACTOR": return UpdateModelData.UpdateModelData.UpdateMaterialConstructionFactor(arg);
-   case "UPDATE-THICKNESS-ID": return UpdateModelData.UpdateModelData.UpdateThicknessId(arg);
-   // ============ 更新模型操作 · 结构组 ============
-   case "UPDATE-STRUCTURE-GROUP-NAME": return UpdateModelData.UpdateModelData.UpdateStructureGroupName(arg);
-   case "UPDATE-STRUCTURE-GROUP": return UpdateModelData.UpdateModelData.UpdateStructureGroup(arg);
+ // ============ 项目分析设置操作 ===================
+ case "UPDATE-PROJECT-SETTING": return UpdateModelData.UpdateModelData.UpdateProjectSetting(arg);
+ case "UPDATE-GLOBAL-SETTING": return UpdateModelData.UpdateModelData.UpdateGlobalSetting(arg);
+ case "UPDATE-CONSTRUCTION-STAGE-SETTING": return UpdateModelData.UpdateModelData.UpdateConstructionStageSetting(arg);
+ case "UPDATE-LIVE-LOAD-SETTING": return UpdateModelData.UpdateModelData.UpdateLiveLoadSetting(arg);
+ case "UPDATE-NON-LINEAR-SETTING": return UpdateModelData.UpdateModelData.UpdateNonLinearSetting(arg);
+ case "UPDATE-OPERATION-STAGE-SETTING": return UpdateModelData.UpdateModelData.UpdateOperationStageSetting(arg);
+ case "UPDATE-SELF-VIBRATION-SETTING": return UpdateModelData.UpdateModelData.UpdateSelfVibrationSetting(arg);
+ case "UPDATE-RESPONSE-SPECTRUM-SETTING": return UpdateModelData.UpdateModelData.UpdateResponseSpectrumSetting(arg);
+ case "UPDATE-TIME-HISTORY-SETTING": return UpdateModelData.UpdateModelData.UpdateTimeHistorySetting(arg);
+ case "UPDATE-BULKING-SETTING": return UpdateModelData.UpdateModelData.UpdateBulkingSetting(arg);
+ // ============ 更新模型操作 · 节点 ============
+ case "UPDATE-NODE": return UpdateModelData.UpdateModelData.UpdateNode(arg);
+ case "UPDATE-NODE-ID": return UpdateModelData.UpdateModelData.UpdateNodeId(arg);
+ case "MERGE-NODES": return UpdateModelData.UpdateModelData.MergeNodes(arg);
+ case "MOVE-NODES": return UpdateModelData.UpdateModelData.MoveNodes(arg);
+ case "RENUMBER-NODES": return UpdateModelData.UpdateModelData.RenumberNodes(arg);
+ // ============ 更新模型操作 · 单元 ============
+ case "UPDATE-ELEMENT": return UpdateModelData.UpdateModelData.UpdateElement(arg);
+ case "UPDATE-ELEMENT-ID": return UpdateModelData.UpdateModelData.UpdateElementId(arg);
+ case "UPDATE-ELEMENT-MATERIAL": return UpdateModelData.UpdateModelData.UpdateElementMaterial(arg);
+ case "UPDATE-ELEMENT-BETA": return UpdateModelData.UpdateModelData.UpdateElementBetaAngle(arg);
+ case "UPDATE-FRAME-SECTION": return UpdateModelData.UpdateModelData.UpdateFrameSection(arg);
+ case "UPDATE-PLATE-THICK": return UpdateModelData.UpdateModelData.UpdatePlateThick(arg);
+ case "UPDATE-ELEMENT-NODE": return UpdateModelData.UpdateModelData.UpdateElementNode(arg);
+ case "RENUMBER-ELEMENTS": return UpdateModelData.UpdateModelData.RenumberElements(arg);
+ case "REVERT-LOCAL-ORIENTATION": return UpdateModelData.UpdateModelData.RevertLocalOrientation(arg);
+ // ============ 更新模型操作 · 材料 ============
+ case "UPDATE-TIME-PARAMETER-ID": return UpdateModelData.UpdateModelData.UpdateTimeParameterId(arg);
+ case "UPDATE-MATERIAL-ID": return UpdateModelData.UpdateModelData.UpdateMaterialId(arg);
+ case "UPDATE-MATERIAL-TIME-PARAMETER": return UpdateModelData.UpdateModelData.UpdateMaterialTimeParameter(arg);
+ case "UPDATE-MATERIAL-CONSTRUCTION-FACTOR": return UpdateModelData.UpdateModelData.UpdateMaterialConstructionFactor(arg);
+ case "UPDATE-THICKNESS-ID": return UpdateModelData.UpdateModelData.UpdateThicknessId(arg);
+ // ============ 更新模型操作 · 结构组 ============
+ case "UPDATE-STRUCTURE-GROUP-NAME": return UpdateModelData.UpdateModelData.UpdateStructureGroupName(arg);
+ case "UPDATE-STRUCTURE-GROUP": return UpdateModelData.UpdateModelData.UpdateStructureGroup(arg);
 
-   // ============ 更新模型操作 · 钢束 ============
-   case "UPDATE-ELEMENT-COMPONENT-TYPE": return UpdateModelData.UpdateModelData.UpdateElementComponentType(arg);
-   case "UPDATE-TENDON-GROUP": return UpdateModelData.UpdateModelData.UpdateTendonGroup(arg);
-   case "UPDATE-TENDON": return UpdateModelData.UpdateModelData.UpdateTendon(arg);
-   case "UPDATE-TENDON-NAME": return UpdateModelData.UpdateModelData.UpdateTendonName(arg);
-   case "UPDATE-TENDON-PROPERTY": return UpdateModelData.UpdateModelData.UpdateTendonProperty(arg);
-   case "UPDATE-TENDON-PROPERTY-MATERIAL": return UpdateModelData.UpdateModelData.UpdateTendonPropertyMaterial(arg);
-   // ============ 更新模型操作 · 荷载 沉降与制造误差============
-   case "UPDATE-LOAD-CASE": return UpdateModelData.UpdateModelData.UpdateLoadCase(arg);
-   case "UPDATE-LOAD-GROUP-NAME": return UpdateModelData.UpdateModelData.UpdateLoadGroupName(arg);
-   case "UPDATE-DEVIATION-PARAMETER": return UpdateModelData.UpdateModelData.UpdateDeviationParameter(arg);
-   case "UPDATE-SINK-GROUP": return UpdateModelData.UpdateModelData.UpdateSinkGroup(arg);
-   case "UPDATE-SINK-CASE": return UpdateModelData.UpdateModelData.UpdateSinkCase(arg);
-   case "UPDATE-DISTRIBUTE-PLANE-LOAD-TYPE": return UpdateModelData.UpdateModelData.UpdateDistributePlaneLoadType(arg);
+ // ============ 更新模型操作 · 钢束 ============
+ case "UPDATE-ELEMENT-COMPONENT-TYPE": return UpdateModelData.UpdateModelData.UpdateElementComponentType(arg);
+ case "UPDATE-TENDON-GROUP": return UpdateModelData.UpdateModelData.UpdateTendonGroup(arg);
+ case "UPDATE-TENDON": return UpdateModelData.UpdateModelData.UpdateTendon(arg);
+ case "UPDATE-TENDON-NAME": return UpdateModelData.UpdateModelData.UpdateTendonName(arg);
+ case "UPDATE-TENDON-PROPERTY": return UpdateModelData.UpdateModelData.UpdateTendonProperty(arg);
+ case "UPDATE-TENDON-PROPERTY-MATERIAL": return UpdateModelData.UpdateModelData.UpdateTendonPropertyMaterial(arg);
+ // ============ 更新模型操作 · 荷载 沉降与制造误差============
+ case "UPDATE-LOAD-CASE": return UpdateModelData.UpdateModelData.UpdateLoadCase(arg);
+ case "UPDATE-LOAD-GROUP-NAME": return UpdateModelData.UpdateModelData.UpdateLoadGroupName(arg);
+ case "UPDATE-DEVIATION-PARAMETER": return UpdateModelData.UpdateModelData.UpdateDeviationParameter(arg);
+ case "UPDATE-SINK-GROUP": return UpdateModelData.UpdateModelData.UpdateSinkGroup(arg);
+ case "UPDATE-SINK-CASE": return UpdateModelData.UpdateModelData.UpdateSinkCase(arg);
+ case "UPDATE-DISTRIBUTE-PLANE-LOAD-TYPE": return UpdateModelData.UpdateModelData.UpdateDistributePlaneLoadType(arg);
 
-   // ================================================
-   // ================================================
-   // ================================================
-   // ============ 删除模型操作 ============
-   case "REMOVE-ELEMENTS": return RemoveModelData.RemoveModelData.RemoveElements(arg);
-   case "REMOVE-NODES": return RemoveModelData.RemoveModelData.RemoveNodes(arg);
-   case "REMOVE-STRUCTURE-GROUP": return RemoveModelData.RemoveModelData.RemoveStructureGroup(arg);
-   case "REMOVE-STRUCTURE-FROM-GROUP": return RemoveModelData.RemoveModelData.RemoveStructureFromGroup(arg);
+ // ================================================
+ // ================================================
+ // ================================================
+ // ============ 删除模型操作 ============
+ case "REMOVE-ELEMENTS": return RemoveModelData.RemoveModelData.RemoveElements(arg);
+ case "REMOVE-NODES": return RemoveModelData.RemoveModelData.RemoveNodes(arg);
+ case "REMOVE-STRUCTURE-GROUP": return RemoveModelData.RemoveModelData.RemoveStructureGroup(arg);
+ case "REMOVE-STRUCTURE-FROM-GROUP": return RemoveModelData.RemoveModelData.RemoveStructureFromGroup(arg);
 
-   case "REMOVE-SHRINK-FUNCTION": return RemoveModelData.RemoveModelData.RemoveShrinkFunction(arg);
-   case "REMOVE-CREEP-FUNCTION": return RemoveModelData.RemoveModelData.RemoveCreepFunction(arg);
-   case "REMOVE-MATERIAL": return RemoveModelData.RemoveModelData.RemoveMaterial(arg);
-   case "REMOVE-TIME-PARAMETER": return RemoveModelData.RemoveModelData.RemoveTimeParameter(arg);
-   case "REMOVE-THICKNESS": return RemoveModelData.RemoveModelData.RemoveThickness(arg);
+ case "REMOVE-SHRINK-FUNCTION": return RemoveModelData.RemoveModelData.RemoveShrinkFunction(arg);
+ case "REMOVE-CREEP-FUNCTION": return RemoveModelData.RemoveModelData.RemoveCreepFunction(arg);
+ case "REMOVE-MATERIAL": return RemoveModelData.RemoveModelData.RemoveMaterial(arg);
+ case "REMOVE-TIME-PARAMETER": return RemoveModelData.RemoveModelData.RemoveTimeParameter(arg);
+ case "REMOVE-THICKNESS": return RemoveModelData.RemoveModelData.RemoveThickness(arg);
 
-   // ============ 删除模型荷载 ============
-   case "REMOVE-LOAD-CASE": return RemoveModelData.RemoveModelData.RemoveLoadCase(arg);
-   case "REMOVE-LOAD-COMBINE": return RemoveModelData.RemoveModelData.RemoveLoadCombine(arg);
-   case "REMOVE-LOAD-GROUP": return RemoveModelData.RemoveModelData.RemoveLoadGroup(arg);
-   case "REMOVE-TENDON": return RemoveModelData.RemoveModelData.RemoveTendon(arg);
-   case "REMOVE-TENDON-PROPERTY": return RemoveModelData.RemoveModelData.RemoveTendonProperty(arg);
-   case "REMOVE-PRE-STRESS": return RemoveModelData.RemoveModelData.RemovePreStress(arg);
-   case "REMOVE-TENDON-GROUP": return RemoveModelData.RemoveModelData.RemoveTendonGroup(arg);
-   case "REMOVE-ELEMENT-TEMPERATURE": return RemoveModelData.RemoveModelData.RemoveElementTemperature(arg);
-   case "REMOVE-TOP-PLATE-TEMPERATURE": return RemoveModelData.RemoveModelData.RemoveTopPlateTemperature(arg);
-   case "REMOVE-BEAM-SECTION-TEMPERATURE": return RemoveModelData.RemoveModelData.RemoveBeamSectionTemperature(arg);
-   case "REMOVE-GRADIENT-TEMPERATURE": return RemoveModelData.RemoveModelData.RemoveGradientTemperature(arg);
-   case "REMOVE-CUSTOM-TEMPERATURE": return RemoveModelData.RemoveModelData.RemoveCustomTemperature(arg);
-   case "REMOVE-INDEX-TEMPERATURE": return RemoveModelData.RemoveModelData.RemoveIndexTemperature(arg);
-   case "REMOVE-DEVIATION-PARAMETER": return RemoveModelData.RemoveModelData.RemoveDeviationParameter(arg);
-   case "REMOVE-DEVIATION-LOAD": return RemoveModelData.RemoveModelData.RemoveDeviationLoad(arg);
-   case "REMOVE-NODAL-FORCE": return RemoveModelData.RemoveModelData.RemoveNodalForce(arg);
-   case "REMOVE-NODAL-DISPLACEMENT": return RemoveModelData.RemoveModelData.RemoveNodalDisplacement(arg);
-   case "REMOVE-INITIAL-TENSION-LOAD": return RemoveModelData.RemoveModelData.RemoveInitialTensionLoad(arg);
-   case "REMOVE-BEAM-ELEMENT-LOAD": return RemoveModelData.RemoveModelData.RemoveBeamElementLoad(arg);
-   case "REMOVE-PLATE-ELEMENT-LOAD": return RemoveModelData.RemoveModelData.RemovePlateElementLoad(arg);
-   case "REMOVE-CABLE-LENGTH-LOAD": return RemoveModelData.RemoveModelData.RemoveCableLengthLoad(arg);
-   case "REMOVE-DISTRIBUTE-PLANE-LOAD": return RemoveModelData.RemoveModelData.RemoveDistributePlaneLoad(arg);
-   case "REMOVE-DISTRIBUTE-PLANE-LOAD-TYPE": return RemoveModelData.RemoveModelData.RemoveDistributePlaneLoadType(arg);
-   case "REMOVE-SINK-GROUP": return RemoveModelData.RemoveModelData.RemoveSinkGroup(arg);
-   case "REMOVE-SINK-CASE": return RemoveModelData.RemoveModelData.RemoveSinkCase(arg);
-   case "REMOVE-CONCURRENT-REACTION": return RemoveModelData.RemoveModelData.RemoveConcurrentReaction(arg);
-   case "REMOVE-CONCURRENT-FORCE": return RemoveModelData.RemoveModelData.RemoveConcurrentForce(arg);
+ // ============ 删除模型荷载 ============
+ case "REMOVE-LOAD-CASE": return RemoveModelData.RemoveModelData.RemoveLoadCase(arg);
+ case "REMOVE-LOAD-COMBINE": return RemoveModelData.RemoveModelData.RemoveLoadCombine(arg);
+ case "REMOVE-LOAD-GROUP": return RemoveModelData.RemoveModelData.RemoveLoadGroup(arg);
+ case "REMOVE-TENDON": return RemoveModelData.RemoveModelData.RemoveTendon(arg);
+ case "REMOVE-TENDON-PROPERTY": return RemoveModelData.RemoveModelData.RemoveTendonProperty(arg);
+ case "REMOVE-PRE-STRESS": return RemoveModelData.RemoveModelData.RemovePreStress(arg);
+ case "REMOVE-TENDON-GROUP": return RemoveModelData.RemoveModelData.RemoveTendonGroup(arg);
+ case "REMOVE-ELEMENT-TEMPERATURE": return RemoveModelData.RemoveModelData.RemoveElementTemperature(arg);
+ case "REMOVE-TOP-PLATE-TEMPERATURE": return RemoveModelData.RemoveModelData.RemoveTopPlateTemperature(arg);
+ case "REMOVE-BEAM-SECTION-TEMPERATURE": return RemoveModelData.RemoveModelData.RemoveBeamSectionTemperature(arg);
+ case "REMOVE-GRADIENT-TEMPERATURE": return RemoveModelData.RemoveModelData.RemoveGradientTemperature(arg);
+ case "REMOVE-CUSTOM-TEMPERATURE": return RemoveModelData.RemoveModelData.RemoveCustomTemperature(arg);
+ case "REMOVE-INDEX-TEMPERATURE": return RemoveModelData.RemoveModelData.RemoveIndexTemperature(arg);
+ case "REMOVE-DEVIATION-PARAMETER": return RemoveModelData.RemoveModelData.RemoveDeviationParameter(arg);
+ case "REMOVE-DEVIATION-LOAD": return RemoveModelData.RemoveModelData.RemoveDeviationLoad(arg);
+ case "REMOVE-NODAL-FORCE": return RemoveModelData.RemoveModelData.RemoveNodalForce(arg);
+ case "REMOVE-NODAL-DISPLACEMENT": return RemoveModelData.RemoveModelData.RemoveNodalDisplacement(arg);
+ case "REMOVE-INITIAL-TENSION-LOAD": return RemoveModelData.RemoveModelData.RemoveInitialTensionLoad(arg);
+ case "REMOVE-BEAM-ELEMENT-LOAD": return RemoveModelData.RemoveModelData.RemoveBeamElementLoad(arg);
+ case "REMOVE-PLATE-ELEMENT-LOAD": return RemoveModelData.RemoveModelData.RemovePlateElementLoad(arg);
+ case "REMOVE-CABLE-LENGTH-LOAD": return RemoveModelData.RemoveModelData.RemoveCableLengthLoad(arg);
+ case "REMOVE-DISTRIBUTE-PLANE-LOAD": return RemoveModelData.RemoveModelData.RemoveDistributePlaneLoad(arg);
+ case "REMOVE-DISTRIBUTE-PLANE-LOAD-TYPE": return RemoveModelData.RemoveModelData.RemoveDistributePlaneLoadType(arg);
+ case "REMOVE-SINK-GROUP": return RemoveModelData.RemoveModelData.RemoveSinkGroup(arg);
+ case "REMOVE-SINK-CASE": return RemoveModelData.RemoveModelData.RemoveSinkCase(arg);
+ case "REMOVE-CONCURRENT-REACTION": return RemoveModelData.RemoveModelData.RemoveConcurrentReaction(arg);
+ case "REMOVE-CONCURRENT-FORCE": return RemoveModelData.RemoveModelData.RemoveConcurrentForce(arg);
 
-   //================================================
-   // ================================================
-   // ================================================
-   // ============ 获取结果数据 ============
-   case "GET-REACTION": return GetResultData.GetResultData.GetReaction(arg);
-   case "GET-DEFORMATION": return GetResultData.GetResultData.GetDeformation(arg);
-   case "GET-ELEMENT-STRESS": return GetResultData.GetResultData.GetElementStress(arg);
-   case "GET-ELEMENT-FORCE": return GetResultData.GetResultData.GetElementForce(arg);
-   case "GET-SELF-CONCURRENT-REACTION": return GetResultData.GetResultData.GetSelfConcurrentReaction(arg);
-   case "GET-ALL-CONCURRENT-REACTION": return GetResultData.GetResultData.GetAllConcurrentReaction(arg);
-   case "GET-CONCURRENT-FORCE": return GetResultData.GetResultData.GetConcurrentForce(arg);
-   case "GET-ELASTIC-LINK-FORCE": return GetResultData.GetResultData.GetElasticLinkForce(arg);
-   case "GET-CONSTRAIN-EQUATION-FORCE": return GetResultData.GetResultData.GetConstrainEquationForce(arg);
-   case "GET-CABLE-ELEMENT-LENGTH": return GetResultData.GetResultData.GetCableElementLength(arg);
-   case "GET-PERIOD-AND-VIBRATION-RESULTS": return GetResultData.GetResultData.GetPeriodAndVibrationResults(arg);
-   case "GET-VIBRATION-MODAL-RESULTS": return GetResultData.GetResultData.GetVibrationModalResults(arg);
-   case "GET-BUCKLING-EIGENVALUE": return GetResultData.GetResultData.GetBucklingEigenvalue(arg);
-   case "GET-BUCKLING-MODAL-RESULTS": return GetResultData.GetResultData.GetBucklingModalResults(arg);
-   case "GET-TENDON-LOSS-RESULTS": return GetResultData.GetResultData.GetTendonLossResults(arg);
-   case "GET-TENDON-POSITION-RESULT": return GetResultData.GetResultData.GetTendonPositionResult(arg);
-   case "GET-TENDON-LENGTH-RESULT": return GetResultData.GetResultData.GetTendonLengthResult(arg);
+ //================================================
+ // ================================================
+ // ================================================
+ // ============ 获取结果数据 ============
+ case "GET-REACTION": return GetResultData.GetResultData.GetReaction(arg);
+ case "GET-DEFORMATION": return GetResultData.GetResultData.GetDeformation(arg);
+ case "GET-ELEMENT-STRESS": return GetResultData.GetResultData.GetElementStress(arg);
+ case "GET-ELEMENT-FORCE": return GetResultData.GetResultData.GetElementForce(arg);
+ case "GET-SELF-CONCURRENT-REACTION": return GetResultData.GetResultData.GetSelfConcurrentReaction(arg);
+ case "GET-ALL-CONCURRENT-REACTION": return GetResultData.GetResultData.GetAllConcurrentReaction(arg);
+ case "GET-CONCURRENT-FORCE": return GetResultData.GetResultData.GetConcurrentForce(arg);
+ case "GET-ELASTIC-LINK-FORCE": return GetResultData.GetResultData.GetElasticLinkForce(arg);
+ case "GET-CONSTRAIN-EQUATION-FORCE": return GetResultData.GetResultData.GetConstrainEquationForce(arg);
+ case "GET-CABLE-ELEMENT-LENGTH": return GetResultData.GetResultData.GetCableElementLength(arg);
+ case "GET-PERIOD-AND-VIBRATION-RESULTS": return GetResultData.GetResultData.GetPeriodAndVibrationResults(arg);
+ case "GET-VIBRATION-MODAL-RESULTS": return GetResultData.GetResultData.GetVibrationModalResults(arg);
+ case "GET-BUCKLING-EIGENVALUE": return GetResultData.GetResultData.GetBucklingEigenvalue(arg);
+ case "GET-BUCKLING-MODAL-RESULTS": return GetResultData.GetResultData.GetBucklingModalResults(arg);
+ case "GET-TENDON-LOSS-RESULTS": return GetResultData.GetResultData.GetTendonLossResults(arg);
+ case "GET-TENDON-POSITION-RESULT": return GetResultData.GetResultData.GetTendonPositionResult(arg);
+ case "GET-TENDON-LENGTH-RESULT": return GetResultData.GetResultData.GetTendonLengthResult(arg);
 
-   // ============ 绘制结果数据 ============
-   case "PLOT-REACTION-RESULT": return GetResultData.GetResultData.PlotReactionResult(arg);
-   case "PLOT-DISPLACEMENT-RESULT": return GetResultData.GetResultData.PlotDeformationResult(arg);
-   case "PLOT-BEAM-ELEMENT-FORCE": return GetResultData.GetResultData.PlotBeamElementForce(arg);
-   case "PLOT-TRUSS-ELEMENT-FORCE": return GetResultData.GetResultData.PlotTrussElementForce(arg);
-   case "PLOT-PLATE-ELEMENT-FORCE": return GetResultData.GetResultData.PlotPlateElementForce(arg);
-   case "PLOT-COMPOSITE-BEAM-FORCE": return GetResultData.GetResultData.PlotCompositeBeamForce(arg);
-   case "PLOT-BEAM-ELEMENT-STRESS": return GetResultData.GetResultData.PlotBeamElementStress(arg);
-   case "PLOT-TRUSS-ELEMENT-STRESS": return GetResultData.GetResultData.PlotTrussElementStress(arg);
-   case "PLOT-COMPOSITE-BEAM-STRESS": return GetResultData.GetResultData.PlotCompositeBeamStress(arg);
-   case "PLOT-PLATE-ELEMENT-STRESS": return GetResultData.GetResultData.PlotPlateElementStress(arg);
-   case "PLOT-MODAL-RESULT": return GetResultData.GetResultData.PlotModalResult(arg);
+ // ============ 绘制结果数据 ============
+ case "PLOT-REACTION-RESULT": return GetResultData.GetResultData.PlotReactionResult(arg);
+ case "PLOT-DISPLACEMENT-RESULT": return GetResultData.GetResultData.PlotDeformationResult(arg);
+ case "PLOT-BEAM-ELEMENT-FORCE": return GetResultData.GetResultData.PlotBeamElementForce(arg);
+ case "PLOT-TRUSS-ELEMENT-FORCE": return GetResultData.GetResultData.PlotTrussElementForce(arg);
+ case "PLOT-PLATE-ELEMENT-FORCE": return GetResultData.GetResultData.PlotPlateElementForce(arg);
+ case "PLOT-COMPOSITE-BEAM-FORCE": return GetResultData.GetResultData.PlotCompositeBeamForce(arg);
+ case "PLOT-BEAM-ELEMENT-STRESS": return GetResultData.GetResultData.PlotBeamElementStress(arg);
+ case "PLOT-TRUSS-ELEMENT-STRESS": return GetResultData.GetResultData.PlotTrussElementStress(arg);
+ case "PLOT-COMPOSITE-BEAM-STRESS": return GetResultData.GetResultData.PlotCompositeBeamStress(arg);
+ case "PLOT-PLATE-ELEMENT-STRESS": return GetResultData.GetResultData.PlotPlateElementStress(arg);
+ case "PLOT-MODAL-RESULT": return GetResultData.GetResultData.PlotModalResult(arg);
