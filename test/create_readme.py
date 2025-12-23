@@ -151,3 +151,4 @@ print(len(result1))
 diff = set(result1) - set(case_names_a)
 result = list(diff)
 print(result)  # ['GET-DEFORMATION', 'GET-ELEMENT-STRESS']
+print(len(result))

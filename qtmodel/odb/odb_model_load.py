@@ -46,7 +46,7 @@ class OdbModelLoad:
         获取预应力荷载
         Args: 无
         Example:
-            odb.get_pre_stress_load()
+            odb.get_pre_stress_load_data()
         Returns: 包含信息为list[dict]
         """
         return QtServer.send_dict("GET-PRE-STRESS-LOAD-DATA")
@@ -68,7 +68,7 @@ class OdbModelLoad:
         获取节点力荷载
         Args: 无
         Example:
-            odb.get_nodal_force_load()
+            odb.get_nodal_force_load_data()
         Returns: 包含信息为list[dict]
         """
         return QtServer.send_dict("GET-NODAL-FORCE-LOAD-DATA")
@@ -123,7 +123,7 @@ class OdbModelLoad:
         获取指定荷载工况的初拉力荷载数据
         Args: 无
         Example:
-            odb.get_cable_length_load()
+            odb.get_cable_length_load_data()
         Returns: 包含信息为list[dict]
         """
         return QtServer.send_dict("GET-CABLE-LENGTH-LOAD-DATA")

@@ -128,8 +128,7 @@ class MdbBoundary:
 
 
     @staticmethod
-    def add_elastic_support(node_id, support_type: int = 1,
-                            boundary_info: list[float] = None, group_name: str = "默认边界组"):
+    def add_elastic_support(node_id, support_type: int = 1,boundary_info: list[float] = None, group_name: str = "默认边界组"):
         """
         添加弹性支承
         Args:
@@ -157,7 +156,8 @@ class MdbBoundary:
 
     @staticmethod
     def add_elastic_link(index: int = -1, link_type: int = 1, start_id: int = 1, end_id: int = 2, beta_angle: float = 0,
-                         boundary_info: list[float] = None, group_name: str = "默认边界组", dis_ratio: float = 0.5, kx: float = 0):
+                         boundary_info: list[float] = None, group_name: str = "默认边界组", dis_ratio: float = 0.5, kx: float = 0,
+                         gap:float = 0,friction:float = 0):
         """
         添加弹性连接，建议指定index(弹性连接编号)
         Args:
@@ -170,6 +170,8 @@ class MdbBoundary:
             group_name:边界组名
             dis_ratio:距i端距离比 (仅一般弹性连接需要)
             kx:受拉或受压刚度
+            gap:间隙
+            friction:摩擦系数
         Example:
             mdb.add_elastic_link(link_type=1,start_id=1,end_id=2,boundary_info=[1e6,1e6,1e6,0,0,0])
             mdb.add_elastic_link(link_type=2,start_id=1,end_id=2)
@@ -189,6 +191,8 @@ class MdbBoundary:
             "group_name": group_name,
             "dis_ratio": dis_ratio,
             "kx": kx,
+            "gap": gap,
+            "friction": friction,
         }
         return QtServer.send_dict("ADD-ELASTIC-LINK", payload)
 
@@ -274,7 +278,7 @@ class MdbBoundary:
 
     @staticmethod
     def add_constraint_equation(name: str, sec_node: int, sec_dof: int = 1,
-                                master_info: list[tuple[int, int, float]] = None, group_name: str = "默认边界组"):
+                                master_info: Union[list[tuple[int, int, float]],list[list[float]]] = None, group_name: str = "默认边界组"):
         """
         添加约束方程
         Args:
@@ -284,7 +288,7 @@ class MdbBoundary:
              master_info:主节点约束信息列表
              group_name:边界组名
         Example:
-            mdb.add_beam_constraint(beam_id=2,info_i=[True,True,True,False,False,False],info_j=[True,True,True,False,False,False])
+            mdb.add_constraint_equation(name="1",sec_dof=1,sec_node=4,master_info=[(6,1,1)],group_name="默认边界组")
         Returns: 无
         """
         if master_info is None:

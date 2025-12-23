@@ -325,7 +325,7 @@ class MdbLiveLoad:
              name:车道线名称
              new_name:更改后车道名,默认为不更改
         Example:
-            mdb.update_lane_line(name="车道1",new_name="车道2")
+            mdb.update_lane_line_name(name="车道1",new_name="车道2")
         Returns: 无
         """
         payload = {

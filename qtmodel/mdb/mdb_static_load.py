@@ -186,9 +186,9 @@ class MdbStaticLoad:
         return QtServer.send_dict("ADD-PLATE-ELEMENT-LOAD", payload)
 
     @staticmethod
-    def add_distribute_plane_load_type(name: str, load_type: int, point_list: list[list[float]], load: float = 0, copy_x: str = None,
-                                       copy_y: str = None,
-                                       describe: str = ""):
+    def add_distribute_plane_load_type(name: str, load_type: int, point_list: list[list[float]],
+                                       load: float = 0, copy_x: str = None,
+                                       copy_y: str = None, describe: str = ""):
         """
         添加分配面荷载类型
         Args:
@@ -217,8 +217,9 @@ class MdbStaticLoad:
 
     @staticmethod
     def add_distribute_plane_load(index: int = -1, case_name: str = "", type_name: str = "",
-                                  point1: tuple[float, float, float] = None, point2: tuple[float, float, float] = None,
-                                  point3: tuple[float, float, float] = None,
+                                  point1: Union[tuple[float, float, float],list[float]] = None,
+                                  point2: Union[tuple[float, float, float],list[float]]  = None,
+                                  point3: Union[tuple[float, float, float],list[float]]  = None,
                                   plate_ids: list[int] = None, coord_system: int = 3, group_name: str = "默认荷载组"):
         """
         添加分配面荷载类型

@@ -1,4 +1,4 @@
-> 最新qtmodel版本 V2.1.2 - 2025-12-19 
+> 最新qtmodel版本 V2.1.2 - 2025-12-23 
 > 最新qdat数据版本 V1.2.4 
 > pip install --upgrade qtmodel -i https://pypi.org/simple
 - 新增更新结构组接口 
@@ -849,10 +849,12 @@ mdb.add_elastic_support(node_id=1,support_type=3,boundary_info=[1,1e6])
 > start_id:起始节点号  
 > end_id:终节点号  
 > beta_angle:贝塔角  
-> boundary_info:边界信息  
+> boundary_info:边界信息 (仅一般弹性连接需要)  
 > group_name:边界组名  
 > dis_ratio:距i端距离比 (仅一般弹性连接需要)  
 > kx:受拉或受压刚度  
+> gap:间隙  
+> friction:摩擦系数  
 ```Python
 # 示例代码
 from qtmodel import *
@@ -911,7 +913,7 @@ mdb.add_beam_constraint(beam_id=2,info_i=[True,True,True,False,False,False],info
 ```Python
 # 示例代码
 from qtmodel import *
-mdb.add_beam_constraint(beam_id=2,info_i=[True,True,True,False,False,False],info_j=[True,True,True,False,False,False])
+mdb.add_constraint_equation(name="1",sec_dof=1,sec_node=4,master_info=[(6,1,1)],group_name="默认边界组")
 #Returns: 无
 ```  
 ### add_node_axis
@@ -1124,6 +1126,20 @@ from qtmodel import *
 mdb.add_tendon_elements(ids=[1,2,4,6])
 #Returns: 无
 ```  
+### add_pre_stress
+添加预应力
+> 参数:  
+> case_name:荷载工况名  
+> tendon_name:钢束名,支持钢束名或钢束名列表  
+> tension_type:预应力类型 (0-始端 1-末端 2-两端)  
+> force:预应力  
+> group_name:荷载组  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.add_pre_stress(case_name="荷载工况名",tendon_name="钢束1",force=1390000)
+#Returns: 无
+```  
 ### update_tendon_property_material
 更新钢束特性材料
 > 参数:  
@@ -1283,20 +1299,6 @@ mdb.add_node_displacement(case_name="荷载工况1",node_id=[1,2,3],load_info=(1
 from qtmodel import *
 mdb.add_beam_element_load(element_id=1,case_name="荷载工况1",load_type=1,list_x=0.5,list_load=100)
 mdb.add_beam_element_load(element_id="1to100",case_name="荷载工况1",load_type=3,list_x=[0.4,0.8],list_load=[100,200])
-#Returns: 无
-```  
-### add_pre_stress
-添加预应力
-> 参数:  
-> case_name:荷载工况名  
-> tendon_name:钢束名,支持钢束名或钢束名列表  
-> tension_type:预应力类型 (0-始端 1-末端 2-两端)  
-> force:预应力  
-> group_name:荷载组  
-```Python
-# 示例代码
-from qtmodel import *
-mdb.add_pre_stress(case_name="荷载工况名",tendon_name="钢束1",force=1390000)
 #Returns: 无
 ```  
 ### add_initial_tension_load
@@ -1675,7 +1677,7 @@ mdb.update_influence_plane_name(name="影响面1",new_name="影响面2")
 ```Python
 # 示例代码
 from qtmodel import *
-mdb.update_lane_line(name="车道1",new_name="车道2")
+mdb.update_lane_line_name(name="车道1",new_name="车道2")
 #Returns: 无
 ```  
 ### update_node_tandem_name
@@ -2916,15 +2918,6 @@ odb.get_span_elements(span_info_name="跨度")
 #Returns: list[int]
 ```  
 ##  获取截面信息
-### get_all_section_shape
-获取所有截面形状信息
-> 参数:  
-```Python
-# 示例代码
-from qtmodel import *
-odb.get_all_section_shape()
-#Returns: 包含信息为list[dict]
-```  
 ### get_section_shape
 获取截面形状信息
 > 参数:  
@@ -2934,15 +2927,6 @@ odb.get_all_section_shape()
 from qtmodel import *
 odb.get_section_shape(1)
 #Returns:
-```  
-### get_all_section_data
-获取所有截面详细信息,截面特性详见UI自定义特性截面
-> 参数:  
-```Python
-# 示例代码
-from qtmodel import *
-odb.get_all_section_data()
-#Returns: 包含信息为list[dict]
 ```  
 ### get_section_data
 获取截面详细信息,截面特性详见UI自定义特性截面
@@ -2965,13 +2949,13 @@ from qtmodel import *
 odb.get_section_property(1)
 #Returns: dict
 ```  
-### get_section_ids
+### get_section_names
 获取模型所有截面号
 > 参数:  
 ```Python
 # 示例代码
 from qtmodel import *
-odb.get_section_ids()
+odb.get_section_names()
 #Returns: list[int]
 ```  
 ### get_section_property_by_loops
@@ -3012,7 +2996,6 @@ odb.get_boundary_group_names()
 ### get_general_support_data
 获取一般支承信息
 > 参数:  
-> group_name:默认输出所有边界组信息  
 ```Python
 # 示例代码
 from qtmodel import *
@@ -3022,7 +3005,6 @@ odb.get_general_support_data()
 ### get_elastic_link_data
 获取弹性连接信息
 > 参数:  
-> group_name:默认输出所有边界组信息  
 ```Python
 # 示例代码
 from qtmodel import *
@@ -3032,7 +3014,6 @@ odb.get_elastic_link_data()
 ### get_elastic_support_data
 获取弹性支承信息
 > 参数:  
-> group_name:默认输出所有边界组信息  
 ```Python
 # 示例代码
 from qtmodel import *
@@ -3042,7 +3023,6 @@ odb.get_elastic_support_data()
 ### get_master_slave_link_data
 获取主从连接信息
 > 参数:  
-> group_name:默认输出所有边界组信息  
 ```Python
 # 示例代码
 from qtmodel import *
@@ -3061,72 +3041,66 @@ odb.get_node_local_axis_data()
 ### get_beam_constraint_data
 获取节点坐标信息
 > 参数:  
-> group_name:默认输出所有边界组信息  
 ```Python
 # 示例代码
 from qtmodel import *
 odb.get_beam_constraint_data()
-#Returns: 包含信息为list[dict]或 dict
+#Returns: 包含信息为list[dict]
 ```  
 ### get_constraint_equation_data
 获取约束方程信息
 > 参数:  
-> group_name:默认输出所有边界组信息  
 ```Python
 # 示例代码
 from qtmodel import *
 odb.get_constraint_equation_data()
 #Returns: 包含信息为list[dict]
 ```  
-### get_effective_width
+### get_effective_width_data
 获取有效宽度数据
 > 参数:  
-> group_name:边界组  
 ```Python
 # 示例代码
 from qtmodel import *
-odb.get_effective_width(group_name="边界组1")
+odb.get_effective_width_data()
 #Returns:  list[dict]
 ```  
 ##  钢束信息
-### get_tendon_property
-获取预应力荷载
+### get_tendon_property_data
+获取所有钢束特性信息
 > 参数:  
-> name: 根据钢束特性名获取钢束特性  
 ```Python
 # 示例代码
 from qtmodel import *
-odb.get_tendon_property(name="钢束特性1")
+odb.get_tendon_property_data()
 #Returns: 包含信息为list[dict]
 ```  
 ### get_tendon_data
-获取预应力荷载
+获取所有钢塑和信息
 > 参数:  
-> name: 根据钢束名获取钢束信息  
 ```Python
 # 示例代码
 from qtmodel import *
-odb.get_tendon_data(name="钢束1")
+odb.get_tendon_data()
 #Returns: 包含信息为list[dict]
 ```  
 ##  荷载信息
-### get_case_names
+### get_load_case_names
 获取荷载工况名
 > 参数:  
 ```Python
 # 示例代码
 from qtmodel import *
-odb.get_case_names()
+odb.get_load_case_names()
 #Returns: 包含信息为list[str]
 ```  
-### get_pre_stress_load
+### get_pre_stress_load_data
 获取预应力荷载
 > 参数:  
-> case_name: 荷载工况名  
 ```Python
 # 示例代码
 from qtmodel import *
-odb.get_pre_stress_load(case_name="荷载工况1")
+odb.get_pre_stress_load_data()
 #Returns: 包含信息为list[dict]
 ```  
 ### get_node_mass_data
@@ -3138,67 +3112,61 @@ from qtmodel import *
 odb.get_node_mass_data()
 #Returns: 包含信息为list[dict]
 ```  
-### get_nodal_force_load
+### get_nodal_force_load_data
 获取节点力荷载
 > 参数:  
-> case_name: 荷载工况名  
 ```Python
 # 示例代码
 from qtmodel import *
-odb.get_nodal_force_load(case_name="荷载工况1")
+odb.get_nodal_force_load_data()
 #Returns: 包含信息为list[dict]
 ```  
-### get_nodal_displacement_load
+### get_nodal_displacement_load_data
 获取节点位移荷载
 > 参数:  
-> case_name: 荷载工况名  
 ```Python
 # 示例代码
 from qtmodel import *
-odb.get_nodal_displacement_load(case_name="荷载工况1")
+odb.get_nodal_displacement_load_data()
 #Returns: 包含信息为list[dict]
 ```  
-### get_beam_element_load
+### get_beam_element_load_data
 获取梁单元荷载
 > 参数:  
-> case_name: 荷载工况名  
 ```Python
 # 示例代码
 from qtmodel import *
-odb.get_beam_element_load_data(case_name="荷载工况1")
+odb.get_beam_element_load_data()
 #Returns: 包含信息为list[dict]
 ```  
-### get_plate_element_load
+### get_plate_element_load_data
 获取梁单元荷载
 > 参数:  
-> case_name: 荷载工况名  
 ```Python
 # 示例代码
 from qtmodel import *
-odb.get_beam_element_load(case_name="荷载工况1")
+odb.get_plate_element_load_data()
 #Returns: 包含信息为list[dict]
 ```  
-### get_initial_tension_load
+### get_initial_tension_load_data
 获取初拉力荷载数据
 > 参数:  
-> case_name: 荷载工况名  
 ```Python
 # 示例代码
 from qtmodel import *
-odb.get_initial_tension_load(case_name="荷载工况1")
+odb.get_initial_tension_load_data()
 #Returns: 包含信息为list[dict]
 ```  
-### get_cable_length_load
+### get_cable_length_load_data
 获取指定荷载工况的初拉力荷载数据
 > 参数:  
-> case_name: 荷载工况名  
 ```Python
 # 示例代码
 from qtmodel import *
 odb.get_cable_length_load_data()
 #Returns: 包含信息为list[dict]
 ```  
-### get_deviation_parameter
+### get_deviation_parameters
 获取制造偏差参数
 > 参数:  
 ```Python
@@ -3207,10 +3175,9 @@ from qtmodel import *
 odb.get_deviation_parameters()
 #Returns: 包含信息为list[dict]
 ```  
-### get_deviation_load
+### get_deviation_load_data
 获取指定荷载工况的制造偏差荷载
 > 参数:  
-> case_name:荷载工况名  
 ```Python
 # 示例代码
 from qtmodel import *

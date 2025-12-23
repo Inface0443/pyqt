@@ -8,17 +8,6 @@ class OdbModelSection:
 
     # region 获取截面信息
     @staticmethod
-    def get_all_section_shape():
-        """
-        获取所有截面形状信息
-        Args:
-        Example:
-            odb.get_all_section_shape()
-        Returns: 包含信息为list[dict]
-        """
-        return QtServer.send_dict("GET-ALL-SECTION-SHAPE", None)
-
-    @staticmethod
     def get_section_shape(sec_id: int):
         """
         获取截面形状信息
@@ -31,17 +20,6 @@ class OdbModelSection:
         """
         payload = {"sec_id": sec_id}
         return QtServer.send_dict("GET-SECTION-SHAPE", payload)
-
-    @staticmethod
-    def get_all_section_data():
-        """
-        获取所有截面详细信息,截面特性详见UI自定义特性截面
-        Args: 无
-        Example:
-            odb.get_all_section_data()
-        Returns: 包含信息为list[dict]
-        """
-        return QtServer.send_dict("GET-ALL-SECTION-DATA", None)
 
     @staticmethod
     def get_section_data(sec_id: int, position: int = 0):
@@ -71,15 +49,15 @@ class OdbModelSection:
         return QtServer.send_dict("GET-SECTION-PROPERTY", payload)
 
     @staticmethod
-    def get_section_ids():
+    def get_section_names():
         """
         获取模型所有截面号
         Args: 无
         Example:
-            odb.get_section_ids()
+            odb.get_section_names()
         Returns: list[int]
         """
-        return QtServer.send_dict("GET-SECTION-IDS", None)
+        return QtServer.send_dict("GET-SECTION-NAMES", None)
 
     @staticmethod
     def get_section_property_by_loops(loop_segments: list[dict[str,list[list[float]] ]] = None):
