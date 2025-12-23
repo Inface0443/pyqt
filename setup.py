@@ -5,14 +5,18 @@ from setuptools import setup, find_packages
 # 读取文件内容
 with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
-# git config --global --get http.proxy
-# set http_proxy= && set https_proxy=
-# python setup.py sdist
-# twine upload dist/*
+"""
+git config --global --get http.proxy
+set http_proxy=
+set https_proxy=
+python setup.py sdist
+twine upload dist/*
+"""
+
 
 setup(
     name="qtmodel",
-    version=f"V2.1.1",
+    version=f"V2.1.2",
     author="dqy-zhj",
     author_email="1105417715@qq.com",
     description=f"python modeling for qt {datetime.now().date()} ",
