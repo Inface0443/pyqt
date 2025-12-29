@@ -71,3 +71,4 @@ df = pd.DataFrame(rows).round(1)  # 保留 1 位小数，可按需调整
 df.to_excel(r'支座反力分解_含其他工况.xlsx', index=False)
 print("已导出：支座反力分解_含其他工况.xlsx")
 
+
