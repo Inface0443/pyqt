@@ -1,3 +1,4 @@
+from typing import Union
 from qtmodel.core.qt_server import QtServer
 
 
@@ -6,28 +7,50 @@ class CdbConcretCheck:
     用于混凝土结构验算
     """
     @staticmethod
-    def add_concrete_load_combine(index: int = -1, name: str = "", combine_type: int = 1,standard:int=1,
-                         combine_info: list[tuple[str, str, float]] = None):
+    def add_check_load_combine(index: int = -1, name: str = "", combine_type: int = 1,standard:int=1,
+                       kind:int=1,  combine_info: list[tuple[str, float, float]] = None):
         """
         添加混凝土检算荷载组合
         Args:
             index: 荷载组合索引，-1表示在最后添加
             name: 荷载组合名称
+            combine_type: 0-相加并判别，1-包络
             standard: 1-公规2015 2-铁规2017 3-铁路极限状态 4-英规BS5400 5-美规
             kind: 类型参考界面
-                公规2015|1-基本 2-偶然 3-标准 4-频遇 5-准永久...
-            combine_type: 荷载组合类型，1-相加并判别，2-包络
+                公规2015|1-基本 2-偶然 3-标准 4-频遇 5-准永久 6-疲劳组合
+                铁路TB1002| 1-主力组合 2-主加附组合 3-主加特殊组合
+                铁路极限状态法| 1~11-组合I~XI 12-标准值组合 13-主力组合 14-主加附组合
+                英规| 1-承载能力极限状态 2-正常使用极限状态
+                美规| 1-强度组合 2-极端事件 3-使用组合I 4-使用组合II 5-使用组合III 6-使用组合IV 7-疲劳组合 8-永久作用组合
             combine_info: 荷载组合信息，格式为[(荷载工况,不利系数,有利系数)]
         Example:
-            cdb.add_check_load_combination(name="P1+P2",load_combinations=["P1","P2"])
+            cdb.add_check_load_combine(name="P1+P2",standard=1,kind=1,combine_info=[("P1 (ST)",1,1),("P2 (ST)",1,1)])
         Returns: 无
         """
         QtServer.send_dict(header="ADD-CONCRET-LOAD-COMBINE",payload={
             "index": index,
             "name": name,
-            "standard": standard,
             "combine_type": combine_type,
+            "standard": standard,
+            "kind": kind,
             "combine_info": combine_info
+        })
+
+    @staticmethod
+    def remove_check_load_combine(index: int = -1, name: str = ""):
+        """
+        删除混凝土检算荷载组合
+        Args:
+            index: 荷载组合索引，-1表示删除所有
+            name: 荷载组合名称
+        Example:
+            cdb.remove_check_load_combine(index=1)
+            cdb.remove_check_load_combine(name="P1+P2")
+        Returns: 无
+        """
+        QtServer.send_dict(header="REMOVE-CONCRET-LOAD-COMBINE",payload={
+            "index": index,
+            "name": name,
         })
 
     @staticmethod
@@ -110,20 +133,71 @@ class CdbConcretCheck:
             "user_data": user_data
         })
 
-
     @staticmethod
-    def update_section_steel_bar(sec_id:int,bar_data:list[tuple[float,float,float,int]]):
+    def add_parameter_reinforcement(sec_id:int,position:int=0,has_outer:bool=True,has_inner:bool=True,outer_type:int=0,inner_type:int=0,
+                                    outer_info:list[list[float]]=None,inner_info:list[list[float]]=None):
         """
-        更新截面钢筋数据
+        添加参数化配筋
         Args:
             sec_id: 截面ID
-            bar_data: 钢筋数据列表，格式为[(x,y,直径,钢筋材料号)]
+            position: 变截面位置，0为截面I端，1为截面J端
+            has_outer: 是否有外部钢筋
+            has_inner: 是否有内部钢筋
+            outer_type: 0-按间距分布 1-按数量分布
+            inner_type: 0-按间距分布 1-按数量分布
+            outer_info: 外部钢筋信息，格式为[[直径,材料号,层边距,钢筋间距/数量,每束根数],...]
+            inner_info: 内部钢筋信息，格式为[[直径,材料号,层边距,钢筋间距/数量,每束根数],...]
         Example:
-            cdb.update_section_steel_bar(sec_id=1,bar_data=[(0.1,0.5,20,10),(0.3,0.6,22,10)])
+            cdb.add_parameter_reinforcement(sec_id=1,has_outer=True,has_inner=True,outer_type=0,inner_type=0,
+                                            outer_info=[[20,1,50,150,1]],inner_info=[[20,1,50,150,1]])
         Returns: 无
         """
-        QtServer.send_dict(header="UPDATE-SECTION-STEEL-BAR",payload={
+        QtServer.send_dict(header="ADD-PARAMETER-REINFORCEMENT",payload={
             "sec_id": sec_id,
+            "position": position,
+            "has_outer": has_outer,
+            "has_inner": has_inner, 
+            "outer_type": outer_type,
+            "inner_type": inner_type,
+            "outer_info": outer_info,
+            "inner_info": inner_info,
+        })
+
+    @staticmethod
+    def add_part_parameter_reinforcement(sec_id:int,position:int=0,data_info:list[list[float]]=None):
+        """
+        添加局部参数化配筋
+        Args:
+            sec_id: 截面ID
+            position: 截面位置，0为截面I端，1为截面J端
+            data_info: 钢筋数据，列表中每项参数为10个，格式为[[基准线号,分布方式,布置方向,直径,钢筋材料号,层边距,间距/数量,每束根数,首点偏移,尾点偏移],...]
+                分布方式| 0-按间距分布 1-按数量分布
+                布置方向| 0-向内布置 1-向外布置
+        Example:
+            cdb.add_part_parameter_reinforcement(sec_id=1,position=0,data_info=[[11,0,0,20,4,50,150,1,0,0]])
+        Returns: 无
+        """
+        QtServer.send_dict(header="ADD-PART-PARAMETER-REINFORCEMENT",payload={
+            "sec_id": sec_id,
+            "position": position,
+            "data_info": data_info,
+        })
+
+    @staticmethod
+    def add_reinforcement_by_point(sec_id:int,position:int=0,bar_data:Union[list[tuple[float,float,float,int]],list[list[float]]] =None):
+        """
+        添加自定义截面纵向钢筋数据
+        Args:
+            sec_id: 截面ID
+            position: 变截面位置，0为截面I端，1为截面J端
+            bar_data: 钢筋数据列表，格式为[(x,y,直径,钢筋材料号)]
+        Example:
+            cdb.add_reinforcement_by_point(sec_id=1,position=0,bar_data=[(0.1,0.5,20,1),(0.3,0.6,22,1)])
+        Returns: 无
+        """
+        QtServer.send_dict(header="ADD-REINFORCEMENT-BY-POINT",payload={
+            "sec_id": sec_id,
+            "position": position,
             "bar_data": bar_data
         })
 
