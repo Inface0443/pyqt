@@ -4,7 +4,7 @@ import re
 
 class Readme:
     """用于生成帮助文档"""
-    version = "V2.1.2"
+    version = "V2.2.1"
     version_qdat = "V1.2.4"
     _data_str = []
 
@@ -94,7 +94,7 @@ class Readme:
         Readme.print_str(f"> 最新qtmodel版本 {Readme.version} - {datetime.now().date()} ")
         Readme.print_str(f"> 最新qdat数据版本 {Readme.version_qdat} ")
         Readme.print_str("> pip install --upgrade qtmodel -i https://pypi.org/simple")
-        Readme.print_str("- 新增更新结构组接口 ")
+        Readme.print_str("- 新增检算荷载组合，检算材料，检算钢筋信息 ")
         Readme.print_str("# 建模操作 ")
         Readme.print_md_file(Readme.get_note(r'../qtmodel/mdb/mdb_structure.py'))
         Readme.print_md_file(Readme.get_note(r'../qtmodel/mdb/mdb_property.py'))

@@ -1,4 +1,4 @@
-> 最新qtmodel版本 V2.1.2 - 2025-12-23 
+> 最新qtmodel版本 V2.2.1 - 2026-01-08 
 > 最新qdat数据版本 V1.2.4 
 > pip install --upgrade qtmodel -i https://pypi.org/simple
 - 新增更新结构组接口 
@@ -2804,7 +2804,7 @@ odb.get_node_data(ids=[1,2])    # 获取多个节点信息
 #Returns:  包含信息为list[dict] or dict
 ```  
 ##  获取单元信息
-### get_element_by_point
+### get_elements_by_point
 获取某一点指定范围内单元集合,单元中心点为节点平均值
 > 参数:  
 > x: 坐标x  
@@ -2814,27 +2814,27 @@ odb.get_node_data(ids=[1,2])    # 获取多个节点信息
 ```Python
 # 示例代码
 from qtmodel import *
-odb.get_element_by_point(0.5,0.5,0.5,tolerance=1)
+odb.get_elements_by_point(0.5,0.5,0.5,tolerance=1)
 #Returns: 包含信息为list[int]
 ```  
-### get_element_by_material
+### get_elements_by_material
 获取某一材料相应的单元
 > 参数:  
 > name:材料名称  
 ```Python
 # 示例代码
 from qtmodel import *
-odb.get_element_by_material("材料1")
+odb.get_elements_by_material("材料1")
 #Returns: 包含信息为list[int]
 ```  
-### get_element_by_section
+### get_elements_by_section
 获取某一截面相应的单元
 > 参数:  
 > index:截面编号  
 ```Python
 # 示例代码
 from qtmodel import *
-odb.get_element_by_section(index=1)
+odb.get_elements_by_section(index=1)
 #Returns: 包含信息为list[int]
 ```  
 ### get_overlap_elements

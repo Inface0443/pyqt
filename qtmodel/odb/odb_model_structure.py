@@ -68,7 +68,7 @@ class OdbModelStructure:
 
     # region 获取单元信息
     @staticmethod
-    def get_element_by_point(x: float = 0, y: float = 0, z: float = 0, tolerance: float = 1):
+    def get_elements_by_point(x: float = 0, y: float = 0, z: float = 0, tolerance: float = 1):
         """
         获取某一点指定范围内单元集合,单元中心点为节点平均值
         Args:
@@ -77,33 +77,33 @@ class OdbModelStructure:
             z: 坐标z
             tolerance:容许范围,默认为1
         Example:
-            odb.get_element_by_point(0.5,0.5,0.5,tolerance=1)
+            odb.get_elements_by_point(0.5,0.5,0.5,tolerance=1)
         Returns: 包含信息为list[int]
         """
         payload = {"x": x, "y": y, "z": z, "tolerance": tolerance}
         return QtServer.send_dict("GET-ELEMENTS-BY-POINT", payload)
 
     @staticmethod
-    def get_element_by_material(name: str = ""):
+    def get_elements_by_material(name: str = ""):
         """
         获取某一材料相应的单元
         Args:
             name:材料名称
         Example:
-            odb.get_element_by_material("材料1")
+            odb.get_elements_by_material("材料1")
         Returns: 包含信息为list[int]
         """
         payload = {"name": name}
         return QtServer.send_dict("GET-ELEMENTS-BY-MATERIAL", payload)
 
     @staticmethod
-    def get_element_by_section(index: int = 1):
+    def get_elements_by_section(index: int = 1):
         """
         获取某一截面相应的单元
         Args:
             index:截面编号
         Example:
-            odb.get_element_by_section(index=1)
+            odb.get_elements_by_section(index=1)
         Returns: 包含信息为list[int]
         """
         payload = {"index": index}

@@ -16,7 +16,7 @@ twine upload dist/*
 
 setup(
     name="qtmodel",
-    version=f"V2.1.2",
+    version=f"V2.2.1",
     author="dqy-zhj",
     author_email="1105417715@qq.com",
     description=f"python modeling for qt {datetime.now().date()} ",
