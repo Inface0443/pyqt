@@ -2,7 +2,7 @@ from typing import Union
 from qtmodel.core.qt_server import QtServer
 
 
-class CdbConcretCheck:
+class CdbConcreteCheck:
     """
     用于混凝土结构验算
     """
@@ -119,7 +119,7 @@ class CdbConcretCheck:
                 BS 5400-1990-[弹性模量,fcu]
                 铁路极限状态法-[弹性模量,fcuk,fck,fctk]
             model: 模型类型，1-损伤演化模型 2-修正Kent-Park模型 3-约束混凝土 4-无约束混凝土 5-钢管混凝土 
-            parameters: 自定义模式参数
+            user_model: 自定义模式参数
             user_data: 用户自定义模型数据，格式为[(应变,应力)]
         Example:
             cdb.add_check_material(name="混凝土",properties=[3.45e10,5e7,3.24e7,2.65e6,1.83e6],model=1)

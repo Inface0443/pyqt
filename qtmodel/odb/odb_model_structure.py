@@ -187,6 +187,17 @@ class OdbModelStructure:
 
     # region 跨度信息
     @staticmethod
+    def get_span_data():
+        """
+        获取所有跨度信息
+        Args:无
+        Example:
+            odb.get_span_data()
+        Returns: list[dict]
+        """
+        return QtServer.send_dict("GET-SPAN-DATA", None)
+
+    @staticmethod
     def get_span_supports(span_info_name: str = ""):
         """
         获取跨度信息的支承节点号

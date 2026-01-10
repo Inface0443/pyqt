@@ -117,6 +117,8 @@ class Readme:
         Readme.print_md_file(Readme.get_note(r'../qtmodel/odb/odb_result_data.py'))
         Readme.print_md_file(Readme.get_note(r'../qtmodel/odb/odb_result_plot.py'))
         Readme.print_md_file(Readme.get_note(r'../qtmodel/odb/odb_view.py'))
+        Readme.print_str("# 构件检算检算 ")
+        Readme.print_md_file(Readme.get_note(r'../qtmodel/cdb/cdb_concrete_check.py'))
         try:
             with open(r"../README.md", 'w', encoding='utf-8') as file:
                 for item in Readme._data_str:

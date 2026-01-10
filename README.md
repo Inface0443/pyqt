@@ -1,7 +1,7 @@
 > 最新qtmodel版本 V2.2.1 - 2026-01-08 
 > 最新qdat数据版本 V1.2.4 
 > pip install --upgrade qtmodel -i https://pypi.org/simple
-- 新增更新结构组接口 
+- 新增检算荷载组合，检算材料，检算钢筋信息 
 # 建模操作 
 ##  节点操作
 ### add_nodes
@@ -3875,4 +3875,194 @@ odb.change_construct_stage(stage=1)
 from qtmodel import *
 odb.get_current_png()
 #Returns: Base64格式(图形)字符串
+```  
+# 构件检算检算 
+### add_check_load_combine
+添加混凝土检算荷载组合
+> 参数:  
+> index: 荷载组合索引，-1表示在最后添加  
+> name: 荷载组合名称  
+> combine_type: 0-相加并判别，1-包络  
+> standard: 1-公规2015 2-铁规2017 3-铁路极限状态 4-英规BS5400 5-美规  
+> kind: 类型参考界面  
+> 公规2015|1-基本 2-偶然 3-标准 4-频遇 5-准永久 6-疲劳组合  
+> 铁路TB1002| 1-主力组合 2-主加附组合 3-主加特殊组合  
+> 铁路极限状态法| 1~11-组合I~XI 12-标准值组合 13-主力组合 14-主加附组合  
+> 英规| 1-承载能力极限状态 2-正常使用极限状态  
+> 美规| 1-强度组合 2-极端事件 3-使用组合I 4-使用组合II 5-使用组合III 6-使用组合IV 7-疲劳组合 8-永久作用组合  
+> combine_info: 荷载组合信息，格式为[(荷载工况,不利系数,有利系数)]  
+```Python
+# 示例代码
+from qtmodel import *
+cdb.add_check_load_combine(name="P1+P2",standard=1,kind=1,combine_info=[("P1 (ST)",1,1),("P2 (ST)",1,1)])
+#Returns: 无
+```  
+### remove_check_load_combine
+删除混凝土检算荷载组合
+> 参数:  
+> index: 荷载组合索引，-1表示删除所有  
+> name: 荷载组合名称  
+```Python
+# 示例代码
+from qtmodel import *
+cdb.remove_check_load_combine(index=1)
+cdb.remove_check_load_combine(name="P1+P2")
+#Returns: 无
+```  
+### add_concrete_check_case
+添加混凝土检算工况
+> 参数:  
+> name: 检算名称  
+> standard: 混凝土标准，1为JTG3362-2018，2为TB10092-2017  
+> structure_type: 结构类型，1为钢筋混凝土，2为B构件，3为A类构件，4为全预应力构件  
+> group_name: 结构组名称  
+```Python
+# 示例代码
+from qtmodel import *
+cdb.add_concrete_check_case(name="混凝土检算",standard=1,structure_type=1,group_name="默认结构组")
+#Returns: 无
+```  
+### remove_concrete_check_case
+删除混凝土检算工况
+> 参数:  
+> name: 检算名称  
+```Python
+# 示例代码
+from qtmodel import *
+cdb.remove_concrete_check_case(name="混凝土检算")
+#Returns: 无
+```  
+### solve_concret_check
+混凝土检算分析
+> 参数:  
+> name: 检算名称  
+```Python
+# 示例代码
+from qtmodel import *
+cdb.solve_concret_check(name="混凝土检算")
+#Returns: 无
+```  
+### add_check_material
+添加混凝土检算材料,需要修改检算材料信息才添加检算材料
+> 参数:  
+> name: 材料名称  
+> properties: 属性值列表,依据材料规范填写  
+> JTG 3362-2018 公路规范-[弹性模量,fcuk,fck,ftk,ftd]  
+> JTG D62-2004 公路规范-[弹性模量,fcuk,fck,ftk,ftd]  
+> JTJ 024-1985 公路规范-[弹性模量,fcuk,fck,ftk,ftd]  
+> TB 1002-2017 铁路规范-[弹性模量,fcuk,fc,ftc]  
+> ASTM 美国材料试验协会-[弹性模量,fc',fr]  
+> AASHTO-[弹性模量,fc',fr]  
+> BS 5400-1990-[弹性模量,fcu]  
+> 铁路极限状态法-[弹性模量,fcuk,fck,fctk]  
+> model: 模型类型，1-损伤演化模型 2-修正Kent-Park模型 3-约束混凝土 4-无约束混凝土 5-钢管混凝土  
+> user_model: 自定义模式参数  
+> user_data: 用户自定义模型数据，格式为[(应变,应力)]  
+```Python
+# 示例代码
+from qtmodel import *
+cdb.add_check_material(name="混凝土",properties=[3.45e10,5e7,3.24e7,2.65e6,1.83e6],model=1)
+#Returns: 无
+```  
+### add_parameter_reinforcement
+添加参数化配筋
+> 参数:  
+> sec_id: 截面ID  
+> position: 变截面位置，0为截面I端，1为截面J端  
+> has_outer: 是否有外部钢筋  
+> has_inner: 是否有内部钢筋  
+> outer_type: 0-按间距分布 1-按数量分布  
+> inner_type: 0-按间距分布 1-按数量分布  
+> outer_info: 外部钢筋信息，格式为[[直径,材料号,层边距,钢筋间距/数量,每束根数],...]  
+> inner_info: 内部钢筋信息，格式为[[直径,材料号,层边距,钢筋间距/数量,每束根数],...]  
+```Python
+# 示例代码
+from qtmodel import *
+cdb.add_parameter_reinforcement(sec_id=1,has_outer=True,has_inner=True,outer_type=0,inner_type=0,
+outer_info=[[20,1,50,150,1]],inner_info=[[20,1,50,150,1]])
+#Returns: 无
+```  
+### add_part_parameter_reinforcement
+添加局部参数化配筋
+> 参数:  
+> sec_id: 截面ID  
+> position: 截面位置，0为截面I端，1为截面J端  
+> data_info: 钢筋数据，列表中每项参数为10个，格式为[[基准线号,分布方式,布置方向,直径,钢筋材料号,层边距,间距/数量,每束根数,首点偏移,尾点偏移],...]  
+> 分布方式| 0-按间距分布 1-按数量分布  
+> 布置方向| 0-向内布置 1-向外布置  
+```Python
+# 示例代码
+from qtmodel import *
+cdb.add_part_parameter_reinforcement(sec_id=1,position=0,data_info=[[11,0,0,20,4,50,150,1,0,0]])
+#Returns: 无
+```  
+### add_reinforcement_by_point
+添加自定义截面纵向钢筋数据
+> 参数:  
+> sec_id: 截面ID  
+> position: 变截面位置，0为截面I端，1为截面J端  
+> bar_data: 钢筋数据列表，格式为[(x,y,直径,钢筋材料号)]  
+```Python
+# 示例代码
+from qtmodel import *
+cdb.add_reinforcement_by_point(sec_id=1,position=0,bar_data=[(0.1,0.5,20,1),(0.3,0.6,22,1)])
+#Returns: 无
+```  
+### add_steel_hoop
+添加箍筋数据
+> 参数:  
+> index: 箍筋编号  
+> name: 箍筋名称  
+> hoop_type: 箍筋类型 1-普通箍筋 2-螺旋箍筋  
+> material_id: 箍筋材料号  
+> nums: 箍筋肢数或环数  
+> diameter: 箍筋直径  
+> gap: 箍筋间距  
+> core_diameter: 箍筋核心直径  
+```Python
+# 示例代码
+from qtmodel import *
+cdb.add_steel_hoop(index=1,name="箍筋1",hoop_type=1,material_id=10,nums=2,diameter=20,gap=0.5,core_diameter=15)
+#Returns: 无
+```  
+### update_element_steel_hoop
+更新单元箍筋数据
+> 参数:  
+> sec_id: 单元ID  
+> bar_data: 箍筋数据列表，格式为[(x,y,直径,箍筋材料号)]  
+```Python
+# 示例代码
+from qtmodel import *
+cdb.update_element_steel_hoop(sec_id=1,bar_data=[(0.1,0.5,20,10),(0.3,0.6,22,10)])
+#Returns: 无
+```  
+### update_vertical_steel_hoop
+更新竖向箍筋数据
+> 参数:  
+> nums: 箍筋肢数或环数  
+> area: 箍筋面积，单位：m²  
+> gap: 箍筋间距，单位：m  
+> effective_prestress: 有效预应力，单位：Pa (8e8 Pa = 800 MPa)  
+> fpd: 强度设计值，单位：Pa (9e8 Pa = 900 MPa)  
+```Python
+# 示例代码
+from qtmodel import *
+cdb.update_vertical_steel_hoop(nums=4,area=0.000314,gap=0.15)
+#Returns: 无
+```  
+### add_concrete_load_combination
+添加混凝土构件荷载组合
+> 参数:  
+> name: 荷载组合名称  
+> standard: 荷载组合标准 1-公路规范JTG D60-2015 2-铁路规范TB 10002-2017  
+> kind:荷载组合类型，根据规范不同类型不同  
+> 公路规范JTG D60-2015|1-基本组合 2-偶然组合 3-标准值组合 4-频遇组合 5-准永久组合  
+> 铁路规范TB 10002-2017|1-主力组合 2-主加附组合 3-主加特殊组合  
+> combine_type: 组合方式 1-相加并判别 2-包络  
+> load_case_factors: 荷载工况列表，格式为[(荷载工况名称,不利系数,有利系数)]  
+```Python
+# 示例代码
+from qtmodel import *
+cdb.add_concrete_load_combination(name="LC1",standard=1,kind=1,combine_type=1,load_case_factors=[("LC1-1",1.0,1.2)])
+#Returns: 无
 ```  
