@@ -3939,7 +3939,7 @@ cdb.remove_concrete_check_case(name="混凝土检算")
 ```Python
 # 示例代码
 from qtmodel import *
-cdb.solve_concret_check(name="混凝土检算")
+cdb.solve_concrete_check(name="混凝土检算")
 #Returns: 无
 ```  
 ### add_check_material

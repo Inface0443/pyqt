@@ -17,11 +17,37 @@ class MdbProject:
     def set_version(version: str = QtServer.QT_VERSION):
         """
         控制第三方库版本
-        Args:无
+        Args: 无
         Example:
-            mdb.set_version()
+            mdb.set_version("2.2.0")
         Returns: 无
         """
+        def _parse_version(v: str):
+            """
+            解析 'x.y.z' -> (x, y, z)
+            支持 '2.2' 自动补 0 -> (2,2,0)
+            """
+            if not isinstance(v, str) or not v.strip():
+                raise ValueError(f"version 必须是非空字符串，如: {QtServer.QT_VERSION}")
+            parts = v.strip().split(".")
+            if len(parts) != 3:
+                raise ValueError(f"version 格式错误：{v}，应为 'a.b.c'")
+            try:
+                nums = tuple(int(p) for p in parts)
+            except ValueError:
+                raise ValueError(f"version 含非数字：{v}，应为 'a.b.c'")
+            if any(n < 0 for n in nums):
+                raise ValueError(f"version 不能为负数：{v}")
+            return nums  # (major, minor, patch)
+
+        current = _parse_version(QtServer.QT_VERSION)
+        target = _parse_version(version)
+
+        # 如果版本大于当前版本，直接报错
+        if target > current:
+            raise ValueError(
+                f"不允许设置到更高版本：当前最高版本 {QtServer.QT_VERSION}"
+            )
         QtServer.QT_VERSION = version
 
     @staticmethod

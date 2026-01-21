@@ -4,7 +4,7 @@ import requests
 
 class QtServer:
     URL: str = "http://localhost:55125/pythonForQt/"
-    QT_VERSION: str = "2.1.2"
+    QT_VERSION: str = "2.2.1"
 
     @staticmethod
     def send_command(command: str = "", header: str = ""):

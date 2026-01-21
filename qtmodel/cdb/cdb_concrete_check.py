@@ -27,7 +27,7 @@ class CdbConcreteCheck:
             cdb.add_check_load_combine(name="P1+P2",standard=1,kind=1,combine_info=[("P1 (ST)",1,1),("P2 (ST)",1,1)])
         Returns: 无
         """
-        QtServer.send_dict(header="ADD-CONCRET-LOAD-COMBINE",payload={
+        QtServer.send_dict(header="ADD-CHECK-LOAD-COMBINE",payload={
             "index": index,
             "name": name,
             "combine_type": combine_type,
@@ -48,7 +48,7 @@ class CdbConcreteCheck:
             cdb.remove_check_load_combine(name="P1+P2")
         Returns: 无
         """
-        QtServer.send_dict(header="REMOVE-CONCRET-LOAD-COMBINE",payload={
+        QtServer.send_dict(header="REMOVE-CHECK-LOAD-COMBINE",payload={
             "index": index,
             "name": name,
         })
@@ -66,7 +66,7 @@ class CdbConcreteCheck:
             cdb.add_concrete_check_case(name="混凝土检算",standard=1,structure_type=1,group_name="默认结构组")
         Returns: 无
         """
-        QtServer.send_dict(header="ADD-CONCRET-CHECK-CASE",payload={
+        QtServer.send_dict(header="ADD-CONCRETE-CHECK-CASE",payload={
             "name": name,
             "standard": standard,
             "structure_type": structure_type,
@@ -83,28 +83,30 @@ class CdbConcreteCheck:
             cdb.remove_concrete_check_case(name="混凝土检算")
         Returns: 无
         """
-        QtServer.send_dict(header="REMOVE-CONCRET-CHECK-CASE",payload={
+        QtServer.send_dict(header="REMOVE-CONCRETE-CHECK-CASE",payload={
             "name": name,
         })
 
     @staticmethod
-    def solve_concret_check(name:str=""):
+    def solve_concrete_check(name:str=""):
         """
         混凝土检算分析
         Args:
             name: 检算名称
         Example:
-            cdb.solve_concret_check(name="混凝土检算")
+            cdb.solve_concrete_check(name="混凝土检算")
         Returns: 无
         """
         payload = {
             "name": name,
         }
-        QtServer.send_dict(header="SOLVE-CONCRET-CHECK",payload=payload)
+        QtServer.send_dict(header="SOLVE-CONCRETE-CHECK",payload=payload)
 
     @staticmethod
     def add_check_material(name:str="",properties:list[float]=None,model:int=1,
-                           user_model:bool=False,user_data:list[tuple[float,float]]=None):
+                           parameter_data:list[float]=None,
+                           curve_data:list[tuple[float,float]]=None,
+                           user_material:int =1,user_standard:int =1):
         """
         添加混凝土检算材料,需要修改检算材料信息才添加检算材料
         Args:
@@ -118,19 +120,23 @@ class CdbConcreteCheck:
                 AASHTO-[弹性模量,fc',fr]
                 BS 5400-1990-[弹性模量,fcu]
                 铁路极限状态法-[弹性模量,fcuk,fck,fctk]
-            model: 模型类型，1-损伤演化模型 2-修正Kent-Park模型 3-约束混凝土 4-无约束混凝土 5-钢管混凝土 
-            user_model: 自定义模式参数
-            user_data: 用户自定义模型数据，格式为[(应变,应力)]
+            model: 应力应变曲线类型，1-损伤演化模型 2-修正Kent-Park模型 3-约束混凝土 4-无约束混凝土 5-钢管混凝土
+            parameter_data: 检算材料应力应变特性参数
+            curve_data: 用户自定义模型数据，格式为[(应变,应力)]
+            user_material: 用户自定义材料类型 1-混凝土 2-钢材 3-预应力 4-钢筋
+            user_standard: 参考Ui对应规范
         Example:
             cdb.add_check_material(name="混凝土",properties=[3.45e10,5e7,3.24e7,2.65e6,1.83e6],model=1)
         Returns: 无
         """
-        QtServer.send_dict(header="ADD-CONCRET-CHECK-MATERIAL",payload={
+        QtServer.send_dict(header="ADD-CONCRETE-CHECK-MATERIAL",payload={
             "name": name,
             "properties": properties,
             "model": model,
-            "user_model": user_model,
-            "user_data": user_data
+            "parameter_data": parameter_data,
+            "curve_data": curve_data,
+            "user_material": user_material,
+            "user_standard": user_standard
         })
 
     @staticmethod
@@ -197,11 +203,45 @@ class CdbConcreteCheck:
         """
         QtServer.send_dict(header="ADD-REINFORCEMENT-BY-POINT",payload={
             "sec_id": sec_id,
+            "sec_name": sec_id,
             "position": position,
             "bar_data": bar_data
         })
 
-    #添加箍筋信息
+    @staticmethod
+    def get_reinforcement_data():
+        """
+        获取全部纵向钢筋坐标信息
+        Args: 无
+        Example:
+            cdb.get_reinforcement_data()
+        Returns: list[dict]类型字符串
+        """
+        QtServer.send_dict(header="GET-REINFORCEMENT-DATA")
+
+    @staticmethod
+    def get_stirrup_data():
+        """
+        获取全部箍筋信息
+        Args: 无
+        Example:
+            cdb.get_stirrup_data()
+        Returns: list[dict]类型字符串
+        """
+        QtServer.send_dict(header="GET-STIRRUP-DATA")
+
+    @staticmethod
+    def get_check_material_data():
+        """
+        获取全部检算材料信息
+        Args: 无
+        Example:
+            cdb.get_check_material_data()
+        Returns: list[dict]类型字符串
+        """
+        QtServer.send_dict(header="GET-CHECK-MATERIAL-DATA")
+
+
     @staticmethod
     def add_steel_hoop(index:int,name:str,hoop_type:int=1,material_id:int=1,nums:int=1,
                         diameter:float=0,gap:float=0,core_diameter:float=0):
@@ -210,7 +250,7 @@ class CdbConcreteCheck:
         Args:
             index: 箍筋编号
             name: 箍筋名称
-            hoop_type: 箍筋类型 1-普通箍筋 2-螺旋箍筋
+            hoop_type: 箍筋类型 0-普通箍筋 1-螺旋箍筋
             material_id: 箍筋材料号
             nums: 箍筋肢数或环数
             diameter: 箍筋直径
@@ -269,7 +309,7 @@ class CdbConcreteCheck:
             "fpd": fpd
         })
 
-    # 添加混凝土构件荷载组合
+
     @staticmethod
     def add_concrete_load_combination(name:str,standard:int=1,kind:int=1,combine_type:int=1,
                                       load_case_factors:list[tuple[str,float,float]]=None):
