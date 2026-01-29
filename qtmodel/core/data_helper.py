@@ -9,9 +9,12 @@ class QtDataHelper:
     """
 
     @staticmethod
-    def str_concrete_box_beam(symmetry: bool = True, sec_info: list[float] = None, box_num: int = 3, box_height: float = 2,
-                              charm_info: list[str] = None, sec_right: list[float] = None, charm_right: list[str] = None,
-                              box_other_info: dict[str, list[float]] = None, box_other_right: dict[str, list[float]] = None):
+    def str_concrete_box_beam(symmetry: bool = True, sec_info: list[float] = None, box_num: int = 3,
+                              box_height: float = 2,
+                              charm_info: list[str] = None, sec_right: list[float] = None,
+                              charm_right: list[str] = None,
+                              box_other_info: dict[str, list[float]] = None,
+                              box_other_right: dict[str, list[float]] = None):
         """混凝土箱梁信息编码
         """
         bridge_width = (2 * sec_info[10]) if symmetry else (sec_info[10] + sec_right[10])
@@ -23,7 +26,8 @@ class QtDataHelper:
 
         if box_other_info and any(k in box_other_info for k in ("i1", "B0", "B4", "T4")):
             s += "\r\n".join(
-                f"L{k}=" + ",".join(f"{v:g}" for v in box_other_info[k]) for k in ("i1", "B0", "B4", "T4") if k in box_other_info) + "\r\n"
+                f"L{k}=" + ",".join(f"{v:g}" for v in box_other_info[k]) for k in ("i1", "B0", "B4", "T4") if
+                k in box_other_info) + "\r\n"
 
         if not symmetry:
             s += ",".join(f"{x:g}" for x in sec_right) + "\r\n"
@@ -32,7 +36,8 @@ class QtDataHelper:
 
             if box_other_right and any(k in box_other_right for k in ("i1", "B0", "B4", "T4")):
                 s += "\r\n".join(
-                    f"R{k}=" + ",".join(f"{v:g}" for v in box_other_info[k]) for k in ("i1", "B0", "B4", "T4") if k in box_other_info) + "\r\n"
+                    f"R{k}=" + ",".join(f"{v:g}" for v in box_other_info[k]) for k in ("i1", "B0", "B4", "T4") if
+                    k in box_other_info) + "\r\n"
         return s
 
     @staticmethod
@@ -42,13 +47,16 @@ class QtDataHelper:
         """
         s = ",".join(f"{x:g}" for x in sec_info) + "\r\n"
         if rib_info is not None:
-            s += "\r\n".join(f"RIB={name}," + ",".join(f"{x:g}" for x in params) for name, params in rib_info.items()) + "\r\n"
+            s += "\r\n".join(
+                f"RIB={name}," + ",".join(f"{x:g}" for x in params) for name, params in rib_info.items()) + "\r\n"
         if rib_place is not None:
-            s += "\r\n".join(f"PLACE={','.join(f'{x:g}' if isinstance(x, float) else str(x) for x in row)}" for row in rib_place) + "\r\n"
+            s += "\r\n".join(f"PLACE={','.join(f'{x:g}' if isinstance(x, float) else str(x) for x in row)}" for row in
+                             rib_place) + "\r\n"
         return s
 
     @staticmethod
-    def str_custom_compound_beam(mat_combine: list[float] = None, loop_segments: list[dict] = None, secondary_loop_segments: list[dict] = None):
+    def str_custom_compound_beam(mat_combine: list[float] = None, loop_segments: list[dict] = None,
+                                 secondary_loop_segments: list[dict] = None):
         """自定义组合梁信息编码
         """
         s = ",".join(f"{x:g}" for x in mat_combine) + "\r\n"
@@ -73,7 +81,8 @@ class QtDataHelper:
         return s
 
     @staticmethod
-    def str_custom_section(loop_segments: list[dict] = None, sec_lines: list[tuple[float, float, float, float, float]] = None):
+    def str_custom_section(loop_segments: list[dict] = None,
+                           sec_lines: list[tuple[float, float, float, float, float]] = None):
         """自定义截面信息编码
         """
         s = ""
@@ -127,17 +136,19 @@ class QtDataHelper:
             secondary_loop_segments: list[dict] = None):
         """仅返回字符串片段,需要拼接"""
         if sec_type == "混凝土箱梁":
-            s = QtDataHelper.str_concrete_box_beam(symmetry, sec_info, box_num, box_height, chamfer_info, sec_right, chamfer_right, box_other_info,
+            s = QtDataHelper.str_concrete_box_beam(symmetry, sec_info, box_num, box_height, chamfer_info, sec_right,
+                                                   chamfer_right, box_other_info,
                                                    box_other_right)
-        elif sec_type == "箱梁边腹板" or sec_type == "箱梁中腹板" :
-            s =",".join(f"{x:g}" for x in sec_info) + "\r\n" + ",".join(f"({s})" for s in chamfer_info)
+        elif sec_type == "箱梁边腹板" or sec_type == "箱梁中腹板":
+            s = ",".join(f"{x:g}" for x in sec_info) + "\r\n" + ",".join(f"({s})" for s in chamfer_info)
         elif sec_type == "工字钢梁" or sec_type == "箱型钢梁" or sec_type == "单箱多室钢梁":
             s = QtDataHelper.str_steel_beam(sec_info, rib_info, rib_place)
         elif sec_type == "特性截面":
             s = ",".join(f"{x:g}" for x in sec_info) + "\r\n"
         elif sec_type.startswith("自定义组合"):
             s = QtDataHelper.str_custom_compound_beam(mat_combine, loop_segments, secondary_loop_segments)
-        elif sec_type.endswith("组合梁") or sec_type in ("钢管砼", "钢箱砼", "哑铃型钢管混凝土", "哑铃型钢管混凝土竖向"):
+        elif sec_type.endswith("组合梁") or sec_type in (
+        "钢管砼", "钢箱砼", "哑铃型钢管混凝土", "哑铃型钢管混凝土竖向"):
             s = QtDataHelper.str_compound_section(sec_info, mat_combine)
         elif sec_type.startswith("自定义"):
             s = QtDataHelper.str_custom_section(loop_segments, sec_lines)
@@ -175,7 +186,8 @@ class QtDataHelper:
             current_increment = sorted_ids[current_index] - sorted_ids[current_index - 1]
             if current_increment == id_increment:
                 if current_index >= id_count - 1:
-                    result.append(create_id_expression(sorted_ids[start_index], sorted_ids[current_index], id_increment))
+                    result.append(
+                        create_id_expression(sorted_ids[start_index], sorted_ids[current_index], id_increment))
                     break
                 current_index += 1
                 continue
@@ -193,7 +205,8 @@ class QtDataHelper:
                 current_index = start_index + 2
             else:
                 # 前面有 3 个及以上
-                result.append(create_id_expression(sorted_ids[start_index], sorted_ids[current_index - 1], id_increment))
+                result.append(
+                    create_id_expression(sorted_ids[start_index], sorted_ids[current_index - 1], id_increment))
                 if current_index >= id_count - 1:
                     result.append(str(sorted_ids[current_index]))
                     break
@@ -261,20 +274,13 @@ class QtDataHelper:
         return f"{code},{calc_type}," + ",".join(groups) + "\r\n"
 
     @staticmethod
-    def parse_ids_to_array(ids: Union[int, List[int], str, None],allow_empty = True) -> List[int]:
+    def parse_ids_to_array(ids: Union[int, List[int], str, List[str], List[Union[int, str]], None],
+                           allow_empty: bool = True) -> List[int]:
         """
-        支持整形、列表、XtoYbyZ形式字符串 统一解析为 int 列表
+        支持整形、列表、XtoYbyZ形式字符串、List[str] 统一解析为 int 列表
         """
+
         def parse_number_string(input_str: str) -> Optional[List[int]]:
-            """
-            将带“to/by”的字符串解析为 int 列表。
-            规则与给定 C# 版本一致：
-              - 以空白分隔各段；段内若包含 'to' 则按 'start to end [by step]' 解析
-              - 仅支持紧凑写法：例如 '3to10by2' 或 '3to10'（不支持 '3 to 10 by 2'）
-              - step 缺省为 1；返回为包含端点的等差序列（若整除）
-              - 对于无法解析的段、step<=0、end<start 的段会跳过
-              - 空或全空白字符串返回 None
-            """
             if input_str is None:
                 return None
             s = input_str.strip()
@@ -285,22 +291,24 @@ class QtDataHelper:
             tokens = s.split()
             for tok in tokens:
                 if "to" in tok:
-                    # 按 'to'/'by' 拆分；例如 '3to10by2' -> ['3','10','2']
-                    parts = re.split(r'to|by', tok)
+                    parts = re.split(r"to|by", tok)
                     if len(parts) >= 2:
                         try:
                             start = int(parts[0])
                             end = int(parts[1])
                         except ValueError:
                             continue
+
                         step = 1
-                        if len(parts) > 2:
+                        if len(parts) > 2 and parts[2] != "":
                             try:
                                 step = int(parts[2])
                             except ValueError:
                                 step = 1
+
                         if step <= 0 or end < start:
                             continue
+
                         count = (end - start) // step + 1
                         results.extend(start + n * step for n in range(count))
                 else:
@@ -311,15 +319,36 @@ class QtDataHelper:
 
             return results
 
-        result_ids = []
+        result_ids: List[int] = []
         if ids is None:
             return result_ids
+
         if isinstance(ids, int):
             result_ids.append(ids)
+
         elif isinstance(ids, str):
-            result_ids.extend(parse_number_string(ids))
+            parsed = parse_number_string(ids)
+            if parsed:
+                result_ids.extend(parsed)
+
+        elif isinstance(ids, list):
+            # ✅ 新增：支持 List[str] / List[int] / List[Union[int,str]]
+            for item in ids:
+                if item is None:
+                    continue
+                if isinstance(item, int):
+                    result_ids.append(item)
+                elif isinstance(item, str):
+                    parsed = parse_number_string(item)
+                    if parsed:
+                        result_ids.extend(parsed)
+                else:
+                    raise TypeError(f"ids 列表中存在不支持的类型: {type(item)} -> {item!r}")
+
         else:
-            result_ids.extend(ids)
+            raise TypeError(f"不支持的 ids 类型: {type(ids)} -> {ids!r}")
+
         if len(result_ids) == 0 and allow_empty is False:
             raise Exception("集合不可为空，请核查数据")
+
         return result_ids
