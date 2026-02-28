@@ -287,37 +287,45 @@ class QtDataHelper:
             if s == "":
                 return None
 
+            # 1) 把常见分隔符统一成空格：逗号/中文逗号/分号/中文分号/竖线/换行/tab
+            s = re.sub(r"[,\uFF0C;\uFF1B|\t\r\n]+", " ", s)
+
             results: List[int] = []
+
+            # 2) 允许 token 里出现 4to10by2 或 4 to 10 by 2
             tokens = s.split()
             for tok in tokens:
-                if "to" in tok:
-                    parts = re.split(r"to|by", tok)
-                    if len(parts) >= 2:
-                        try:
-                            start = int(parts[0])
-                            end = int(parts[1])
-                        except ValueError:
-                            continue
+                tok = tok.strip()
+                if not tok:
+                    continue
 
-                        step = 1
-                        if len(parts) > 2 and parts[2] != "":
-                            try:
-                                step = int(parts[2])
-                            except ValueError:
-                                step = 1
+                # 用 regex 抽取区间：start to end (by step)?
+                # 支持：4to10by2, 4 to 10 by 2, 4to10, 4-10by2, 4-10
+                m = re.fullmatch(
+                    r"(?P<start>-?\d+)\s*(?:to|-)\s*(?P<end>-?\d+)\s*(?:by\s*(?P<step>-?\d+))?",
+                    tok,
+                    flags=re.IGNORECASE
+                )
+                if m:
+                    start = int(m.group("start"))
+                    end = int(m.group("end"))
+                    step_str = m.group("step")
+                    step = int(step_str) if step_str is not None else 1
 
-                        if step <= 0 or end < start:
-                            continue
-
-                        count = (end - start) // step + 1
-                        results.extend(start + n * step for n in range(count))
-                else:
-                    try:
-                        results.append(int(tok))
-                    except ValueError:
+                    # 规则：step 必须 > 0；默认只支持递增区间
+                    if step <= 0 or end < start:
                         continue
 
-            return results
+                    results.extend(range(start, end + 1, step))
+                    continue
+
+                # 普通数字
+                try:
+                    results.append(int(tok))
+                except ValueError:
+                    continue
+
+            return results if results else None
 
         result_ids: List[int] = []
         if ids is None:

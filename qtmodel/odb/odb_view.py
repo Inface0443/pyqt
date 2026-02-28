@@ -1,4 +1,5 @@
 from qtmodel.core.qt_server import QtServer
+from qtmodel.core.data_helper import QtDataHelper
 
 
 class OdbView:
@@ -106,12 +107,11 @@ class OdbView:
            odb.activate_structure(node_ids=[1,2,3],element_ids=[1,2,3])
         Returns: 无
         """
-        payload = {}
-        if node_ids is not None:
-            payload["node_ids"] = node_ids
-        if element_ids is not None:
-            payload["element_ids"] = element_ids
+        payload = {
+            "node_ids": QtDataHelper.parse_ids_to_array(node_ids),
+            "element_ids": QtDataHelper.parse_ids_to_array(element_ids),
 
+        }
         return QtServer.send_dict(
             "ACTIVATE-STRUCTURE",
             payload if payload else None  # 两者都空则只发 Header
