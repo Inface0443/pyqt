@@ -474,4 +474,19 @@ class MdbBoundary:
         """
         payload = {"node_id": node_id}
         return QtServer.send_dict("REMOVE-NODE-AXIS", payload)
+    
+    @staticmethod
+    def remove_elastic_link(link_ids:Union[int,List[int],str] =-1):
+        """
+        根据弹性连接编号删除弹性连接
+        Args:
+             link_ids:弹性连接号，不为正数时则删除所有弹性连接
+        Example:
+            mdb.remove_elastic_link(link_id=1)
+        Returns: 无
+        """
+        payload = {"link_ids": QtDataHelper.parse_ids_to_array(link_ids)}
+        if link_ids == -1:
+            payload = None
+        return QtServer.send_dict("REMOVE-ELASTIC-LINK", payload)
     # region

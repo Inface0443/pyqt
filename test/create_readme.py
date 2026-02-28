@@ -98,6 +98,7 @@ class Readme:
         Readme.print_str("# 建模操作 ")
         Readme.print_md_file(Readme.get_note(r'../qtmodel/mdb/mdb_structure.py'))
         Readme.print_md_file(Readme.get_note(r'../qtmodel/mdb/mdb_property.py'))
+        Readme.print_md_file(Readme.get_note(r'../qtmodel/mdb/mdb_project.py'))
         Readme.print_md_file(Readme.get_note(r'../qtmodel/mdb/mdb_section.py'))
         Readme.print_md_file(Readme.get_note(r'../qtmodel/mdb/mdb_boundary.py'))
         Readme.print_md_file(Readme.get_note(r'../qtmodel/mdb/mdb_tendon.py'))

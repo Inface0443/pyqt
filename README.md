@@ -1,8 +1,5 @@
-# API 帮助文档
-> 最新qtmodel版本 V2.2.1 - 2026-01-08
-> 
-> 最新qdat数据版本 V1.2.4
-> 
+> 最新qtmodel版本 V2.2.1 - 2026-02-28 
+> 最新qdat数据版本 V1.2.4 
 > pip install --upgrade qtmodel -i https://pypi.org/simple
 
 - 新增检算荷载组合，检算材料，检算钢筋信息
@@ -647,11 +644,175 @@ mdb.remove_thickness()
 mdb.remove_thickness(index=1)
 mdb.remove_thickness(name="板厚1")
 #Returns: 无
-```
-
-### 截面
-
-#### add_section
+```  
+##  项目管理
+### set_url
+设置关联桥通路径
+> 参数:  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.set_url()
+#Returns: 无
+```  
+### set_version
+控制API数据传输版本
+> 参数:  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.set_version("2.2.0")
+#Returns: 无
+```  
+### undo_model
+撤销模型上次操作
+> 参数:  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.undo_model()
+#Returns: 无
+```  
+### redo_model
+重做上次撤销
+> 参数:  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.redo_model()
+#Returns: 无
+```  
+### update_model
+刷新模型信息
+> 参数:  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.update_model()
+#Returns: 无
+```  
+### update_to_pre
+切换到前处理
+> 参数:  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.update_to_pre()
+#Returns: 无
+```  
+### update_to_post
+切换到后处理
+> 参数:  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.update_to_post()
+#Returns: 无
+```  
+### do_solve
+运行分析
+> 参数:  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.do_solve()
+#Returns: 无
+```  
+### initial
+初始化模型,新建模型
+> 参数:  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.initial()
+#Returns: 无
+```  
+### open_file
+打开bfmd文件
+> 参数:  
+> file_path: 文件全路径  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.open_file(file_path="a.bfmd")
+#Returns: 无
+```  
+### close_project
+关闭项目
+> 参数:  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.close_project()
+#Returns: 无
+```  
+### save_file
+保存bfmd文件，默认保存为当前路径
+> 参数:  
+> file_path: 文件全路径  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.save_file(file_path="a.bfmd")
+#Returns: 无
+```  
+### import_command
+导入命令
+> 参数:  
+> command:命令字符  
+> command_type:命令类型,默认桥通命令 1-桥通命令 2-mct命令  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.import_command(command="*SEC-INFO")
+mdb.import_command(command="*SECTION",command_type=2)
+#Returns: 无
+```  
+### import_file
+导入文件,导入文件为桥通所在主机文件
+> 参数:  
+> file_path:导入文件(.mct/.qdat/.dxf/.3dx)  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.import_file(file_path="a.mct")
+#Returns: 无
+```  
+### export_file
+导出命令为导出到本机所在地址,默认输出截面特性和截面信息
+> 参数:  
+> file_path:导出文件全路径，支持格式(.mct/.qdat/.obj/.txt/.py)  
+> convert_sec_group:是否将变截面组转换为变截面  
+> type_kind:输出文件类型 0-仅输出截面特性和材料特性(仅供qdat输出) 1-仅输出模型文件  2-输出截面特性和截面信息  
+> group_name:obj与 APDL导出时指定结构组导出  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.export_file(file_path="a.mct")
+#Returns: 无
+```  
+### export_qt_helper
+输出桥通qdat命令帮助文档,仅支持最新帮助文档,保存路径为调用主机下
+> 参数:  
+> file_path:导出文件全路径，支持格式(.txt/.qdat)  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.export_qt_helper(file_path="a.qdat")
+#Returns: 无
+```  
+### update_view_stage
+更新施工阶段显示，通过指定施工阶段名切换视图显示
+> 参数:  
+> stage_name:施工阶段名称  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.update_view_stage(stage_name="一次成桥")
+#Returns: 无
+```  
+##  截面
+### add_section
 添加单一截面信息,如果截面号存在则自动覆盖添加
 
 > 参数:
@@ -1270,11 +1431,19 @@ mdb.remove_general_elastic_support_property(name = "特性1")
 from qtmodel import *
 mdb.remove_node_axis(node_id=1)
 #Returns: 无
-```
-
-### 钢束操作
-
-#### add_tendon_group
+```  
+### remove_elastic_link
+根据弹性连接编号删除弹性连接
+> 参数:  
+> link_ids:弹性连接号，不为正数时则删除所有弹性连接  
+```Python
+# 示例代码
+from qtmodel import *
+mdb.remove_elastic_link(link_id=1)
+#Returns: 无
+```  
+##  钢束操作
+### add_tendon_group
 按照名称添加钢束组，添加时可指定钢束组id
 
 > 参数:
@@ -3557,11 +3726,18 @@ odb.get_group_elements(group_name="默认结构组")
 from qtmodel import *
 odb.get_element_weight(ids=1)
 #Returns: dict<int,double>类型的json格式字符串
-```
-
-### 跨度信息
-
-#### get_span_supports
+```  
+##  跨度信息
+### get_span_data
+获取所有跨度信息
+> 参数:  
+```Python
+# 示例代码
+from qtmodel import *
+odb.get_span_data()
+#Returns: list[dict]
+```  
+### get_span_supports
 获取跨度信息的支承节点号
 
 > 参数:
@@ -4834,9 +5010,8 @@ cdb.add_concrete_check_case(name="混凝土检算",standard=1,structure_type=1,g
 from qtmodel import *
 cdb.remove_concrete_check_case(name="混凝土检算")
 #Returns: 无
-```
-
-#### solve_concret_check
+```  
+### solve_concrete_check
 混凝土检算分析
 
 > 参数:
@@ -4851,22 +5026,22 @@ cdb.solve_concrete_check(name="混凝土检算")
 
 #### add_check_material
 添加混凝土检算材料,需要修改检算材料信息才添加检算材料
-
-> 参数:
-> name: 材料名称
-> properties: 属性值列表,依据材料规范填写
-> JTG 3362-2018 公路规范-[弹性模量,fcuk,fck,ftk,ftd]
-> JTG D62-2004 公路规范-[弹性模量,fcuk,fck,ftk,ftd]
-> JTJ 024-1985 公路规范-[弹性模量,fcuk,fck,ftk,ftd]
-> TB 1002-2017 铁路规范-[弹性模量,fcuk,fc,ftc]
-> ASTM 美国材料试验协会-[弹性模量,fc',fr]
-> AASHTO-[弹性模量,fc',fr]
-> BS 5400-1990-[弹性模量,fcu]
-> 铁路极限状态法-[弹性模量,fcuk,fck,fctk]
-> model: 模型类型，1-损伤演化模型 2-修正Kent-Park模型 3-约束混凝土 4-无约束混凝土 5-钢管混凝土
-> user_model: 自定义模式参数
-> user_data: 用户自定义模型数据，格式为[(应变,应力)]
-
+> 参数:  
+> name: 材料名称  
+> properties: 属性值列表,依据材料规范填写  
+> JTG 3362-2018 公路规范-[弹性模量,fcuk,fck,ftk,ftd]  
+> JTG D62-2004 公路规范-[弹性模量,fcuk,fck,ftk,ftd]  
+> JTJ 024-1985 公路规范-[弹性模量,fcuk,fck,ftk,ftd]  
+> TB 1002-2017 铁路规范-[弹性模量,fcuk,fc,ftc]  
+> ASTM 美国材料试验协会-[弹性模量,fc',fr]  
+> AASHTO-[弹性模量,fc',fr]  
+> BS 5400-1990-[弹性模量,fcu]  
+> 铁路极限状态法-[弹性模量,fcuk,fck,fctk]  
+> model: 应力应变曲线类型，1-损伤演化模型 2-修正Kent-Park模型 3-约束混凝土 4-无约束混凝土 5-钢管混凝土  
+> parameter_data: 检算材料应力应变特性参数  
+> curve_data: 用户自定义模型数据，格式为[(应变,应力)]  
+> user_material: 用户自定义材料类型 1-混凝土 2-钢材 3-预应力 4-钢筋  
+> user_standard: 参考Ui对应规范  
 ```Python
 # 示例代码
 from qtmodel import *
@@ -4925,21 +5100,45 @@ cdb.add_part_parameter_reinforcement(sec_id=1,position=0,data_info=[[11,0,0,20,4
 from qtmodel import *
 cdb.add_reinforcement_by_point(sec_id=1,position=0,bar_data=[(0.1,0.5,20,1),(0.3,0.6,22,1)])
 #Returns: 无
-```
-
-#### add_steel_hoop
+```  
+### get_reinforcement_data
+获取全部纵向钢筋坐标信息
+> 参数:  
+```Python
+# 示例代码
+from qtmodel import *
+cdb.get_reinforcement_data()
+#Returns: list[dict]类型字符串
+```  
+### get_stirrup_data
+获取全部箍筋信息
+> 参数:  
+```Python
+# 示例代码
+from qtmodel import *
+cdb.get_stirrup_data()
+#Returns: list[dict]类型字符串
+```  
+### get_check_material_data
+获取全部检算材料信息
+> 参数:  
+```Python
+# 示例代码
+from qtmodel import *
+cdb.get_check_material_data()
+#Returns: list[dict]类型字符串
+```  
+### add_steel_hoop
 添加箍筋数据
-
-> 参数:
-> index: 箍筋编号
-> name: 箍筋名称
-> hoop_type: 箍筋类型 1-普通箍筋 2-螺旋箍筋
-> material_id: 箍筋材料号
-> nums: 箍筋肢数或环数
-> diameter: 箍筋直径
-> gap: 箍筋间距
-> core_diameter: 箍筋核心直径
-
+> 参数:  
+> index: 箍筋编号  
+> name: 箍筋名称  
+> hoop_type: 箍筋类型 0-普通箍筋 1-螺旋箍筋  
+> material_id: 箍筋材料号  
+> nums: 箍筋肢数或环数  
+> diameter: 箍筋直径  
+> gap: 箍筋间距  
+> core_diameter: 箍筋核心直径  
 ```Python
 # 示例代码
 from qtmodel import *

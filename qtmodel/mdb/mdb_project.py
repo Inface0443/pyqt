@@ -11,12 +11,19 @@ class MdbProject:
     # region 项目管理
     @staticmethod
     def set_url(url: str):
+        """
+        设置关联桥通路径
+        Args:无
+        Example:
+            mdb.set_url()
+        Returns: 无
+        """
         QtServer.URL = url
 
     @staticmethod
     def set_version(version: str = QtServer.QT_VERSION):
         """
-        控制第三方库版本
+        控制API数据传输版本
         Args: 无
         Example:
             mdb.set_version("2.2.0")
@@ -238,4 +245,21 @@ class MdbProject:
         content = QtServer.send_dict(header="EXP-QT-HELPER")
         with open(file_path, 'w', encoding='utf-8') as file:
             file.write(content)
+
+
+    @staticmethod
+    def update_view_stage(stage_name:str):
+        """
+        更新施工阶段显示，通过指定施工阶段名切换视图显示
+        Args:
+            stage_name:施工阶段名称
+        Example:
+            mdb.update_view_stage(stage_name="一次成桥")
+        Returns: 无
+        """
+        payload = {
+            "stage_name": stage_name,
+        }
+        return QtServer.send_dict("UPDATE-VIEW-STAGE", payload)
+
     # endregion
