@@ -3998,7 +3998,7 @@ odb.get_groups_of_stage(stage_id=1)
 ### 结果表格
 
 #### get_reaction
-获取制作反力
+获取支座反力
 
 > 参数:
 > ids: 节点编号,支持整数或整数型列表支持XtoYbyN形式字符串
@@ -4270,7 +4270,7 @@ odb.get_tendon_length_result()
 ### 绘制模型结果
 
 #### plot_reaction_result
-保存结果图片到指定文件甲
+保存结果图片到指定文件夹
 
 > 参数:
 > file_path: 保存路径名
@@ -4298,7 +4298,7 @@ odb.plot_reaction_result(file_path=r"D:\\图片\\反力图.png",component=1,case
 ```
 
 #### plot_displacement_result
-保存结果图片到指定文件甲
+保存结果图片到指定文件夹
 
 > 参数:
 > file_path: 保存路径名
