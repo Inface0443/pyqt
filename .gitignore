@@ -1,41 +1,43 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Packages
+*.egg
+*.egg-info/
+dist/
+build/
+eggs/
+.eggs/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Environments
+.env
+.venv
+env/
+venv/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# IDEs
+.idea/
+.vscode/
+*.swp
+
+# C# build directories
+[Bb]in/
+[Oo]bj/
+
+# Project specific
 test/test.py
-qtmodel/__pycache__/__init__.cpython-39.pyc
-qtmodel/core/__pycache__/__init__.cpython-39.pyc
-qtmodel/core/__pycache__/data_helper.cpython-39.pyc
-qtmodel/core/__pycache__/model_db.cpython-39.pyc
-qtmodel/core/__pycache__/qt_server.cpython-39.pyc
-qtmodel/core/__pycache__/result_db.cpython-39.pyc
-qtmodel/mdb/__pycache__/__init__.cpython-39.pyc
-qtmodel/mdb/__pycache__/mdb_analysis_setting.cpython-39.pyc
-qtmodel/mdb/__pycache__/mdb_assistant.cpython-39.pyc
-qtmodel/mdb/__pycache__/mdb_boundary.cpython-39.pyc
-qtmodel/mdb/__pycache__/mdb_construction_stage.cpython-39.pyc
-qtmodel/mdb/__pycache__/mdb_dynamic_load.cpython-39.pyc
-qtmodel/mdb/__pycache__/mdb_live_load.cpython-39.pyc
-qtmodel/mdb/__pycache__/mdb_load.cpython-39.pyc
-qtmodel/mdb/__pycache__/mdb_project.cpython-39.pyc
-qtmodel/mdb/__pycache__/mdb_property.cpython-39.pyc
-qtmodel/mdb/__pycache__/mdb_section.cpython-39.pyc
-qtmodel/mdb/__pycache__/mdb_sink_load.cpython-39.pyc
-qtmodel/mdb/__pycache__/mdb_static_load.cpython-39.pyc
-qtmodel/mdb/__pycache__/mdb_structure.cpython-39.pyc
-qtmodel/mdb/__pycache__/mdb_temperature_load.cpython-39.pyc
-qtmodel/mdb/__pycache__/mdb_tendon.cpython-39.pyc
-qtmodel/odb/__pycache__/__init__.cpython-39.pyc
-qtmodel/odb/__pycache__/odb_model_boundary.cpython-39.pyc
-qtmodel/odb/__pycache__/odb_model_load.cpython-39.pyc
-qtmodel/odb/__pycache__/odb_model_material.cpython-39.pyc
-qtmodel/odb/__pycache__/odb_model_section.cpython-39.pyc
-qtmodel/odb/__pycache__/odb_model_stage.cpython-39.pyc
-qtmodel/odb/__pycache__/odb_model_structure.cpython-39.pyc
-qtmodel/odb/__pycache__/odb_result_data.cpython-39.pyc
-qtmodel/odb/__pycache__/odb_result_plot.cpython-39.pyc
-qtmodel/odb/__pycache__/odb_view.cpython-39.pyc
-test/72+120+72-建模.ipynb
 test/test_solve.ipynb
-/QtCsharp/
+test/72+120+72-建模.ipynb
 /test/buckling_curve.py
+/QtCsharp/
+/QtModelCSharp/
 /models/
-/QtModelCSharp
-/bin
-/obj
