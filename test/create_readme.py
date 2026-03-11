@@ -4,8 +4,7 @@ import re
 
 class Readme:
     """用于生成帮助文档"""
-    version = "V2.2.1"
-    version_qdat = "V1.2.4"
+    version = "V2.2.3"
     _data_str = []
 
     @staticmethod
@@ -92,7 +91,6 @@ class Readme:
     def print_md_file_context():
         # 获取当前日期和时间
         Readme.print_str(f"> 最新qtmodel版本 {Readme.version} - {datetime.now().date()} ")
-        Readme.print_str(f"> 最新qdat数据版本 {Readme.version_qdat} ")
         Readme.print_str("> pip install --upgrade qtmodel -i https://pypi.org/simple")
         Readme.print_str("- 新增检算荷载组合，检算材料，检算钢筋信息 ")
         Readme.print_str("# 建模操作 ")

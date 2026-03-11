@@ -1,5 +1,4 @@
-> 最新qtmodel版本 V2.2.1 - 2026-02-28 
-> 最新qdat数据版本 V1.2.4 
+> 最新qtmodel版本 V2.2.3 - 2026-03-11 
 > pip install --upgrade qtmodel -i https://pypi.org/simple
 - 新增检算荷载组合，检算材料，检算钢筋信息 
 # 建模操作 
