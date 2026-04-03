@@ -296,7 +296,7 @@ class MdbStaticLoad:
         """
         payload = {
             "case_name": case_name,
-            "node_id": node_id,
+            "node_id": QtDataHelper.parse_ids_to_array(node_id),
             "group_name": group_name,
         }
         return QtServer.send_dict("REMOVE-NODAL-FORCE", payload)
@@ -315,7 +315,7 @@ class MdbStaticLoad:
         """
         payload = {
             "case_name": case_name,
-            "node_id": node_id,
+            "node_id": QtDataHelper.parse_ids_to_array(node_id),
             "group_name": group_name,
         }
         return QtServer.send_dict("REMOVE-NODAL-DISPLACEMENT", payload)
@@ -333,7 +333,7 @@ class MdbStaticLoad:
         Returns: 无
         """
         payload = {
-            "element_id": element_id,
+            "element_id": QtDataHelper.parse_ids_to_array(element_id),
             "case_name": case_name,
             "group_name": group_name,
         }
@@ -353,7 +353,7 @@ class MdbStaticLoad:
         Returns: 无
         """
         payload = {
-            "element_id": element_id,
+            "element_id":QtDataHelper.parse_ids_to_array(element_id),
             "case_name": case_name,
             "load_type": load_type,
             "group_name": group_name,
@@ -374,7 +374,7 @@ class MdbStaticLoad:
         Returns: 无
         """
         payload = {
-            "element_id": element_id,
+            "element_id": QtDataHelper.parse_ids_to_array(element_id),
             "case_name": case_name,
             "load_type": load_type,
             "group_name": group_name,
@@ -394,7 +394,7 @@ class MdbStaticLoad:
         Returns: 无
         """
         payload = {
-            "element_id": element_id,
+            "element_id": QtDataHelper.parse_ids_to_array(element_id),
             "case_name": case_name,
             "group_name": group_name,
         }
